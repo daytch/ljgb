@@ -8,25 +8,23 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System.IO;
 
 namespace ljgb.BusinessLogic
 {
     public class WarnaFacade
     {
-        //IWarna dep;
-        //public WarnaController(IWarna _dep)
-        //{
-        //    dep = _dep;
-        //}
-
         private ljgbContext db;
         private IWarna dep;
 
-        public WarnaFacade(IConfiguration configuration)
+        public WarnaFacade()
         {
-            Configuration = configuration;
-            var appSettingsJson = AppSettingsJson.GetAppSettings();
-            string connectionString = appSettingsJson["DefaultConnection"].ToString();
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+
+            IConfigurationRoot configuration = builder.Build();
+            string connectionString = configuration.GetConnectionString("DefaultConnection").ToString();
 
             var optionsBuilder = new DbContextOptionsBuilder<ljgbContext>();
             optionsBuilder.UseSqlServer(connectionString);
