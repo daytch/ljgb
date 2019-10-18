@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using ljgb.DataAccess.Interface;
+using ljgb.BusinessLogic;
 using ljgb.DataAccess.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,20 +10,14 @@ namespace ljgb.API.Controllers
     [ApiController]
     public class WarnaController : ControllerBase
     {
-
-        IWarna interfaceWarna;
-        public WarnaController(IWarna _interfaceWarna)
-        {
-            interfaceWarna = _interfaceWarna;
-        }
-
+        private WarnaFacade facade = new WarnaFacade();
         [HttpGet]
         [Route("GetWarna")]
         public async Task<IActionResult> GetCategories()
         {
             try
             {
-                var categories = await interfaceWarna.GetWarna();
+                var categories = await facade.GetCategories();
                 if (categories == null)
                 {
                     return NotFound();
@@ -31,9 +25,9 @@ namespace ljgb.API.Controllers
 
                 return Ok(categories);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return BadRequest();
+                return BadRequest(ex);
             }
 
         }
@@ -44,7 +38,7 @@ namespace ljgb.API.Controllers
         {
             try
             {
-                var posts = await interfaceWarna.GetPosts();
+                var posts = await facade.GetPosts();
                 if (posts == null)
                 {
                     return NotFound();
@@ -69,7 +63,7 @@ namespace ljgb.API.Controllers
 
             try
             {
-                var post = await interfaceWarna.GetPost(postId);
+                var post = await facade.GetPost(postId);
 
                 if (post == null)
                 {
@@ -92,7 +86,7 @@ namespace ljgb.API.Controllers
             {
                 try
                 {
-                    var postId = await interfaceWarna.AddPost(model);
+                    var postId = await facade.AddPost(model);
                     if (postId > 0)
                     {
                         return Ok(postId);
@@ -125,7 +119,7 @@ namespace ljgb.API.Controllers
 
             try
             {
-                result = await interfaceWarna.DeletePost(postId);
+                result = await facade.DeletePost(postId);
                 if (result == 0)
                 {
                     return NotFound();
@@ -148,7 +142,7 @@ namespace ljgb.API.Controllers
             {
                 try
                 {
-                    await interfaceWarna.UpdatePost(model);
+                    await facade.UpdatePost(model);
 
                     return Ok();
                 }

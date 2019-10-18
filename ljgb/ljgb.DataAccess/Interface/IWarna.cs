@@ -17,6 +17,6 @@ namespace ljgb.DataAccess.Interface
 
         Task<long> DeletePost(long warnaId);
 
-        Task UpdatePost(Warna warna);
+        Task<bool> UpdatePost(Warna warna);
     }
 }

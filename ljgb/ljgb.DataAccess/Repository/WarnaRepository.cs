@@ -101,9 +101,9 @@ namespace ljgb.DataAccess.Repository
             return result;
         }
 
-
-        public async Task UpdatePost(Warna warna)
+        public async Task<bool> UpdatePost(Warna warna)
         {
+            bool result = false;
             if (db != null)
             {
                 //Delete that warna
@@ -111,7 +111,9 @@ namespace ljgb.DataAccess.Repository
 
                 //Commit the transaction
                 await db.SaveChangesAsync();
+                result = true;
             }
+            return result;
         }
     }
 }
