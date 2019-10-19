@@ -29,7 +29,6 @@ namespace ljgb.API.Controllers
             {
                 return BadRequest(ex);
             }
-
         }
 
         [HttpGet]

@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - ljgb.UI</title>
+    <title>@ViewData["Title"] - ljgb.Web</title>
 
     <environment include="Development">
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
@@ -26,13 +26,25 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a asp-page="/Index" class="navbar-brand">ljgb.UI</a>
+                <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">ljgb.Web</a>
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li><a asp-page="/Index">Home</a></li>
-                    <li><a asp-page="/About">About</a></li>
-                    <li><a asp-page="/Contact">Contact</a></li>
+                    <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
+                    <li><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
+                    <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <li role="presentation" class="active">
+                            <a data-toggle="modal" data-target="#logoutModal" href="#">Sign out</a>
+                        </li>
+                    }
+                    else
+                    {
+                        <li><a asp-controller="Auth" asp-action="SignIn">Sign in</a></li>
+                    }
                 </ul>
             </div>
         </div>
@@ -40,11 +52,31 @@
 
     <partial name="_CookieConsentPartial" />
 
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="LogoutModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="logoutModal">Sign out</h4>
+                </div>
+                <div class="modal-body">
+                    Do you wish to sign out?
+                </div>
+                <div class="modal-footer">
+                    <form method="post" asp-controller="Auth" asp-action="SignOut">
+                        <button type="button" class="btn btn-warning" data-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Sign Out</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="container body-content">
         @RenderBody()
         <hr />
         <footer>
-            <p>&copy; 2019 - ljgb.UI</p>
+            <p>&copy; 2019 - ljgb.Web</p>
         </footer>
     </div>
 

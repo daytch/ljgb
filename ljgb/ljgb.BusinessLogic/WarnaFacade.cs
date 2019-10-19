@@ -14,6 +14,7 @@ namespace ljgb.BusinessLogic
 {
     public class WarnaFacade
     {
+        #region Important
         private ljgbContext db;
         private IWarna dep;
 
@@ -29,16 +30,11 @@ namespace ljgb.BusinessLogic
             var optionsBuilder = new DbContextOptionsBuilder<ljgbContext>();
             optionsBuilder.UseSqlServer(connectionString);
 
-            ljgbContext dbContext = new ljgbContext(optionsBuilder.Options);
-            this.dep = new WarnaRepository(dbContext);
+            db = new ljgbContext(optionsBuilder.Options);
+            this.dep = new WarnaRepository(db);
         }
-
-        public WarnaFacade WithDependency(IWarna dependency)
-        {
-            this.dep = dependency;
-            return this;
-        }
-
+        #endregion
+        
         public async Task<List<Warna>> GetCategories()
         {
             var categories = await dep.GetWarna();
