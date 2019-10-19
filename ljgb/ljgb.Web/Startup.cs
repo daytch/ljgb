@@ -69,6 +69,11 @@ namespace ljgb.Web
                 };
             });
 
+            services.AddAuthentication().AddTwitter(twitterOptions => {
+                twitterOptions.ConsumerKey = Configuration["Authentication:Twitter:ConsumerKey"];
+                twitterOptions.ConsumerSecret = Configuration["Authentication:Twitter:ConsumerSecret"];
+            });
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 
