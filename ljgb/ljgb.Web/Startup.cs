@@ -1,10 +1,18 @@
-﻿using Microsoft.AspNetCore.Authentication.Cookies;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using ljgb.Web.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Authentication.OAuth;
 
 namespace ljgb.Web
 {
@@ -27,30 +35,38 @@ namespace ljgb.Web
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            services.AddAuthentication(options =>
+            services.AddDbContext<ApplicationDbContext>(options =>
+                options.UseSqlServer(
+                    Configuration.GetConnectionString("DefaultConnection")));
+            services.AddDefaultIdentity<IdentityUser>()
+                .AddEntityFrameworkStores<ApplicationDbContext>();
+
+            services.AddAuthentication().AddFacebook(facebookOptions =>
             {
-                options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-            })
-            .AddFacebook(options =>
+                facebookOptions.AppId = Configuration["Authentication:Facebook:AppId"];
+                facebookOptions.AppSecret = Configuration["Authentication:Facebook:AppSecret"];
+            });
+
+            services.AddAuthentication().AddGoogle(googleOptions =>
             {
-                options.AppId = "326162094885123";
-                options.AppSecret = "f672717ce5331b202427d0235b21bed8";
-            })
-            .AddTwitter(options =>
+                googleOptions.ClientId = Configuration["Authentication:Google:ClientId"];
+                googleOptions.ClientSecret = Configuration["Authentication:Google:ClientSecret"];
+            });
+
+            services.AddAuthentication().AddLinkedIn(options =>
             {
-                options.ConsumerKey = "fonKXtTeziloBa4P4skiZEdvd";
-                options.ConsumerSecret = "Go2t9JOJenbkbm9DmlDusFKUAAhPGdzqqUdQMhyAhkVjkycylD";
-            })
-            //.AddGitHub(options =>
-            //{
-            //    options.ClientId = "";
-            //    options.ClientSecret = "";
-            //})
-            .AddCookie(options =>
-            {
-                options.LoginPath = "/auth/signin";
+                options.ClientId = Configuration["Authentication:LinkedIn:ClientId"];
+                options.ClientSecret = Configuration["Authentication:LinkedIn:ClientSecret"];
+                options.Events = new OAuthEvents()
+                {
+                    OnRemoteFailure = loginFailureHandler =>
+                    {
+                        var authProperties = options.StateDataFormat.Unprotect(loginFailureHandler.Request.Query["state"]);
+                        loginFailureHandler.Response.Redirect("/Account/login");
+                        loginFailureHandler.HandleResponse();
+                        return Task.FromResult(0);
+                    }
+                };
             });
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
@@ -62,6 +78,7 @@ namespace ljgb.Web
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseDatabaseErrorPage();
             }
             else
             {
@@ -72,6 +89,8 @@ namespace ljgb.Web
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
+
+            app.UseAuthentication();
 
             app.UseMvc(routes =>
             {
