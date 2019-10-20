@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace ljgb.DataAccess.ViewModel
+namespace ljgb.Common.ViewModel
 {
     public class UserProfileViewModel
     {

@@ -1,6 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
+using Flurl.Http;
+using ljgb.UI.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
@@ -18,13 +20,16 @@ namespace ljgb.UI.Areas.Identity.Pages.Account
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly UserManager<IdentityUser> _userManager;
 
+        private static string base_url_api;
+
         public RegisterModel(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, ILogger<RegisterModel> logger,
-            IEmailSender emailSender)
+            IEmailSender emailSender, ConfigOptions _urlapi)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
+            base_url_api = _urlapi.base_api_url;
         }
 
         [BindProperty] public InputModel Input { get; set; }
@@ -38,14 +43,19 @@ namespace ljgb.UI.Areas.Identity.Pages.Account
             returnUrl = returnUrl ?? Url.Content("~/");
             if (ModelState.IsValid)
             {
-                var user = new IdentityUser {UserName = Input.Email, Email = Input.Email};
-                var result = await _userManager.CreateAsync(user, Input.Password);
+                var user = new IdentityUser { UserName = Input.Email, Email = Input.Email };
+                //IdentityResult result = await _userManager.CreateAsync(user, Input.Password);
+                UserModel u = new UserModel() { user = user, password = Input.Password };
+                string url = base_url_api + "User/Register/";
+
+                IdentityResult result = await url.PostJsonAsync(u).ReceiveJson<IdentityResult>();
+
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User created a new account with password.");
 
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                    var callbackUrl = Url.Page("/Account/ConfirmEmail", null, new {userId = user.Id, code}, Request.Scheme);
+                    var callbackUrl = Url.Page("/Account/ConfirmEmail", null, new { userId = user.Id, code }, Request.Scheme);
 
                     await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
                         $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");

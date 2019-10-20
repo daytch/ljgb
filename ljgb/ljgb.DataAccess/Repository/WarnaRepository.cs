@@ -1,10 +1,11 @@
 ﻿using ljgb.DataAccess.Interface;
 using ljgb.DataAccess.Models;
-using ljgb.DataAccess.ViewModel;
+using ljgb.Common.ViewModel;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
+using ljgb.Common.ViewModel;
 
 namespace ljgb.DataAccess.Repository
 {

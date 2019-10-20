@@ -158,5 +158,31 @@ namespace ljgb.API.Controllers
             return BadRequest();
         }
 
+        [HttpPut]
+        [Route("Register")]
+        public async Task<IActionResult> Register([FromBody]UserProfile model)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    await facade.UpdatePost(model);
+
+                    return Ok();
+                }
+                catch (Exception ex)
+                {
+                    if (ex.GetType().FullName ==
+                             "Microsoft.EntityFrameworkCore.DbUpdateConcurrencyException")
+                    {
+                        return NotFound();
+                    }
+
+                    return BadRequest();
+                }
+            }
+
+            return BadRequest();
+        }
     }
 }

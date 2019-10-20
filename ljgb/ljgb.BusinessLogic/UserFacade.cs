@@ -1,13 +1,11 @@
-﻿using ljgb.DataAccess.Interface;
+﻿using ljgb.Common.ViewModel;
+using ljgb.DataAccess.Interface;
 using ljgb.DataAccess.Models;
 using ljgb.DataAccess.Repository;
-using ljgb.DataAccess.ViewModel;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace ljgb.BusinessLogic

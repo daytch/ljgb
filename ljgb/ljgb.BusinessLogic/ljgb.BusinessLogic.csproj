@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ljgb.Common\ljgb.Common.csproj" />
     <ProjectReference Include="..\ljgb.DataAccess\ljgb.DataAccess.csproj" />
   </ItemGroup>
 

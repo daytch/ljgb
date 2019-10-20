@@ -1,5 +1,5 @@
 ﻿using ljgb.DataAccess.Models;
-using ljgb.DataAccess.ViewModel;
+using ljgb.Common.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Text;

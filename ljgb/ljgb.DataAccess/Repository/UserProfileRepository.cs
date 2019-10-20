@@ -1,6 +1,6 @@
 ﻿using ljgb.DataAccess.Interface;
 using ljgb.DataAccess.Models;
-using ljgb.DataAccess.ViewModel;
+using ljgb.Common.ViewModel;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;

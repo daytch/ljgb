@@ -1,10 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Flurl;
+using Flurl.Http;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ljgb.UI.Models;
+using ljgb.DataAccess.Models;
 
 namespace ljgb.UI.Controllers
 {

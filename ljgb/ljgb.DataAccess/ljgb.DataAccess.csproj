@@ -15,4 +15,8 @@
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.6.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\ljgb.Common\ljgb.Common.csproj" />
+  </ItemGroup>
+
 </Project>

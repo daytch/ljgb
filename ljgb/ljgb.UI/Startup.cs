@@ -1,4 +1,4 @@
-﻿﻿using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -10,12 +10,22 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using ljgb.UI.Data;
 using ljgb.UI.Models;
+using Flurl;
+using Flurl.Http;
+using Microsoft.Extensions.Logging;
+using System;
 
 namespace ljgb.UI
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration) => Configuration = configuration;
+        private readonly ILogger<Startup> logger;
+
+        public Startup(IConfiguration configuration, ILogger<Startup> _log)
+        {
+            Configuration = configuration;
+            logger = _log;
+        }// => Configuration = configuration;
 
         private IConfiguration Configuration { get; }
 
@@ -35,7 +45,7 @@ namespace ljgb.UI
             // If you followed the instructions in 'README.MD' and installed SQL Express then change the 'DefaultConnection' value in 'appSettings.json' with
             // "Server=localhost\\SQLEXPRESS;Database=aspnet-smartadmin;Trusted_Connection=True;MultipleActiveResultSets=true"
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-            
+
             services.AddDefaultIdentity<IdentityUser>().AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
 
             services.AddRouting(options =>
@@ -58,6 +68,29 @@ namespace ljgb.UI
                 options.LogoutPath = "/Identity/Account/Logout";
                 options.AccessDeniedPath = "/Identity/Account/AccessDenied";
             });
+
+            // Do this in Startup. All calls to SimpleCast will use the same HttpClient instance.
+            FlurlHttp.ConfigureClient(Configuration["API_url"], cli => cli
+                .Configure(settings =>
+                {
+                    // keeps logging & error handling out of SimpleCastClient
+                    settings.BeforeCall = call => logger.LogWarning($"Calling {call.Request.RequestUri}");
+                    settings.OnError = call => logger.LogError($"Call to SimpleCast failed: {call.Exception}");
+                })
+                // adds default headers to send with every call
+                .WithHeaders(new
+                {
+                    Accept = "application/json",
+                    User_Agent = "MyCustomUserAgent" // Flurl will convert that underscore to a hyphen
+                }));
+
+            // Set API url
+            Action<ConfigOptions> configOptions = (options =>
+            {
+                options.base_api_url = Configuration["API_url"];
+            });
+            services.Configure(configOptions);
+            services.AddSingleton(resolver => resolver.GetRequiredService<IOptions<ConfigOptions>>().Value);
 
             services.AddSingleton<IEmailSender, EmailSender>();
             services.AddResponseCaching();
