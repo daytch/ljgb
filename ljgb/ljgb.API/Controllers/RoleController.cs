@@ -8,16 +8,16 @@ namespace ljgb.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UserController : ControllerBase
+    public class RoleController : ControllerBase
     {
-        private UserFacade facade = new UserFacade();
+        private RoleFacade facade = new RoleFacade();
         [HttpPost]
-        [Route("GetUser")]
-        public async Task<IActionResult> GetAllUser()
+        [Route("GetRole")]
+        public async Task<IActionResult> GetAllRole()
         {
             try
             {
-                var categories = await facade.GetAllUser();
+                var categories = await facade.GetAllRole();
                 if (categories == null)
                 {
                     return NotFound();
@@ -31,25 +31,7 @@ namespace ljgb.API.Controllers
             }
         }
 
-        [HttpPost]
-        [Route("GetPosts")]
-        public async Task<IActionResult> GetPosts()
-        {
-            try
-            {
-                var posts = await facade.GetPosts();
-                if (posts == null)
-                {
-                    return NotFound();
-                }
-
-                return Ok(posts);
-            }
-            catch (Exception)
-            {
-                return BadRequest();
-            }
-        }
+      
 
         [HttpPost]
         [Route("GetPost")]
@@ -79,7 +61,7 @@ namespace ljgb.API.Controllers
 
         [HttpPost]
         [Route("AddPost")]
-        public async Task<IActionResult> AddPost([FromBody]UserProfile model)
+        public async Task<IActionResult> AddPost([FromBody]Role model)
         {
             if (ModelState.IsValid)
             {
@@ -135,7 +117,7 @@ namespace ljgb.API.Controllers
 
         [HttpPut]
         [Route("UpdatePost")]
-        public async Task<IActionResult> UpdatePost([FromBody]UserProfile model)
+        public async Task<IActionResult> UpdatePost([FromBody]Role model)
         {
             if (ModelState.IsValid)
             {
@@ -160,31 +142,5 @@ namespace ljgb.API.Controllers
             return BadRequest();
         }
 
-        [HttpPut]
-        [Route("Register")]
-        public async Task<IActionResult> Register([FromBody]UserProfile model)
-        {
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    await facade.UpdatePost(model);
-
-                    return Ok();
-                }
-                catch (Exception ex)
-                {
-                    if (ex.GetType().FullName ==
-                             "Microsoft.EntityFrameworkCore.DbUpdateConcurrencyException")
-                    {
-                        return NotFound();
-                    }
-
-                    return BadRequest();
-                }
-            }
-
-            return BadRequest();
-        }
     }
 }

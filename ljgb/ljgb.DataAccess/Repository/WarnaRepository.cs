@@ -21,7 +21,7 @@ namespace ljgb.DataAccess.Repository
         {
             if (db != null)
             {
-                return await db.Warna.ToListAsync();
+                return await db.Warna.Where(x=>x.RowStatus == true).ToListAsync();
             }
 
             return null;
@@ -32,6 +32,7 @@ namespace ljgb.DataAccess.Repository
             if (db != null)
             {
                 return await (from w in db.Warna
+                              where w.RowStatus == true
                               select new WarnaViewModel
                               {
                                   Id = w.Id,
@@ -51,7 +52,7 @@ namespace ljgb.DataAccess.Repository
             if (db != null)
             {
                 return await (from w in db.Warna
-                              where w.Id == postId
+                              where w.Id == postId && w.RowStatus == true
                               select new WarnaViewModel
                               {
                                   Id = w.Id,
@@ -90,8 +91,9 @@ namespace ljgb.DataAccess.Repository
 
                 if (warna != null)
                 {
+                    warna.RowStatus = true;
                     //Delete that warna
-                    db.Warna.Remove(warna);
+                    db.Warna.Update(warna);
 
                     //Commit the transaction
                     result = await db.SaveChangesAsync();

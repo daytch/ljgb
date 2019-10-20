@@ -1,29 +1,31 @@
-﻿using System;
-using System.Threading.Tasks;
-using ljgb.BusinessLogic;
+﻿using ljgb.BusinessLogic;
 using ljgb.DataAccess.Models;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace ljgb.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UserController : ControllerBase
+    public class TypeBarangController : ControllerBase
     {
-        private UserFacade facade = new UserFacade();
+        private TypeBarangFacade facade = new TypeBarangFacade();
         [HttpPost]
-        [Route("GetUser")]
-        public async Task<IActionResult> GetAllUser()
+        [Route("GetAll")]
+        public async Task<IActionResult> GetAll()
         {
             try
             {
-                var categories = await facade.GetAllUser();
-                if (categories == null)
+                var models = await facade.GetAll();
+                if (models == null)
                 {
                     return NotFound();
                 }
 
-                return Ok(categories);
+                return Ok(models);
             }
             catch (Exception ex)
             {
@@ -31,28 +33,10 @@ namespace ljgb.API.Controllers
             }
         }
 
-        [HttpPost]
-        [Route("GetPosts")]
-        public async Task<IActionResult> GetPosts()
-        {
-            try
-            {
-                var posts = await facade.GetPosts();
-                if (posts == null)
-                {
-                    return NotFound();
-                }
 
-                return Ok(posts);
-            }
-            catch (Exception)
-            {
-                return BadRequest();
-            }
-        }
 
         [HttpPost]
-        [Route("GetPost")]
+        [Route("GetModelWithID")]
         public async Task<IActionResult> GetPost(long postId)
         {
             if (postId < 1)
@@ -79,7 +63,7 @@ namespace ljgb.API.Controllers
 
         [HttpPost]
         [Route("AddPost")]
-        public async Task<IActionResult> AddPost([FromBody]UserProfile model)
+        public async Task<IActionResult> AddPost([FromBody]TypeBarang model)
         {
             if (ModelState.IsValid)
             {
@@ -133,36 +117,9 @@ namespace ljgb.API.Controllers
         }
 
 
-        [HttpPut]
+        [HttpPost]
         [Route("UpdatePost")]
-        public async Task<IActionResult> UpdatePost([FromBody]UserProfile model)
-        {
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    await facade.UpdatePost(model);
-
-                    return Ok();
-                }
-                catch (Exception ex)
-                {
-                    if (ex.GetType().FullName ==
-                             "Microsoft.EntityFrameworkCore.DbUpdateConcurrencyException")
-                    {
-                        return NotFound();
-                    }
-
-                    return BadRequest();
-                }
-            }
-
-            return BadRequest();
-        }
-
-        [HttpPut]
-        [Route("Register")]
-        public async Task<IActionResult> Register([FromBody]UserProfile model)
+        public async Task<IActionResult> UpdatePost([FromBody]TypeBarang model)
         {
             if (ModelState.IsValid)
             {

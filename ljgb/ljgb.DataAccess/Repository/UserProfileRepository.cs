@@ -33,6 +33,7 @@ namespace ljgb.DataAccess.Repository
             if (db != null)
             {
                 return await (from user in db.UserProfile
+                              where user.RowStatus == true
                               select new UserProfileViewModel
                               {
                                   ID = user.Id,
@@ -58,7 +59,7 @@ namespace ljgb.DataAccess.Repository
             if (db != null)
             {
                 return await (from user in db.UserProfile
-                              where user.Id == postId
+                              where user.Id == postId && user.RowStatus == true
                               select new UserProfileViewModel
                               {
                                   ID = user.Id,
@@ -98,7 +99,7 @@ namespace ljgb.DataAccess.Repository
 
             if (db != null)
             {
-                //Find the warna for specific warna id
+                //Find the warna for specific userprofile
                 var user = await db.UserProfile.FirstOrDefaultAsync(x => x.Id == postId);
 
                 if (user != null)
