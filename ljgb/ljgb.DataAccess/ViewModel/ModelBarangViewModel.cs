@@ -1,24 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 
-namespace ljgb.DataAccess.Models
+namespace ljgb.DataAccess.ViewModel
 {
-    public partial class TrackStatus
+    public class ModelBarangViewModel
     {
-        public TrackStatus()
-        {
-            TrackLevel = new HashSet<TrackLevel>();
-        }
-
-        public int Id { get; set; }
+        public long ID { get; set; }
         public string Name { get; set; }
+        public long MerkID { get; set; }
         public string Description { get; set; }
         public DateTime Created { get; set; }
         public string CreatedBy { get; set; }
         public DateTime? Modified { get; set; }
         public string ModifiedBy { get; set; }
         public bool RowStatus { get; set; }
-
-        public ICollection<TrackLevel> TrackLevel { get; set; }
     }
 }

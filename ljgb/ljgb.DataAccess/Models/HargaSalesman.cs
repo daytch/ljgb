@@ -17,5 +17,6 @@ namespace ljgb.DataAccess.Models
         public bool RowStatus { get; set; }
 
         public Barang Barang { get; set; }
+        public UserProfile UserProfile { get; set; }
     }
 }

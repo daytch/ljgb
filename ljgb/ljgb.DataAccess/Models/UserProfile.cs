@@ -7,6 +7,7 @@ namespace ljgb.DataAccess.Models
     {
         public UserProfile()
         {
+            HargaSalesman = new HashSet<HargaSalesman>();
             ProfileRole = new HashSet<ProfileRole>();
         }
 
@@ -23,6 +24,7 @@ namespace ljgb.DataAccess.Models
         public string ModifiedBy { get; set; }
         public bool RowStatus { get; set; }
 
+        public ICollection<HargaSalesman> HargaSalesman { get; set; }
         public ICollection<ProfileRole> ProfileRole { get; set; }
     }
 }

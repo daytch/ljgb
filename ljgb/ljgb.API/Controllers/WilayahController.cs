@@ -8,22 +8,23 @@ namespace ljgb.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UserController : ControllerBase
+    public class WilayahController : ControllerBase
     {
-        private UserFacade facade = new UserFacade();
+        
+        private WilayahFacade facade = new WilayahFacade();
         [HttpPost]
-        [Route("GetUser")]
-        public async Task<IActionResult> GetAllUser()
+        [Route("GetWilayah")]
+        public async Task<IActionResult> GetAllWilayah()
         {
             try
             {
-                var categories = await facade.GetAllUser();
-                if (categories == null)
+                var wilayahs = await facade.GetAllWilayah();
+                if (wilayahs == null)
                 {
                     return NotFound();
                 }
 
-                return Ok(categories);
+                return Ok(wilayahs);
             }
             catch (Exception ex)
             {
@@ -31,28 +32,10 @@ namespace ljgb.API.Controllers
             }
         }
 
-        [HttpPost]
-        [Route("GetPosts")]
-        public async Task<IActionResult> GetPosts()
-        {
-            try
-            {
-                var posts = await facade.GetPosts();
-                if (posts == null)
-                {
-                    return NotFound();
-                }
 
-                return Ok(posts);
-            }
-            catch (Exception)
-            {
-                return BadRequest();
-            }
-        }
 
         [HttpPost]
-        [Route("GetPost")]
+        [Route("GetWilayahWithID")]
         public async Task<IActionResult> GetPost(long postId)
         {
             if (postId < 1)
@@ -79,7 +62,7 @@ namespace ljgb.API.Controllers
 
         [HttpPost]
         [Route("AddPost")]
-        public async Task<IActionResult> AddPost([FromBody]UserProfile model)
+        public async Task<IActionResult> AddPost([FromBody]Wilayah model)
         {
             if (ModelState.IsValid)
             {
@@ -133,9 +116,9 @@ namespace ljgb.API.Controllers
         }
 
 
-        [HttpPut]
+        [HttpPost]
         [Route("UpdatePost")]
-        public async Task<IActionResult> UpdatePost([FromBody]UserProfile model)
+        public async Task<IActionResult> UpdatePost([FromBody]Wilayah model)
         {
             if (ModelState.IsValid)
             {
@@ -159,6 +142,5 @@ namespace ljgb.API.Controllers
 
             return BadRequest();
         }
-
     }
 }
