@@ -29,7 +29,7 @@ namespace ljgb.DataAccess.Repository
                     return model.Id;
                 }
 
-                return 0;
+                return "0";
             }
 
             public async Task<string> DeletePost(string ID)
@@ -44,7 +44,7 @@ namespace ljgb.DataAccess.Repository
                     if (model != null)
                     {
                         //Delete that warna
-                     
+
                         db.AspNetRoles.Remove(model);
 
                         //Commit the transaction
@@ -62,7 +62,7 @@ namespace ljgb.DataAccess.Repository
                 if (db != null)
                 {
                     return await (from model in db.AspNetRoles
-                                 
+
                                   select new AspNetRolesViewModel
                                   {
                                       ID = model.Id,
@@ -117,4 +117,5 @@ namespace ljgb.DataAccess.Repository
                 return result;
             }
         }
+    }
 }

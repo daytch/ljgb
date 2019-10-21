@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
 using ljgb.BusinessLogic;
+using ljgb.Common.Requests;
 using ljgb.DataAccess.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ljgb.API.Controllers
@@ -10,7 +12,14 @@ namespace ljgb.API.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        private UserFacade facade = new UserFacade();
+        private readonly UserManager<IdentityUser> userManager;
+        private UserFacade facade;
+        public UserController(UserManager<IdentityUser> _userManager)
+        {
+            userManager = _userManager;
+            facade = new UserFacade(userManager);
+        }
+
         [HttpPost]
         [Route("GetUser")]
         public async Task<IActionResult> GetAllUser()
@@ -160,31 +169,11 @@ namespace ljgb.API.Controllers
             return BadRequest();
         }
 
-        [HttpPut]
+        [HttpPost]
         [Route("Register")]
-        public async Task<IActionResult> Register([FromBody]UserProfile model)
+        public async Task<IdentityResult> Register([FromBody]UserRequest model)
         {
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    await facade.UpdatePost(model);
-
-                    return Ok();
-                }
-                catch (Exception ex)
-                {
-                    if (ex.GetType().FullName ==
-                             "Microsoft.EntityFrameworkCore.DbUpdateConcurrencyException")
-                    {
-                        return NotFound();
-                    }
-
-                    return BadRequest();
-                }
-            }
-
-            return BadRequest();
+            return await facade.Register(model);
         }
     }
 }

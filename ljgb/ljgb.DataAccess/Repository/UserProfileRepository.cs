@@ -7,15 +7,19 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using System.Linq;
+using Microsoft.AspNetCore.Identity;
+using ljgb.Common.Requests;
 
 namespace ljgb.DataAccess.Repository
 {
     public class UserProfileRepository : IUser
     {
         ljgbContext db;
-        public UserProfileRepository(ljgbContext _db)
+        private readonly UserManager<IdentityUser> userManager;
+        public UserProfileRepository(ljgbContext _db, UserManager<IdentityUser> _userManager)
         {
             db = _db;
+            userManager = _userManager;
         }
 
         public async Task<List<UserProfile>> GetUserProfiles()
@@ -135,7 +139,7 @@ namespace ljgb.DataAccess.Repository
 
                     throw ex;
                 }
-                
+
             }
             return result;
         }
@@ -145,6 +149,18 @@ namespace ljgb.DataAccess.Repository
             throw new NotImplementedException();
         }
 
-       
+        public async Task<IdentityResult> Register(UserRequest user)
+        {
+            IdentityResult result = new IdentityResult();
+            try
+            {
+                result = await userManager.CreateAsync(user.user, user.password);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
+        }
     }
 }

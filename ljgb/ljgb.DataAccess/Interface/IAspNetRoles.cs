@@ -13,9 +13,9 @@ namespace ljgb.DataAccess.Interface
 
         Task<AspNetRolesViewModel> GetPost(long ID);
 
-        Task<long> AddPost(AspNetRoles model);
+        Task<string> AddPost(AspNetRoles model);
 
-        Task<long> DeletePost(string ID);
+        Task<string> DeletePost(string ID);
 
         Task<bool> UpdatePost(AspNetRoles model);
     }

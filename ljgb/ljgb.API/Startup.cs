@@ -1,8 +1,10 @@
-﻿using ljgb.DataAccess.Interface;
+﻿using ljgb.DataAccess;
+using ljgb.DataAccess.Interface;
 using ljgb.DataAccess.Models;
 using ljgb.DataAccess.Repository;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -28,6 +30,7 @@ namespace ljgb.API
             services.AddDbContext<ljgbContext>(item => item.UseSqlServer
                                  (Configuration.GetConnectionString("DefaultConnection")));
             services.AddScoped<IWarna, WarnaRepository>();
+            services.AddDefaultIdentity<IdentityUser>().AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
             // Register the Swagger generator, defining 1 or more Swagger documents
             services.AddSwaggerGen(c =>
             {

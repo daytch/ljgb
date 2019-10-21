@@ -1,7 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using Flurl.Http;
+using ljgb.Common.Requests;
 using ljgb.UI.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -45,10 +47,26 @@ namespace ljgb.UI.Areas.Identity.Pages.Account
             {
                 var user = new IdentityUser { UserName = Input.Email, Email = Input.Email };
                 //IdentityResult result = await _userManager.CreateAsync(user, Input.Password);
-                UserModel u = new UserModel() { user = user, password = Input.Password };
-                string url = base_url_api + "User/Register/";
-
-                IdentityResult result = await url.PostJsonAsync(u).ReceiveJson<IdentityResult>();
+                UserRequest u = new UserRequest() { user = user, password = Input.Password };
+                string url = base_url_api + "User/Register";
+                IdentityResult result = new IdentityResult();
+                try
+                {
+                    result = await url.PostJsonAsync(u).ReceiveJson<IdentityResult>();
+                }
+                catch (FlurlHttpTimeoutException ext)
+                {
+                    // FlurlHttpTimeoutException derives from FlurlHttpException; catch here only
+                    // if you want to handle timeouts as a special case
+                    // Console.log("Request timed out.");
+                    var b = ext;
+                }
+                catch (FlurlHttpException ex)
+                {
+                    // ex.Message contains rich details, inclulding the URL, verb, response status,
+                    // and request and response bodies (if available)
+                    var a = ex;//(ex.Message);
+                }
 
                 if (result.Succeeded)
                 {

@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Microsoft.AspNetCore.Identity;
 
 namespace ljgb.Common.Requests
 {
-    class UserRequest
+    public class UserRequest
     {
+        public IdentityUser user { get; set; }
+        public string password { get; set; }
     }
 }

@@ -1,9 +1,12 @@
-﻿using ljgb.Common.ViewModel;
+﻿using ljgb.Common.Requests;
+using ljgb.Common.ViewModel;
 using ljgb.DataAccess.Interface;
 using ljgb.DataAccess.Models;
 using ljgb.DataAccess.Repository;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
@@ -15,8 +18,9 @@ namespace ljgb.BusinessLogic
         #region Important
         private ljgbContext db;
         private IUser dep;
+        private readonly UserManager<IdentityUser> userManager;
 
-        public UserFacade()
+        public UserFacade(UserManager<IdentityUser> _userManager)
         {
             var builder = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
@@ -27,9 +31,10 @@ namespace ljgb.BusinessLogic
 
             var optionsBuilder = new DbContextOptionsBuilder<ljgbContext>();
             optionsBuilder.UseSqlServer(connectionString);
+            userManager = _userManager;
 
             db = new ljgbContext(optionsBuilder.Options);
-            this.dep = new UserProfileRepository(db);
+            this.dep = new UserProfileRepository(db, userManager);
         }
         #endregion
 
@@ -89,9 +94,22 @@ namespace ljgb.BusinessLogic
             return result;
         }
 
-        public async Task<bool> UpdatePost(UserProfile model)
+        public async Task<bool> UpdatePost(UserProfile profile)
         {
-            bool result = await dep.UpdatePost(model);
+            return await dep.UpdatePost(profile);
+        }
+
+        public async Task<IdentityResult> Register(UserRequest model)
+        {
+            IdentityResult result = new IdentityResult();
+            try
+            {
+                result = await dep.Register(model);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
 
             return result;
         }

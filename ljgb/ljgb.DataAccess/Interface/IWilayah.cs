@@ -1,10 +1,7 @@
 ﻿using ljgb.DataAccess.Models;
 using ljgb.DataAccess.ViewModel;
-using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
-using ljgb.DataAccess.ViewModel;
 
 namespace ljgb.DataAccess.Interface
 {
