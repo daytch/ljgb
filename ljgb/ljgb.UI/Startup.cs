@@ -81,7 +81,7 @@ namespace ljgb.UI
                 .WithHeaders(new
                 {
                     Accept = "application/json",
-                    User_Agent = "MyCustomUserAgent" // Flurl will convert that underscore to a hyphen
+                    User_Agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36" // Flurl will convert that underscore to a hyphen
                 }));
 
             // Set API url

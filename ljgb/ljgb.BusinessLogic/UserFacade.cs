@@ -18,7 +18,7 @@ namespace ljgb.BusinessLogic
         #region Important
         private ljgbContext db;
         private IUser dep;
-        private readonly UserManager<IdentityUser> userManager;
+        private UserManager<IdentityUser> userManager;
 
         public UserFacade(UserManager<IdentityUser> _userManager)
         {
@@ -34,7 +34,7 @@ namespace ljgb.BusinessLogic
             userManager = _userManager;
 
             db = new ljgbContext(optionsBuilder.Options);
-            this.dep = new UserProfileRepository(db, userManager);
+            dep = new UserProfileRepository(db, userManager);
         }
         #endregion
 

@@ -13,7 +13,7 @@ namespace ljgb.API.Controllers
     public class UserController : ControllerBase
     {
         private readonly UserManager<IdentityUser> userManager;
-        private UserFacade facade;
+        private readonly UserFacade facade;
         public UserController(UserManager<IdentityUser> _userManager)
         {
             userManager = _userManager;
@@ -141,7 +141,6 @@ namespace ljgb.API.Controllers
             }
         }
 
-
         [HttpPut]
         [Route("UpdatePost")]
         public async Task<IActionResult> UpdatePost([FromBody]UserProfile model)
@@ -173,6 +172,7 @@ namespace ljgb.API.Controllers
         [Route("Register")]
         public async Task<IdentityResult> Register([FromBody]UserRequest model)
         {
+            //return await userManager.CreateAsync(model.user, model.password);
             return await facade.Register(model);
         }
     }

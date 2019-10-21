@@ -1,4 +1,7 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using ljgb.DataAccess.Interface;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
 
@@ -21,9 +24,12 @@ namespace ljgb.DataAccess
 
             //var logger = serviceProvider.GetService<ILoggerFactory>()
             //    .CreateLogger<Program>();
-            
+            //services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
+            services.AddDefaultIdentity<IdentityUser>().AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
+
             // Get Service and call method
-            //var service = serviceProvider.GetService<IMyService>();
+            var service = serviceProvider.GetService<IUser>();
         }
     }
 }
