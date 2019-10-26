@@ -14,7 +14,7 @@ namespace ljgb.API.Controllers
         private WarnaFacade facade = new WarnaFacade();
         [HttpGet]
         [Route("GetWarna")]
-        public async Task<IActionResult> GetCategories([FromQuery]DatatablesQuery query)
+        public async Task<IActionResult> GetCategories()
         {
             try
             {

@@ -25,8 +25,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ljgb.UI", "ljgb.UI\ljgb.UI.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ljgb.Infrastructure", "ljgb.Infrastructure\ljgb.Infrastructure.csproj", "{1EAE6F15-0106-4C77-9988-0ECAAD1EA53D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ljgb.Infra", "ljgb.Infra\ljgb.Infra.csproj", "{CDE72155-7191-45CE-B29A-CB51FABE299F}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -57,10 +55,6 @@ Global
 		{1EAE6F15-0106-4C77-9988-0ECAAD1EA53D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1EAE6F15-0106-4C77-9988-0ECAAD1EA53D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1EAE6F15-0106-4C77-9988-0ECAAD1EA53D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CDE72155-7191-45CE-B29A-CB51FABE299F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CDE72155-7191-45CE-B29A-CB51FABE299F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CDE72155-7191-45CE-B29A-CB51FABE299F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CDE72155-7191-45CE-B29A-CB51FABE299F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -72,7 +66,6 @@ Global
 		{C259D35E-1C8C-4830-97A6-46C5EB21803B} = {9321B63A-8FE9-4D1C-B42C-9DE5DF4414E0}
 		{6EE4DC32-DAD4-4BD4-8F49-8D5719BFBB03} = {7CEBC9EB-832E-4E08-B7CB-27CFAB72410C}
 		{1EAE6F15-0106-4C77-9988-0ECAAD1EA53D} = {C27955F3-34EA-42D5-B9C1-B9868BC06B91}
-		{CDE72155-7191-45CE-B29A-CB51FABE299F} = {C27955F3-34EA-42D5-B9C1-B9868BC06B91}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {53FA4AAD-674F-41A7-9E5A-13F837F58CEA}
