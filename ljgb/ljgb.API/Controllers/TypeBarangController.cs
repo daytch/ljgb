@@ -1,5 +1,5 @@
 ﻿using ljgb.BusinessLogic;
-using ljgb.DataAccess.Models;
+using ljgb.DataAccess.Model;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;

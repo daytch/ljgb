@@ -1,4 +1,4 @@
-﻿using ljgb.DataAccess.Models;
+﻿using ljgb.DataAccess.Model;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 

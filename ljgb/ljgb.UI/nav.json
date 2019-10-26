@@ -332,6 +332,19 @@
           "title": "Generate Table Style",
           "href": "tables_generate_style.html"
         }
+        
+
+      ]
+    },
+    {
+      "title": "Provinsi",
+      "icon": "fal fa-th-list",
+      "items": [
+        {
+          "title": "List Provinsi",
+          "href": "provinsi_provinsi.cshtml"
+        }
+       
       ]
     },
     {
@@ -822,6 +835,39 @@
           "title": "Timeline",
           "showOnSeed": false,
           "href": "page_timeline.html"
+        }
+      ]
+    },
+    {
+      "title": "App Views",
+      "icon": "fal fa-cogs",
+      "showOnSeed": false,
+      "items": [
+        {
+          "title": "E-commerce",
+          "href": "javascript:void(0);",
+          "items": [
+            {
+              "title": "Orders",
+              "href": "page_ecommerce_orders.html"
+            },
+            {
+              "title": "Products",
+              "href": "page_ecommerce_products.html"
+            },
+            {
+              "title": "Item detail",
+              "href": "page_ecommerce_item_details.html"
+            },
+            {
+              "title": "Add Item",
+              "href": "page_ecommerce_add_item.html"
+            },
+            {
+              "title": "Checkout",
+              "href": "page_ecommerce_checkout.html"
+            }
+          ]
         }
       ]
     },

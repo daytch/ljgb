@@ -1,4 +1,4 @@
-﻿using ljgb.DataAccess.Models;
+﻿using ljgb.DataAccess.Model;
 using ljgb.DataAccess.ViewModel;
 using System;
 using System.Collections.Generic;
@@ -9,14 +9,14 @@ namespace ljgb.DataAccess.Interface
 {
     public interface ITrackLevel
     {
-        Task<List<TrackLevelViewModel>> GetAll();
+        //Task<List<TrackLevelViewModel>> GetAll();
 
-        Task<TrackLevelViewModel> GetPost(long ID);
+        //Task<TrackLevelViewModel> GetPost(long ID);
 
-        Task<long> AddPost(TrackLevel model);
+        //Task<long> AddPost(TrackLevel model);
 
-        Task<long> DeletePost(long ID);
+        //Task<long> DeletePost(long ID);
 
-        Task<bool> UpdatePost(TrackLevel model);
+        //Task<bool> UpdatePost(TrackLevel model);
     }
 }

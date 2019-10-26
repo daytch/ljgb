@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using ljgb.BusinessLogic;
 using ljgb.Common.Requests;
-using ljgb.DataAccess.Models;
+using ljgb.DataAccess.Model;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 

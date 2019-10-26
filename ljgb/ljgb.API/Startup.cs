@@ -1,6 +1,6 @@
 ﻿using ljgb.DataAccess;
 using ljgb.DataAccess.Interface;
-using ljgb.DataAccess.Models;
+using ljgb.DataAccess.Model;
 using ljgb.DataAccess.Repository;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -15,6 +15,7 @@ namespace ljgb.API
 {
     public class Startup
     {
+        readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -30,6 +31,18 @@ namespace ljgb.API
             services.AddDbContext<ApplicationDbContext>(item => item.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddScoped<IWarna, WarnaRepository>();
             services.AddDefaultIdentity<IdentityUser>().AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
+           
+            services.AddCors(options =>
+            {
+                options.AddPolicy(MyAllowSpecificOrigins,
+                builder =>
+                {
+                    builder.WithOrigins("https://localhost:44363",
+                                        "http://localhost:50790")
+                                        .AllowAnyHeader()
+                                        .AllowAnyMethod();
+                });
+            });
 
             // Register the Swagger generator, defining 1 or more Swagger documents
             services.AddSwaggerGen(c =>
@@ -66,6 +79,8 @@ namespace ljgb.API
 
             app.UseHttpsRedirection();
             app.UseMvc();
+            app.UseCors(MyAllowSpecificOrigins);
+
 
         }
     }

@@ -14,5 +14,6 @@ namespace ljgb.UI.Controllers
         // GET
         public IActionResult Basic() => View(_settings);
         public IActionResult GenerateStyle() => View(_settings);
+        
     }
 }

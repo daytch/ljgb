@@ -119,6 +119,7 @@ namespace ljgb.UI
             app.UseMvc(routes =>
             {
                 routes.MapRoute("default", "{controller=Intel}/{action=Introduction}/{id?}");
+                routes.MapRoute("provinsi", "{controller=Provinsi}/{action=AddProvinsi}/{id?}");
             });
 
             app.UseResponseCaching();

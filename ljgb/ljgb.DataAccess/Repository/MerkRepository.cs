@@ -1,5 +1,5 @@
 ﻿using ljgb.DataAccess.Interface;
-using ljgb.DataAccess.Models;
+using ljgb.DataAccess.Model;
 using ljgb.DataAccess.ViewModel;
 using Microsoft.EntityFrameworkCore;
 using System;

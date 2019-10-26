@@ -1,12 +1,12 @@
-﻿using ljgb.DataAccess.Interface;
-using ljgb.DataAccess.Models;
-using Microsoft.EntityFrameworkCore;
+﻿using ljgb.Common.ViewModel;
+using ljgb.DataAccess.Interface;
+using ljgb.DataAccess.Model;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using System.Linq;
-using ljgb.DataAccess.ViewModel;
+using Microsoft.EntityFrameworkCore;
 
 namespace ljgb.DataAccess.Repository
 {
@@ -17,41 +17,14 @@ namespace ljgb.DataAccess.Repository
         {
             db = _db;
         }
-        public async Task<long> AddPost(Barang model)
+        public Task<long> AddPost(Barang model)
         {
-            if (db != null)
-            {
-                await db.Barang.AddAsync(model);
-                await db.SaveChangesAsync();
-
-                return model.Id;
-            }
-
-            return 0;
+            throw new NotImplementedException();
         }
 
-        public async Task<long> DeletePost(long ID)
+        public Task<long> DeletePost(long ID)
         {
-            int result = 0;
-
-            if (db != null)
-            {
-                //Find the warna for specific userprofile
-                var model = await db.Barang.FirstOrDefaultAsync(x => x.Id == ID);
-
-                if (model != null)
-                {
-                    //Delete that warna
-                    model.RowStatus = false;
-                    db.Barang.Update(model);
-
-                    //Commit the transaction
-                    result = await db.SaveChangesAsync();
-                }
-                return result;
-            }
-
-            return result;
+            throw new NotImplementedException();
         }
 
         public async Task<List<BarangViewModel>> GetAll()
@@ -59,74 +32,41 @@ namespace ljgb.DataAccess.Repository
 
             if (db != null)
             {
-                return await (from model in db.Barang
-                              where model.RowStatus == true
-                              select new BarangViewModel
-                              {
-                                  ID = model.Id,
-                                  Name = model.Name,
-                                  HargaOTR = model.HargaOtr,
-                                  PhotoPath = model.PhotoPath,
-                                  TypeBarangID = model.TypeBarangId,
-                                  WarnaID = model.WarnaId,
-                                  Created = model.Created,
-                                  CreadtedBy = model.CreatedBy,
-                                  Modified = model.Modified,
-                                  ModifiedBy = model.ModifiedBy,
-                                  RowStatus = model.RowStatus
-                              }).ToListAsync();
-            }
-
-            return null;
-        }
-
-        public async Task<BarangViewModel> GetPost(long ID)
-        {
-            if (db != null)
-            {
-                return await (from model in db.Barang
-                              where model.Id == ID &&  model.RowStatus == true
-                              select new BarangViewModel
-                              {
-                                  ID = model.Id,
-                                  Name = model.Name,
-                                  HargaOTR = model.HargaOtr,
-                                  PhotoPath = model.PhotoPath,
-                                  TypeBarangID = model.TypeBarangId,
-                                  WarnaID = model.WarnaId,
-                                  Created = model.Created,
-                                  CreadtedBy = model.CreatedBy,
-                                  Modified = model.Modified,
-                                  ModifiedBy = model.ModifiedBy,
-                                  RowStatus = model.RowStatus
-                              }).FirstOrDefaultAsync();
-            }
-
-            return null;
-        }
-
-        public async Task<bool> UpdatePost(Barang model)
-        {
-            bool result = false;
-            if (db != null)
-            {
                 try
                 {
-                    //Delete that warna
-                    db.Barang.Update(model);
+                    return await (from model in db.Barang
+                                  where model.RowStatus == true
+                                  select new BarangViewModel
+                                  {
+                                      Id = model.Id,
+                                      Name = model.Name,
 
-                    //Commit the transaction
-                    await db.SaveChangesAsync();
-                    result = true;
+                                      Created = model.Created,
+                                      CreatedBy = model.CreatedBy,
+                                      Modified = model.Modified,
+                                      ModifiedBy = model.ModifiedBy,
+                                      RowStatus = model.RowStatus
+                                  }).ToListAsync();
                 }
                 catch (Exception ex)
                 {
 
-                    throw ex;
+                    throw;
                 }
-
+               
             }
-            return result;
+
+            return null;
+        }
+
+        public Task<BarangViewModel> GetPost(long ID)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> UpdatePost(Barang model)
+        {
+            throw new NotImplementedException();
         }
     }
 }

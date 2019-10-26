@@ -1,6 +1,6 @@
 ﻿using ljgb.DataAccess.Interface;
 using ljgb.DataAccess.Repository;
-using ljgb.DataAccess.Models;
+using ljgb.DataAccess.Model;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;

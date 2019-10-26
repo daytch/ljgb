@@ -1,5 +1,5 @@
 ﻿using ljgb.DataAccess.Interface;
-using ljgb.DataAccess.Models;
+using ljgb.DataAccess.Model;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;

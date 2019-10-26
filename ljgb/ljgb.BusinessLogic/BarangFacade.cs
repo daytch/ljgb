@@ -1,7 +1,7 @@
-﻿using ljgb.DataAccess.Interface;
-using ljgb.DataAccess.Models;
+﻿using ljgb.Common.ViewModel;
+using ljgb.DataAccess.Interface;
+using ljgb.DataAccess.Model;
 using ljgb.DataAccess.Repository;
-using ljgb.DataAccess.ViewModel;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -92,3 +92,4 @@ namespace ljgb.BusinessLogic
         }
     }
 }
+

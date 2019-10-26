@@ -1,7 +1,7 @@
 ﻿using ljgb.Common.Requests;
 using ljgb.Common.ViewModel;
 using ljgb.DataAccess.Interface;
-using ljgb.DataAccess.Models;
+using ljgb.DataAccess.Model;
 using ljgb.DataAccess.Repository;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;

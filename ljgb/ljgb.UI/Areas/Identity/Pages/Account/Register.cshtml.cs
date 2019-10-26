@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 
+
 namespace ljgb.UI.Areas.Identity.Pages.Account
 {
     [AllowAnonymous]

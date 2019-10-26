@@ -1,4 +1,4 @@
-﻿using ljgb.DataAccess.Models;
+﻿using ljgb.DataAccess.Model;
 using ljgb.Common.ViewModel;
 using System.Collections.Generic;
 using System.Threading.Tasks;

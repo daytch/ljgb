@@ -4,14 +4,14 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using ljgb.UI.Models;
 using System.Threading.Tasks;
-using ljgb.DataAccess.Models;
+using ljgb.DataAccess.Model;
 using Flurl;
 using Flurl.Http;
 using System.Collections.Generic;
 
 namespace ljgb.UI.Controllers
 {
-    [Authorize]
+ 
     public class IntelController : Controller
     {
         private readonly ApplicationSettings _settings;

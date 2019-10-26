@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using ljgb.BusinessLogic;
-using ljgb.DataAccess.Models;
+using ljgb.DataAccess.Model;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ljgb.API.Controllers

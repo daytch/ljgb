@@ -1,4 +1,4 @@
-﻿using ljgb.DataAccess.Models;
+﻿using ljgb.DataAccess.Model;
 using ljgb.DataAccess.ViewModel;
 using System;
 using System.Collections.Generic;

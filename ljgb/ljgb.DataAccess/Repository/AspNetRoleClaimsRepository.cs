@@ -1,4 +1,4 @@
-﻿using ljgb.DataAccess.Models;
+﻿using ljgb.DataAccess.Model;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;

@@ -171,7 +171,9 @@
     "app_views_e-commerce_products": "Products",
     "app_views-e-commerce_item_detail": "Item detail",
     "app_views-e-commerce_add_item": "Add Item",
-    "app_views-e-commerce_checkout": "Checkout"
+    "app_views-e-commerce_checkout": "Checkout",
+    "Provisi": "Provinsi",
+    "Provinsi_List_Provinsi":  "List Provinsi"
   },
   "drpdwn": {
     "reset_layout": "Reset Layout",
