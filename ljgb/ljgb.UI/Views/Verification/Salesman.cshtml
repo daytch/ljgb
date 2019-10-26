@@ -1,0 +1,99 @@
+﻿@{
+    ViewData["Title"] = "Verification Salesman";
+    ViewData["PageName"] = "verification_salesman";
+    ViewData["Category1"] = "Verification Salesman";
+}
+
+@section Header {
+}
+
+@section PageHeading {
+    @*<div class="subheader">
+            <h1 class="subheader-title">
+                <i class="subheader-icon fal fa-window"></i> Panels
+                <small>
+                    Panels can be used in almost any setuation, helping wrap everything in a slick &amp; lightweight container
+                </small>
+            </h1>
+        </div>*@
+}
+
+<div class="row">
+    <div class="col-xl-12">
+        <div id="panel-1" class="panel">
+            <div class="panel-hdr">
+                <h2>
+                    Example <span class="fw-300"><i>Table</i></span>
+                </h2>
+                <div class="panel-toolbar">
+                    <button class="btn btn-panel" data-action="panel-collapse" data-toggle="tooltip" data-offset="0,10" data-original-title="Collapse"></button>
+                    <button class="btn btn-panel" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>
+                    <button class="btn btn-panel" data-action="panel-close" data-toggle="tooltip" data-offset="0,10" data-original-title="Close"></button>
+                </div>
+            </div>
+            <div class="panel-container show">
+                <div class="panel-content">
+                    <!-- datatable start -->
+                    <table id="dt-basic-example" class="table table-bordered table-hover table-striped w-100">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Description</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                    <!-- datatable end -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+    $(document).ready(function () {
+            // initialize datatable
+        var url = "@ViewBag.url_api";
+            $('#dt-basic-example').dataTable(
+                {
+                    language: {
+                        processing: "<div class='overlay custom-loader-background'><i class='fa fa-cog fa-spin custom-loader-color'></i></div>"
+                    },
+                    processing: true,
+                    serverSide: true,
+                    initComplete: function () {
+                        $(this.api().table().container()).find("input").parent().wrap("<form>").parent().attr("autocomplete", "off")
+                    },
+                    ajax: {
+                        url: url + "Warna/GetWarna",
+                        contentType: "application/json",
+                        type: "GET",
+                        dataType: "JSON",
+                        data: function (a) {
+                            return a
+                        },
+                        dataSrc: function (a) {
+                            return a.draw = a.draw, a.recordsTotal = a.recordsTotal, a.recordsFiltered = a.recordsFiltered, a.data = a.data, a.data
+                        }
+                    },
+                    responsive: true,
+                    columns: [{
+                        data: "name",
+                        width: "40%"
+                    },
+                        {
+                        data: "description",
+                        width: "40%"
+                        },
+                        {
+                        mRender: function (a, e, t) {
+                            return '<a class="btn btn-xs green" data-id="' + t.ID + '" data-name="' + t.Name + '" data-register="' + t.RegisterNo + '" data-phone="' + t.Phone + '" data-website="' + t.Website + '" data-mainbusiness="' + t.MainBusiness + '" data-mainbusiness="' + t.MainBusiness + '" data-mainbusiness="' + t.MainBusiness + '" data-address="' + t.Address + '" data-businessdescription="' + t.BusinessDescription + '" data-businessportfolio="' + t.BusinessPortfolio + '" data-businessstrategy="' + t.BusinessStrategy + '" data-businessvalue="' + t.BusinessValue + '" data-logo="' + t.Logo + '" data-mission="' + t.Mission + '" data-vision="' + t.Vision + '" data-vision="' + t.Vision + '" data-toggle="modal" data-target="#myModal"><i class="icon-note"></i></a><a class="btn btn-xs red" data-id="' + t.ID + '" data-toggle="modal" data-target="#ModalConfirm"><i class="icon-trash"></i></a>'
+                        }
+                    }]
+                });
+        });
+
+    </script>
+}

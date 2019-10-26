@@ -331,6 +331,14 @@
         {
           "title": "Generate Table Style",
           "href": "tables_generate_style.html"
+        },
+        {
+          "title": "Verification Salesman",
+          "href": "verification_salesman.html"
+        },
+        {
+          "title": "Verification Customer",
+          "href": "verification_customer.html"
         }
       ]
     },

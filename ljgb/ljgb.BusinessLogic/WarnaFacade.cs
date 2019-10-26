@@ -7,6 +7,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System.IO;
 using ljgb.Common.ViewModel;
+using ljgb.Common.Responses;
+using System.Linq;
+using System;
 
 namespace ljgb.BusinessLogic
 {
@@ -15,6 +18,7 @@ namespace ljgb.BusinessLogic
         #region Important
         private ljgbContext db;
         private IWarna dep;
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         public WarnaFacade()
         {
@@ -32,15 +36,78 @@ namespace ljgb.BusinessLogic
             this.dep = new WarnaRepository(db);
         }
         #endregion
-        
-        public async Task<List<Warna>> GetCategories()
+
+        private static WarnaResponse SortByColumnWithOrder(string order, string orderDir, WarnaResponse resp)
         {
-            var categories = await dep.GetWarna();
-            if (categories == null)
+            try
             {
-                return null;
+                // Sorting    
+                switch (order)
+                {
+                    case "0":
+                        // Setting.    
+                        resp.data = orderDir.Equals("DESC", StringComparison.CurrentCultureIgnoreCase) ? resp.data.OrderByDescending(p => p.Name).ToList()
+                                                             : resp.data.OrderBy(p => p.Name).ToList();
+                        break;
+                    case "1":
+                        // Setting.    
+                        resp.data = orderDir.Equals("DESC", StringComparison.CurrentCultureIgnoreCase) ? resp.data.OrderByDescending(p => p.Description).ToList()
+                                                             : resp.data.OrderBy(p => p.Description).ToList();
+                        break;
+
+                    default:
+                        // Setting.    
+                        resp.data = resp.data.OrderByDescending(p => p.Id).ToList();
+                        break;
+                }
             }
-            return categories;
+            catch (Exception ex)
+            {
+                log.Error("CompanyFacade.SortByColumnWithOrder :" + ex.ToString());
+            }
+            // info.    
+            return resp;
+        }
+
+        public async Task<WarnaResponse> GetCategories(string search, string order, string orderDir, int startRec, int pageSize, int draw)
+        {
+            WarnaResponse resp = new WarnaResponse();
+            List<Warna> Listwarna = await dep.GetWarna();
+            resp.data = Listwarna.Select(x => new WarnaViewModel()
+            {
+                Id = x.Id,
+                Name = x.Name,
+                Description = x.Description,
+                Created = x.Created,
+                CreatedBy = x.CreatedBy,
+                Modified = x.Modified,
+                ModifiedBy = x.ModifiedBy,
+                RowStatus = x.RowStatus
+            }).ToList();
+            // Total record count.    
+            int totalRecords = resp.data.Count;
+            // Verification.    
+            if (!string.IsNullOrEmpty(search) && !string.IsNullOrWhiteSpace(search))
+            {
+                // Apply search    
+                resp.data = resp.data.Where(p => p.Name.ToString().ToLower().Contains(search.ToLower()) ||
+                            p.Description.ToLower().Contains(search.ToLower())).ToList();
+            }
+            // Sorting.    
+            resp = SortByColumnWithOrder(order, orderDir, resp);
+            // Filter record count.    
+            int recFilter = resp.data.Count;
+
+            resp.data = resp.data.Skip(startRec).Take(pageSize).ToList();
+
+            resp.draw = Convert.ToInt32(draw);
+            resp.recordsTotal = totalRecords;
+            resp.recordsFiltered = recFilter;
+            //if (categories == null)
+            //{
+            //    return null;
+            //}
+            return resp;
         }
 
         public async Task<List<WarnaViewModel>> GetPosts()

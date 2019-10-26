@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using ljgb.API.Core;
 using ljgb.BusinessLogic;
 using ljgb.DataAccess.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -13,11 +14,17 @@ namespace ljgb.API.Controllers
         private WarnaFacade facade = new WarnaFacade();
         [HttpGet]
         [Route("GetWarna")]
-        public async Task<IActionResult> GetCategories()
+        public async Task<IActionResult> GetCategories([FromQuery]DatatablesQuery query)
         {
             try
             {
-                var categories = await facade.GetCategories();
+                string search = HttpContext.Request.Query["search[value]"].ToString();
+                int draw = Convert.ToInt32(HttpContext.Request.Query["draw"]);
+                string order = HttpContext.Request.Query["order[0][column]"];
+                string orderDir = HttpContext.Request.Query["order[0][dir]"];
+                int startRec = Convert.ToInt32(HttpContext.Request.Query["start"]);
+                int pageSize = Convert.ToInt32(HttpContext.Request.Query["length"]);
+                var categories = await facade.GetCategories(search, order, orderDir, startRec, pageSize, draw);
                 if (categories == null)
                 {
                     return NotFound();
