@@ -39,7 +39,8 @@ namespace ljgb.UI.Controllers
             if (ModelState.IsValid)
             {
                 string url_api = base_url_api + "Provinsi/GetAll";
-             
+                ViewBag.url_api = base_url_api;
+
 
                 try
                 {
@@ -60,7 +61,7 @@ namespace ljgb.UI.Controllers
                     var a = ex;//(ex.Message);
                 }
             }
-
+             
             return View(_settings);
         }
 

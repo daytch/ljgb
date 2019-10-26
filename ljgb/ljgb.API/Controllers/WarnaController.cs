@@ -14,29 +14,29 @@ namespace ljgb.API.Controllers
         private WarnaFacade facade = new WarnaFacade();
         [HttpGet]
         [Route("GetWarna")]
-        public async Task<IActionResult> GetCategories([FromQuery]DatatablesQuery query)
-        {
-            try
-            {
-                string search = HttpContext.Request.Query["search[value]"].ToString();
-                int draw = Convert.ToInt32(HttpContext.Request.Query["draw"]);
-                string order = HttpContext.Request.Query["order[0][column]"];
-                string orderDir = HttpContext.Request.Query["order[0][dir]"];
-                int startRec = Convert.ToInt32(HttpContext.Request.Query["start"]);
-                int pageSize = Convert.ToInt32(HttpContext.Request.Query["length"]);
-                var categories = await facade.GetCategories(search, order, orderDir, startRec, pageSize, draw);
-                if (categories == null)
-                {
-                    return NotFound();
-                }
+        //public async Task<IActionResult> GetCategories([FromQuery]DatatablesQuery query)
+        //{
+        //    try
+        //    {
+        //        string search = HttpContext.Request.Query["search[value]"].ToString();
+        //        int draw = Convert.ToInt32(HttpContext.Request.Query["draw"]);
+        //        string order = HttpContext.Request.Query["order[0][column]"];
+        //        string orderDir = HttpContext.Request.Query["order[0][dir]"];
+        //        int startRec = Convert.ToInt32(HttpContext.Request.Query["start"]);
+        //        int pageSize = Convert.ToInt32(HttpContext.Request.Query["length"]);
+        //        var categories = await facade.GetCategories(search, order, orderDir, startRec, pageSize, draw);
+        //        if (categories == null)
+        //        {
+        //            return NotFound();
+        //        }
 
-                return Ok(categories);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex);
-            }
-        }
+        //        return Ok(categories);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return BadRequest(ex);
+        //    }
+        //}
 
         [HttpGet]
         [Route("GetPosts")]

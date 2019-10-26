@@ -3,13 +3,10 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using ljgb.BusinessLogic;
 using ljgb.Common.Requests;
-<<<<<<< HEAD
 using ljgb.DataAccess.Model;
-=======
 using ljgb.Common.Responses;
-using ljgb.DataAccess.Models;
+using ljgb.DataAccess.Model;
 using Microsoft.AspNetCore.Authentication;
->>>>>>> f89dd6539dea93c06df658947be6bb586b41c240
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;

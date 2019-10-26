@@ -1,10 +1,6 @@
 ﻿using ljgb.DataAccess.Interface;
-<<<<<<< HEAD
 using ljgb.DataAccess.Model;
-=======
-using ljgb.DataAccess.Models;
 using ljgb.DataAccess.Repository;
->>>>>>> f89dd6539dea93c06df658947be6bb586b41c240
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;

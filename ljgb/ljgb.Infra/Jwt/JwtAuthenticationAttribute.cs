@@ -26,7 +26,7 @@ namespace ljgb.Infra.Jwt
             else
             {
                 var controllerRef = actionContext.ControllerContext.Controller as WebApi.BaseApiController;
-                controllerRef.userSession = Session.SessionManager.UserSession;
+                //controllerRef.userSession = Session.SessionManager.UserSession;
                 //controllerRef.dataContext = new DataAccess.DataContext(controllerRef.userSession.AppUserId);
                 base.OnAuthorization(actionContext);
             }
@@ -44,7 +44,7 @@ namespace ljgb.Infra.Jwt
 
                 if (string.IsNullOrEmpty(authHeader))
                 {
-                    authHeader = HttpContext.Current.Request.QueryString["x-Token"].ToString();
+                    //authHeader = HttpContext.Current.Request.QueryString["x-Token"].ToString();
                 }
 
                 if (string.IsNullOrEmpty(authHeader)) throw new ArgumentNullException("Invalid Token");

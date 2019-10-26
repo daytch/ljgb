@@ -44,13 +44,11 @@ namespace ljgb.DataAccess.Model
         {
             if (!optionsBuilder.IsConfigured)
             {
-<<<<<<< HEAD:ljgb/ljgb.DataAccess/Model/ljgbContext.cs
+
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
                 optionsBuilder.UseSqlServer("Server=GONNA-BE-GOOD\\SQLEXPRESS;Database=ljgb;Trusted_Connection=True;");
-=======
-// #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Server=localhost\\SQLEXPRESS;Database=ljgb;uid=sa;password=Mapan1326;Trusted_Connection=True;");
->>>>>>> f89dd6539dea93c06df658947be6bb586b41c240:ljgb/ljgb.DataAccess/Models/ljgbContext.cs
+
+
             }
         }
 

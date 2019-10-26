@@ -20,10 +20,11 @@ namespace ljgb.API
 {
     public class Startup
     {
-        readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+      
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+
         }
 
         public IConfiguration Configuration { get; }
@@ -35,28 +36,17 @@ namespace ljgb.API
 
             services.AddDbContext<ApplicationDbContext>(item => item.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddScoped<IWarna, WarnaRepository>();
-<<<<<<< HEAD
+
             services.AddDefaultIdentity<IdentityUser>().AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
-           
-            services.AddCors(options =>
-            {
-                options.AddPolicy(MyAllowSpecificOrigins,
-                builder =>
-                {
-                    builder.WithOrigins("https://localhost:44363",
-                                        "http://localhost:50790")
-                                        .AllowAnyHeader()
-                                        .AllowAnyMethod();
-                });
-            });
-=======
+
+
             //services.AddDefaultIdentity<IdentityUser>().AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
 
 
             // ===== Add Identity ========
-            services.AddIdentity<IdentityUser, IdentityRole>()
-                .AddEntityFrameworkStores<ApplicationDbContext>()
-                .AddDefaultTokenProviders();
+            //services.AddIdentity<IdentityUser, IdentityRole>()
+            //    .AddEntityFrameworkStores<ApplicationDbContext>()
+            //    .AddDefaultTokenProviders();
 
             // ===== Add Jwt Authentication ========
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear(); // => remove default claims
@@ -80,7 +70,6 @@ namespace ljgb.API
                 });
 
             services.AddSingleton<IConfiguration>(Configuration);
->>>>>>> f89dd6539dea93c06df658947be6bb586b41c240
 
             // Register the Swagger generator, defining 1 or more Swagger documents
             services.AddSwaggerGen(c =>
@@ -89,6 +78,7 @@ namespace ljgb.API
 
             });
             services.AddMvc().AddJsonOptions(ConfigureJson);
+            
         }
 
         private void ConfigureJson(MvcJsonOptions obj)
@@ -124,7 +114,7 @@ namespace ljgb.API
             app.UseAuthentication();
             app.UseHttpsRedirection();
             app.UseMvc();
-            app.UseCors(MyAllowSpecificOrigins);
+           
 
 
         }

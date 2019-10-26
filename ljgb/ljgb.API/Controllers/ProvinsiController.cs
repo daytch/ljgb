@@ -1,6 +1,5 @@
 ﻿using ljgb.BusinessLogic;
 using ljgb.Common.Requests;
-using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -11,7 +10,6 @@ namespace ljgb.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [EnableCors]
     public class ProvinsiController :ControllerBase
     {
         private ProvinsiFacade facade = new ProvinsiFacade();
