@@ -5,7 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+<<<<<<< HEAD
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.2.0" />
+=======
+    <PackageReference Include="log4net" Version="2.0.8" />
+>>>>>>> f89dd6539dea93c06df658947be6bb586b41c240
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.2.0" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.6.0" />

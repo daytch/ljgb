@@ -4,11 +4,12 @@ using ljgb.Common.ViewModel;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using System.Linq;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using ljgb.Common.Requests;
+using Microsoft.AspNetCore.Authentication;
 
 namespace ljgb.DataAccess.Repository
 {
@@ -16,10 +17,14 @@ namespace ljgb.DataAccess.Repository
     {
         ljgbContext db;
         private readonly UserManager<IdentityUser> userManager;
-        public UserProfileRepository(ljgbContext _db, UserManager<IdentityUser> _userManager)
+        private readonly IEmailSender emailSender;
+        private readonly SignInManager<IdentityUser> signInManager;
+        public UserProfileRepository(ljgbContext _db, UserManager<IdentityUser> _userManager, IEmailSender _emailSender, SignInManager<IdentityUser> _signInManager)
         {
             db = _db;
             userManager = _userManager;
+            emailSender = _emailSender;
+            signInManager = _signInManager;
         }
 
         public async Task<List<UserProfile>> GetUserProfiles()
@@ -155,6 +160,81 @@ namespace ljgb.DataAccess.Repository
             try
             {
                 result = await userManager.CreateAsync(user.user, user.password);
+                //await userManager.UpdateSecurityStampAsync(user.user);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
+        }
+
+        public async Task<string> GenerateEmailConfirmationToken(UserRequest user)
+        {
+            string result = string.Empty;
+            try
+            {
+                result = await userManager.GenerateEmailConfirmationTokenAsync(user.user);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
+        }
+
+        public async Task<bool> SendConfirmationEmail(UserRequest user)
+        {
+            bool result = true;
+            try
+            {
+                // _emailSender.SendEmailAsync
+                await emailSender.SendEmailAsync(user.user.Email, user.EmailSubject, user.HTMLTag);
+            }
+            catch (Exception ex)
+            {
+                result = false;
+                throw ex;
+            }
+            return result;
+        }
+
+        public async Task<bool> SignIn(UserRequest user)
+        {
+            bool result = true;
+            try
+            {
+                user.user.SecurityStamp = Guid.NewGuid().ToString();
+                await signInManager.SignInAsync(user.user, false);
+            }
+            catch (Exception ex)
+            {
+                result = false;
+                throw ex;
+            }
+            return result;
+        }
+        
+        public async Task<IEnumerable<AuthenticationScheme>> GetExternalAuthenticationSchemes()
+        {
+            IEnumerable<AuthenticationScheme> result;
+            try
+            {
+                result = await signInManager.GetExternalAuthenticationSchemesAsync();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
+        }
+
+        public async Task<SignInResult> PasswordSignIn(UserRequest user)
+        {
+            SignInResult result = new SignInResult();
+            try
+            {
+                result = await signInManager.PasswordSignInAsync(user.user.Email, user.password, user.RememberMe, user.lockoutOnFailure);
             }
             catch (Exception ex)
             {

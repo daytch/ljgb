@@ -1,9 +1,17 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using ljgb.BusinessLogic;
 using ljgb.Common.Requests;
+<<<<<<< HEAD
 using ljgb.DataAccess.Model;
+=======
+using ljgb.Common.Responses;
+using ljgb.DataAccess.Models;
+using Microsoft.AspNetCore.Authentication;
+>>>>>>> f89dd6539dea93c06df658947be6bb586b41c240
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ljgb.API.Controllers
@@ -14,10 +22,14 @@ namespace ljgb.API.Controllers
     {
         private readonly UserManager<IdentityUser> userManager;
         private readonly UserFacade facade;
-        public UserController(UserManager<IdentityUser> _userManager)
+        private readonly IEmailSender emailSender;
+        private readonly SignInManager<IdentityUser> signInManager;
+        public UserController(UserManager<IdentityUser> _userManager, IEmailSender _emailSender, SignInManager<IdentityUser> _signInManager)
         {
             userManager = _userManager;
-            facade = new UserFacade(userManager);
+            emailSender = _emailSender;
+            signInManager = _signInManager;
+            facade = new UserFacade(userManager, emailSender, signInManager);
         }
 
         [HttpPost]
@@ -170,10 +182,114 @@ namespace ljgb.API.Controllers
 
         [HttpPost]
         [Route("Register")]
-        public async Task<IdentityResult> Register([FromBody]UserRequest model)
+        public async Task<RegisterResponse> Register([FromBody]UserRequest model)
         {
             //return await userManager.CreateAsync(model.user, model.password);
-            return await facade.Register(model);
+            IdentityResult result = new IdentityResult();
+            RegisterResponse resp = new RegisterResponse();
+            try
+            {
+                result = await facade.Register(model);
+                resp = new RegisterResponse()
+                {
+                    Succeeded = result.Succeeded,
+                    Errors = result.Errors
+                };
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return resp;
+            //return await facade.Register(model);
         }
+
+        [HttpPost]
+        [Route("GenerateEmailConfirmationToken")]
+        public async Task<string> GenerateEmailConfirmationToken([FromBody]UserRequest model)
+        {
+            string result = string.Empty;
+            try
+            {
+                result = await facade.GenerateEmailConfirmationToken(model);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
+        }
+
+        [HttpPost]
+        [Route("SendConfirmationEmail")]
+        public async Task<bool> SendConfirmationEmail([FromBody]UserRequest model)
+        {
+            bool result = false;
+            try
+            {
+                result = await facade.SendConfirmationEmail(model);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
+        }
+
+        [HttpPost]
+        [Route("SignIn")]
+        public async Task<bool> SignIn([FromBody]UserRequest model)
+        {
+            bool result = false;
+            try
+            {
+                result = await facade.SignIn(model);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
+        }
+
+        [HttpGet]
+        [Route("GetExternalAuthenticationSchemes")]
+        public async Task<IEnumerable<AuthenticationScheme>> GetExternalAuthenticationSchemes()
+        {
+            IEnumerable<AuthenticationScheme> result;
+            try
+            {
+                result = await facade.GetExternalAuthenticationSchemes();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
+        }
+
+        [HttpPost]
+        [Route("PasswordSignIn")]
+        public async Task<SignInResponse> PasswordSignIn([FromBody]UserRequest user)
+        {
+            SignInResponse result = new SignInResponse();
+            try
+            {
+                //Microsoft.AspNetCore.Identity.SignInResult res = await facade.PasswordSignIn(model);
+                var res = await signInManager.PasswordSignInAsync(user.user.Email, user.password, user.RememberMe, user.lockoutOnFailure);
+                result = new SignInResponse()
+                {
+                    Succeeded = res.Succeeded,
+                    IsLockedOut = res.IsLockedOut,
+                    IsNotAllowed = res.RequiresTwoFactor
+                };
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return result;
+        }
+
     }
 }

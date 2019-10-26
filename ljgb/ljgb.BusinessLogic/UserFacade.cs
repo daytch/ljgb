@@ -3,7 +3,9 @@ using ljgb.Common.ViewModel;
 using ljgb.DataAccess.Interface;
 using ljgb.DataAccess.Model;
 using ljgb.DataAccess.Repository;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -18,9 +20,11 @@ namespace ljgb.BusinessLogic
         #region Important
         private ljgbContext db;
         private IUser dep;
-        private UserManager<IdentityUser> userManager;
+        private readonly UserManager<IdentityUser> userManager;
+        private readonly IEmailSender emailSender;
+        private readonly SignInManager<IdentityUser> signInManager;
 
-        public UserFacade(UserManager<IdentityUser> _userManager)
+        public UserFacade(UserManager<IdentityUser> _userManager, IEmailSender _emailSender, SignInManager<IdentityUser> _signInManager)
         {
             var builder = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
@@ -32,9 +36,11 @@ namespace ljgb.BusinessLogic
             var optionsBuilder = new DbContextOptionsBuilder<ljgbContext>();
             optionsBuilder.UseSqlServer(connectionString);
             userManager = _userManager;
+            emailSender = _emailSender;
+            signInManager = _signInManager;
 
             db = new ljgbContext(optionsBuilder.Options);
-            dep = new UserProfileRepository(db, userManager);
+            dep = new UserProfileRepository(db, userManager, emailSender, signInManager);
         }
         #endregion
 
@@ -105,6 +111,81 @@ namespace ljgb.BusinessLogic
             try
             {
                 result = await dep.Register(model);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return result;
+        }
+
+        public async Task<string> GenerateEmailConfirmationToken(UserRequest model)
+        {
+            string result = string.Empty;
+            try
+            {
+                result = await dep.GenerateEmailConfirmationToken(model);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return result;
+        }
+
+        public async Task<bool> SendConfirmationEmail(UserRequest model)
+        {
+            bool result = true;
+            try
+            {
+                result = await dep.SendConfirmationEmail(model);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return result;
+        }
+
+        public async Task<bool> SignIn(UserRequest model)
+        {
+            bool result = true;
+            try
+            {
+                result = await dep.SignIn(model);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return result;
+        }
+
+        public async Task<IEnumerable<AuthenticationScheme>> GetExternalAuthenticationSchemes()
+        {
+            IEnumerable<AuthenticationScheme> result;
+            try
+            {
+                result = await dep.GetExternalAuthenticationSchemes();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return result;
+        }
+
+        public async Task<SignInResult> PasswordSignIn(UserRequest model)
+        {
+            SignInResult result = new SignInResult();
+            try
+            {
+                result = await dep.PasswordSignIn(model);
             }
             catch (Exception ex)
             {
