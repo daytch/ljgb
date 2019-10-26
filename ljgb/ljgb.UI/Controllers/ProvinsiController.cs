@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text.Encodings.Web;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Flurl.Http;
 using ljgb.Common.Requests;
 using ljgb.Common.Responses;
-using ljgb.UI.Areas.Identity.Pages.Account;
 using ljgb.UI.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
@@ -20,9 +15,9 @@ namespace ljgb.UI.Controllers
     public class ProvinsiController : Controller
     {
         private readonly ApplicationSettings _settings;
-        private readonly ILogger<RegisterModel> _logger;
-        private readonly IEmailSender _emailSender;
-        private readonly SignInManager<IdentityUser> _signInManager;
+        //private readonly ILogger<RegisterModel> _logger;
+        //private readonly IEmailSender _emailSender;
+        //private readonly SignInManager<IdentityUser> _signInManager;
         public string returnUrl { get; set; }
         private readonly UserManager<IdentityUser> _userManager;
         [BindProperty] public InputModel Input { get; set; }
