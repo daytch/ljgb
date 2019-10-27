@@ -3,14 +3,10 @@ using System.Collections.Generic;
 
 namespace ljgb.DataAccess.Model
 {
-    public partial class Provinsi
+    public partial class Kota
     {
-        public Provinsi()
-        {
-            Kota = new HashSet<Kota>();
-        }
-
         public long Id { get; set; }
+        public long ProvinsiId { get; set; }
         public string Nama { get; set; }
         public string Description { get; set; }
         public DateTime Created { get; set; }
@@ -19,6 +15,6 @@ namespace ljgb.DataAccess.Model
         public string ModifiedBy { get; set; }
         public bool RowStatus { get; set; }
 
-        public virtual ICollection<Kota> Kota { get; set; }
+        public virtual Provinsi Provinsi { get; set; }
     }
 }

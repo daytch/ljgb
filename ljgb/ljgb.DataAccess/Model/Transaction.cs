@@ -18,7 +18,6 @@ namespace ljgb.DataAccess.Model
 
         public virtual UserProfile Buyer { get; set; }
         public virtual NegoBarang NegoBarang { get; set; }
-        public virtual UserProfile Seller { get; set; }
         public virtual TransactionLevel TransactionLevel { get; set; }
     }
 }

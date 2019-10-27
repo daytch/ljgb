@@ -1,7 +1,7 @@
 ﻿using ljgb.DataAccess;
 using ljgb.DataAccess.Interface;
 using ljgb.DataAccess.Model;
-using ljgb.DataAccess.Repository;
+//using ljgb.DataAccess.Repository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -20,10 +20,7 @@ namespace ljgb.API
 {
     public class Startup
     {
-<<<<<<< HEAD
-      
-=======
->>>>>>> 1a515106f23e88b2898d686e47b763df5a882d52
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -38,16 +35,13 @@ namespace ljgb.API
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             services.AddDbContext<ApplicationDbContext>(item => item.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-            services.AddScoped<IWarna, WarnaRepository>();
-<<<<<<< HEAD
+            //services.AddScoped<IWarna, WarnaRepository>();
+
 
             services.AddDefaultIdentity<IdentityUser>().AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
 
 
-            //services.AddDefaultIdentity<IdentityUser>().AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
 
-=======
->>>>>>> 1a515106f23e88b2898d686e47b763df5a882d52
 
             // ===== Add Identity ========
             //services.AddIdentity<IdentityUser, IdentityRole>()
@@ -120,12 +114,7 @@ namespace ljgb.API
             app.UseAuthentication();
             app.UseHttpsRedirection();
             app.UseMvc();
-<<<<<<< HEAD
-           
 
-
-=======
->>>>>>> 1a515106f23e88b2898d686e47b763df5a882d52
         }
     }
 }

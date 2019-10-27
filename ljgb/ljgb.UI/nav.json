@@ -340,7 +340,7 @@
           "title": "Verification Customer",
           "href": "verification_customer.html"
         }
-        
+
 
       ]
     },
@@ -352,7 +352,29 @@
           "title": "List Provinsi",
           "href": "provinsi_provinsi.cshtml"
         }
-       
+
+      ]
+    },
+    {
+      "title": "Kota",
+      "icon": "fal fa-th-list",
+      "items": [
+        {
+          "title": "List Kota",
+          "href": "Kota_Kota.cshtml"
+        }
+
+      ]
+    },
+    {
+      "title": "Transaksi",
+      "icon": "fal fa-th-list",
+      "items": [
+        {
+          "title": "Daftar Transaksi",
+          "href": "Transaksi_Transaksi.cshtml"
+        }
+
       ]
     },
     {

@@ -15,12 +15,7 @@ namespace ljgb.UI.Controllers
     public class ProvinsiController : Controller
     {
         private readonly ApplicationSettings _settings;
-        //private readonly ILogger<RegisterModel> _logger;
-        //private readonly IEmailSender _emailSender;
-        //private readonly SignInManager<IdentityUser> _signInManager;
         public string returnUrl { get; set; }
-        private readonly UserManager<IdentityUser> _userManager;
-        [BindProperty] public InputModel Input { get; set; }
         private static string base_url_api;
         public ProvinsiController(IOptions<ApplicationSettings> settings, ConfigOptions _urlapi)
         {
@@ -60,11 +55,44 @@ namespace ljgb.UI.Controllers
             return View(_settings);
         }
 
-        public async Task<IActionResult> AddProvinsi([FromBody] ProvinsiRequest request)
+        public async Task<IActionResult> CreateProvinsi(int request)
         {
 
             return View(_settings);
 
+        }
+
+        public async Task<IActionResult> Details(int id)
+        {
+            returnUrl = returnUrl ?? Url.Content("~/");
+            ProvinsiRequest request = new ProvinsiRequest();
+            request.ID = id;
+            if (ModelState.IsValid)
+            {
+                string url_api = base_url_api + "Provinsi/GetModelWithID";
+                ViewBag.url_api = base_url_api;
+
+
+                try
+                {
+                    var result = await url_api.PostJsonAsync(request).ReceiveJson<ProvinsiResponse>();
+                    ViewData["DetailResponse"] = result;
+                }
+                catch (FlurlHttpTimeoutException ext)
+                {
+                    // FlurlHttpTimeoutException derives from FlurlHttpException; catch here only
+                    // if you want to handle timeouts as a special case
+                    // Console.log("Request timed out.");
+                    var b = ext;
+                }
+                catch (FlurlHttpException ex)
+                {
+                    // ex.Message contains rich details, inclulding the URL, verb, response status,
+                    // and request and response bodies (if available)
+                    var a = ex;//(ex.Message);
+                }
+            }
+            return PartialView(2);
         }
 
         private async void Load()

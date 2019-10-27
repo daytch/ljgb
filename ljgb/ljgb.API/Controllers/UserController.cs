@@ -3,10 +3,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using ljgb.BusinessLogic;
 using ljgb.Common.Requests;
-<<<<<<< HEAD
-using ljgb.DataAccess.Model;
-=======
->>>>>>> 1a515106f23e88b2898d686e47b763df5a882d52
 using ljgb.Common.Responses;
 using ljgb.DataAccess.Model;
 using Microsoft.AspNetCore.Authentication;
