@@ -103,10 +103,7 @@ namespace ljgb.BusinessLogic
             resp.draw = Convert.ToInt32(draw);
             resp.recordsTotal = totalRecords;
             resp.recordsFiltered = recFilter;
-            //if (categories == null)
-            //{
-            //    return null;
-            //}
+
             return resp;
         }
 

@@ -6,11 +6,11 @@ namespace ljgb.DataAccess.Model
     public partial class vw_buyer
     {
         public long ID { get; set; }
-        public long DetailID { get; set; }
+        public int DetailID { get; set; }
         public string Nama { get; set; }
         public string Email { get; set; }
         public string Telp { get; set; }
-        public DateTime VerifiedDate { get; set; }
+        public Nullable<DateTime> VerifiedDate { get; set; }
         public string VerifiedBy { get; set; }
     }
 }

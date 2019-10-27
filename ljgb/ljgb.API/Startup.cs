@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -70,6 +71,7 @@ namespace ljgb.API
 
             });
             services.AddMvc().AddJsonOptions(ConfigureJson);
+            services.AddSingleton<IEmailSender, EmailSender>();
         }
 
         private void ConfigureJson(MvcJsonOptions obj)

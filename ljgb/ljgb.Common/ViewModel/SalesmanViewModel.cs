@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 
-namespace ljgb.DataAccess.Model
+namespace ljgb.Common.ViewModel
 {
-    public partial class vw_salesman
+    public class SalesmanViewModel
     {
         public Int64 ID { get; set; }
         public int DetailID { get; set; }

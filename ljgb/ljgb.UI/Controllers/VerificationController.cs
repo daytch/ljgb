@@ -20,6 +20,10 @@ namespace ljgb.UI.Controllers
             ViewBag.url_api = _config.base_api_url;
             return View(_settings);
         }
-        public IActionResult Customer() => View(_settings);
+        public IActionResult Customer()
+        {
+            ViewBag.url_api = _config.base_api_url;
+            return View(_settings);
+        }
     }
 }

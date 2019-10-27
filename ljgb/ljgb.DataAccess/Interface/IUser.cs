@@ -11,11 +11,18 @@ namespace ljgb.DataAccess.Interface
     public interface IUser
     {
         Task<List<UserProfile>> GetUserProfiles();
+
         Task<List<vw_salesman>> GetSalesman();
+
+        Task<List<vw_buyer>> GetBuyer();
 
         Task<List<UserProfileViewModel>> GetPosts();
 
         Task<UserProfileViewModel> GetPost(long postId);
+
+        Task<UserDetail> SelectUserDetail(long id);
+        
+        Task<bool> SaveUserDetail(UserDetail userProfile);
 
         Task<long> AddPost(UserProfile userProfile);
 
