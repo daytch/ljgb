@@ -37,6 +37,16 @@ namespace ljgb.DataAccess.Repository
             return null;
         }
 
+        public async Task<List<vw_salesman>> GetSalesman()
+        {
+            if (db != null)
+            {
+                return await db.vw_salesman.ToListAsync();
+            }
+
+            return null;
+        }
+
         public async Task<List<UserProfileViewModel>> GetPosts()
         {
             if (db != null)

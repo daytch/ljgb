@@ -1,4 +1,4 @@
-﻿using ljgb.DataAccess.Interface;
+﻿//using ljgb.DataAccess.Interface;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -29,7 +29,7 @@ namespace ljgb.DataAccess
             services.AddDefaultIdentity<IdentityUser>().AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
 
             // Get Service and call method
-            var service = serviceProvider.GetService<IUser>();
+            //var service = serviceProvider.GetService<IUser>();
         }
     }
 }

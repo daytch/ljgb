@@ -49,6 +49,26 @@ namespace ljgb.API.Controllers
         }
 
         [HttpPost]
+        [Route("GetSalesman")]
+        public async Task<IActionResult> GetAllSalesman()
+        {
+            try
+            {
+                var salesman = await facade.GetAllSalesman();
+                if (salesman == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(salesman);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+
+        [HttpPost]
         [Route("GetPosts")]
         public async Task<IActionResult> GetPosts()
         {

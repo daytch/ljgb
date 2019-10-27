@@ -7,6 +7,7 @@ namespace ljgb.DataAccess.Model
     {
         public Barang()
         {
+            HargaSalesman = new HashSet<HargaSalesman>();
             NegoBarang = new HashSet<NegoBarang>();
         }
 
@@ -25,6 +26,7 @@ namespace ljgb.DataAccess.Model
 
         public virtual TypeBarang TypeBarang { get; set; }
         public virtual Warna Warna { get; set; }
+        public virtual ICollection<HargaSalesman> HargaSalesman { get; set; }
         public virtual ICollection<NegoBarang> NegoBarang { get; set; }
     }
 }

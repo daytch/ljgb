@@ -1,5 +1,5 @@
-﻿using ljgb.DataAccess.Interface;
-using ljgb.DataAccess.Repository;
+﻿//using ljgb.DataAccess.Interface;
+//using ljgb.DataAccess.Repository;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -52,7 +52,7 @@ namespace ljgb.DataAccess
                 options.AccessDeniedPath = "/Identity/Account/AccessDenied";
             });
 
-            services.AddSingleton<IEmailSender, EmailSender>();
+            //services.AddSingleton<IEmailSender, EmailSender>();
             services.AddLogging();
             services.AddSingleton<IConfigurationRoot>(Configuration);
         }

@@ -54,6 +54,16 @@ namespace ljgb.BusinessLogic
             return categories;
         }
 
+        public async Task<List<vw_salesman>> GetAllSalesman()
+        {
+            var salesman = await dep.GetUserProfiles();
+            if (salesman == null)
+            {
+                return null;
+            }
+            return salesman;
+        }
+
         public async Task<List<UserProfileViewModel>> GetPosts()
         {
             var posts = await dep.GetPosts();

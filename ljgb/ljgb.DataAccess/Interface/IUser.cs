@@ -11,6 +11,7 @@ namespace ljgb.DataAccess.Interface
     public interface IUser
     {
         Task<List<UserProfile>> GetUserProfiles();
+        Task<List<vw_salesman>> GetSalesman();
 
         Task<List<UserProfileViewModel>> GetPosts();
 

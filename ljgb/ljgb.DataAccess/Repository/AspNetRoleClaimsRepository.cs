@@ -21,7 +21,7 @@ namespace ljgb.DataAccess.Repository
         {
             if (db != null)
             {
-                await db.AspNetRoleClaims.AddAsync(model);
+                //await db.AspNetRoleClaims.AddAsync(model);
                 await db.SaveChangesAsync();
 
                 return model.Id;
@@ -37,13 +37,13 @@ namespace ljgb.DataAccess.Repository
             if (db != null)
             {
                 //Find the warna for specific userprofile
-                var model = await db.AspNetRoleClaims.FirstOrDefaultAsync(x => x.Id == ID);
+                //var model = await db.AspNetRoleClaims.FirstOrDefaultAsync(x => x.Id == ID);
 
-                if (model != null)
+                if (true)//(model != null)
                 {
                     //Delete that warna
                  
-                    db.AspNetRoleClaims.Remove(model);
+                    //db.AspNetRoleClaims.Remove(model);
 
                     //Commit the transaction
                     result = await db.SaveChangesAsync();
@@ -60,7 +60,7 @@ namespace ljgb.DataAccess.Repository
             if (db != null)
             {
                 return await (from model in db.AspNetRoleClaims
-                              
+
                               select new AspNetRoleClaimsViewModel
                               {
                                   ID = model.Id,
