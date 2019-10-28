@@ -34,11 +34,14 @@
             <div class="panel-container show">
                 <div class="panel-content">
                     <!-- datatable start -->
-                    <table id="dt-basic-example" class="table table-bordered table-hover table-striped w-100">
+                    <table id="tableSalesman" class="table table-bordered table-hover table-striped w-100">
                         <thead>
                             <tr>
                                 <th>Name</th>
-                                <th>Description</th>
+                                <th>Email</th>
+                                <th>Telp</th>
+                                <th>Verified Date</th>
+                                <th>Verified By</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -51,53 +54,255 @@
     </div>
 </div>
 
+<!-- Modal Edit -->
+<div class="modal fade" id="ModalEdit" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    Verification Salesman
+                    <small class="m-0 text-muted">
+                        Salesman
+                    </small>
+                </h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"><i class="fal fa-times"></i></span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <label for="Nama">Nama</label>
+                        </div>
+                        <div class="col-md-8">
+                            <input type="text" class="form-control col-md-10" id="Nama" placeholder="Nama" readonly="readonly" required>
+                        </div>
+                        <input type="hidden" class="form-control" id="SalesmanID">
+                        <input type="hidden" class="form-control" id="UserDetailID">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <label for="Email">Email</label>
+                        </div>
+                        <div class="col-md-8">
+                            <input type="text" class="form-control col-md-10" id="Email" placeholder="Email" readonly="readonly" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <label for="Telp">Telp</label>
+                        </div>
+                        <div class="col-md-8">
+                            <input type="text" class="form-control col-md-10" id="Telp" placeholder="Telp" readonly="readonly" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <label for="VerifiedDate">Verified Date</label>
+                        </div>
+                        <div class="col-md-8">
+                            <input class="form-control col-md-10" id="VerifiedDate" type="date" name="date" value="2023-07-23">
+                            @*<input type="text" class="form-control col-md-10" id="VerifiedDate" placeholder="Verified Date" required>*@
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <label for="Verified By">Verified By</label>
+                        </div>
+                        <div class="col-md-8">
+                            <input type="text" class="form-control col-md-10" id="VerifiedBy" placeholder="Verified By" required>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" id="save" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- modal Delete alert -->
+<div class="modal modal-alert fade" id="ModalDelete" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Apakah anda yakin akan menghapus data ini ?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"><i class="fal fa-times"></i></span>
+                </button>
+            </div>
+            @*<div class="modal-body">
+                    Modal text description...
+                </div>*@
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" id="btn-delete" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 @section Scripts {
     <script type="text/javascript">
-    $(document).ready(function () {
-            // initialize datatable
-        var url = "@ViewBag.url_api";
-         var table =  $('#dt-basic-example').dataTable(
-                {
-                    language: {
-                        processing: "<div class='overlay custom-loader-background'><i class='fa fa-cog fa-spin custom-loader-color'></i></div>"
+        $(document).ready(function () {
+            moment.locale('ID');
+            var url = "@ViewBag.url_api";
+            $('#tableSalesman').dataTable({
+                language: {
+                    processing: "<div class='overlay custom-loader-background'><i class='fa fa-cog fa-spin custom-loader-color'></i></div>"
+                },
+                processing: true,
+                serverSide: true,
+                initComplete: function () {
+                    $(this.api().table().container()).find("input").parent().wrap("<form>").parent().attr("autocomplete", "off");
+                },
+                ajax: {
+                    url: url + "User/GetSalesman",
+                    contentType: "application/json",
+                    type: "GET",
+                    dataType: "JSON",
+                    data: function (a) {
+                        return a;
                     },
-                    processing: true,
-                    serverSide: true,
-                    initComplete: function () {
-                        $(this.api().table().container()).find("input").parent().wrap("<form>").parent().attr("autocomplete", "off")
+                    dataSrc: function (json) {
+                        json.draw = json.draw;
+                        json.recordsTotal = json.recordsTotal;
+                        json.recordsFiltered = json.recordsFiltered;
+                        json.data = json.datasalesman;
+                        var return_data = json;
+                        return return_data.data;
+                    }
+                },
+                responsive: true,
+                columns: [
+                    {
+                        data: "nama",
+                        width: "25%"
                     },
-                    ajax: {
-                        url: url + "Warna/GetWarna",
-                        contentType: "application/json",
-                        type: "GET",
-                        dataType: "JSON",
-                        data: function (a) {
-                            return a
-                        },
-                        dataSrc: function (a) {
-                            return a.draw = a.draw, a.recordsTotal = a.recordsTotal, a.recordsFiltered = a.recordsFiltered, a.data = a.data, a.data
-                        }
+                    {
+                        data: "email",
+                        width: "15%"
                     },
-                    responsive: true,
-                    columns: [
-                        {
-                            data: "name",
-                            width: "40%"
+                    {
+                        data: "telp",
+                        width: "15%"
+                    },
+                    {
+                        mRender: function (a, e, t) {
+                            return (t.verifiedDate === null) ? " - " : moment(t.verifiedDate).format('L');
                         },
-                        {
-                            data: "description",
-                            width: "40%"
+                        width: "15%"
+                    },
+                    {
+                        mRender: function (a, e, t) {
+                            return (t.verifiedBy === null) ? " - " : t.verifiedBy;
                         },
-                        {
-                            mRender: function (a, e, t) {
-                                return '<a class="btn btn-xs btn-success waves-effect waves-themed" data-id="' + t.id + '" data-toggle="modal" data-target="#myModal"><i class="fas fa-edit"></i></a> '
-                                    + '<a class="btn btn-xs btn-danger waves-effect waves-themed" data-id="' + t.id + '" data-toggle="modal" data-target="#ModalConfirm"><i class="fas fa-trash-alt"></i></a>';
-                        },width:'20%'
-                        }
-                    ]
+                        width: '23%'
+                    },
+                    {
+                        mRender: function (a, e, t) {
+                            return '<a class="btn btn-xs btn-success waves-effect waves-themed" data-detailid="' + t.detailID + '" data-id="' + t.id + '" data-nama="' + t.nama + '" data-email="' + t.email + '" data-telp="' + t.telp + '" data-toggle="modal" data-target="#ModalEdit"><i class="fas fa-edit"></i></a> '
+                                + '<a class="btn btn-xs btn-danger waves-effect waves-themed" data-detailid="' + t.detailID + '" data-toggle="modal" data-target="#ModalDelete"><i class="fas fa-trash-alt"></i></a>';
+                        },
+                        width: "12%"
+                    }
+                ]
             });
 
+            function resetModal() {
+                var $t = $('[data-dismiss=modal]'),
+                    target = $t[0].href || $t.data("target") || $t.parents('.modal') || [];
+                $(target)
+                    .find("input,textarea,select")
+                    .val('')
+                    .end()
+                    .find("input[type=checkbox], input[type=radio]")
+                    .prop("checked", "")
+                    .end();
+            }
 
+            $("#ModalDelete").on("show.bs.modal", function (e) {
+                $('#UserDetailID').val(e.relatedTarget.getAttribute('data-detailid'));
+            });
+
+            $('#ModalEdit').on('show.bs.modal', function (e) {
+                resetModal();
+
+                $('#SalesmanID').val(e.relatedTarget.getAttribute('data-id'));
+                $('#UserDetailID').val(e.relatedTarget.getAttribute('data-detailid'));
+                $('#Nama').val(e.relatedTarget.getAttribute('data-nama'));
+                $('#Email').val(e.relatedTarget.getAttribute('data-email'));
+                $('#Telp').val(e.relatedTarget.getAttribute('data-telp'));
+            });
+
+            $('#save').on('click', function (e) {
+
+                if ($("#VerifiedDate").val() !== "" && $("#VerifiedBy").val() !== "") {
+                    var userData = {
+                        DetailID: ($("#UserDetailID").val()) ? $("#UserDetailID").val() : 0,
+                        VerifiedDate: $("#VerifiedDate").val(),
+                        VerifiedBy: $("#VerifiedBy").val()
+                    }
+
+                    $.ajax({
+                        url: url + "User/SaveUserDetail",
+                        type: "POST",
+                        dataType: 'json',
+                        contentType: "application/json",
+                        data: JSON.stringify(userData),
+                        success: function (response) {
+                            if (response.IsSuccess) {
+                                $("#myModal").modal('hide');
+                                $(document.body).removeClass('modal-open');
+                                $('.modal-backdrop').remove();
+                                toastr["success"](response.Message);
+                                $('#tbuser').DataTable().ajax.reload();
+                            } else {
+                                toastr["error"](response.Message);
+                            }
+                        }
+                    });
+                } else {
+                    toastr["error"]("Please fill Verified Date and Verified By!.");
+                }
+            });
+
+            $('#btn-delete').on('click', function (e) {
+
+                var userData = {
+                    DetailID: $("#UserDetailID").val()
+                }
+
+                $.ajax({
+                    url: url + "User/DeleteUserDetail",
+                    type: "POST",
+                    dataType: 'json',
+                    contentType: "application/json",
+                    data: JSON.stringify(userData),
+                    success: function (response) {
+                        if (response.isSuccess) {
+                            toastr["success"](response.message);
+                            $('#tableSalesman').DataTable().ajax.reload();
+                            $("#ModalDelete").modal('hide');
+                            $(document.body).removeClass('modal-open');
+                            $('.modal-backdrop').remove();
+                        } else {
+                            toastr["error"](response.Message);
+                        }
+                    }
+                });
+            });
         });
 
     </script>

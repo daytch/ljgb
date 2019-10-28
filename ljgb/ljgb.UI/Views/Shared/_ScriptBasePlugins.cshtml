@@ -7,3 +7,32 @@
 
 <!-- Datatables  -->
 <script src="~/js/datagrid/datatables/datatables.bundle.js"></script>
+
+<!-- MomentJS -->
+<script src="~/js/moment.min.js"></script>
+<script src="~/js/moment-with-locales.min.js"></script>
+
+<!-- ToastJS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        toastr.options = {
+            "closeButton": false,
+            "debug": false,
+            "newestOnTop": false,
+            "progressBar": true,
+            "positionClass": "toast-top-right",
+            "preventDuplicates": false,
+            "onclick": null,
+            "showDuration": "300",
+            "hideDuration": "1000",
+            "timeOut": "5000",
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+        }
+    });
+</script>

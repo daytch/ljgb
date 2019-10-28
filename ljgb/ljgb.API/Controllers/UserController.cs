@@ -6,6 +6,8 @@ using ljgb.Common.Requests;
 using ljgb.Common.Responses;
 using ljgb.DataAccess.Model;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -46,6 +48,111 @@ namespace ljgb.API.Controllers
             {
                 return BadRequest(ex);
             }
+        }
+
+        [HttpGet]
+        [Route("GetSalesman")]
+        public async Task<IActionResult> GetAllSalesman()
+        {
+            try
+            {
+                string search = HttpContext.Request.Query["search[value]"].ToString();
+                int draw = Convert.ToInt32(HttpContext.Request.Query["draw"]);
+                string order = HttpContext.Request.Query["order[0][column]"];
+                string orderDir = HttpContext.Request.Query["order[0][dir]"];
+                int startRec = Convert.ToInt32(HttpContext.Request.Query["start"]);
+                int pageSize = Convert.ToInt32(HttpContext.Request.Query["length"]);
+                var salesman = await facade.GetAllSalesman(search, order, orderDir, startRec, pageSize, draw);
+                if (salesman == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(salesman);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+
+        [HttpGet]
+        [Route("GetBuyer")]
+        public async Task<IActionResult> GetAllBuyer()
+        {
+            try
+            {
+                string search = HttpContext.Request.Query["search[value]"].ToString();
+                int draw = Convert.ToInt32(HttpContext.Request.Query["draw"]);
+                string order = HttpContext.Request.Query["order[0][column]"];
+                string orderDir = HttpContext.Request.Query["order[0][dir]"];
+                int startRec = Convert.ToInt32(HttpContext.Request.Query["start"]);
+                int pageSize = Convert.ToInt32(HttpContext.Request.Query["length"]);
+                var buyer = await facade.GetAllBuyer(search, order, orderDir, startRec, pageSize, draw);
+                if (buyer == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(buyer);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+        
+        [HttpPost]
+        [Route("SaveUserDetail")]
+        public async Task<IActionResult> SaveUserDetail([FromBody]UserRequest request)
+        {
+            UserResponse resp = new UserResponse();
+            try
+            {
+                bool posts = await facade.SaveUserDetail(request);
+                resp.IsSuccess = posts;
+                if (posts)
+                {
+                    resp.Message = "Success When Update UserDetail.";
+                }
+                else
+                {
+                    resp.Message = "Failed when Update UserDetail.";
+                }
+
+                return Ok(resp);
+            }
+            catch (Exception ex)
+            {
+                resp.Message = ex.ToString();
+                resp.IsSuccess = false;
+            }
+            return Ok(resp);
+        }
+
+        [HttpPost]
+        [Route("DeleteUserDetail")]
+        public async Task<IActionResult> DeleteUserDetail([FromBody]UserRequest request)
+        {
+            UserResponse resp = new UserResponse();
+            try
+            {
+                resp.IsSuccess = await facade.DeleteUserDetail(request);
+                if (resp.IsSuccess)
+                {
+                    resp.Message = "Success when deleted data.";
+                }
+                else
+                {
+                    resp.Message = "Failed when deleted data.";
+                }
+            }
+            catch (Exception ex)
+            {
+                resp.IsSuccess = false;
+                resp.Message = ex.ToString();
+            }
+            return Ok(resp);
         }
 
         [HttpPost]
@@ -147,33 +254,6 @@ namespace ljgb.API.Controllers
 
                 return BadRequest();
             }
-        }
-
-        [HttpPut]
-        [Route("UpdatePost")]
-        public async Task<IActionResult> UpdatePost([FromBody]UserProfile model)
-        {
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    await facade.UpdatePost(model);
-
-                    return Ok();
-                }
-                catch (Exception ex)
-                {
-                    if (ex.GetType().FullName ==
-                             "Microsoft.EntityFrameworkCore.DbUpdateConcurrencyException")
-                    {
-                        return NotFound();
-                    }
-
-                    return BadRequest();
-                }
-            }
-
-            return BadRequest();
         }
 
         [HttpPost]

@@ -37,6 +37,26 @@ namespace ljgb.DataAccess.Repository
             return null;
         }
 
+        public async Task<List<vw_salesman>> GetSalesman()
+        {
+            if (db != null)
+            {
+                return await db.vw_salesman.ToListAsync();
+            }
+
+            return null;
+        }
+
+        public async Task<List<vw_buyer>> GetBuyer()
+        {
+            if (db != null)
+            {
+                return await db.vw_buyer.ToListAsync();
+            }
+
+            return null;
+        }
+
         public async Task<List<UserProfileViewModel>> GetPosts()
         {
             if (db != null)
@@ -100,6 +120,49 @@ namespace ljgb.DataAccess.Repository
             }
 
             return 0;
+        }
+
+        public async Task<bool> SaveUserDetail(UserDetail user)
+        {
+            bool result = false;
+            if (db != null)
+            {
+                try
+                {
+                    //Delete that warna
+                    db.UserDetail.Update(user);
+
+                    //Commit the transaction
+                    await db.SaveChangesAsync();
+                    result = true;
+                }
+                catch (Exception ex)
+                {
+
+                    throw ex;
+                }
+
+            }
+            return result;
+        }
+
+        public async Task<UserDetail> SelectUserDetail(long id)
+        {
+            UserDetail result = new UserDetail();
+            if (db != null)
+            {
+                try
+                {
+                    result = await db.UserDetail.Where(x => x.Id == id).FirstOrDefaultAsync();
+                }
+                catch (Exception ex)
+                {
+
+                    throw ex;
+                }
+
+            }
+            return result;
         }
 
         public async Task<long> DeletePost(long postId)
