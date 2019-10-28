@@ -10,12 +10,12 @@ namespace ljgb.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ProvinsiController :ControllerBase
+    public class KotaController : ControllerBase
     {
-        private ProvinsiFacade facade = new ProvinsiFacade();
+        private KotaFacade facade = new KotaFacade();
         [HttpPost]
         [Route("GetAll")]
-        public async Task<IActionResult> GetAll(ProvinsiRequest req)
+        public async Task<IActionResult> GetAll()
         {
             try
             {
@@ -37,7 +37,7 @@ namespace ljgb.API.Controllers
 
         [HttpPost]
         [Route("GetModelWithID")]
-        public async Task<IActionResult> GetPost(ProvinsiRequest req)
+        public async Task<IActionResult> GetPost(KotaRequest req)
         {
             if (req == null)
             {
@@ -63,7 +63,7 @@ namespace ljgb.API.Controllers
 
         [HttpPost]
         [Route("AddPost")]
-        public async Task<IActionResult> AddPost([FromBody]ProvinsiRequest req)
+        public async Task<IActionResult> AddPost([FromBody]KotaRequest req)
         {
             if (ModelState.IsValid)
             {
@@ -86,7 +86,7 @@ namespace ljgb.API.Controllers
 
         [HttpPost]
         [Route("DeletePost")]
-        public async Task<IActionResult> DeletePost(ProvinsiRequest req)
+        public async Task<IActionResult> DeletePost(KotaRequest req)
         {
 
 
@@ -106,7 +106,7 @@ namespace ljgb.API.Controllers
 
         [HttpPost]
         [Route("UpdatePost")]
-        public async Task<IActionResult> UpdatePost([FromBody]ProvinsiRequest req)
+        public async Task<IActionResult> UpdatePost([FromBody]KotaRequest req)
         {
             if (ModelState.IsValid)
             {
@@ -130,5 +130,6 @@ namespace ljgb.API.Controllers
 
             return BadRequest();
         }
+
     }
 }

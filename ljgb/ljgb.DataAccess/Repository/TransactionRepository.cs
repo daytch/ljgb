@@ -229,27 +229,50 @@ namespace ljgb.DataAccess.Repository
                                                            },
                                                            Seller = new UserProfileViewModel
                                                            {
-                                                               ID = buyer.Id,
-                                                               Name = buyer.Nama,
-                                                               Email = buyer.Email,
-                                                               Telp = buyer.Telp,
-                                                               Facebook = buyer.Facebook,
-                                                               IG = buyer.Ig,
-                                                               JenisKelamin = buyer.JenisKelamin
+                                                               ID = seller.Id,
+                                                               Name = seller.Nama,
+                                                               Email = seller.Email,
+                                                               Telp = seller.Telp,
+                                                               Facebook = seller.Facebook,
+                                                               IG = seller.Ig,
+                                                               JenisKelamin = seller.JenisKelamin
                                                            },
                                                            NegoBarang = new NegoBarangViewModel
                                                            {
                                                                ID = negoBarang.Id,
-                                                               userProfieViewModel = new UserProfileViewModel {
-                                                                   ID = buyer.Id,
-                                                                   Name = buyer.Nama,
-                                                                   Email = buyer.Email,
-                                                                   Telp = buyer.Telp,
-                                                                   Facebook = buyer.Facebook,
-                                                                   IG = buyer.Ig,
-                                                                   JenisKelamin = buyer.JenisKelamin
+                                                               userProfieViewModel = new UserProfileViewModel
+                                                               {
+                                                                   ID = userNegoBarang.Id,
+                                                                   Name = userNegoBarang.Nama,
+                                                                   Email = userNegoBarang.Email,
+                                                                   Telp = userNegoBarang.Telp,
+                                                                   Facebook = userNegoBarang.Facebook,
+                                                                   IG = userNegoBarang.Ig,
+                                                                   JenisKelamin = userNegoBarang.JenisKelamin
 
+                                                               },
+                                                               Barang = new BarangViewModel
+                                                               {
+                                                                   Id = barang.Id,
+                                                                   HargaOtr = barang.HargaOtr,
+                                                                   Name = barang.Name,
+                                                               },
+                                                               Harga = negoBarang.Harga,
+
+
+                                                           },
+                                                           TrasanctionLevel = new TransactionLevelViewModel
+                                                           {
+                                                               ID = level.Id,
+                                                               Status = new TransactionStatusViewModel
+                                                               {
+                                                                   Name = status.Name
+                                                               },
+                                                               Step = new TransactionStepViewModel
+                                                               {
+                                                                   Name = step.Name
                                                                }
+                                                               
                                                            },
                                                            Created = transaction.Created,
                                                            CreatedBy = transaction.CreatedBy,
@@ -324,28 +347,50 @@ namespace ljgb.DataAccess.Repository
                                                           },
                                                           Seller = new UserProfileViewModel
                                                           {
-                                                              ID = buyer.Id,
-                                                              Name = buyer.Nama,
-                                                              Email = buyer.Email,
-                                                              Telp = buyer.Telp,
-                                                              Facebook = buyer.Facebook,
-                                                              IG = buyer.Ig,
-                                                              JenisKelamin = buyer.JenisKelamin
+                                                              ID = seller.Id,
+                                                              Name = seller.Nama,
+                                                              Email = seller.Email,
+                                                              Telp = seller.Telp,
+                                                              Facebook = seller.Facebook,
+                                                              IG = seller.Ig,
+                                                              JenisKelamin = seller.JenisKelamin
                                                           },
                                                           NegoBarang = new NegoBarangViewModel
                                                           {
                                                               ID = negoBarang.Id,
                                                               userProfieViewModel = new UserProfileViewModel
                                                               {
-                                                                  ID = buyer.Id,
-                                                                  Name = buyer.Nama,
-                                                                  Email = buyer.Email,
-                                                                  Telp = buyer.Telp,
-                                                                  Facebook = buyer.Facebook,
-                                                                  IG = buyer.Ig,
-                                                                  JenisKelamin = buyer.JenisKelamin
+                                                                  ID = userNegoBarang.Id,
+                                                                  Name = userNegoBarang.Nama,
+                                                                  Email = userNegoBarang.Email,
+                                                                  Telp = userNegoBarang.Telp,
+                                                                  Facebook = userNegoBarang.Facebook,
+                                                                  IG = userNegoBarang.Ig,
+                                                                  JenisKelamin = userNegoBarang.JenisKelamin
 
+                                                              },
+                                                              Barang = new BarangViewModel
+                                                              {
+                                                                  Id = barang.Id,
+                                                                  HargaOtr = barang.HargaOtr,
+                                                                  Name = barang.Name,
+                                                              },
+                                                              Harga = negoBarang.Harga,
+                                                              
+                                                              
+                                                          },
+                                                          TrasanctionLevel = new TransactionLevelViewModel
+                                                          {
+                                                              ID = level.Id,
+                                                              Status = new TransactionStatusViewModel
+                                                              {
+                                                                  Name = status.Name
+                                                              },
+                                                              Step = new TransactionStepViewModel
+                                                              {
+                                                                  Name = step.Name
                                                               }
+
                                                           },
                                                           Created = transaction.Created,
                                                           CreatedBy = transaction.CreatedBy,

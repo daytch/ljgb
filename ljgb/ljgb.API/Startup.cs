@@ -1,7 +1,7 @@
 ﻿using ljgb.DataAccess;
 using ljgb.DataAccess.Interface;
 using ljgb.DataAccess.Model;
-using ljgb.DataAccess.Repository;
+//using ljgb.DataAccess.Repository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -21,9 +21,11 @@ namespace ljgb.API
 {
     public class Startup
     {
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+
         }
 
         public IConfiguration Configuration { get; }
@@ -34,12 +36,18 @@ namespace ljgb.API
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             services.AddDbContext<ApplicationDbContext>(item => item.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-            services.AddScoped<IWarna, WarnaRepository>();
+            //services.AddScoped<IWarna, WarnaRepository>();
+
+
+            services.AddDefaultIdentity<IdentityUser>().AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
+
+
+
 
             // ===== Add Identity ========
-            services.AddIdentity<IdentityUser, IdentityRole>()
-                .AddEntityFrameworkStores<ApplicationDbContext>()
-                .AddDefaultTokenProviders();
+            //services.AddIdentity<IdentityUser, IdentityRole>()
+            //    .AddEntityFrameworkStores<ApplicationDbContext>()
+            //    .AddDefaultTokenProviders();
 
             // ===== Add Jwt Authentication ========
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear(); // => remove default claims
@@ -71,7 +79,11 @@ namespace ljgb.API
 
             });
             services.AddMvc().AddJsonOptions(ConfigureJson);
+<<<<<<< HEAD
+            
+=======
             services.AddSingleton<IEmailSender, EmailSender>();
+>>>>>>> c26e61f71be20fe3bfd2c1703d7dba5fda547bb3
         }
 
         private void ConfigureJson(MvcJsonOptions obj)
@@ -107,6 +119,7 @@ namespace ljgb.API
             app.UseAuthentication();
             app.UseHttpsRedirection();
             app.UseMvc();
+
         }
     }
 }

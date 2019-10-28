@@ -17,5 +17,9 @@ namespace ljgb.Common.Requests
         public DateTime? Modified { get; set; }
         public string ModifiedBy { get; set; }
         public bool RowStatus { get; set; }
+        public TransactionRequest()
+        {
+            TrasanctionLevel = new TransactionLevelViewModel();
+        }
     }
 }

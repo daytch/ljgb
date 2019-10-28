@@ -9,8 +9,7 @@ namespace ljgb.DataAccess.Model
         {
             NegoBarang = new HashSet<NegoBarang>();
             ProfileRole = new HashSet<ProfileRole>();
-            TransactionBuyer = new HashSet<Transaction>();
-            TransactionSeller = new HashSet<Transaction>();
+            Transaction = new HashSet<Transaction>();
         }
 
         public long Id { get; set; }
@@ -20,6 +19,8 @@ namespace ljgb.DataAccess.Model
         public string Facebook { get; set; }
         public string Ig { get; set; }
         public string JenisKelamin { get; set; }
+        public string Alamat { get; set; }
+        public long KotaId { get; set; }
         public DateTime Created { get; set; }
         public string CreatedBy { get; set; }
         public DateTime? Modified { get; set; }
@@ -29,7 +30,6 @@ namespace ljgb.DataAccess.Model
 
         public virtual ICollection<NegoBarang> NegoBarang { get; set; }
         public virtual ICollection<ProfileRole> ProfileRole { get; set; }
-        public virtual ICollection<Transaction> TransactionBuyer { get; set; }
-        public virtual ICollection<Transaction> TransactionSeller { get; set; }
+        public virtual ICollection<Transaction> Transaction { get; set; }
     }
 }

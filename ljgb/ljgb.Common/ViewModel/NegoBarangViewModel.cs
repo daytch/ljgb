@@ -10,6 +10,7 @@ namespace ljgb.Common.ViewModel
         public long UserProfileID { get; set; }
         public UserProfileViewModel userProfieViewModel { get; set; }
         public long BarangID { get; set; }
+        public BarangViewModel Barang { get; set; }
         public string TypePenawaran { get; set; }
         public long Harga { get; set; }
         public DateTime Created { get; set; }
