@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -91,9 +92,10 @@ namespace ljgb.BusinessLogic
             TransactionResponse response = new TransactionResponse();
             try
             {
+                TransactionResponse getItem = await dep.GetPost(req);
                 TransactionLevelFacade transactionLevelFacade = new TransactionLevelFacade();
                 TransactionLevelRequest transactionLevelRequest = new TransactionLevelRequest();
-                transactionLevelRequest.ID = req.TrasanctionLevel.ID;
+                transactionLevelRequest.ID = getItem.ListTransaction.FirstOrDefault().TrasanctionLevel.ID;
                 TransactionLevelResponse transactionLevelResponse = new TransactionLevelResponse();
                 transactionLevelResponse = await transactionLevelFacade.GetNextLevel(transactionLevelRequest);
                 if (transactionLevelResponse == null)
@@ -103,6 +105,7 @@ namespace ljgb.BusinessLogic
                     response.Message = transactionLevelResponse.Message;
                     return response;
                 }
+                
                 req.TrasanctionLevel.ID = transactionLevelResponse.model.ID;
                 response = await dep.ApproveTransaction(req);
             }

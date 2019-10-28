@@ -263,6 +263,7 @@ namespace ljgb.DataAccess.Repository
                                                            },
                                                            TrasanctionLevel = new TransactionLevelViewModel
                                                            {
+                                                               ID = level.Id,
                                                                Status = new TransactionStatusViewModel
                                                                {
                                                                    Name = status.Name
@@ -377,6 +378,19 @@ namespace ljgb.DataAccess.Repository
                                                               Harga = negoBarang.Harga,
                                                               
                                                               
+                                                          },
+                                                          TrasanctionLevel = new TransactionLevelViewModel
+                                                          {
+                                                              ID = level.Id,
+                                                              Status = new TransactionStatusViewModel
+                                                              {
+                                                                  Name = status.Name
+                                                              },
+                                                              Step = new TransactionStepViewModel
+                                                              {
+                                                                  Name = step.Name
+                                                              }
+
                                                           },
                                                           Created = transaction.Created,
                                                           CreatedBy = transaction.CreatedBy,

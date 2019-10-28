@@ -23,7 +23,7 @@ namespace ljgb.DataAccess.Model
         public virtual DbSet<AspNetUserTokens> AspNetUserTokens { get; set; }
         public virtual DbSet<AspNetUsers> AspNetUsers { get; set; }
         public virtual DbSet<Barang> Barang { get; set; }
-        public virtual DbSet<Branch> Branch { get; set; }
+        public virtual DbSet<Dealer> Dealer { get; set; }
         public virtual DbSet<Kota> Kota { get; set; }
         public virtual DbSet<Merk> Merk { get; set; }
         public virtual DbSet<ModelBarang> ModelBarang { get; set; }
@@ -37,9 +37,9 @@ namespace ljgb.DataAccess.Model
         public virtual DbSet<TransactionStep> TransactionStep { get; set; }
         public virtual DbSet<TypeBarang> TypeBarang { get; set; }
         public virtual DbSet<TypePembayaran> TypePembayaran { get; set; }
+        public virtual DbSet<UserDetail> UserDetail { get; set; }
         public virtual DbSet<UserProfile> UserProfile { get; set; }
         public virtual DbSet<Warna> Warna { get; set; }
-        public virtual DbSet<Wilayah> Wilayah { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -201,9 +201,14 @@ namespace ljgb.DataAccess.Model
                     .HasConstraintName("FK_Barang_Warna");
             });
 
-            modelBuilder.Entity<Branch>(entity =>
+            modelBuilder.Entity<Dealer>(entity =>
             {
                 entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.Alamat)
+                    .IsRequired()
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.Created).HasColumnType("datetime");
 
@@ -212,11 +217,12 @@ namespace ljgb.DataAccess.Model
                     .HasMaxLength(250)
                     .IsUnicode(false);
 
-                entity.Property(e => e.Description)
+                entity.Property(e => e.Kode)
+                    .IsRequired()
                     .HasMaxLength(250)
                     .IsUnicode(false);
 
-                entity.Property(e => e.DomisiliId).HasColumnName("DomisiliID");
+                entity.Property(e => e.KotaId).HasColumnName("KotaID");
 
                 entity.Property(e => e.Modified).HasColumnType("datetime");
 
@@ -224,16 +230,19 @@ namespace ljgb.DataAccess.Model
                     .HasMaxLength(250)
                     .IsUnicode(false);
 
-                entity.Property(e => e.Name)
+                entity.Property(e => e.Nama)
                     .IsRequired()
                     .HasMaxLength(250)
                     .IsUnicode(false);
 
-                entity.HasOne(d => d.Domisili)
-                    .WithMany(p => p.Branch)
-                    .HasForeignKey(d => d.DomisiliId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Branch_Branch");
+                entity.Property(e => e.PejabatDealer)
+                    .HasMaxLength(250)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Telepon)
+                    .IsRequired()
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<Kota>(entity =>
@@ -670,9 +679,51 @@ namespace ljgb.DataAccess.Model
                     .IsUnicode(false);
             });
 
+            modelBuilder.Entity<UserDetail>(entity =>
+            {
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.Created).HasColumnType("datetime");
+
+                entity.Property(e => e.CreatedBy)
+                    .IsRequired()
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Description)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.KodeDealer)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Modified).HasColumnType("datetime");
+
+                entity.Property(e => e.ModifiedBy)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Photo)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UserProfileId).HasColumnName("UserProfileID");
+
+                entity.Property(e => e.VerifiedBy)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.VerifiedDate).HasColumnType("datetime");
+            });
+
             modelBuilder.Entity<UserProfile>(entity =>
             {
                 entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.Alamat)
+                    .HasMaxLength(250)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.Created).HasColumnType("datetime");
 
@@ -698,6 +749,8 @@ namespace ljgb.DataAccess.Model
                 entity.Property(e => e.JenisKelamin)
                     .HasMaxLength(50)
                     .IsUnicode(false);
+
+                entity.Property(e => e.KotaId).HasColumnName("KotaID");
 
                 entity.Property(e => e.Modified).HasColumnType("datetime");
 
@@ -732,34 +785,6 @@ namespace ljgb.DataAccess.Model
                     .IsUnicode(false);
 
                 entity.Property(e => e.Description)
-                    .HasMaxLength(250)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.Modified).HasColumnType("datetime");
-
-                entity.Property(e => e.ModifiedBy)
-                    .HasMaxLength(250)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.Name)
-                    .IsRequired()
-                    .HasMaxLength(250)
-                    .IsUnicode(false);
-            });
-
-            modelBuilder.Entity<Wilayah>(entity =>
-            {
-                entity.Property(e => e.Id).HasColumnName("ID");
-
-                entity.Property(e => e.Created).HasColumnType("datetime");
-
-                entity.Property(e => e.CreatedBy)
-                    .IsRequired()
-                    .HasMaxLength(250)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.Description)
-                    .IsRequired()
                     .HasMaxLength(250)
                     .IsUnicode(false);
 

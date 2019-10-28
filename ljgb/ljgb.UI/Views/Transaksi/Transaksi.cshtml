@@ -92,7 +92,9 @@
                                     <td>@item.NegoBarang.Harga</td>
                                     <td>@item.NegoBarang.Barang.HargaOtr</td>
                                     <th scope="row" style="text-align:right">
+                                        <button type="button" class="btn btn-secondary waves-effect waves-themed fal fa-edit" id="@item.ID" onclick="Cancel(this.id)">Cancel </button>
                                         <button type="button" class="btn btn-primary waves-effect waves-themed fal fa-edit" id="@item.ID" onclick="Approve(this.id)" > @item.TrasanctionLevel.Step.Name </button>
+
                                        
 
                                     </th>
@@ -254,8 +256,64 @@
 
 
         };
+        function Approve(id) {
 
 
+                // not sure if you wanted this, but I thought I'd add it.
+                // get an associative array of just the values.
+
+                // not sure if you wanted this, but I thought I'd add it.
+                // get an associative array of just the values.
+
+
+                var values = {
+                    id: id
+                };
+                $.ajax({
+                    url: "https://localhost:44325/api/Transaction/ApproveTransaction",
+                    contentType: 'application/json',
+                    dataType: 'json',
+                    type: "POST",
+                    data: JSON.stringify(values),
+                    success: function (data) {
+                        console.log(data);
+                    },
+                    error: function (jqXHR, text, errorThrown) {
+                        console.log(jqXHR + " " + text + " " + errorThrown);
+                    }
+                });
+
+
+            };
+        function Cancel(id) {
+
+
+            // not sure if you wanted this, but I thought I'd add it.
+            // get an associative array of just the values.
+
+            // not sure if you wanted this, but I thought I'd add it.
+            // get an associative array of just the values.
+
+
+            var values = {
+                id: id
+            };
+            $.ajax({
+                url: "https://localhost:44325/api/Transaction/CancelTransaction",
+                contentType: 'application/json',
+                dataType: 'json',
+                type: "POST",
+                data: JSON.stringify(values),
+                success: function (data) {
+                    console.log(data);
+                },
+                error: function (jqXHR, text, errorThrown) {
+                    console.log(jqXHR + " " + text + " " + errorThrown);
+                }
+            });
+
+
+        };
         $(document).ready(function () {
             // initialize datatable
             var url = "@ViewBag.url_api";
@@ -320,7 +378,7 @@
 
 
             });
-
+            
 
 
 
