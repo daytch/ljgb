@@ -1,4 +1,5 @@
 ﻿using ljgb.BusinessLogic;
+using ljgb.Common.Responses;
 using ljgb.DataAccess.Model;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -33,7 +34,26 @@ namespace ljgb.API.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("GetAllForHomePage")]
+        public async Task<IActionResult> GetAllForHomePage([FromQuery]string city)
+        {
+            BarangResponse respon = new BarangResponse();
+            try
+            {
+                respon = await facade.GetAllForHomePage(city);
+                respon.IsSuccess = true;
+                respon.Message = "Success";
 
+                return Ok(respon);
+            }
+            catch (Exception ex)
+            {
+                respon.Message = ex.Message;
+                respon.IsSuccess = false;
+                return BadRequest(respon);
+            }
+        }
 
         [HttpPost]
         [Route("GetModelWithID")]
