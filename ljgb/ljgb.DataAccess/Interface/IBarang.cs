@@ -12,11 +12,11 @@ namespace ljgb.DataAccess.Interface
     {
         Task<List<BarangViewModel>> GetAll();
 
-        List<Car> GetHighestBid(string kota);
+        List<Car> GetHighestBid(string kota,int total);
 
-        List<Car> GetLowestAsk(string kota);
+        List<Car> GetLowestAsk(string kota, int total);
 
-        List<Car> GetListNormal(string kota);
+        List<Car> GetListNormal(string kota, int total);
 
         Task<BarangViewModel> GetPost(long ID);
 

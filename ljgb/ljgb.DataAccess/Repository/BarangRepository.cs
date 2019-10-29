@@ -28,13 +28,13 @@ namespace ljgb.DataAccess.Repository
             throw new NotImplementedException();
         }
 
-        public List<Car> GetLowestAsk(string kota)
+        public List<Car> GetLowestAsk(string kota, int total)
         {
             if (db != null)
             {
                 try
                 {
-                    return db.Set<Car>().FromSql("EXEC sp_GetLowestAsk {0}", kota).AsNoTracking().ToList();
+                    return db.Set<Car>().FromSql("EXEC sp_GetLowestAsk {0}, {1}", kota, total).AsNoTracking().ToList();
                 }
                 catch (Exception ex)
                 {
@@ -45,13 +45,13 @@ namespace ljgb.DataAccess.Repository
             return null;
         }
 
-        public List<Car> GetListNormal(string kota)
+        public List<Car> GetListNormal(string kota, int total)
         {
             if (db != null)
             {
                 try
                 {
-                    return db.Set<Car>().FromSql("EXEC sp_GetListNormal {0}", kota).AsNoTracking().ToList();
+                    return db.Set<Car>().FromSql("EXEC sp_GetListNormal {0}, {1}", kota, total).AsNoTracking().ToList();
                 }
                 catch (Exception ex)
                 {
@@ -63,14 +63,14 @@ namespace ljgb.DataAccess.Repository
         }
         // 
 
-        public List<Car> GetHighestBid(string kota)
+        public List<Car> GetHighestBid(string kota, int total)
         {
 
             if (db != null)
             {
                 try
                 {
-                    return db.Set<Car>().FromSql("EXEC sp_GetHighestBid {0}", kota).AsNoTracking().ToList();
+                    return db.Set<Car>().FromSql("EXEC sp_GetHighestBid {0}, {1}", kota, total).AsNoTracking().ToList();
                 }
                 catch (Exception ex)
                 {

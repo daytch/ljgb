@@ -50,9 +50,9 @@ namespace ljgb.BusinessLogic
         public async Task<BarangResponse> GetAllForHomePage(string city)
         {
             BarangResponse resp = new BarangResponse();
-            resp.HighestBids = dep.GetHighestBid(city);
-            resp.LowestAsks = dep.GetLowestAsk(city);
-            resp.ListNormal = dep.GetListNormal(city);
+            resp.HighestBids = dep.GetHighestBid(city, 5);
+            resp.LowestAsks = dep.GetLowestAsk(city, 5);
+            resp.ListNormal = dep.GetListNormal(city, 10);
             return resp;
         }
 

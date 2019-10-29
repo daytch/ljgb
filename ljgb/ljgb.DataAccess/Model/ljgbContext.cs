@@ -498,11 +498,11 @@ namespace ljgb.DataAccess.Model
 
                 entity.Property(e => e.TransactionLevelId).HasColumnName("TransactionLevelID");
 
-                entity.HasOne(d => d.Buyer)
-                    .WithMany(p => p.TransactionBuyer)
-                    .HasForeignKey(d => d.BuyerId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Transaction_UserProfile");
+                entity.HasOne(d => d.Buyer);
+                    //.WithMany(p => p.TransactionBuyer)
+                    //.HasForeignKey(d => d.BuyerId)
+                    //.OnDelete(DeleteBehavior.ClientSetNull)
+                    //.HasConstraintName("FK_Transaction_UserProfile");
 
                 entity.HasOne(d => d.NegoBarang)
                     .WithMany(p => p.Transaction)
@@ -510,11 +510,11 @@ namespace ljgb.DataAccess.Model
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Transaction_NegoBarang");
 
-                entity.HasOne(d => d.Seller)
-                    .WithMany(p => p.TransactionSeller)
-                    .HasForeignKey(d => d.SellerId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Transaction_UserProfile1");
+                //entity.HasOne(d => d.Seller)
+                    //.WithMany(p => p.TransactionSeller)
+                    //.HasForeignKey(d => d.SellerId)
+                    //.OnDelete(DeleteBehavior.ClientSetNull)
+                    //.HasConstraintName("FK_Transaction_UserProfile1");
 
                 entity.HasOne(d => d.TransactionLevel)
                     .WithMany(p => p.Transaction)
