@@ -12,7 +12,8 @@ namespace ljgb.Common.ViewModel
         public long WarnaId { get; set; }
         public WarnaViewModel WarnaBarang { get; set; }
         public long TypeBarangId { get; set; }
-      
+        public TypeBarangViewModel TypeBarang { get; set; }
+
         public string PhotoPath { get; set; }
         public DateTime Created { get; set; }
         public string CreatedBy { get; set; }

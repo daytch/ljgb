@@ -60,5 +60,36 @@ namespace ljgb.UI.Controllers
 
             return View(_settings);
         }
+
+        public async Task<IActionResult> DetailProfile(long id)
+        {
+            returnUrl = returnUrl ?? Url.Content("~/");
+            if (ModelState.IsValid)
+            {
+                string url_api = base_url_api + "User/GetPost";
+                ViewBag.url_api = base_url_api;
+                
+
+                try
+                {
+                    var result = await url_api.PostJsonAsync(id).ReceiveJson<UserResponse>();
+                    ViewData["DetailResponse"] = result;
+                }
+                catch (FlurlHttpTimeoutException ext)
+                {
+                    // FlurlHttpTimeoutException derives from FlurlHttpException; catch here only
+                    // if you want to handle timeouts as a special case
+                    // Console.log("Request timed out.");
+                    var b = ext;
+                }
+                catch (FlurlHttpException ex)
+                {
+                    // ex.Message contains rich details, inclulding the URL, verb, response status,
+                    // and request and response bodies (if available)
+                    var a = ex;//(ex.Message);
+                }
+            }
+            return PartialView(2);
+        }
     }
 }

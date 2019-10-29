@@ -12,6 +12,8 @@ namespace ljgb.Common.ViewModel
         public NegoBarangViewModel NegoBarang { get; set; }
         public TransactionLevelViewModel TrasanctionLevel { get; set; }
 
+        public string NamaDealer { get; set; }
+        public string NamaBarang { get; set; }
         public DateTime Created { get; set; }
         public string CreatedBy { get; set; }
         public DateTime? Modified { get; set; }

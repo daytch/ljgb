@@ -39,7 +39,7 @@ namespace ljgb.DataAccess.Repository
                                   select new BarangViewModel
                                   {
                                       Id = model.Id,
-                                      Name = model.Name,
+                                      Name = model.Nama,
 
                                       Created = model.Created,
                                       CreatedBy = model.CreatedBy,

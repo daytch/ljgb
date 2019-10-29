@@ -64,7 +64,7 @@ namespace ljgb.DataAccess.Repository
                               select new ModelBarangViewModel
                               {
                                   ID = model.Id,
-                                  Name = model.Name,
+                                  Name = model.Nama,
                                   MerkID = model.MerkId,
                                   Description = model.Description,
                                   Created = model.Created,
@@ -87,7 +87,7 @@ namespace ljgb.DataAccess.Repository
                               select new ModelBarangViewModel
                               {
                                   ID = model.Id,
-                                  Name = model.Name,
+                                  Name = model.Nama,
                                   MerkID = model.MerkId,
                                   Description = model.Description,
                                   Created = model.Created,

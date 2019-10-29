@@ -1,17 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 
-namespace ljgb.DataAccess.Model
+namespace ljgb.Common.ViewModel
 {
-    public partial class UserDetail
+    public class ModelBarangViewModel
     {
-        public int Id { get; set; }
-        public int UserProfileId { get; set; }
-        public string KodeDealer { get; set; }
-        public DateTime? VerifiedDate { get; set; }
-        public string VerifiedBy { get; set; }
+        public long ID { get; set; }
+        public string Nama { get; set; }
+        public MerkViewModel Merk { get; set; }
+        public long MerkID { get; set; }
         public string Description { get; set; }
-        public string Photo { get; set; }
         public DateTime Created { get; set; }
         public string CreatedBy { get; set; }
         public DateTime? Modified { get; set; }

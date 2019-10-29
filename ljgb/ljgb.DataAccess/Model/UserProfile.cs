@@ -18,6 +18,7 @@ namespace ljgb.DataAccess.Model
         public string Telp { get; set; }
         public string Facebook { get; set; }
         public string Ig { get; set; }
+        public string PhotoPath { get; set; }
         public string JenisKelamin { get; set; }
         public string Alamat { get; set; }
         public long KotaId { get; set; }
@@ -26,7 +27,6 @@ namespace ljgb.DataAccess.Model
         public DateTime? Modified { get; set; }
         public string ModifiedBy { get; set; }
         public bool RowStatus { get; set; }
-        public string PhotoPath { get; set; }
 
         public virtual ICollection<NegoBarang> NegoBarang { get; set; }
         public virtual ICollection<ProfileRole> ProfileRole { get; set; }

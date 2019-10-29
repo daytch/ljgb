@@ -203,6 +203,18 @@ namespace ljgb.DataAccess.Repository
                                                        on barang.WarnaId equals warna.Id
                                                        join userNegoBarang in db.UserProfile
                                                        on negoBarang.UserProfileId equals userNegoBarang.Id
+                                                       join userDetail in db.UserDetail
+                                                       on seller.Id equals userDetail.UserProfileId
+                                                       join dealer in db.Dealer
+                                                       on userDetail.KodeDealer equals dealer.Kode
+                                                       join tBarang in db.TypeBarang
+                                                       on barang.TypeBarangId equals tBarang.Id
+                                                       join mdlBarang in db.ModelBarang
+                                                       on tBarang.ModelBarangId equals mdlBarang.Id
+                                                       join merkBarang in db.Merk
+                                                       on mdlBarang.MerkId equals merkBarang.Id
+                                                       join kota in db.Kota
+                                                       on dealer.KotaId equals kota.Id
                                                        where transaction.RowStatus == true
                                                        && barang.RowStatus == true
                                                        && buyer.RowStatus == true
@@ -214,6 +226,8 @@ namespace ljgb.DataAccess.Repository
                                                        && level.RowStatus == true
                                                        && warna.RowStatus == true
                                                        && userNegoBarang.RowStatus == true
+                                                      
+                                                       && dealer.RowStatus == true
                                                        select new TransactionViewModel
                                                        {
                                                            ID = transaction.Id,
@@ -255,7 +269,8 @@ namespace ljgb.DataAccess.Repository
                                                                {
                                                                    Id = barang.Id,
                                                                    HargaOtr = barang.HargaOtr,
-                                                                   Name = barang.Name,
+                                                                   Name = barang.Nama,
+                                                                   
                                                                },
                                                                Harga = negoBarang.Harga,
 
@@ -274,6 +289,8 @@ namespace ljgb.DataAccess.Repository
                                                                }
                                                                
                                                            },
+                                                           NamaBarang = (merkBarang.Nama+" "+mdlBarang.Nama+" "+tBarang.Nama+" "+warna.Name),
+                                                           NamaDealer = dealer.Nama+"-"+kota.Nama,
                                                            Created = transaction.Created,
                                                            CreatedBy = transaction.CreatedBy,
                                                            Modified = transaction.Modified,
@@ -373,7 +390,7 @@ namespace ljgb.DataAccess.Repository
                                                               {
                                                                   Id = barang.Id,
                                                                   HargaOtr = barang.HargaOtr,
-                                                                  Name = barang.Name,
+                                                                  Name = barang.Nama,
                                                               },
                                                               Harga = negoBarang.Harga,
                                                               
