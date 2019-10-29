@@ -38,7 +38,7 @@ namespace ljgb.DataAccess.Repository
                     model.CreatedBy = "xsivicto1905";
                     model.RowStatus = true;
 
-                    await db.Kota.AddAsync(model);
+                    //await db.Kota.AddAsync(model);
                     await db.SaveChangesAsync();
                     response.Message = "Data has been Saved";
 
@@ -63,7 +63,7 @@ namespace ljgb.DataAccess.Repository
             {
                 try
                 {
-                    Kota model = await db.Kota.Where(x => x.RowStatus == true && x.Id == request.ID).FirstOrDefaultAsync();
+                    Kota model = new Kota(); // await db.Kota.Where(x => x.RowStatus == true && x.Id == request.ID).FirstOrDefaultAsync();
                     if (model != null)
                     {
                         model.RowStatus = false;
@@ -95,20 +95,20 @@ namespace ljgb.DataAccess.Repository
             {
                 try
                 {
-                    response.ListKota = await(from model in db.Kota
-                                               where model.RowStatus == true
-                                               select new KotaViewModel
-                                               {
-                                                   ID = model.Id,
-                                                   Nama = model.Nama,
-                                                   Description = model.Description,
-                                                   ProvinsiID = model.ProvinsiId,
-                                                   Created = model.Created,
-                                                   CreatedBy = model.CreatedBy,
-                                                   Modified = model.Modified,
-                                                   ModifiedBy = model.ModifiedBy,
-                                                   RowStatus = model.RowStatus
-                                               }).ToListAsync();
+                    //response.ListKota = await(from model in db.Kota
+                    //                           where model.RowStatus == true
+                    //                           select new KotaViewModel
+                    //                           {
+                    //                               ID = model.Id,
+                    //                               Nama = model.Nama,
+                    //                               Description = model.Description,
+                    //                               ProvinsiID = model.ProvinsiId,
+                    //                               Created = model.Created,
+                    //                               CreatedBy = model.CreatedBy,
+                    //                               Modified = model.Modified,
+                    //                               ModifiedBy = model.ModifiedBy,
+                    //                               RowStatus = model.RowStatus
+                    //                           }).ToListAsync();
                     response.ListProvinsi = await (from prov in db.Provinsi
                                                    where prov.RowStatus == true
                                                    select new ProvinsiViewModel
@@ -142,20 +142,20 @@ namespace ljgb.DataAccess.Repository
             {
                 try
                 {
-                    response.ListKota = await(from model in db.Kota
-                                               where model.RowStatus == true && model.Id == request.ID
-                                               select new KotaViewModel
-                                               {
-                                                   ID = model.Id,
-                                                   Nama = model.Nama,
-                                                   Description = model.Description,
-                                                   ProvinsiID = model.ProvinsiId,
-                                                   Created = model.Created,
-                                                   CreatedBy = model.CreatedBy,
-                                                   Modified = model.Modified,
-                                                   ModifiedBy = model.ModifiedBy,
-                                                   RowStatus = model.RowStatus
-                                               }).ToListAsync();
+                    //response.ListKota = await(from model in db.Kota
+                    //                           where model.RowStatus == true && model.Id == request.ID
+                    //                           select new KotaViewModel
+                    //                           {
+                    //                               ID = model.Id,
+                    //                               Nama = model.Nama,
+                    //                               Description = model.Description,
+                    //                               ProvinsiID = model.ProvinsiId,
+                    //                               Created = model.Created,
+                    //                               CreatedBy = model.CreatedBy,
+                    //                               Modified = model.Modified,
+                    //                               ModifiedBy = model.ModifiedBy,
+                    //                               RowStatus = model.RowStatus
+                    //                           }).ToListAsync();
                 }
                 catch (Exception ex)
                 {
@@ -179,7 +179,7 @@ namespace ljgb.DataAccess.Repository
                 try
                 {
 
-                    Kota model = await db.Kota.Where(x => x.RowStatus == true && x.Id == request.ID).FirstOrDefaultAsync();
+                    Kota model = new Kota(); //await db.Kota.Where(x => x.RowStatus == true && x.Id == request.ID).FirstOrDefaultAsync();
 
                     model.Nama = request.Nama;
                     model.Description = request.Description;

@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using ljgb.Common.Responses;
 
 namespace ljgb.DataAccess.Repository
 {
@@ -27,6 +28,60 @@ namespace ljgb.DataAccess.Repository
             throw new NotImplementedException();
         }
 
+        public List<Car> GetLowestAsk(string kota, int total)
+        {
+            if (db != null)
+            {
+                try
+                {
+                    return db.Set<Car>().FromSql("EXEC sp_GetLowestAsk {0}, {1}", kota, total).AsNoTracking().ToList();
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+
+            }
+            return null;
+        }
+
+        public List<Car> GetListNormal(string kota, int total)
+        {
+            if (db != null)
+            {
+                try
+                {
+                    return db.Set<Car>().FromSql("EXEC sp_GetListNormal {0}, {1}", kota, total).AsNoTracking().ToList();
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+
+            }
+            return null;
+        }
+        // 
+
+        public List<Car> GetHighestBid(string kota, int total)
+        {
+
+            if (db != null)
+            {
+                try
+                {
+                    return db.Set<Car>().FromSql("EXEC sp_GetHighestBid {0}, {1}", kota, total).AsNoTracking().ToList();
+                }
+                catch (Exception ex)
+                {
+
+                    throw;
+                }
+
+            }
+
+            return null;
+        }
         public async Task<List<BarangViewModel>> GetAll()
         {
 
@@ -53,7 +108,7 @@ namespace ljgb.DataAccess.Repository
 
                     throw;
                 }
-               
+
             }
 
             return null;

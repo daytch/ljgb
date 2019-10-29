@@ -1,4 +1,5 @@
-﻿using ljgb.Common.ViewModel;
+﻿using ljgb.Common.Responses;
+using ljgb.Common.ViewModel;
 using ljgb.DataAccess.Interface;
 using ljgb.DataAccess.Model;
 using ljgb.DataAccess.Repository;
@@ -46,7 +47,14 @@ namespace ljgb.BusinessLogic
             return models;
         }
 
-
+        public async Task<BarangResponse> GetAllForHomePage(string city)
+        {
+            BarangResponse resp = new BarangResponse();
+            resp.HighestBids = dep.GetHighestBid(city, 5);
+            resp.LowestAsks = dep.GetLowestAsk(city, 5);
+            resp.ListNormal = dep.GetListNormal(city, 10);
+            return resp;
+        }
 
         public async Task<BarangViewModel> GetPost(long ID)
         {

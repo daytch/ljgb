@@ -262,14 +262,14 @@
                         contentType: "application/json",
                         data: JSON.stringify(userData),
                         success: function (response) {
-                            if (response.IsSuccess) {
-                                $("#myModal").modal('hide');
+                            if (response.isSuccess) {
+                                $("#ModalEdit").modal('hide');
                                 $(document.body).removeClass('modal-open');
                                 $('.modal-backdrop').remove();
-                                toastr["success"](response.Message);
+                                toastr["success"](response.message);
                                 $('#tbuser').DataTable().ajax.reload();
                             } else {
-                                toastr["error"](response.Message);
+                                toastr["error"](response.message);
                             }
                         }
                     });
@@ -298,7 +298,7 @@
                             $(document.body).removeClass('modal-open');
                             $('.modal-backdrop').remove();
                         } else {
-                            toastr["error"](response.Message);
+                            toastr["error"](response.message);
                         }
                     }
                 });

@@ -80,9 +80,12 @@ namespace ljgb.API
 
             });
             services.AddMvc().AddJsonOptions(ConfigureJson);
+<<<<<<< HEAD
 
             services.AddSingleton<IEmailSender, EmailSender>();
 
+=======
+>>>>>>> abe18f5efd73ed6e9863601c26a0a89533575949
         }
 
         private void ConfigureJson(MvcJsonOptions obj)
