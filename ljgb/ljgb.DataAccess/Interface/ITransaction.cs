@@ -9,7 +9,7 @@ namespace ljgb.DataAccess.Interface
 {
     public interface ITransaction
     {
-        Task<TransactionResponse> GetAll();
+        Task<TransactionResponse> GetAll(string search, string order, string orderDir, int startRec, int pageSize, int draw);
 
         Task<TransactionResponse> GetPost(TransactionRequest model);
 
@@ -20,5 +20,7 @@ namespace ljgb.DataAccess.Interface
         Task<TransactionResponse> UpdatePost(TransactionRequest model);
         Task<TransactionResponse> CancelTransaction(TransactionRequest req);
         Task<TransactionResponse> ApproveTransaction(TransactionRequest req);
+
+        Task<TransactionResponse> GetJournalByTransaction(TransactionRequest req);
     }
 }

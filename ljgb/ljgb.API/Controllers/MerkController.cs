@@ -1,5 +1,6 @@
 ﻿using ljgb.BusinessLogic;
-using ljgb.DataAccess.Model;
+using ljgb.Common.Requests;
+using ljgb.Common.Responses;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -14,13 +15,20 @@ namespace ljgb.API.Controllers
     {
 
         private MerkFacade facade = new MerkFacade();
-        [HttpPost]
+        [HttpGet]
         [Route("GetAll")]
         public async Task<IActionResult> GetAll()
         {
             try
             {
-                var models = await facade.GetAll();
+                string search = HttpContext.Request.Query["search[value]"].ToString();
+                int draw = Convert.ToInt32(HttpContext.Request.Query["draw"]);
+                string order = HttpContext.Request.Query["order[0][column]"];
+                string orderDir = HttpContext.Request.Query["order[0][dir]"];
+                int startRec = Convert.ToInt32(HttpContext.Request.Query["start"]);
+                int pageSize = Convert.ToInt32(HttpContext.Request.Query["length"]);
+                pageSize = 10;
+                var models = await facade.GetAll(search, order, orderDir, startRec, pageSize, draw);
                 if (models == null)
                 {
                     return NotFound();
@@ -34,7 +42,26 @@ namespace ljgb.API.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("GetAllWithoutFilter")]
+        public async Task<IActionResult> GetAllWithoutFilter()
+        {
+            try
+            {
+              
+                var models = await facade.GetAllWithoutFilter();
+                if (models == null)
+                {
+                    return NotFound();
+                }
 
+                return Ok(models);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
 
         [HttpPost]
         [Route("GetModelWithID")]
@@ -64,21 +91,25 @@ namespace ljgb.API.Controllers
 
         [HttpPost]
         [Route("AddPost")]
-        public async Task<IActionResult> AddPost([FromBody]Merk model)
+        public async Task<IActionResult> AddPost([FromBody]MerkRequest model)
         {
             if (ModelState.IsValid)
             {
+                MerkResponse response = new MerkResponse();
                 try
                 {
-                    var postId = await facade.AddPost(model);
-                    if (postId > 0)
+                    if (model.ID != null && model.ID != 0)
                     {
-                        return Ok(postId);
+                        response = await facade.UpdatePost(model);
                     }
                     else
                     {
-                        return NotFound();
+                        response = await facade.AddPost(model);
                     }
+                   
+                    
+                    return Ok(response);
+                  
                 }
                 catch (Exception)
                 {
@@ -92,10 +123,10 @@ namespace ljgb.API.Controllers
 
         [HttpPost]
         [Route("DeletePost")]
-        public async Task<IActionResult> DeletePost(long postId)
+        public async Task<IActionResult> DeletePost([FromBody]MerkRequest model)
         {
-            long result = 0;
 
+            long postId = model.ID;
             if (postId < 1)
             {
                 return BadRequest();
@@ -103,12 +134,9 @@ namespace ljgb.API.Controllers
 
             try
             {
-                result = await facade.DeletePost(postId);
-                if (result == 0)
-                {
-                    return NotFound();
-                }
-                return Ok();
+                 var response = await facade.DeletePost(postId);
+               
+                return Ok(response);
             }
             catch (Exception)
             {
@@ -120,7 +148,7 @@ namespace ljgb.API.Controllers
 
         [HttpPost]
         [Route("UpdatePost")]
-        public async Task<IActionResult> UpdatePost([FromBody]Merk model)
+        public async Task<IActionResult> UpdatePost([FromBody]MerkRequest model)
         {
             if (ModelState.IsValid)
             {
@@ -128,7 +156,7 @@ namespace ljgb.API.Controllers
                 {
                     await facade.UpdatePost(model);
 
-                    return Ok();
+                    return Ok(model);
                 }
                 catch (Exception ex)
                 {

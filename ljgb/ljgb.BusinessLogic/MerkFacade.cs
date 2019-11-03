@@ -1,7 +1,9 @@
-﻿using ljgb.DataAccess.Interface;
+﻿using ljgb.Common.Requests;
+using ljgb.Common.Responses;
+using ljgb.Common.ViewModel;
+using ljgb.DataAccess.Interface;
 using ljgb.DataAccess.Model;
 using ljgb.DataAccess.Repository;
-using ljgb.DataAccess.ViewModel;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -36,9 +38,9 @@ namespace ljgb.BusinessLogic
         #endregion
 
 
-        public async Task<List<MerkViewModel>> GetAll()
+        public async Task<MerkResponse> GetAll(string search, string order, string orderDir, int startRec, int pageSize, int draw)
         {
-            var models = await dep.GetAll();
+            var models = await dep.GetAll(search, order, orderDir, startRec, pageSize, draw);
             if (models == null)
             {
                 return null;
@@ -46,9 +48,12 @@ namespace ljgb.BusinessLogic
             return models;
         }
 
+        public async Task<MerkResponse> GetAllWithoutFilter()
+        {
+            return await dep.GetAllWithoutFilter();
+        }
 
-
-        public async Task<MerkViewModel> GetPost(long ID)
+        public async Task<MerkResponse> GetPost(long ID)
         {
             var model = await dep.GetPost(ID);
 
@@ -60,35 +65,24 @@ namespace ljgb.BusinessLogic
 
         }
 
-        public async Task<long> AddPost(Merk model)
+        public async Task<MerkResponse> AddPost(MerkRequest model)
         {
-            var postId = await dep.AddPost(model);
-            if (postId > 0)
-            {
-                return postId;
-            }
-            else
-            {
-                return 0;
-            }
+          return await dep.AddPost(model);
+            
         }
 
-        public async Task<long> DeletePost(long ID)
+        public async Task<MerkResponse> DeletePost(long ID)
         {
-            long result = 0;
-            result = await dep.DeletePost(ID);
-            if (result == 0)
-            {
-                return 0;
-            }
-            return result;
+
+            return await dep.DeletePost(ID);
+           
         }
 
-        public async Task<bool> UpdatePost(Merk model)
+        public async Task<MerkResponse> UpdatePost(MerkRequest model)
         {
-            bool result = await dep.UpdatePost(model);
+           return await dep.UpdatePost(model);
 
-            return result;
+           
         }
     }
 }
