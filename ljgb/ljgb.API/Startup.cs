@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.IdentityModel.Tokens.Jwt;
@@ -42,7 +43,12 @@ namespace ljgb.API
 
             services.AddDefaultIdentity<IdentityUser>().AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
 
-
+            services.AddLogging(builder =>
+            {
+                builder.AddConfiguration(Configuration.GetSection("Logging"))
+                    .AddConsole()
+                    .AddDebug();
+            });
 
 
             // ===== Add Identity ========
@@ -66,7 +72,7 @@ namespace ljgb.API
                     {
                         ValidIssuer = Configuration["Jwt:Issuer"],
                         ValidAudience = Configuration["Jwt:Issuer"],
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Kata_Paling_Rahasia"])),
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Kata_Paling_Rahasia"])),
                         ClockSkew = TimeSpan.Zero // remove delay of token when expire
                     };
                 });
@@ -80,12 +86,6 @@ namespace ljgb.API
 
             });
             services.AddMvc().AddJsonOptions(ConfigureJson);
-<<<<<<< HEAD
-
-            services.AddSingleton<IEmailSender, EmailSender>();
-
-=======
->>>>>>> abe18f5efd73ed6e9863601c26a0a89533575949
         }
 
         private void ConfigureJson(MvcJsonOptions obj)
@@ -119,7 +119,7 @@ namespace ljgb.API
             }
 
             app.UseAuthentication();
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
             app.UseMvc();
 
         }

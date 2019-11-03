@@ -1,9 +1,6 @@
 ﻿using ljgb.Common.Requests;
 using ljgb.Common.Responses;
-using ljgb.Common.ViewModel;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using ljgb.DataAccess.Model;
 using System.Threading.Tasks;
 
 namespace ljgb.DataAccess.Interface
@@ -15,6 +12,8 @@ namespace ljgb.DataAccess.Interface
         Task<NegoBarangResponse> GetPost(NegoBarangRequest model);
 
         Task<NegoBarangResponse> AddPost(NegoBarangRequest model);
+
+        Task<NegoBarang> GetNegoBarang(NegoBarang model);
 
         Task<NegoBarangResponse> DeletePost(NegoBarangRequest model);
 

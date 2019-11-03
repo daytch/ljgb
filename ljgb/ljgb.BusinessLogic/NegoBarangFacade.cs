@@ -60,10 +60,19 @@ namespace ljgb.BusinessLogic
 
         }
 
-        public async Task<NegoBarangResponse> AddPost(NegoBarangRequest req)
+        public async Task<NegoBarangResponse> SubmitBid(NegoBarangRequest req)
         {
+            req.TypePenawaran = "bid";
             return await dep.AddPost(req);
            
+        }
+
+
+        public async Task<NegoBarangResponse> Submitask(NegoBarangRequest req)
+        {
+            req.TypePenawaran = "ask";
+            return await dep.AddPost(req);
+
         }
 
         public async Task<NegoBarangResponse> DeletePost(NegoBarangRequest req)

@@ -14,6 +14,10 @@ namespace ljgb.Common.ViewModel
         public long TypeBarangId { get; set; }
         public TypeBarangViewModel TypeBarang { get; set; }
 
+        public long LowestAsk { get; set; }
+        public long HighestBid { get; set; }
+        public string Description { get; set; }
+
         public string PhotoPath { get; set; }
         public DateTime Created { get; set; }
         public string CreatedBy { get; set; }

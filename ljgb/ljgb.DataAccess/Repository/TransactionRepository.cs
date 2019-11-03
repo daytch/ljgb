@@ -19,35 +19,32 @@ namespace ljgb.DataAccess.Repository
         {
             db = _db;
         }
-        public async Task<TransactionResponse> AddPost(TransactionRequest model)
+        public async Task<TransactionResponse> AddPost(Transaction model)
         {
             TransactionResponse response = new TransactionResponse();
-            
 
             if (db != null)
             {
                 try
                 {
+                    //Transaction transaction = new Transaction()
+                    //{
+                    //    BuyerId = model.Buyer.ID,
+                    //    SellerId = model.Seller.ID,
+                    //    NegoBarangId = model.NegoBarang.ID,
+                    //    TransactionLevelId = model.TrasanctionLevel.ID,
+                    //    Created = DateTime.Now,
+                    //    CreatedBy = model.CreatedBy,
+                    //    RowStatus = true
+                    //};
 
-                    Transaction transaction = new Transaction();
-
-                   
-                    transaction.BuyerId = model.Buyer.ID;
-                    transaction.SellerId = model.Seller.ID;
-                    transaction.NegoBarangId = model.NegoBarang.ID;
-                    transaction.TransactionLevelId = model.TrasanctionLevel.ID;
-                    transaction.Created = DateTime.Now;
-                    transaction.CreatedBy = model.CreatedBy;
-                    transaction.RowStatus = true;
-
-                    await db.Transaction.AddAsync(transaction);
+                    await db.Transaction.AddAsync(model);
                     await db.SaveChangesAsync();
 
                     response.Message = "Data has been saved!";
                 }
                 catch (Exception ex)
                 {
-
                     response.IsSuccess = false;
                     response.Message = ex.ToString();
                 }
@@ -69,7 +66,7 @@ namespace ljgb.DataAccess.Repository
                     if (model != null)
                     {
 
-                    
+
                         model.TransactionLevelId = req.TrasanctionLevel.ID;
                         model.Modified = DateTime.Now;
                         model.ModifiedBy = req.ModifiedBy;
@@ -94,7 +91,6 @@ namespace ljgb.DataAccess.Repository
             return response;
         }
 
-
         public async Task<TransactionResponse> CancelTransaction(TransactionRequest req)
         {
             TransactionResponse response = new TransactionResponse();
@@ -103,19 +99,19 @@ namespace ljgb.DataAccess.Repository
             {
                 try
                 {
-                   
-                                                  
+
+
 
                     Transaction model = await db.Transaction.Where(x => x.RowStatus == true && x.Id == req.ID).FirstOrDefaultAsync();
                     if (model != null)
                     {
-                        var query =  db.TransactionLevel.Where(x => x.RowStatus == true && model.TransactionLevelId == x.Id).FirstOrDefault();
-                        var findLevel = await  (from level in db.TransactionLevel
-                                         join status in db.TransactionStatus
-                                         on level.TransactionStatusId equals status.Id
-                                         where status.Name.Contains("Cancel") && status.RowStatus == true && level.RowStatus == true
-                                         && level.Name == query.Name
-                                         select level).FirstOrDefaultAsync();
+                        var query = db.TransactionLevel.Where(x => x.RowStatus == true && model.TransactionLevelId == x.Id).FirstOrDefault();
+                        var findLevel = await (from level in db.TransactionLevel
+                                               join status in db.TransactionStatus
+                                               on level.TransactionStatusId equals status.Id
+                                               where status.Name.Contains("Cancel") && status.RowStatus == true && level.RowStatus == true
+                                               && level.Name == query.Name
+                                               select level).FirstOrDefaultAsync();
 
 
 
@@ -184,119 +180,119 @@ namespace ljgb.DataAccess.Repository
             {
                 try
                 {
-                    response.ListTransaction = await  (from transaction in db.Transaction
-                                                       join buyer in db.UserProfile
-                                                       on transaction.BuyerId equals buyer.Id
-                                                       join seller in db.UserProfile
-                                                       on transaction.SellerId equals seller.Id
-                                                       join negoBarang in db.NegoBarang
-                                                       on transaction.NegoBarangId equals negoBarang.Id
-                                                       join level in db.TransactionLevel
-                                                       on transaction.TransactionLevelId equals level.Id
-                                                       join step in db.TransactionStep
-                                                       on level.TransactionStepId equals step.Id
-                                                       join status in db.TransactionStatus
-                                                       on level.TransactionStatusId equals status.Id
-                                                       join barang in db.Barang
-                                                       on negoBarang.BarangId equals barang.Id
-                                                       join warna in db.Warna
-                                                       on barang.WarnaId equals warna.Id
-                                                       join userNegoBarang in db.UserProfile
-                                                       on negoBarang.UserProfileId equals userNegoBarang.Id
-                                                       join userDetail in db.UserDetail
-                                                       on seller.Id equals userDetail.UserProfileId
-                                                       join dealer in db.Dealer
-                                                       on userDetail.KodeDealer equals dealer.Kode
-                                                       join tBarang in db.TypeBarang
-                                                       on barang.TypeBarangId equals tBarang.Id
-                                                       join mdlBarang in db.ModelBarang
-                                                       on tBarang.ModelBarangId equals mdlBarang.Id
-                                                       join merkBarang in db.Merk
-                                                       on mdlBarang.MerkId equals merkBarang.Id
-                                                       join kota in db.Kota
-                                                       on dealer.KotaId equals kota.Id
-                                                       where transaction.RowStatus == true
-                                                       && barang.RowStatus == true
-                                                       && buyer.RowStatus == true
-                                                       && seller.RowStatus == true
-                                                       && negoBarang.RowStatus == true
-                                                       && level.RowStatus == true
-                                                       && step.RowStatus == true
-                                                       && status.RowStatus == true
-                                                       && level.RowStatus == true
-                                                       && warna.RowStatus == true
-                                                       && userNegoBarang.RowStatus == true
-                                                      
-                                                       && dealer.RowStatus == true
-                                                       select new TransactionViewModel
-                                                       {
-                                                           ID = transaction.Id,
-                                                           Buyer = new UserProfileViewModel
-                                                           {
-                                                               ID = buyer.Id,
-                                                               Name = buyer.Nama,
-                                                               Email = buyer.Email,
-                                                               Telp = buyer.Telp,
-                                                               Facebook = buyer.Facebook,
-                                                               IG = buyer.Ig,
-                                                               JenisKelamin = buyer.JenisKelamin
-                                                           },
-                                                           Seller = new UserProfileViewModel
-                                                           {
-                                                               ID = seller.Id,
-                                                               Name = seller.Nama,
-                                                               Email = seller.Email,
-                                                               Telp = seller.Telp,
-                                                               Facebook = seller.Facebook,
-                                                               IG = seller.Ig,
-                                                               JenisKelamin = seller.JenisKelamin
-                                                           },
-                                                           NegoBarang = new NegoBarangViewModel
-                                                           {
-                                                               ID = negoBarang.Id,
-                                                               userProfieViewModel = new UserProfileViewModel
-                                                               {
-                                                                   ID = userNegoBarang.Id,
-                                                                   Name = userNegoBarang.Nama,
-                                                                   Email = userNegoBarang.Email,
-                                                                   Telp = userNegoBarang.Telp,
-                                                                   Facebook = userNegoBarang.Facebook,
-                                                                   IG = userNegoBarang.Ig,
-                                                                   JenisKelamin = userNegoBarang.JenisKelamin
+                    response.ListTransaction = await (from transaction in db.Transaction
+                                                      join buyer in db.UserProfile
+                                                      on transaction.BuyerId equals buyer.Id
+                                                      join seller in db.UserProfile
+                                                      on transaction.SellerId equals seller.Id
+                                                      join negoBarang in db.NegoBarang
+                                                      on transaction.NegoBarangId equals negoBarang.Id
+                                                      join level in db.TransactionLevel
+                                                      on transaction.TransactionLevelId equals level.Id
+                                                      join step in db.TransactionStep
+                                                      on level.TransactionStepId equals step.Id
+                                                      join status in db.TransactionStatus
+                                                      on level.TransactionStatusId equals status.Id
+                                                      join barang in db.Barang
+                                                      on negoBarang.BarangId equals barang.Id
+                                                      join warna in db.Warna
+                                                      on barang.WarnaId equals warna.Id
+                                                      join userNegoBarang in db.UserProfile
+                                                      on negoBarang.UserProfileId equals userNegoBarang.Id
+                                                      join userDetail in db.UserDetail
+                                                      on seller.Id equals userDetail.UserProfileId
+                                                      join dealer in db.Dealer
+                                                      on userDetail.KodeDealer equals dealer.Kode
+                                                      join tBarang in db.TypeBarang
+                                                      on barang.TypeBarangId equals tBarang.Id
+                                                      join mdlBarang in db.ModelBarang
+                                                      on tBarang.ModelBarangId equals mdlBarang.Id
+                                                      join merkBarang in db.Merk
+                                                      on mdlBarang.MerkId equals merkBarang.Id
+                                                      join kota in db.Kota
+                                                      on dealer.KotaId equals kota.Id
+                                                      where transaction.RowStatus == true
+                                                      && barang.RowStatus == true
+                                                      && buyer.RowStatus == true
+                                                      && seller.RowStatus == true
+                                                      && negoBarang.RowStatus == true
+                                                      && level.RowStatus == true
+                                                      && step.RowStatus == true
+                                                      && status.RowStatus == true
+                                                      && level.RowStatus == true
+                                                      && warna.RowStatus == true
+                                                      && userNegoBarang.RowStatus == true
 
-                                                               },
-                                                               Barang = new BarangViewModel
-                                                               {
-                                                                   Id = barang.Id,
-                                                                   HargaOtr = barang.HargaOtr,
-                                                                   Name = barang.Nama,
-                                                                   
-                                                               },
-                                                               Harga = negoBarang.Harga,
+                                                      && dealer.RowStatus == true
+                                                      select new TransactionViewModel
+                                                      {
+                                                          ID = transaction.Id,
+                                                          Buyer = new UserProfileViewModel
+                                                          {
+                                                              ID = buyer.Id,
+                                                              Name = buyer.Nama,
+                                                              Email = buyer.Email,
+                                                              Telp = buyer.Telp,
+                                                              Facebook = buyer.Facebook,
+                                                              IG = buyer.Ig,
+                                                              JenisKelamin = buyer.JenisKelamin
+                                                          },
+                                                          Seller = new UserProfileViewModel
+                                                          {
+                                                              ID = seller.Id,
+                                                              Name = seller.Nama,
+                                                              Email = seller.Email,
+                                                              Telp = seller.Telp,
+                                                              Facebook = seller.Facebook,
+                                                              IG = seller.Ig,
+                                                              JenisKelamin = seller.JenisKelamin
+                                                          },
+                                                          NegoBarang = new NegoBarangViewModel
+                                                          {
+                                                              ID = negoBarang.Id,
+                                                              userProfieViewModel = new UserProfileViewModel
+                                                              {
+                                                                  ID = userNegoBarang.Id,
+                                                                  Name = userNegoBarang.Nama,
+                                                                  Email = userNegoBarang.Email,
+                                                                  Telp = userNegoBarang.Telp,
+                                                                  Facebook = userNegoBarang.Facebook,
+                                                                  IG = userNegoBarang.Ig,
+                                                                  JenisKelamin = userNegoBarang.JenisKelamin
+
+                                                              },
+                                                              Barang = new BarangViewModel
+                                                              {
+                                                                  Id = barang.Id,
+                                                                  HargaOtr = barang.HargaOtr,
+                                                                  Name = barang.Name,
+
+                                                              },
+                                                              Harga = negoBarang.Harga,
 
 
-                                                           },
-                                                           TrasanctionLevel = new TransactionLevelViewModel
-                                                           {
-                                                               ID = level.Id,
-                                                               Status = new TransactionStatusViewModel
-                                                               {
-                                                                   Name = status.Name
-                                                               },
-                                                               Step = new TransactionStepViewModel
-                                                               {
-                                                                   Name = step.Name
-                                                               }
-                                                               
-                                                           },
-                                                           NamaBarang = (merkBarang.Nama+" "+mdlBarang.Nama+" "+tBarang.Nama+" "+warna.Name),
-                                                           NamaDealer = dealer.Nama+"-"+kota.Nama,
-                                                           Created = transaction.Created,
-                                                           CreatedBy = transaction.CreatedBy,
-                                                           Modified = transaction.Modified,
-                                                           ModifiedBy = transaction.ModifiedBy
-                                                           
-                                                       }).ToListAsync();
+                                                          },
+                                                          TrasanctionLevel = new TransactionLevelViewModel
+                                                          {
+                                                              ID = level.Id,
+                                                              Status = new TransactionStatusViewModel
+                                                              {
+                                                                  Name = status.Name
+                                                              },
+                                                              Step = new TransactionStepViewModel
+                                                              {
+                                                                  Name = step.Name
+                                                              }
+
+                                                          },
+                                                          NamaBarang = (merkBarang.Nama + " " + mdlBarang.Name + " " + tBarang.Name + " " + warna.Name),
+                                                          NamaDealer = dealer.Nama + "-" + kota.Nama,
+                                                          Created = transaction.Created,
+                                                          CreatedBy = transaction.CreatedBy,
+                                                          Modified = transaction.Modified,
+                                                          ModifiedBy = transaction.ModifiedBy
+
+                                                      }).ToListAsync();
                     response.Message = "Success";
                 }
                 catch (Exception ex)
@@ -318,7 +314,7 @@ namespace ljgb.DataAccess.Repository
             {
                 try
                 {
-                    response.ListTransaction = await(from transaction in db.Transaction
+                    response.ListTransaction = await (from transaction in db.Transaction
                                                       join buyer in db.UserProfile
                                                       on transaction.BuyerId equals buyer.Id
                                                       join seller in db.UserProfile
@@ -390,11 +386,11 @@ namespace ljgb.DataAccess.Repository
                                                               {
                                                                   Id = barang.Id,
                                                                   HargaOtr = barang.HargaOtr,
-                                                                  Name = barang.Nama,
+                                                                  Name = barang.Name,
                                                               },
                                                               Harga = negoBarang.Harga,
-                                                              
-                                                              
+
+
                                                           },
                                                           TrasanctionLevel = new TransactionLevelViewModel
                                                           {
@@ -438,7 +434,7 @@ namespace ljgb.DataAccess.Repository
                     Transaction model = await db.Transaction.Where(x => x.RowStatus == true && x.Id == req.ID).FirstOrDefaultAsync();
                     if (model != null)
                     {
-                        
+
                         model.BuyerId = req.Buyer.ID;
                         model.SellerId = req.Seller.ID;
                         model.NegoBarangId = req.NegoBarang.ID;

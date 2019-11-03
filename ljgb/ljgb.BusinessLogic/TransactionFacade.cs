@@ -19,6 +19,7 @@ namespace ljgb.BusinessLogic
         #region Important
         private ljgbContext db;
         private ITransaction dep;
+        private INegoBarang INego;
 
         public TransactionFacade()
         {
@@ -33,6 +34,7 @@ namespace ljgb.BusinessLogic
             optionsBuilder.UseSqlServer(connectionString);
 
             db = new ljgbContext(optionsBuilder.Options);
+            this.INego = new NegoBarangRepository(db);
             this.dep = new TransactionRepository(db);
         }
         #endregion
@@ -61,10 +63,42 @@ namespace ljgb.BusinessLogic
 
         }
 
-        public async Task<TransactionResponse> AddPost(TransactionRequest req)
+        public async Task<TransactionResponse> SubmitBuy(int id, int nominal)
         {
-            return await dep.AddPost(req);
+            NegoBarang nego = new NegoBarang() { BarangId = id, TypePenawaran = "ask", Harga = nominal };
+            NegoBarang ResultNego = await INego.GetNegoBarang(nego);
+            Transaction tran = new Transaction()
+            {
+                BuyerId = 4,
+                SellerId = ResultNego.UserProfileId,
+                NegoBarangId = ResultNego.Id,
+                TransactionLevelId = 1,
 
+                CreatedBy = "Admin",
+                Created = DateTime.Now,
+                RowStatus = true
+            };
+
+            return await dep.AddPost(tran);
+        }
+
+        public async Task<TransactionResponse> SubmitSell(int id, int nominal)
+        {
+            NegoBarang nego = new NegoBarang() { BarangId = id, TypePenawaran = "bid", Harga = nominal };
+            NegoBarang ResultNego = await INego.GetNegoBarang(nego);
+            Transaction tran = new Transaction()
+            {
+                BuyerId = ResultNego.UserProfileId,
+                SellerId = 4,
+                NegoBarangId = ResultNego.Id,
+                TransactionLevelId = 1,
+
+                CreatedBy = "Admin",
+                Created = DateTime.Now,
+                RowStatus = true
+            };
+
+            return await dep.AddPost(tran);
         }
 
         public async Task<TransactionResponse> DeletePost(TransactionRequest req)
@@ -105,7 +139,7 @@ namespace ljgb.BusinessLogic
                     response.Message = transactionLevelResponse.Message;
                     return response;
                 }
-                
+
                 req.TrasanctionLevel.ID = transactionLevelResponse.model.ID;
                 response = await dep.ApproveTransaction(req);
             }

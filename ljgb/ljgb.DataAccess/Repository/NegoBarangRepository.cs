@@ -22,8 +22,8 @@ namespace ljgb.DataAccess.Repository
         public async Task<NegoBarangResponse> AddPost(NegoBarangRequest model)
         {
             NegoBarangResponse response = new NegoBarangResponse();
-            
-           
+
+
             if (db != null)
             {
                 try
@@ -42,7 +42,7 @@ namespace ljgb.DataAccess.Repository
                     await db.NegoBarang.AddAsync(negoBarang);
                     await db.SaveChangesAsync();
 
-                  
+
                 }
                 catch (Exception ex)
                 {
@@ -53,6 +53,26 @@ namespace ljgb.DataAccess.Repository
             }
 
 
+            return response;
+        }
+
+        public async Task<NegoBarang> GetNegoBarang(NegoBarang model)
+        {
+            NegoBarang response = new NegoBarang();
+
+            if (db != null)
+            {
+                try
+                {
+                    response = await db.NegoBarang.Where(x => x.RowStatus == true
+                    && x.BarangId == model.BarangId && x.Harga == model.Harga && x.TypePenawaran == model.TypePenawaran).FirstOrDefaultAsync();
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+
+            }
             return response;
         }
 
@@ -69,7 +89,7 @@ namespace ljgb.DataAccess.Repository
                     {
                         negoBarang.RowStatus = false;
                         await db.SaveChangesAsync();
-                     
+
                         response.Message = "Data has been Saved";
                     }
                     else
@@ -112,12 +132,12 @@ namespace ljgb.DataAccess.Repository
                                                     RowStatus = model.RowStatus
                                                 }).ToListAsync();
                 }
-                catch (Exception ex) 
+                catch (Exception ex)
                 {
-                    
+
                     response.Message = ex.ToString();
                 }
-              
+
             }
 
             return response;
@@ -130,21 +150,21 @@ namespace ljgb.DataAccess.Repository
             {
                 try
                 {
-                    response.ListModel = await(from model in db.NegoBarang
-                                               where model.RowStatus == true && model.Id == req.ID
-                                               select new NegoBarangViewModel
-                                               {
-                                                   ID = model.Id,
-                                                   UserProfileID = model.UserProfileId,
-                                                   BarangID = model.BarangId,
-                                                   TypePenawaran = model.TypePenawaran,
-                                                   Harga = model.Harga,
-                                                   Created = model.Created,
-                                                   CreatedBy = model.CreatedBy,
-                                                   Modified = model.Modified,
-                                                   ModifiedBy = model.ModifiedBy,
-                                                   RowStatus = model.RowStatus
-                                               }).ToListAsync();
+                    response.ListModel = await (from model in db.NegoBarang
+                                                where model.RowStatus == true && model.Id == req.ID
+                                                select new NegoBarangViewModel
+                                                {
+                                                    ID = model.Id,
+                                                    UserProfileID = model.UserProfileId,
+                                                    BarangID = model.BarangId,
+                                                    TypePenawaran = model.TypePenawaran,
+                                                    Harga = model.Harga,
+                                                    Created = model.Created,
+                                                    CreatedBy = model.CreatedBy,
+                                                    Modified = model.Modified,
+                                                    ModifiedBy = model.ModifiedBy,
+                                                    RowStatus = model.RowStatus
+                                                }).ToListAsync();
                 }
                 catch (Exception ex)
                 {
@@ -160,7 +180,7 @@ namespace ljgb.DataAccess.Repository
         public async Task<NegoBarangResponse> UpdatePost(NegoBarangRequest model)
         {
             NegoBarangResponse response = new NegoBarangResponse();
-           
+
             if (db != null)
             {
                 try

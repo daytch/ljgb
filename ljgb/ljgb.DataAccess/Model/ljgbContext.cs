@@ -1,7 +1,5 @@
-﻿using System;
-using ljgb.Common.Responses;
+﻿using ljgb.Common.Responses;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace ljgb.DataAccess.Model
 {
@@ -24,13 +22,8 @@ namespace ljgb.DataAccess.Model
         public virtual DbSet<AspNetUserTokens> AspNetUserTokens { get; set; }
         public virtual DbSet<AspNetUsers> AspNetUsers { get; set; }
         public virtual DbSet<Barang> Barang { get; set; }
-<<<<<<< HEAD
         public virtual DbSet<Dealer> Dealer { get; set; }
         public virtual DbSet<Kota> Kota { get; set; }
-=======
-        public virtual DbSet<Branch> Branch { get; set; }
-        public virtual DbSet<HargaSalesman> HargaSalesman { get; set; }
->>>>>>> abe18f5efd73ed6e9863601c26a0a89533575949
         public virtual DbSet<Merk> Merk { get; set; }
         public virtual DbSet<ModelBarang> ModelBarang { get; set; }
         public virtual DbSet<NegoBarang> NegoBarang { get; set; }
@@ -46,38 +39,27 @@ namespace ljgb.DataAccess.Model
         public virtual DbSet<UserDetail> UserDetail { get; set; }
         public virtual DbSet<UserProfile> UserProfile { get; set; }
         public virtual DbSet<Warna> Warna { get; set; }
-<<<<<<< HEAD
-        public virtual DbSet<vw_buyer> vw_buyer { get; set; }
-        public virtual DbSet<vw_salesman> vw_salesman { get; set; }
-=======
-        public virtual DbSet<Wilayah> Wilayah { get; set; }
+
         public virtual DbSet<vw_buyer> vw_buyer { get; set; }
         public virtual DbSet<vw_salesman> vw_salesman { get; set; }
         public virtual DbSet<Car> Car { get; set; }
->>>>>>> abe18f5efd73ed6e9863601c26a0a89533575949
+        public virtual DbSet<CarDetail> CarDetail { get; set; }
+        public virtual DbSet<CarAsks> CarAsks { get; set; }
+        public virtual DbSet<Position> Position { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
-<<<<<<< HEAD
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Server=GONNA-BE-GOOD\\SQLEXPRESS;Database=ljgb;Trusted_Connection=True;");
-=======
-//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
+                //#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
                 optionsBuilder.UseSqlServer("Server=localhost\\SQLEXPRESS;Database=ljgb;Trusted_Connection=True;");
->>>>>>> abe18f5efd73ed6e9863601c26a0a89533575949
             }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasAnnotation("ProductVersion", "2.2.0-rtm-35687");
-<<<<<<< HEAD
 
-=======
-            
->>>>>>> abe18f5efd73ed6e9863601c26a0a89533575949
             modelBuilder.Entity<vw_buyer>(entity =>
             {
                 entity.HasIndex(e => e.ID);
@@ -89,10 +71,7 @@ namespace ljgb.DataAccess.Model
                 entity.HasIndex(e => e.ID);
                 entity.Property(e => e.DetailID).IsRequired();
             });
-<<<<<<< HEAD
-=======
 
->>>>>>> abe18f5efd73ed6e9863601c26a0a89533575949
             modelBuilder.Entity<AspNetRoleClaims>(entity =>
             {
                 entity.HasIndex(e => e.RoleId);
@@ -214,7 +193,7 @@ namespace ljgb.DataAccess.Model
                     .HasMaxLength(250)
                     .IsUnicode(false);
 
-                entity.Property(e => e.Nama)
+                entity.Property(e => e.Name)
                     .IsRequired()
                     .HasMaxLength(250)
                     .IsUnicode(false);
@@ -240,7 +219,6 @@ namespace ljgb.DataAccess.Model
                     .HasConstraintName("FK_Barang_Warna");
             });
 
-<<<<<<< HEAD
             modelBuilder.Entity<Dealer>(entity =>
             {
                 entity.Property(e => e.Id).HasColumnName("ID");
@@ -250,12 +228,6 @@ namespace ljgb.DataAccess.Model
                     .HasMaxLength(500)
                     .IsUnicode(false);
 
-=======
-            modelBuilder.Entity<Branch>(entity =>
-            {
-                entity.Property(e => e.Id).HasColumnName("ID");
-
->>>>>>> abe18f5efd73ed6e9863601c26a0a89533575949
                 entity.Property(e => e.Created).HasColumnType("datetime");
 
                 entity.Property(e => e.CreatedBy)
@@ -263,20 +235,12 @@ namespace ljgb.DataAccess.Model
                     .HasMaxLength(250)
                     .IsUnicode(false);
 
-<<<<<<< HEAD
                 entity.Property(e => e.Kode)
                     .IsRequired()
                     .HasMaxLength(250)
                     .IsUnicode(false);
 
                 entity.Property(e => e.KotaId).HasColumnName("KotaID");
-=======
-                entity.Property(e => e.Description)
-                    .HasMaxLength(250)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.DomisiliId).HasColumnName("DomisiliID");
->>>>>>> abe18f5efd73ed6e9863601c26a0a89533575949
 
                 entity.Property(e => e.Modified).HasColumnType("datetime");
 
@@ -284,16 +248,11 @@ namespace ljgb.DataAccess.Model
                     .HasMaxLength(250)
                     .IsUnicode(false);
 
-<<<<<<< HEAD
                 entity.Property(e => e.Nama)
-=======
-                entity.Property(e => e.Name)
->>>>>>> abe18f5efd73ed6e9863601c26a0a89533575949
                     .IsRequired()
                     .HasMaxLength(250)
                     .IsUnicode(false);
 
-<<<<<<< HEAD
                 entity.Property(e => e.PejabatDealer)
                     .HasMaxLength(250)
                     .IsUnicode(false);
@@ -311,42 +270,20 @@ namespace ljgb.DataAccess.Model
                 entity.Property(e => e.Created).HasColumnType("datetime");
 
                 entity.Property(e => e.CreatedBy)
-=======
-                entity.HasOne(d => d.Domisili)
-                    .WithMany(p => p.Branch)
-                    .HasForeignKey(d => d.DomisiliId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Branch_Branch");
-            });
-
-            modelBuilder.Entity<HargaSalesman>(entity =>
-            {
-                entity.Property(e => e.Id).HasColumnName("ID");
-
-                entity.Property(e => e.BarangId).HasColumnName("BarangID");
-
-                entity.Property(e => e.Created).HasColumnType("datetime");
-
-                entity.Property(e => e.Createdby)
->>>>>>> abe18f5efd73ed6e9863601c26a0a89533575949
                     .IsRequired()
                     .HasMaxLength(250)
                     .IsUnicode(false);
 
-<<<<<<< HEAD
                 entity.Property(e => e.Description)
                     .HasMaxLength(250)
                     .IsUnicode(false);
 
-=======
->>>>>>> abe18f5efd73ed6e9863601c26a0a89533575949
                 entity.Property(e => e.Modified).HasColumnType("datetime");
 
                 entity.Property(e => e.ModifiedBy)
                     .HasMaxLength(250)
                     .IsUnicode(false);
 
-<<<<<<< HEAD
                 entity.Property(e => e.Nama)
                     .IsRequired()
                     .HasMaxLength(250)
@@ -359,15 +296,6 @@ namespace ljgb.DataAccess.Model
                     .HasForeignKey(d => d.ProvinsiId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Kota_Provinsi");
-=======
-                entity.Property(e => e.UserProfileId).HasColumnName("UserProfileID");
-
-                entity.HasOne(d => d.Barang)
-                    .WithMany(p => p.HargaSalesman)
-                    .HasForeignKey(d => d.BarangId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_HargaSalesman_Barang");
->>>>>>> abe18f5efd73ed6e9863601c26a0a89533575949
             });
 
             modelBuilder.Entity<Merk>(entity =>
@@ -420,7 +348,7 @@ namespace ljgb.DataAccess.Model
                     .HasMaxLength(250)
                     .IsUnicode(false);
 
-                entity.Property(e => e.Nama)
+                entity.Property(e => e.Name)
                     .IsRequired()
                     .HasMaxLength(250)
                     .IsUnicode(false);
@@ -585,19 +513,11 @@ namespace ljgb.DataAccess.Model
 
                 entity.Property(e => e.TransactionLevelId).HasColumnName("TransactionLevelID");
 
-<<<<<<< HEAD
                 entity.HasOne(d => d.Buyer)
                     .WithMany(p => p.Transaction)
                     .HasForeignKey(d => d.BuyerId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Transaction_UserProfile");
-=======
-                entity.HasOne(d => d.Buyer);
-                    //.WithMany(p => p.TransactionBuyer)
-                    //.HasForeignKey(d => d.BuyerId)
-                    //.OnDelete(DeleteBehavior.ClientSetNull)
-                    //.HasConstraintName("FK_Transaction_UserProfile");
->>>>>>> abe18f5efd73ed6e9863601c26a0a89533575949
 
                 entity.HasOne(d => d.NegoBarang)
                     .WithMany(p => p.Transaction)
@@ -605,24 +525,11 @@ namespace ljgb.DataAccess.Model
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Transaction_NegoBarang");
 
-<<<<<<< HEAD
-=======
-                //entity.HasOne(d => d.Seller)
-                    //.WithMany(p => p.TransactionSeller)
-                    //.HasForeignKey(d => d.SellerId)
-                    //.OnDelete(DeleteBehavior.ClientSetNull)
-                    //.HasConstraintName("FK_Transaction_UserProfile1");
-
->>>>>>> abe18f5efd73ed6e9863601c26a0a89533575949
                 entity.HasOne(d => d.TransactionLevel)
                     .WithMany(p => p.Transaction)
                     .HasForeignKey(d => d.TransactionLevelId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-<<<<<<< HEAD
                     .HasConstraintName("FK_Transaction_UserProfile1");
-=======
-                    .HasConstraintName("FK_Transaction_TransactionLevel");
->>>>>>> abe18f5efd73ed6e9863601c26a0a89533575949
             });
 
             modelBuilder.Entity<TransactionLevel>(entity =>
@@ -660,21 +567,13 @@ namespace ljgb.DataAccess.Model
                     .WithMany(p => p.TransactionLevel)
                     .HasForeignKey(d => d.TransactionStatusId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-<<<<<<< HEAD
                     .HasConstraintName("FK_TransactionLevel_TransactionStatus");
-=======
-                    .HasConstraintName("FK_TrackLevel_TrackStatus");
->>>>>>> abe18f5efd73ed6e9863601c26a0a89533575949
 
                 entity.HasOne(d => d.TransactionStep)
                     .WithMany(p => p.TransactionLevel)
                     .HasForeignKey(d => d.TransactionStepId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-<<<<<<< HEAD
                     .HasConstraintName("FK_TransactionLevel_TransactionStep");
-=======
-                    .HasConstraintName("FK_TrackLevel_TrackType");
->>>>>>> abe18f5efd73ed6e9863601c26a0a89533575949
             });
 
             modelBuilder.Entity<TransactionStatus>(entity =>
@@ -755,7 +654,7 @@ namespace ljgb.DataAccess.Model
                     .HasMaxLength(250)
                     .IsUnicode(false);
 
-                entity.Property(e => e.Nama)
+                entity.Property(e => e.Name)
                     .IsRequired()
                     .HasMaxLength(250)
                     .IsUnicode(false);
@@ -813,13 +712,10 @@ namespace ljgb.DataAccess.Model
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
-<<<<<<< HEAD
                 entity.Property(e => e.KodeDealer)
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
-=======
->>>>>>> abe18f5efd73ed6e9863601c26a0a89533575949
                 entity.Property(e => e.Modified).HasColumnType("datetime");
 
                 entity.Property(e => e.ModifiedBy)
@@ -843,13 +739,10 @@ namespace ljgb.DataAccess.Model
             {
                 entity.Property(e => e.Id).HasColumnName("ID");
 
-<<<<<<< HEAD
                 entity.Property(e => e.Alamat)
                     .HasMaxLength(250)
                     .IsUnicode(false);
 
-=======
->>>>>>> abe18f5efd73ed6e9863601c26a0a89533575949
                 entity.Property(e => e.Created).HasColumnType("datetime");
 
                 entity.Property(e => e.CreatedBy)
@@ -875,11 +768,8 @@ namespace ljgb.DataAccess.Model
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
-<<<<<<< HEAD
                 entity.Property(e => e.KotaId).HasColumnName("KotaID");
 
-=======
->>>>>>> abe18f5efd73ed6e9863601c26a0a89533575949
                 entity.Property(e => e.Modified).HasColumnType("datetime");
 
                 entity.Property(e => e.ModifiedBy)
@@ -927,37 +817,6 @@ namespace ljgb.DataAccess.Model
                     .HasMaxLength(250)
                     .IsUnicode(false);
             });
-<<<<<<< HEAD
-=======
-
-            modelBuilder.Entity<Wilayah>(entity =>
-            {
-                entity.Property(e => e.Id).HasColumnName("ID");
-
-                entity.Property(e => e.Created).HasColumnType("datetime");
-
-                entity.Property(e => e.CreatedBy)
-                    .IsRequired()
-                    .HasMaxLength(250)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.Description)
-                    .IsRequired()
-                    .HasMaxLength(250)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.Modified).HasColumnType("datetime");
-
-                entity.Property(e => e.ModifiedBy)
-                    .HasMaxLength(250)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.Name)
-                    .IsRequired()
-                    .HasMaxLength(250)
-                    .IsUnicode(false);
-            });
->>>>>>> abe18f5efd73ed6e9863601c26a0a89533575949
         }
     }
 }

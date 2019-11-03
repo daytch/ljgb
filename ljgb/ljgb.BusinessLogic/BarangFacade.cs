@@ -1,4 +1,5 @@
-﻿using ljgb.Common.Responses;
+﻿using ljgb.Common.Requests;
+using ljgb.Common.Responses;
 using ljgb.Common.ViewModel;
 using ljgb.DataAccess.Interface;
 using ljgb.DataAccess.Model;
@@ -47,12 +48,58 @@ namespace ljgb.BusinessLogic
             return models;
         }
 
-        public async Task<BarangResponse> GetAllForHomePage(string city)
+        public BarangResponse GetAllForHomePage(string city)
         {
             BarangResponse resp = new BarangResponse();
             resp.HighestBids = dep.GetHighestBid(city, 5);
             resp.LowestAsks = dep.GetLowestAsk(city, 5);
             resp.ListNormal = dep.GetListNormal(city, 10);
+            return resp;
+        }
+
+        public async Task<Position> GetAskPosition(int ID, int Nominal)
+        {
+            Position pos = await dep.GetAskPosition(ID, Nominal);
+            if (pos == null)
+            {
+                pos = new Position()
+                {
+                    ID = Convert.ToInt64(ID),
+                    price_rank = 1
+                };
+            }
+            return pos;
+        }
+
+        public async Task<Position> GetBidPosition(int ID, int Nominal)
+        {
+            Position pos = await dep.GetBidPosition(ID, Nominal);
+            if (pos == null)
+            {
+                pos = new Position()
+                {
+                    ID = Convert.ToInt64(ID),
+                    price_rank = 1
+                };
+            }
+
+            return pos;
+        }
+
+        public async Task<BarangResponse> GetBarangDetail(int ID)
+        {
+            BarangResponse resp = new BarangResponse();
+            resp.CarDetail = await dep.GetBarangDetail(ID);
+            resp.RelatedProducts = dep.GetRelatedProducts(ID);
+
+            return resp;
+        }
+
+        public BarangResponse GetAllAsksById(BarangRequest req)
+        {
+            BarangResponse resp = new BarangResponse();
+            resp.ListAsks = dep.GetAllAsksById(req);
+
             return resp;
         }
 

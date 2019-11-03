@@ -11,7 +11,7 @@ namespace ljgb.DataAccess.Model
         }
 
         public long Id { get; set; }
-        public string Nama { get; set; }
+        public string Name { get; set; }
         public long MerkId { get; set; }
         public string Description { get; set; }
         public DateTime Created { get; set; }
