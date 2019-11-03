@@ -11,7 +11,9 @@ namespace ljgb.DataAccess.Interface
 
         Task<TransactionResponse> GetPost(TransactionRequest model);
 
-        Task<TransactionResponse> AddPost(Transaction model);
+        Task<TransactionResponse> AddPost(TransactionRequest model);
+
+        Task<long> SaveTransaction(Transaction model);
 
         Task<TransactionResponse> DeletePost(TransactionRequest model);
 

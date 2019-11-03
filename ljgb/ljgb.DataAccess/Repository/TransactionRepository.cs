@@ -19,6 +19,27 @@ namespace ljgb.DataAccess.Repository
         {
             db = _db;
         }
+
+        public async Task<long> SaveTransaction(Transaction model)
+        {
+            long TransactionID = 0;
+            if (db != null)
+            {
+                try
+                {
+                    await db.Transaction.AddAsync(model);
+
+                    await db.SaveChangesAsync();
+                    TransactionID = model.Id;
+                }
+                catch (Exception ex)
+                {
+                    return 0;
+                }
+            }
+            return TransactionID;
+        }
+
         public async Task<TransactionResponse> AddPost(TransactionRequest model)
         {
             TransactionResponse response = new TransactionResponse();
@@ -320,7 +341,7 @@ namespace ljgb.DataAccess.Repository
                                                           //    }
 
                                                           //},
-                                                          NamaBarang = (merkBarang.Nama + " " + mdlBarang.Nama + " " + tBarang.Nama + " " + warna.Name),
+                                                          NamaBarang = (merkBarang.Nama + " " + mdlBarang.Name + " " + tBarang.Name + " " + warna.Name),
                                                           NamaDealerKota = dealer.Nama + "-" + kota.Nama,
                                                           NamaDealer = dealer.Nama,
                                                           AlamatDealer = dealer.Alamat,
@@ -472,7 +493,7 @@ namespace ljgb.DataAccess.Repository
                                                              }
 
                                                          },
-                                                         NamaBarang = (merkBarang.Nama + " " + mdlBarang.Nama + " " + tBarang.Nama + " " + warna.Name),
+                                                         NamaBarang = (merkBarang.Nama + " " + mdlBarang.Name + " " + tBarang.Name + " " + warna.Name),
                                                           NamaDealer = dealer.Nama + "-" + kota.Nama,
                                                           Created = transaction.Created,
                                                           CreatedBy = transaction.CreatedBy,

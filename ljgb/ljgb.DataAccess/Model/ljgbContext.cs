@@ -190,7 +190,7 @@ namespace ljgb.DataAccess.Model
                     .HasMaxLength(250)
                     .IsUnicode(false);
 
-                entity.Property(e => e.Nama)
+                entity.Property(e => e.Name)
                     .IsRequired()
                     .HasMaxLength(250)
                     .IsUnicode(false);
@@ -345,7 +345,7 @@ namespace ljgb.DataAccess.Model
                     .HasMaxLength(250)
                     .IsUnicode(false);
 
-                entity.Property(e => e.Nama)
+                entity.Property(e => e.Name)
                     .IsRequired()
                     .HasMaxLength(250)
                     .IsUnicode(false);
@@ -685,7 +685,7 @@ namespace ljgb.DataAccess.Model
                     .HasMaxLength(250)
                     .IsUnicode(false);
 
-                entity.Property(e => e.Nama)
+                entity.Property(e => e.Name)
                     .IsRequired()
                     .HasMaxLength(250)
                     .IsUnicode(false);
