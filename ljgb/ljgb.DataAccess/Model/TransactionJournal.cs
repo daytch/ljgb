@@ -3,14 +3,10 @@ using System.Collections.Generic;
 
 namespace ljgb.DataAccess.Model
 {
-    public partial class Transaction
+    public partial class TransactionJournal
     {
-        public Transaction()
-        {
-            TransactionJournal = new HashSet<TransactionJournal>();
-        }
-
         public long Id { get; set; }
+        public long TransactionId { get; set; }
         public long BuyerId { get; set; }
         public long SellerId { get; set; }
         public long NegoBarangId { get; set; }
@@ -21,9 +17,6 @@ namespace ljgb.DataAccess.Model
         public string ModifiedBy { get; set; }
         public bool RowStatus { get; set; }
 
-        public virtual UserProfile Buyer { get; set; }
-        public virtual NegoBarang NegoBarang { get; set; }
-        public virtual TransactionLevel TransactionLevel { get; set; }
-        public virtual ICollection<TransactionJournal> TransactionJournal { get; set; }
+        public virtual Transaction Transaction { get; set; }
     }
 }

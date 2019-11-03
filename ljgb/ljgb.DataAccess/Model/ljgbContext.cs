@@ -1,5 +1,6 @@
-﻿using ljgb.Common.Responses;
+﻿using System;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace ljgb.DataAccess.Model
 {
@@ -31,6 +32,7 @@ namespace ljgb.DataAccess.Model
         public virtual DbSet<Provinsi> Provinsi { get; set; }
         public virtual DbSet<Role> Role { get; set; }
         public virtual DbSet<Transaction> Transaction { get; set; }
+        public virtual DbSet<TransactionJournal> TransactionJournal { get; set; }
         public virtual DbSet<TransactionLevel> TransactionLevel { get; set; }
         public virtual DbSet<TransactionStatus> TransactionStatus { get; set; }
         public virtual DbSet<TransactionStep> TransactionStep { get; set; }
@@ -39,20 +41,15 @@ namespace ljgb.DataAccess.Model
         public virtual DbSet<UserDetail> UserDetail { get; set; }
         public virtual DbSet<UserProfile> UserProfile { get; set; }
         public virtual DbSet<Warna> Warna { get; set; }
-
         public virtual DbSet<vw_buyer> vw_buyer { get; set; }
         public virtual DbSet<vw_salesman> vw_salesman { get; set; }
-        public virtual DbSet<Car> Car { get; set; }
-        public virtual DbSet<CarDetail> CarDetail { get; set; }
-        public virtual DbSet<CarAsks> CarAsks { get; set; }
-        public virtual DbSet<Position> Position { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
-                //#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Server=localhost\\SQLEXPRESS;Database=ljgb;Trusted_Connection=True;");
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
+                optionsBuilder.UseSqlServer("Server=GONNA-BE-GOOD\\SQLEXPRESS;Database=ljgb;Trusted_Connection=True;");
             }
         }
 
@@ -193,7 +190,7 @@ namespace ljgb.DataAccess.Model
                     .HasMaxLength(250)
                     .IsUnicode(false);
 
-                entity.Property(e => e.Name)
+                entity.Property(e => e.Nama)
                     .IsRequired()
                     .HasMaxLength(250)
                     .IsUnicode(false);
@@ -348,7 +345,7 @@ namespace ljgb.DataAccess.Model
                     .HasMaxLength(250)
                     .IsUnicode(false);
 
-                entity.Property(e => e.Name)
+                entity.Property(e => e.Nama)
                     .IsRequired()
                     .HasMaxLength(250)
                     .IsUnicode(false);
@@ -532,6 +529,40 @@ namespace ljgb.DataAccess.Model
                     .HasConstraintName("FK_Transaction_UserProfile1");
             });
 
+            modelBuilder.Entity<TransactionJournal>(entity =>
+            {
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.BuyerId).HasColumnName("BuyerID");
+
+                entity.Property(e => e.Created).HasColumnType("datetime");
+
+                entity.Property(e => e.CreatedBy)
+                    .IsRequired()
+                    .HasMaxLength(250)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Modified).HasColumnType("datetime");
+
+                entity.Property(e => e.ModifiedBy)
+                    .HasMaxLength(250)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.NegoBarangId).HasColumnName("NegoBarangID");
+
+                entity.Property(e => e.SellerId).HasColumnName("SellerID");
+
+                entity.Property(e => e.TransactionId).HasColumnName("TransactionID");
+
+                entity.Property(e => e.TransactionLevelId).HasColumnName("TransactionLevelID");
+
+                entity.HasOne(d => d.Transaction)
+                    .WithMany(p => p.TransactionJournal)
+                    .HasForeignKey(d => d.TransactionId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_TransactionJournal_Transaction");
+            });
+
             modelBuilder.Entity<TransactionLevel>(entity =>
             {
                 entity.Property(e => e.Id).HasColumnName("ID");
@@ -654,7 +685,7 @@ namespace ljgb.DataAccess.Model
                     .HasMaxLength(250)
                     .IsUnicode(false);
 
-                entity.Property(e => e.Name)
+                entity.Property(e => e.Nama)
                     .IsRequired()
                     .HasMaxLength(250)
                     .IsUnicode(false);

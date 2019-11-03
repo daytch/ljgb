@@ -345,6 +345,28 @@
       ]
     },
     {
+      "title": "Merk",
+      "icon": "fal fa-th-list",
+      "items": [
+        {
+          "title": "Merk",
+          "href": "Merk_ListMerk.cshtml"
+        }
+
+      ]
+    },
+    {
+      "title": "Model Barang",
+      "icon": "fal fa-th-list",
+      "items": [
+        {
+          "title": "Model Barang",
+          "href": "ModelBarang_ListModelBarang.cshtml"
+        }
+
+      ]
+    },
+    {
       "title": "Provinsi",
       "icon": "fal fa-th-list",
       "items": [
@@ -355,6 +377,7 @@
 
       ]
     },
+
     {
       "title": "Kota",
       "icon": "fal fa-th-list",

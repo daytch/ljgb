@@ -39,9 +39,9 @@ namespace ljgb.BusinessLogic
         }
         #endregion
 
-        public async Task<TransactionResponse> GetAll()
+        public async Task<TransactionResponse> GetAll(string search,string order,string orderDir,int startRec,int pageSize,int draw)
         {
-            var models = await dep.GetAll();
+            var models = await dep.GetAll(search, order, orderDir, startRec, pageSize, draw);
             if (models == null)
             {
                 return null;
@@ -121,6 +121,12 @@ namespace ljgb.BusinessLogic
 
         }
 
+        public async Task<TransactionResponse> GetJournalByTransaction(TransactionRequest req)
+        {
+            return await dep.GetJournalByTransaction(req);
+
+        }
+
         public async Task<TransactionResponse> ApproveTransaction(TransactionRequest req)
         {
             TransactionResponse response = new TransactionResponse();
@@ -132,7 +138,7 @@ namespace ljgb.BusinessLogic
                 transactionLevelRequest.ID = getItem.ListTransaction.FirstOrDefault().TrasanctionLevel.ID;
                 TransactionLevelResponse transactionLevelResponse = new TransactionLevelResponse();
                 transactionLevelResponse = await transactionLevelFacade.GetNextLevel(transactionLevelRequest);
-                if (transactionLevelResponse == null)
+                if (transactionLevelResponse.model == null )
                 {
 
                     response.IsSuccess = false;

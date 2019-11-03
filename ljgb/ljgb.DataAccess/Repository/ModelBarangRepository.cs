@@ -1,12 +1,14 @@
 ﻿using ljgb.DataAccess.Interface;
 using ljgb.DataAccess.Model;
-using ljgb.DataAccess.ViewModel;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using System.Linq;
+using ljgb.Common.Responses;
+using ljgb.Common.Requests;
+using ljgb.Common.ViewModel;
 
 namespace ljgb.DataAccess.Repository
 {
@@ -17,112 +19,227 @@ namespace ljgb.DataAccess.Repository
         {
             db = _db;
         }
-        public async Task<long> AddPost(ModelBarang model)
+        public async Task<ModelBarangResponse> AddPost(ModelBarangRequest request)
         {
-            if (db != null)
+            ModelBarangResponse response = new ModelBarangResponse();
+            try
             {
-                await db.ModelBarang.AddAsync(model);
-                await db.SaveChangesAsync();
-
-                return model.Id;
-            }
-
-            return 0;
-        }
-
-        public async Task<long> DeletePost(long ID)
-        {
-            int result = 0;
-
-            if (db != null)
-            {
-                //Find the warna for specific userprofile
-                var model = await db.ModelBarang.FirstOrDefaultAsync(x => x.Id == ID);
-
-                if (model != null)
+                if (db != null)
                 {
-                    model.RowStatus = false;
-                    //Delete that warna
-                    db.ModelBarang.Update(model);
+                    ModelBarang model = new ModelBarang();
+                    model.Nama = request.Nama;
+                    model.Description = request.Description;
+                    model.MerkId = request.MerkID;
+                    model.Created = DateTime.Now;
+                    model.Createdby = "xsivicto1905";
+                    model.RowStatus = true;
 
-                    //Commit the transaction
-                    result = await db.SaveChangesAsync();
+                    await db.ModelBarang.AddAsync(model);
+                    await db.SaveChangesAsync();
+
+                    response.IsSuccess = true;
+                    response.Message = "Data Already Saved";
                 }
-                return result;
-            }
-
-            return result;
-        }
-
-        public async Task<List<ModelBarangViewModel>> GetAll()
-        {
-
-            if (db != null)
-            {
-                return await (from model in db.ModelBarang
-                              where model.RowStatus == true
-                              select new ModelBarangViewModel
-                              {
-                                  ID = model.Id,
-                                  Name = model.Name,
-                                  MerkID = model.MerkId,
-                                  Description = model.Description,
-                                  Created = model.Created,
-                                  CreatedBy = model.Createdby,
-                                  Modified = model.Modified,
-                                  ModifiedBy = model.ModifiedBy,
-                                  RowStatus = model.RowStatus
-                              }).ToListAsync();
-            }
-
-            return null;
-        }
-
-        public async Task<ModelBarangViewModel> GetPost(long ID)
-        {
-            if (db != null)
-            {
-                return await (from model in db.ModelBarang
-                              where model.Id == ID & model.RowStatus == true
-                              select new ModelBarangViewModel
-                              {
-                                  ID = model.Id,
-                                  Name = model.Name,
-                                  MerkID = model.MerkId,
-                                  Description = model.Description,
-                                  Created = model.Created,
-                                  CreatedBy = model.Createdby,
-                                  Modified = model.Modified,
-                                  ModifiedBy = model.ModifiedBy,
-                                  RowStatus = model.RowStatus
-                              }).FirstOrDefaultAsync();
-            }
-
-            return null;
-        }
-
-        public async Task<bool> UpdatePost(ModelBarang model)
-        {
-            bool result = false;
-            if (db != null)
-            {
-                try
+                else
                 {
-                    //Delete that warna
+
+                    response.Message ="Opps, Something Error with System Righ Now !";
+                    response.IsSuccess = false;
+                }
+            }
+            catch (Exception ex)
+            {
+
+                response.Message = ex.ToString();
+                response.IsSuccess = false;
+            }
+
+            return response;
+        }
+
+        public async Task<ModelBarangResponse> DeletePost(ModelBarangRequest request)
+        {
+            ModelBarangResponse response = new ModelBarangResponse();
+            
+
+            try
+            {
+                if (db != null)
+                {
+                    //Find the warna for specific userprofile
+                    ModelBarang model = await db.ModelBarang.FirstOrDefaultAsync(x => x.Id == request.ID);
+
+                    if (model != null)
+                    {
+                        model.RowStatus = false;
+                       
+                       
+                        //Commit the transaction
+                        db.SaveChangesAsync();
+
+                        response.Message = "Data Already Saved";
+                        response.IsSuccess = true;
+                    }
+                    else
+                    {
+                        response.Message = "Data Not Found!";
+                        response.IsSuccess = false;
+                    }
+                    
+                }
+                else
+                {
+
+                    response.Message = "Opps, Something Error with System Righ Now !";
+                    response.IsSuccess = false;
+                }
+            }
+            catch (Exception ex)
+            {
+
+                response.Message = ex.ToString();
+                response.IsSuccess = false;
+            }
+
+            return response;
+        }
+
+        public async Task<ModelBarangResponse> GetAll(string search, string order, string orderDir, int startRec, int pageSize, int draw)
+        {
+            ModelBarangResponse response = new ModelBarangResponse();
+            try
+            {
+              
+                if (db != null)
+                {
+                    var query = (from model in db.ModelBarang
+                                 where model.RowStatus == true
+                                 select model
+                                );
+
+                    int totalRecords = query.Count();
+                    if (!string.IsNullOrEmpty(search) && !string.IsNullOrWhiteSpace(search))
+                    {
+                        query = query.Where(p => p.Nama.ToString().ToLower().Contains(search.ToLower()) ||
+                                            
+                                            p.Description.ToLower().Contains(search.ToLower()));
+                    }
+                    int recFilter = query.Count();
+                    response.ListModel = await (from model in query
+                                                join merk in db.Merk
+                                                on model.MerkId equals merk.Id
+                                                where merk.RowStatus == true
+                                                select new ModelBarangViewModel
+                                                {
+                                                    ID = model.Id,
+                                                    Nama = model.Nama,
+                                                    NamaMerk = merk.Nama,
+                                                    MerkID = model.MerkId,
+                                                    Description = model.Description,
+                                                    Created = model.Created,
+                                                    CreatedBy = model.Createdby,
+                                                    Modified = model.Modified,
+                                                    ModifiedBy = model.ModifiedBy,
+                                                    RowStatus = model.RowStatus
+                                                }).Skip(startRec).Take(pageSize).ToListAsync();
+                    response.draw = Convert.ToInt32(draw);
+                    response.recordsTotal = totalRecords;
+                    response.recordsFiltered = recFilter;
+                    response.Message = "Load Success";
+                    response.IsSuccess = true;
+                }
+                else
+                {
+                    response.Message = "Opps, Something Error with System Righ Now !";
+                    response.IsSuccess = false;
+                }
+            }
+            catch (Exception ex)
+            {
+
+                response.Message = ex.ToString();
+                response.IsSuccess = false;
+
+            }
+
+            return response;
+        }
+
+        public async Task<ModelBarangResponse> GetPost(long ID)
+        {
+            ModelBarangResponse response = new ModelBarangResponse();
+            try
+            {
+                if (db != null)
+                {
+                    response.Model =  await (from model in db.ModelBarang
+                                  where model.Id == ID & model.RowStatus == true
+                                  select new ModelBarangViewModel
+                                  {
+                                      ID = model.Id,
+                                      Nama = model.Nama,
+                                      MerkID = model.MerkId,
+                                      Description = model.Description,
+                                      Created = model.Created,
+                                      CreatedBy = model.Createdby,
+                                      Modified = model.Modified,
+                                      ModifiedBy = model.ModifiedBy,
+                                      RowStatus = model.RowStatus
+                                  }).FirstOrDefaultAsync();
+                    response.Message = "Load Success";
+                    response.IsSuccess = false;
+                }
+                else
+                {
+                    response.Message = "Opps, Something Error with System Righ Now !";
+                    response.IsSuccess = false;
+                }
+            }
+            catch (Exception ex)
+            {
+
+                response.Message = ex.ToString();
+                response.IsSuccess = false;
+            }
+
+            return response;
+        }
+
+        public async Task<ModelBarangResponse> UpdatePost(ModelBarangRequest request)
+        {
+            ModelBarangResponse response = new ModelBarangResponse();
+            try
+            {
+
+                if (db != null)
+                {
+                    ModelBarang model = await db.ModelBarang.Where(x=>x.Id == request.ID).FirstAsync();
+                    model.Modified = DateTime.Now;
+                    model.ModifiedBy = "xsivicto1905";
+                    model.MerkId = request.MerkID;
+                    model.Nama = request.Nama;
+                    model.Description = request.Description;
+
                     db.ModelBarang.Update(model);
 
                     //Commit the transaction
                     await db.SaveChangesAsync();
-                    result = true;
+                    
+
                 }
-                catch (Exception ex)
+                else
                 {
-
-                    throw ex;
+                    response.Message = "Opps, Something Error with System Righ Now !";
+                    response.IsSuccess = false;
                 }
-
             }
-            return result;
+            catch (Exception ex)
+            {
+
+                response.Message = ex.ToString();
+                response.IsSuccess = false;
+            }
+            return response;
         }
     }
 }

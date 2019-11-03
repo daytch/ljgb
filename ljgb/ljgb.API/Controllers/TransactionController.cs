@@ -17,9 +17,18 @@ namespace ljgb.API.Controllers
         [Route("GetAll")]
         public async Task<IActionResult> GetAll()
         {
+            
+
             try
             {
-                var models = await facade.GetAll();
+                string search = HttpContext.Request.Query["search[value]"].ToString();
+                string order = HttpContext.Request.Query["order[0][column]"];
+                string orderDir = HttpContext.Request.Query["order[0][dir]"];
+                int startRec = Convert.ToInt32(HttpContext.Request.Query["start"]);
+                int pageSize = Convert.ToInt32(HttpContext.Request.Query["length"]);
+                int draw = Convert.ToInt32(HttpContext.Request.Query["draw"]);
+
+                var models = await facade.GetAll(search, order, orderDir, startRec, pageSize, draw);
                 if (models == null)
                 {
                     return NotFound();
@@ -185,6 +194,33 @@ namespace ljgb.API.Controllers
                 try
                 {
                     var result = await facade.CancelTransaction(req);
+
+                    return Ok(result);
+                }
+                catch (Exception ex)
+                {
+                    if (ex.GetType().FullName ==
+                             "Microsoft.EntityFrameworkCore.DbUpdateConcurrencyException")
+                    {
+                        return NotFound();
+                    }
+
+                    return BadRequest();
+                }
+            }
+
+            return BadRequest();
+        }
+
+        [HttpPost]
+        [Route("GetJournalByTransaction")]
+        public async Task<IActionResult> GetJournalByTransaction([FromBody]TransactionRequest req)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    var result = await facade.GetJournalByTransaction(req);
 
                     return Ok(result);
                 }

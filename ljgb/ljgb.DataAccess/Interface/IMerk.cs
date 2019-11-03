@@ -1,5 +1,6 @@
-﻿using ljgb.DataAccess.Model;
-using ljgb.DataAccess.ViewModel;
+﻿using ljgb.Common.Requests;
+using ljgb.Common.Responses;
+using ljgb.Common.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -9,14 +10,16 @@ namespace ljgb.DataAccess.Interface
 {
     public interface IMerk
     {
-        Task<List<MerkViewModel>> GetAll();
+        Task<MerkResponse> GetAll(string search, string order, string orderDir, int startRec, int pageSize, int draw);
 
-        Task<MerkViewModel> GetPost(long ID);
+        Task<MerkResponse> GetPost(long ID);
 
-        Task<long> AddPost(Merk model);
+        Task<MerkResponse> AddPost(MerkRequest model);
 
-        Task<long> DeletePost(long ID);
+        Task<MerkResponse> DeletePost(long ID);
 
-        Task<bool> UpdatePost(Merk model);
+        Task<MerkResponse> UpdatePost(MerkRequest model);
+
+        Task<MerkResponse> GetAllWithoutFilter();
     }
 }

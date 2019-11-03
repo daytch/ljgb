@@ -1,5 +1,6 @@
-﻿using ljgb.DataAccess.Model;
-using ljgb.DataAccess.ViewModel;
+﻿using ljgb.Common.Requests;
+using ljgb.Common.Responses;
+
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -9,14 +10,14 @@ namespace ljgb.DataAccess.Interface
 {
     public interface IModelBarang
     {
-        Task<List<ModelBarangViewModel>> GetAll();
+        Task<ModelBarangResponse> GetAll(string search, string order, string orderDir, int startRec, int pageSize, int draw);
 
-        Task<ModelBarangViewModel> GetPost(long ID);
+        Task<ModelBarangResponse> GetPost(long ID);
 
-        Task<long> AddPost(ModelBarang model);
+        Task<ModelBarangResponse> AddPost(ModelBarangRequest model);
 
-        Task<long> DeletePost(long ID);
+        Task<ModelBarangResponse> DeletePost(ModelBarangRequest model);
 
-        Task<bool> UpdatePost(ModelBarang model);
+        Task<ModelBarangResponse> UpdatePost(ModelBarangRequest model);
     }
 }

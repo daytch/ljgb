@@ -12,6 +12,9 @@ namespace ljgb.Common.ViewModel
         public NegoBarangViewModel NegoBarang { get; set; }
         public TransactionLevelViewModel TrasanctionLevel { get; set; }
 
+
+
+
         public string NamaDealer { get; set; }
         public string NamaBarang { get; set; }
         public DateTime Created { get; set; }
@@ -19,5 +22,36 @@ namespace ljgb.Common.ViewModel
         public DateTime? Modified { get; set; }
         public string ModifiedBy { get; set; }
         public bool RowStatus { get; set; }
+
+        public string NamaStatus { get; set; }
+        public string NamaLangkah { get; set; }
+        public long HargaOTR { get; set; }
+        public long HargaNego { get; set; }
+        public string NamaPembeli { get; set; }
+        public string NamaPenjual { get; set; }
+        public long IDPembeli { get; set; }
+        public long IDPenjual { get; set; }
+        public string EmailPembeli { get; set; }
+        public string EmailPenjual { get; set; }
+        public string TelpPembeli { get; set; }
+        public string TelpPenjual { get; set; }
+
+
+        public string NamaDealerKota { get; set; }
+        public string KodeDealer { get; set; }
+        public string AlamatDealer { get; set; }
+        public string KotaDealer { get; set; }
+        public string PejabatDealer { get; set; }
+        public string TelpDealer { get; set; }
+        public string TipePenawaran { get; set; }
+
+        public TransactionViewModel()
+        {
+            Buyer = new UserProfileViewModel();
+            Seller = new UserProfileViewModel();
+            NegoBarang = new NegoBarangViewModel();
+            TrasanctionLevel = new TransactionLevelViewModel();
+        }
+      
     }
 }
