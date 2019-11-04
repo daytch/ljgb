@@ -19,5 +19,10 @@ namespace ljgb.DataAccess.Interface
         Task<ModelBarangResponse> DeletePost(ModelBarangRequest model);
 
         Task<ModelBarangResponse> UpdatePost(ModelBarangRequest model);
+
+        Task<ModelBarangResponse> GetModelWithMerkID(ModelBarangRequest model);
+
+        //Task<ModelBarangResponse> GetAllWithoutFilter();
+        
     }
 }

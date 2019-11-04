@@ -48,7 +48,16 @@ namespace ljgb.BusinessLogic
             return models;
         }
 
-
+        //public async Task<ModelBarangResponse> GetAllWithoutFilter()
+        //{
+        //    var models = await dep.GetAllWithoutFilter();
+        //    if (models == null)
+        //    {
+        //        return null;
+        //    }
+        //    return models;
+        //}
+        
 
         public async Task<ModelBarangResponse> GetPost(long ID)
         {
@@ -79,6 +88,11 @@ namespace ljgb.BusinessLogic
         {
             return await dep.UpdatePost(model);
             
+        }
+
+        public async Task<ModelBarangResponse> GetModelWithMerkID(ModelBarangRequest model)
+        {
+            return await dep.GetModelWithMerkID(model);
         }
     }
 }

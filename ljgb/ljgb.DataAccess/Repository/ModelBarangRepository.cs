@@ -113,27 +113,41 @@ namespace ljgb.DataAccess.Repository
                 if (db != null)
                 {
                     var query = (from model in db.ModelBarang
-                                 where model.RowStatus == true
-                                 select model
+                                 join merk in db.Merk
+                                 on model.MerkId equals merk.Id
+                                 where merk.RowStatus == true
+                                 && model.RowStatus == true
+                                 select new
+                                 {
+                                     model.Id,
+                                     model.Nama,
+                                     NamaMerk = merk.Nama,
+                                     model.MerkId,
+                                     model.Description,
+                                     model.Created,
+                                     model.Createdby,
+                                     model.Modified,
+                                     model.ModifiedBy,
+                                     model.RowStatus
+
+                                 }
                                 );
 
                     int totalRecords = query.Count();
                     if (!string.IsNullOrEmpty(search) && !string.IsNullOrWhiteSpace(search))
                     {
                         query = query.Where(p => p.Nama.ToString().ToLower().Contains(search.ToLower()) ||
-                                            
+                                            p.NamaMerk.ToString().ToLower().Contains(search.ToLower())||
                                             p.Description.ToLower().Contains(search.ToLower()));
                     }
                     int recFilter = query.Count();
                     response.ListModel = await (from model in query
-                                                join merk in db.Merk
-                                                on model.MerkId equals merk.Id
-                                                where merk.RowStatus == true
+                                                
                                                 select new ModelBarangViewModel
                                                 {
                                                     ID = model.Id,
                                                     Nama = model.Nama,
-                                                    NamaMerk = merk.Nama,
+                                                    NamaMerk = model.NamaMerk,
                                                     MerkID = model.MerkId,
                                                     Description = model.Description,
                                                     Created = model.Created,
@@ -160,6 +174,46 @@ namespace ljgb.DataAccess.Repository
                 response.Message = ex.ToString();
                 response.IsSuccess = false;
 
+            }
+
+            return response;
+        }
+
+        public async Task<ModelBarangResponse> GetModelWithMerkID(ModelBarangRequest request)
+        {
+            ModelBarangResponse response = new ModelBarangResponse();
+            try
+            {
+                if (db != null)
+                {
+                    response.ListModel = await(from model in db.ModelBarang
+                                           where model.MerkId == request.MerkID & model.RowStatus == true
+                                           select new ModelBarangViewModel
+                                           {
+                                               ID = model.Id,
+                                               Nama = model.Nama,
+                                               MerkID = model.MerkId,
+                                               Description = model.Description,
+                                               Created = model.Created,
+                                               CreatedBy = model.Createdby,
+                                               Modified = model.Modified,
+                                               ModifiedBy = model.ModifiedBy,
+                                               RowStatus = model.RowStatus
+                                           }).ToListAsync();
+                    response.Message = "Load Success";
+                    response.IsSuccess = true;
+                }
+                else
+                {
+                    response.Message = "Opps, Something Error with System Righ Now !";
+                    response.IsSuccess = false;
+                }
+            }
+            catch (Exception ex)
+            {
+
+                response.Message = ex.ToString();
+                response.IsSuccess = false;
             }
 
             return response;

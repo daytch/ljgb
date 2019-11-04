@@ -1,7 +1,8 @@
-﻿using ljgb.DataAccess.Interface;
+﻿using ljgb.Common.Requests;
+using ljgb.Common.Responses;
+using ljgb.DataAccess.Interface;
 using ljgb.DataAccess.Model;
 using ljgb.DataAccess.Repository;
-using ljgb.DataAccess.ViewModel;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -36,59 +37,43 @@ namespace ljgb.BusinessLogic
         #endregion
 
 
-        public async Task<List<TypeBarangViewModel>> GetAll()
+        public async Task<TypeBarangResponse> GetAll(string search, string order, string orderDir, int startRec, int pageSize, int draw)
         {
-            var models = await dep.GetAll();
-            if (models == null)
-            {
-                return null;
-            }
-            return models;
+            return await dep.GetAll(search, order, orderDir, startRec, pageSize, draw);
+    
         }
 
 
 
-        public async Task<TypeBarangViewModel> GetPost(long ID)
+        public async Task<TypeBarangResponse> GetPost(TypeBarangRequest request)
         {
-            var model = await dep.GetPost(ID);
-
-            if (model == null)
-            {
-                return null;
-            }
-            return model;
+            return await dep.GetPost(request);
 
         }
 
-        public async Task<long> AddPost(TypeBarang model)
+        public async Task<TypeBarangResponse> AddPost(TypeBarangRequest request)
         {
-            var postId = await dep.AddPost(model);
-            if (postId > 0)
-            {
-                return postId;
-            }
-            else
-            {
-                return 0;
-            }
+            TypeBarang model = new TypeBarang();
+            model.ModelBarangId = request.ModelBarangID;
+            model.Nama = request.Nama;
+            model.Description = request.Description;
+            model.Created = DateTime.Now;
+            model.CreatedBy = "xsivicto1905";
+            model.RowStatus = true;
+            return await dep.AddPost(model);
+            
         }
 
-        public async Task<long> DeletePost(long ID)
+        public async Task<TypeBarangResponse> DeletePost(TypeBarangRequest request)
         {
-            long result = 0;
-            result = await dep.DeletePost(ID);
-            if (result == 0)
-            {
-                return 0;
-            }
-            return result;
+           
+            return await dep.DeletePost(request);
+       
         }
 
-        public async Task<bool> UpdatePost(TypeBarang model)
+        public async Task<TypeBarangResponse> UpdatePost(TypeBarangRequest request)
         {
-            bool result = await dep.UpdatePost(model);
-
-            return result;
+            return await dep.UpdatePost(request);
         }
     }
 }
