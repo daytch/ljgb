@@ -161,9 +161,26 @@ namespace ljgb.DataAccess.Repository
             }
             catch (Exception ex)
             {
+<<<<<<< HEAD
 
                 response.Message = ex.ToString();
                 response.IsSuccess = false;
+=======
+                return await (from model in db.TypeBarang
+                              where model.RowStatus == true
+                              select new TypeBarangViewModel
+                              {
+                                  ID = model.Id,
+                                  Name = model.Name,
+                                  ModelBarangID = model.ModelBarangId,
+                                  Description = model.Description,
+                                  Created = model.Created,
+                                  CreatedBy = model.CreatedBy,
+                                  Modified = model.Modified,
+                                  ModifiedBy = model.ModifiedBy,
+                                  RowStatus = model.RowStatus
+                              }).ToListAsync();
+>>>>>>> 1ad68382c47205fb378ded98b05f8f688d92ea2f
             }
 
             return response;
@@ -174,6 +191,7 @@ namespace ljgb.DataAccess.Repository
             TypeBarangResponse response = new TypeBarangResponse();
             try
             {
+<<<<<<< HEAD
                 if (db != null)
                 {
                     response.Model =  await (from model in db.TypeBarang
@@ -208,6 +226,22 @@ namespace ljgb.DataAccess.Repository
             {
                 response.Message = ex.ToString();
                 response.IsSuccess = false;
+=======
+                return await (from model in db.TypeBarang
+                              where model.Id == ID && model.RowStatus == true
+                              select new TypeBarangViewModel
+                              {
+                                  ID = model.Id,
+                                  Name = model.Name,
+                                  ModelBarangID = model.ModelBarangId,
+                                  Description = model.Description,
+                                  Created = model.Created,
+                                  CreatedBy = model.CreatedBy,
+                                  Modified = model.Modified,
+                                  ModifiedBy = model.ModifiedBy,
+                                  RowStatus = model.RowStatus
+                              }).FirstOrDefaultAsync();
+>>>>>>> 1ad68382c47205fb378ded98b05f8f688d92ea2f
             }
 
             return response;

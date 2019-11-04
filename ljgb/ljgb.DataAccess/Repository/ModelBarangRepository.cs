@@ -27,7 +27,7 @@ namespace ljgb.DataAccess.Repository
                 if (db != null)
                 {
                     ModelBarang model = new ModelBarang();
-                    model.Nama = request.Nama;
+                    model.Name = request.Nama;
                     model.Description = request.Description;
                     model.MerkId = request.MerkID;
                     model.Created = DateTime.Now;
@@ -136,8 +136,13 @@ namespace ljgb.DataAccess.Repository
                     int totalRecords = query.Count();
                     if (!string.IsNullOrEmpty(search) && !string.IsNullOrWhiteSpace(search))
                     {
+<<<<<<< HEAD
                         query = query.Where(p => p.Nama.ToString().ToLower().Contains(search.ToLower()) ||
                                             p.NamaMerk.ToString().ToLower().Contains(search.ToLower())||
+=======
+                        query = query.Where(p => p.Name.ToString().ToLower().Contains(search.ToLower()) ||
+                                            
+>>>>>>> 1ad68382c47205fb378ded98b05f8f688d92ea2f
                                             p.Description.ToLower().Contains(search.ToLower()));
                     }
                     int recFilter = query.Count();
@@ -146,8 +151,13 @@ namespace ljgb.DataAccess.Repository
                                                 select new ModelBarangViewModel
                                                 {
                                                     ID = model.Id,
+<<<<<<< HEAD
                                                     Nama = model.Nama,
                                                     NamaMerk = model.NamaMerk,
+=======
+                                                    Nama = model.Name,
+                                                    NamaMerk = merk.Nama,
+>>>>>>> 1ad68382c47205fb378ded98b05f8f688d92ea2f
                                                     MerkID = model.MerkId,
                                                     Description = model.Description,
                                                     Created = model.Created,
@@ -231,7 +241,7 @@ namespace ljgb.DataAccess.Repository
                                   select new ModelBarangViewModel
                                   {
                                       ID = model.Id,
-                                      Nama = model.Nama,
+                                      Nama = model.Name,
                                       MerkID = model.MerkId,
                                       Description = model.Description,
                                       Created = model.Created,
@@ -271,7 +281,7 @@ namespace ljgb.DataAccess.Repository
                     model.Modified = DateTime.Now;
                     model.ModifiedBy = "xsivicto1905";
                     model.MerkId = request.MerkID;
-                    model.Nama = request.Nama;
+                    model.Name = request.Nama;
                     model.Description = request.Description;
 
                     db.ModelBarang.Update(model);

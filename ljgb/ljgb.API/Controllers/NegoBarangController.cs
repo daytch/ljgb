@@ -62,33 +62,41 @@ namespace ljgb.API.Controllers
         }
 
         [HttpPost]
-        [Route("AddPost")]
-        public async Task<IActionResult> AddPost([FromBody]NegoBarangRequest req)
+        [Route("SubmitBid")]
+        public async Task<IActionResult> SubmitBid([FromBody]NegoBarangRequest request)
         {
-            if (ModelState.IsValid)
+            try
             {
-                try
-                {
-                    var postId = await facade.AddPost(req);
-                   
-                        return Ok(postId);
-
-                }
-                catch (Exception)
-                {
-                    return BadRequest();
-                }
-
+                var result = await facade.SubmitBid(request);
             }
-
-            return BadRequest();
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+            return Ok();
         }
+
+
+        [HttpPost]
+        [Route("SubmitAsk")]
+        public async Task<IActionResult> SubmitAsk([FromBody]NegoBarangRequest request)
+        {
+            try
+            {
+                var result = await facade.Submitask(request);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+            return Ok();
+        }
+
 
         [HttpPost]
         [Route("DeletePost")]
         public async Task<IActionResult> DeletePost(NegoBarangRequest req)
         {
-
 
             try
             {

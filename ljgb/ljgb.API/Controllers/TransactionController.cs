@@ -71,14 +71,31 @@ namespace ljgb.API.Controllers
         }
 
         [HttpPost]
-        [Route("AddPost")]
-        public async Task<IActionResult> AddPost([FromBody]TransactionRequest req)
+        [Route("SubmitBuy")]
+        public async Task<IActionResult> SubmitBuy([FromBody]int BarangID, int Nominal)
+        {
+            try
+            {
+                var postId = await facade.SubmitBuy(BarangID, Nominal);
+
+                return Ok(postId);
+
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpPost]
+        [Route("SubmitSell")]
+        public async Task<IActionResult> SubmitSell([FromBody]int BarangID, int Nominal)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    var postId = await facade.AddPost(req);
+                    var postId = await facade.SubmitSell(BarangID, Nominal);
 
                     return Ok(postId);
 

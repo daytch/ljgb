@@ -1,8 +1,6 @@
 ﻿using ljgb.Common.Requests;
 using ljgb.Common.Responses;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using ljgb.DataAccess.Model;
 using System.Threading.Tasks;
 
 namespace ljgb.DataAccess.Interface
@@ -14,6 +12,8 @@ namespace ljgb.DataAccess.Interface
         Task<TransactionResponse> GetPost(TransactionRequest model);
 
         Task<TransactionResponse> AddPost(TransactionRequest model);
+
+        Task<long> SaveTransaction(Transaction model);
 
         Task<TransactionResponse> DeletePost(TransactionRequest model);
 

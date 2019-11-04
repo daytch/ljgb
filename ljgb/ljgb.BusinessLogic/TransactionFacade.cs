@@ -19,6 +19,9 @@ namespace ljgb.BusinessLogic
         #region Important
         private ljgbContext db;
         private ITransaction dep;
+        private INegoBarang INego;
+        private ITransactionJournal IJournal;
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         public TransactionFacade()
         {
@@ -33,11 +36,13 @@ namespace ljgb.BusinessLogic
             optionsBuilder.UseSqlServer(connectionString);
 
             db = new ljgbContext(optionsBuilder.Options);
+            this.IJournal = new TransactionJournalRepository(db);
+            this.INego = new NegoBarangRepository(db);
             this.dep = new TransactionRepository(db);
         }
         #endregion
 
-        public async Task<TransactionResponse> GetAll(string search,string order,string orderDir,int startRec,int pageSize,int draw)
+        public async Task<TransactionResponse> GetAll(string search, string order, string orderDir, int startRec, int pageSize, int draw)
         {
             var models = await dep.GetAll(search, order, orderDir, startRec, pageSize, draw);
             if (models == null)
@@ -46,8 +51,6 @@ namespace ljgb.BusinessLogic
             }
             return models;
         }
-
-
 
         public async Task<TransactionResponse> GetPost(TransactionRequest req)
         {
@@ -61,10 +64,102 @@ namespace ljgb.BusinessLogic
 
         }
 
-        public async Task<TransactionResponse> AddPost(TransactionRequest req)
+        public async Task<TransactionResponse> SubmitBuy(int id, int nominal)
         {
-            return await dep.AddPost(req);
+            TransactionResponse response = new TransactionResponse();
+            NegoBarang nego = new NegoBarang() { BarangId = id, TypePenawaran = "ask", Harga = nominal };
+            NegoBarang ResultNego = await INego.GetNegoBarang(nego);
+            Transaction tran = new Transaction()
+            {
+                BuyerId = 4,
+                SellerId = ResultNego.UserProfileId,
+                NegoBarangId = ResultNego.Id,
+                TransactionLevelId = 1,
 
+                CreatedBy = "Admin",
+                Created = DateTime.Now,
+                RowStatus = true
+            };
+
+            long TransID = await dep.SaveTransaction(tran);
+            if (TransID < 1)
+            {
+                response.Message = "Failed When Save Transaction";
+                response.IsSuccess = false;
+            }
+            else
+            {
+                TransactionJournal journal = new TransactionJournal()
+                {
+                    TransactionId = tran.Id,
+                    BuyerId = tran.BuyerId,
+                    SellerId = tran.SellerId,
+                    NegoBarangId = tran.NegoBarangId,
+                    TransactionLevelId = tran.TransactionLevelId,
+
+                    Created = tran.Created,
+                    CreatedBy = tran.CreatedBy,
+                    RowStatus = tran.RowStatus,
+                };
+                long JournalID = await IJournal.SaveTransactionJournal(journal);
+
+                if (JournalID < 1)
+                {
+                    log.Error("Failed when insert TransactionJournal, TransactionID = " + tran.Id);
+                }
+                response.Message = "Transaction Success.";
+                response.IsSuccess = true;
+            }
+            return response;
+        }
+
+        public async Task<TransactionResponse> SubmitSell(int id, int nominal)
+        {
+            TransactionResponse response = new TransactionResponse();
+            NegoBarang nego = new NegoBarang() { BarangId = id, TypePenawaran = "bid", Harga = nominal };
+            NegoBarang ResultNego = await INego.GetNegoBarang(nego);
+            Transaction tran = new Transaction()
+            {
+                BuyerId = ResultNego.UserProfileId,
+                SellerId = 4,
+                NegoBarangId = ResultNego.Id,
+                TransactionLevelId = 1,
+
+                CreatedBy = "Admin",
+                Created = DateTime.Now,
+                RowStatus = true
+            };
+
+            long TransID = await dep.SaveTransaction(tran);
+            if (TransID < 1)
+            {
+                response.Message = "Failed When Save Transaction";
+                response.IsSuccess = false;
+            }
+            else
+            {
+                TransactionJournal journal = new TransactionJournal()
+                {
+                    TransactionId = tran.Id,
+                    BuyerId = tran.BuyerId,
+                    SellerId = tran.SellerId,
+                    NegoBarangId = tran.NegoBarangId,
+                    TransactionLevelId = tran.TransactionLevelId,
+
+                    Created = tran.Created,
+                    CreatedBy = tran.CreatedBy,
+                    RowStatus = tran.RowStatus,
+                };
+                long JournalID = await IJournal.SaveTransactionJournal(journal);
+
+                if (JournalID < 1)
+                {
+                    log.Error("Failed when insert TransactionJournal, TransactionID = " + tran.Id);
+                }
+                response.Message = "Transaction Success.";
+                response.IsSuccess = true;
+            }
+            return response;
         }
 
         public async Task<TransactionResponse> DeletePost(TransactionRequest req)
@@ -104,14 +199,14 @@ namespace ljgb.BusinessLogic
                 transactionLevelRequest.ID = getItem.ListTransaction.FirstOrDefault().TrasanctionLevel.ID;
                 TransactionLevelResponse transactionLevelResponse = new TransactionLevelResponse();
                 transactionLevelResponse = await transactionLevelFacade.GetNextLevel(transactionLevelRequest);
-                if (transactionLevelResponse.model == null )
+                if (transactionLevelResponse.model == null)
                 {
 
                     response.IsSuccess = false;
                     response.Message = transactionLevelResponse.Message;
                     return response;
                 }
-                
+
                 req.TrasanctionLevel.ID = transactionLevelResponse.model.ID;
                 response = await dep.ApproveTransaction(req);
             }

@@ -1,4 +1,5 @@
 ﻿using ljgb.BusinessLogic;
+using ljgb.Common.Requests;
 using ljgb.Common.Responses;
 using ljgb.DataAccess.Model;
 using Microsoft.AspNetCore.Mvc;
@@ -14,6 +15,7 @@ namespace ljgb.API.Controllers
     public class BarangController : ControllerBase
     {
         private BarangFacade facade = new BarangFacade();
+
         [HttpPost]
         [Route("GetAll")]
         public async Task<IActionResult> GetAll()
@@ -33,15 +35,15 @@ namespace ljgb.API.Controllers
                 return BadRequest(ex);
             }
         }
-
+        
         [HttpGet]
         [Route("GetAllForHomePage")]
-        public async Task<IActionResult> GetAllForHomePage([FromQuery]string city)
+        public IActionResult GetAllForHomePage([FromQuery]string city)
         {
             BarangResponse respon = new BarangResponse();
             try
             {
-                respon = await facade.GetAllForHomePage(city);
+                respon = facade.GetAllForHomePage(city);
                 respon.IsSuccess = true;
                 respon.Message = "Success";
 
@@ -52,6 +54,115 @@ namespace ljgb.API.Controllers
                 respon.Message = ex.Message;
                 respon.IsSuccess = false;
                 return BadRequest(respon);
+            }
+        }
+
+        [HttpGet]
+        [Route("GetBarangDetail")]
+        public async Task<IActionResult> GetBarangDetail(int Id)
+        {
+            if (Id < 1)
+            {
+                return BadRequest();
+            }
+
+            try
+            {
+                BarangResponse post = await facade.GetBarangDetail(Id);
+
+                if (post == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(post);
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpGet]
+        [Route("GetBidPosition")]
+        public async Task<IActionResult> GetBidPosition(int Id,int Nominal)
+        {
+            if (Id < 1)
+            {
+                return BadRequest();
+            }
+
+            try
+            {
+                Position post = await facade.GetBidPosition(Id,Nominal);
+
+                if (post == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(post);
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpGet]
+        [Route("GetAskPosition")]
+        public async Task<IActionResult> GetAskPosition(int Id, int Nominal)
+        {
+            if (Id < 1)
+            {
+                return BadRequest();
+            }
+
+            try
+            {
+                Position post = await facade.GetAskPosition(Id, Nominal);
+
+                if (post == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(post);
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpGet]
+        [Route("GetAllAsksById")]
+        public IActionResult GetAllAsksById([FromQuery]BarangRequest request)
+        {
+            int Id = request.ID;//Convert.ToInt32(HttpContext.Request.Query["id"]);
+            int start = Convert.ToInt32(HttpContext.Request.Query["start"]);
+            int limit = Convert.ToInt32(HttpContext.Request.Query["limit"]);
+            int max = Convert.ToInt32(HttpContext.Request.Query["max"]);
+
+            if (Id < 1)
+            {
+                return BadRequest();
+            }
+
+            try
+            {
+                BarangResponse post = facade.GetAllAsksById(request);
+
+                if (post == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(post);
+            }
+            catch (Exception)
+            {
+                return BadRequest();
             }
         }
 
@@ -81,6 +192,7 @@ namespace ljgb.API.Controllers
             }
         }
 
+
         [HttpPost]
         [Route("AddPost")]
         public async Task<IActionResult> AddPost([FromBody]Barang model)
@@ -108,6 +220,7 @@ namespace ljgb.API.Controllers
 
             return BadRequest();
         }
+
 
         [HttpPost]
         [Route("DeletePost")]
