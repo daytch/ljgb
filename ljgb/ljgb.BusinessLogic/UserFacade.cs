@@ -22,6 +22,7 @@ namespace ljgb.BusinessLogic
         #region Important
         private ljgbContext db;
         private IUser dep;
+        private IUserDetail IDetail;
         private readonly UserManager<IdentityUser> userManager;
         private readonly IEmailSender emailSender;
         private readonly SignInManager<IdentityUser> signInManager;
@@ -45,6 +46,7 @@ namespace ljgb.BusinessLogic
 
             db = new ljgbContext(optionsBuilder.Options);
             dep = new UserProfileRepository(db, userManager, emailSender, signInManager);
+            IDetail = new UserDetailRepository(db);
         }
         #endregion
 
@@ -168,7 +170,7 @@ namespace ljgb.BusinessLogic
                             p.Email.ToLower().Contains(search.ToLower()) ||
                             p.VerifiedBy.ToLower().Contains(search.ToLower())).ToList();
             }
-            
+
             resp = SortByColumnWithOrder(order, orderDir, resp);
 
             int recFilter = resp.datasalesman.Count;
@@ -218,6 +220,31 @@ namespace ljgb.BusinessLogic
             return resp;
         }
 
+        public async Task<UserDetailResponse> GetSalesmanById(int id)
+        {
+            var sales = await dep.GetSalesmanById(id);
+            if (sales == null)
+            {
+                return null;
+            }
+
+            UserDetailResponse resp = new UserDetailResponse()
+            {
+                Id = sales.Id,
+                Nama = sales.Nama,
+                Alamat = sales.Alamat,
+                Email = sales.Email,
+                JenisKelamin = sales.JenisKelamin,
+                KodeDealer = sales.KodeDealer,
+                KotaId = sales.KotaId,
+                ProvinsiId = sales.ProvinsiId,
+                Telp = sales.Telp,
+                IsSuccess = true,
+                Message = "Success"
+            };
+            return resp;
+        }
+
         public async Task<List<UserProfileViewModel>> GetPosts()
         {
             var posts = await dep.GetPosts();
@@ -253,18 +280,6 @@ namespace ljgb.BusinessLogic
             }
         }
 
-        public async Task<bool> SaveUserDetail(UserRequest req)
-        {
-            UserDetail detail = await dep.SelectUserDetail(req.DetailID);
-            detail.VerifiedBy = req.VerifiedBy;
-            detail.VerifiedDate = req.VerifiedDate;
-            detail.Modified = DateTime.Now;
-            detail.ModifiedBy = "Admin";
-
-            bool postId = await dep.SaveUserDetail(detail);
-           return postId;
-        }
-
         public async Task<long> DeletePost(long postId)
         {
             long result = 0;
@@ -276,15 +291,130 @@ namespace ljgb.BusinessLogic
             return result;
         }
 
-        public async Task<bool> DeleteUserDetail(UserRequest request)
-        {
-            UserDetail detail = await dep.SelectUserDetail(request.DetailID);
-            detail.Modified = DateTime.Now;
-            detail.ModifiedBy = "Admin";
-            detail.RowStatus = false;
+        //public async Task<bool> DeleteUserDetail(UserRequest request)
+        //{
+        //    UserDetail detail = await dep.SelectUserDetail(request.DetailID);
+        //    detail.Modified = DateTime.Now;
+        //    detail.ModifiedBy = "Admin";
+        //    detail.RowStatus = false;
 
-            bool postId = await dep.SaveUserDetail(detail);
-            return postId;
+        //    bool postId = await dep.SaveUserDetail(detail);
+        //    return postId;
+        //}
+
+        public async Task<UserResponse> SaveSalesman(UserRequest model)
+        {
+            UserResponse response = new UserResponse();
+            try
+            {
+                UserProfile user = new UserProfile();
+                UserDetail detail = new UserDetail();
+
+                #region Insert Profile
+                if (model.Id < 1)
+                {
+                    user = new UserProfile()
+                    {
+                        Nama = model.Nama,
+                        Email = model.Email,
+                        Telp = model.Telp,
+                        Alamat = model.Alamat,
+                        KotaId = model.KotaId,
+                        JenisKelamin = model.JenisKelamin,
+
+                        Created = DateTime.Now,
+                        CreatedBy = "Admin",
+                        RowStatus = true
+                    };
+
+                    long userID = await dep.AddPost(user);
+                    if (userID < 1)
+                    {
+                        response.IsSuccess = false;
+                        response.Message = "Failed When save to table UserProfile";
+                        return response;
+                    }
+                }
+                else
+                {
+                    user = await dep.Select(Convert.ToInt64(model.Id));
+                    if (user == null)
+                    {
+                        response.IsSuccess = false;
+                        response.Message = "Failed When get UserProfile.";
+                        return response;
+                    }
+
+                    user.Nama = model.Nama;
+                    user.Telp = model.Telp;
+                    user.Alamat = model.Alamat;
+                    user.KotaId = model.KotaId;
+
+                    user.Modified = DateTime.Now;
+                    user.ModifiedBy = "Admin";
+                    bool result = await dep.Update(user);
+                    if (!result)
+                    {
+                        response.IsSuccess = false;
+                        response.Message = "Failed When save to table UserProfile";
+                        return response;
+                    }
+                }
+                #endregion
+
+                #region Insert UserDetail
+                detail = await IDetail.SelectByUserProfileID(user.Id);
+                if (detail == null)
+                {
+                    detail = new UserDetail()
+                    {
+                        UserProfileId = Convert.ToInt32(user.Id),
+                        VerifiedBy = "Admin",
+                        VerifiedDate = DateTime.Now,
+                        Description = "seller",
+                        KodeDealer = model.KodeDealer,
+
+                        Created = DateTime.Now,
+                        CreatedBy = "Admin",
+                        RowStatus = true
+                    };
+                    long DetailID = await IDetail.SaveUserDetail(detail);
+                    if (DetailID < 1)
+                    {
+                        response.IsSuccess = false;
+                        response.Message = "Failed When save to table UserDetail";
+                        return response;
+                    }
+                }
+                else
+                {
+                    detail.UserProfileId = Convert.ToInt32(user.Id);
+                    detail.VerifiedBy = "Admin";
+                    detail.VerifiedDate = DateTime.Now;
+                    detail.Description = "seller";
+                    detail.KodeDealer = model.KodeDealer;
+
+                    detail.Modified = DateTime.Now;
+                    detail.ModifiedBy = "Admin";
+                    bool result = await IDetail.Update(detail);
+                    if (!result)
+                    {
+                        response.IsSuccess = false;
+                        response.Message = "Failed When save to table UserDetail";
+                        return response;
+                    }
+                }
+                #endregion
+
+                response.Message = "Save Userprofile & UserDetail Success.";
+                response.IsSuccess = true;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return response;
         }
 
         public async Task<IdentityResult> Register(UserRequest model)

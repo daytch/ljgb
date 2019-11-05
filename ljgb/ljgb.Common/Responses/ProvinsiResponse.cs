@@ -11,6 +11,8 @@ namespace ljgb.Common.Responses
 
         public ProvinsiViewModel Model { get; set; }
 
+        public List<Dropdown> ListProvinces { get; set; }
+
         public ProvinsiResponse()
         {
             ListProvinsi = new List<ProvinsiViewModel>();

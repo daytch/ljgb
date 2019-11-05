@@ -90,7 +90,7 @@ namespace ljgb.DataAccess.Repository
 
                 if (warna != null)
                 {
-                    warna.RowStatus = true;
+                    warna.RowStatus = false;
                     //Delete that warna
                     db.Warna.Update(warna);
 

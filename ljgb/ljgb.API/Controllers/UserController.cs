@@ -77,6 +77,26 @@ namespace ljgb.API.Controllers
         }
 
         [HttpGet]
+        [Route("GetSalesmanById")]
+        public async Task<IActionResult> GetSalesmanById(int id)
+        {
+            try
+            {
+                var salesman = await facade.GetSalesmanById(id);
+                if (salesman == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(salesman);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+        
+        [HttpGet]
         [Route("GetBuyer")]
         public async Task<IActionResult> GetAllBuyer()
         {
@@ -102,58 +122,58 @@ namespace ljgb.API.Controllers
             }
         }
         
-        [HttpPost]
-        [Route("SaveUserDetail")]
-        public async Task<IActionResult> SaveUserDetail([FromBody]UserRequest request)
-        {
-            UserResponse resp = new UserResponse();
-            try
-            {
-                bool posts = await facade.SaveUserDetail(request);
-                resp.IsSuccess = posts;
-                if (posts)
-                {
-                    resp.Message = "Success When Update UserDetail.";
-                }
-                else
-                {
-                    resp.Message = "Failed when Update UserDetail.";
-                }
+        //[HttpPost]
+        //[Route("SaveUserDetail")]
+        //public async Task<IActionResult> SaveUserDetail([FromBody]UserRequest request)
+        //{
+        //    UserResponse resp = new UserResponse();
+        //    try
+        //    {
+        //        bool posts = await facade.SaveUserDetail(request);
+        //        resp.IsSuccess = posts;
+        //        if (posts)
+        //        {
+        //            resp.Message = "Success When Update UserDetail.";
+        //        }
+        //        else
+        //        {
+        //            resp.Message = "Failed when Update UserDetail.";
+        //        }
 
-                return Ok(resp);
-            }
-            catch (Exception ex)
-            {
-                resp.Message = ex.ToString();
-                resp.IsSuccess = false;
-            }
-            return Ok(resp);
-        }
+        //        return Ok(resp);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        resp.Message = ex.ToString();
+        //        resp.IsSuccess = false;
+        //    }
+        //    return Ok(resp);
+        //}
 
-        [HttpPost]
-        [Route("DeleteUserDetail")]
-        public async Task<IActionResult> DeleteUserDetail([FromBody]UserRequest request)
-        {
-            UserResponse resp = new UserResponse();
-            try
-            {
-                resp.IsSuccess = await facade.DeleteUserDetail(request);
-                if (resp.IsSuccess)
-                {
-                    resp.Message = "Success when deleted data.";
-                }
-                else
-                {
-                    resp.Message = "Failed when deleted data.";
-                }
-            }
-            catch (Exception ex)
-            {
-                resp.IsSuccess = false;
-                resp.Message = ex.ToString();
-            }
-            return Ok(resp);
-        }
+        //[HttpPost]
+        //[Route("DeleteUserDetail")]
+        //public async Task<IActionResult> DeleteUserDetail([FromBody]UserRequest request)
+        //{
+        //    UserResponse resp = new UserResponse();
+        //    try
+        //    {
+        //        resp.IsSuccess = await facade.DeleteUserDetail(request);
+        //        if (resp.IsSuccess)
+        //        {
+        //            resp.Message = "Success when deleted data.";
+        //        }
+        //        else
+        //        {
+        //            resp.Message = "Failed when deleted data.";
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        resp.IsSuccess = false;
+        //        resp.Message = ex.ToString();
+        //    }
+        //    return Ok(resp);
+        //}
 
         [HttpPost]
         [Route("GetPosts")]
@@ -278,6 +298,22 @@ namespace ljgb.API.Controllers
             }
             return resp;
             //return await facade.Register(model);
+        }
+
+        [HttpPost]
+        [Route("SaveSalesman")]
+        public async Task<UserResponse> SaveSalesman([FromBody]UserRequest model)
+        {
+            UserResponse response = new UserResponse();
+            try
+            {
+                response = await facade.SaveSalesman(model);                
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return response;
         }
 
         [HttpPost]

@@ -70,9 +70,20 @@ namespace ljgb.BusinessLogic
 
         public async Task<ModelBarangResponse> DeletePost(ModelBarangRequest model)
         {
-            
-            return await dep.DeletePost(model);
-           
+            ModelBarangResponse resp = new ModelBarangResponse();
+            long result = 0;
+            result = await dep.DeletePost(model.ID);
+            if (result == 0)
+            {
+                resp.IsSuccess = false;
+                resp.Message = "Failed when delete Model Bareng";
+            }
+            else
+            {
+                resp.IsSuccess = true;
+                resp.Message = "Success Delete Model Barang";
+            }
+            return resp;
         }
 
         public async Task<ModelBarangResponse> UpdatePost(ModelBarangRequest model)

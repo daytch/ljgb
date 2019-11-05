@@ -43,53 +43,6 @@ namespace ljgb.DataAccess.Repository
                 else
                 {
 
-                    response.Message ="Opps, Something Error with System Righ Now !";
-                    response.IsSuccess = false;
-                }
-            }
-            catch (Exception ex)
-            {
-
-                response.Message = ex.ToString();
-                response.IsSuccess = false;
-            }
-
-            return response;
-        }
-
-        public async Task<ModelBarangResponse> DeletePost(ModelBarangRequest request)
-        {
-            ModelBarangResponse response = new ModelBarangResponse();
-            
-
-            try
-            {
-                if (db != null)
-                {
-                    //Find the warna for specific userprofile
-                    ModelBarang model = await db.ModelBarang.FirstOrDefaultAsync(x => x.Id == request.ID);
-
-                    if (model != null)
-                    {
-                        model.RowStatus = false;
-                       
-                       
-                        //Commit the transaction
-                        db.SaveChangesAsync();
-
-                        response.Message = "Data Already Saved";
-                        response.IsSuccess = true;
-                    }
-                    else
-                    {
-                        response.Message = "Data Not Found!";
-                        response.IsSuccess = false;
-                    }
-                    
-                }
-                else
-                {
-
                     response.Message = "Opps, Something Error with System Righ Now !";
                     response.IsSuccess = false;
                 }
@@ -104,12 +57,34 @@ namespace ljgb.DataAccess.Repository
             return response;
         }
 
+        public async Task<long> DeletePost(long modelID)
+        {
+            int result = 0;
+            if (db != null)
+            {
+                //Find the warna for specific userprofile
+                var model = await db.ModelBarang.FirstOrDefaultAsync(x => x.Id == modelID);
+
+                if (model != null)
+                {
+                    model.RowStatus = false;
+                    //Delete that warna
+                    db.ModelBarang.Update(model);
+
+                    //Commit the transaction
+                    result = await db.SaveChangesAsync();
+                }
+                return result;
+            }
+            return result;
+        }
+
         public async Task<ModelBarangResponse> GetAll(string search, string order, string orderDir, int startRec, int pageSize, int draw)
         {
             ModelBarangResponse response = new ModelBarangResponse();
             try
             {
-              
+
                 if (db != null)
                 {
                     var query = (from model in db.ModelBarang
@@ -121,7 +96,7 @@ namespace ljgb.DataAccess.Repository
                     if (!string.IsNullOrEmpty(search) && !string.IsNullOrWhiteSpace(search))
                     {
                         query = query.Where(p => p.Name.ToString().ToLower().Contains(search.ToLower()) ||
-                                            
+
                                             p.Description.ToLower().Contains(search.ToLower()));
                     }
                     int recFilter = query.Count();
@@ -172,20 +147,20 @@ namespace ljgb.DataAccess.Repository
             {
                 if (db != null)
                 {
-                    response.Model =  await (from model in db.ModelBarang
-                                  where model.Id == ID & model.RowStatus == true
-                                  select new ModelBarangViewModel
-                                  {
-                                      ID = model.Id,
-                                      Nama = model.Name,
-                                      MerkID = model.MerkId,
-                                      Description = model.Description,
-                                      Created = model.Created,
-                                      CreatedBy = model.Createdby,
-                                      Modified = model.Modified,
-                                      ModifiedBy = model.ModifiedBy,
-                                      RowStatus = model.RowStatus
-                                  }).FirstOrDefaultAsync();
+                    response.Model = await (from model in db.ModelBarang
+                                            where model.Id == ID & model.RowStatus == true
+                                            select new ModelBarangViewModel
+                                            {
+                                                ID = model.Id,
+                                                Nama = model.Name,
+                                                MerkID = model.MerkId,
+                                                Description = model.Description,
+                                                Created = model.Created,
+                                                CreatedBy = model.Createdby,
+                                                Modified = model.Modified,
+                                                ModifiedBy = model.ModifiedBy,
+                                                RowStatus = model.RowStatus
+                                            }).FirstOrDefaultAsync();
                     response.Message = "Load Success";
                     response.IsSuccess = false;
                 }
@@ -213,7 +188,7 @@ namespace ljgb.DataAccess.Repository
 
                 if (db != null)
                 {
-                    ModelBarang model = await db.ModelBarang.Where(x=>x.Id == request.ID).FirstAsync();
+                    ModelBarang model = await db.ModelBarang.Where(x => x.Id == request.ID).FirstAsync();
                     model.Modified = DateTime.Now;
                     model.ModifiedBy = "xsivicto1905";
                     model.MerkId = request.MerkID;
@@ -224,7 +199,7 @@ namespace ljgb.DataAccess.Repository
 
                     //Commit the transaction
                     await db.SaveChangesAsync();
-                    
+
 
                 }
                 else

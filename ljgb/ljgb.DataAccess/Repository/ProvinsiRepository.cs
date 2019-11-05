@@ -122,6 +122,25 @@ namespace ljgb.DataAccess.Repository
             return response;
         }
 
+        public async Task<List<Provinsi>> GetAllForDropdown()
+        {
+            List<Provinsi> response = new List<Provinsi>();
+
+            if (db != null)
+            {
+                try
+                {
+                    response = await db.Provinsi.Where(x => x.RowStatus == true).Select(x => new Provinsi() { Id = x.Id, Nama = x.Nama }).ToListAsync();
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+
+            }
+            return response;
+        }
+
         public async Task<ProvinsiResponse> GetPost(ProvinsiRequest request)
         {
             ProvinsiResponse response = new ProvinsiResponse();

@@ -1,5 +1,6 @@
 ﻿using ljgb.Common.Requests;
 using ljgb.Common.Responses;
+using ljgb.Common.ViewModel;
 using ljgb.DataAccess.Interface;
 using ljgb.DataAccess.Model;
 using ljgb.DataAccess.Repository;
@@ -8,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -46,6 +48,16 @@ namespace ljgb.BusinessLogic
             return models;
         }
 
+        public async Task<List<Dropdown>> GetAllForDropdown()
+        {
+            List<Provinsi> ListProvinsi = await dep.GetAllForDropdown();
+            List<Dropdown> ListDropdown = ListProvinsi.Select(x => new Dropdown() { ID = x.Id, Text = x.Nama }).ToList();
+            if (ListDropdown == null)
+            {
+                return null;
+            }
+            return ListDropdown;
+        }        
 
 
         public async Task<ProvinsiResponse> GetPost(ProvinsiRequest req)

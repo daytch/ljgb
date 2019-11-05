@@ -64,7 +64,7 @@ namespace ljgb.DataAccess.Repository
         //                      select new TrackLevelViewModel
         //                      {
         //                          ID = model.Id,
-        //                          Name = model.Name,
+        //                          Name = model.Nama,
         //                          Description = model.Description,
         //                          TrackStatusID = model.TrackStatusId,
         //                          TrackTypeID = model.TrackTypeId,
@@ -88,7 +88,7 @@ namespace ljgb.DataAccess.Repository
         //                      select new TrackLevelViewModel
         //                      {
         //                          ID = model.Id,
-        //                          Name = model.Name,
+        //                          Name = model.Nama,
         //                          Description = model.Description,
         //                          TrackStatusID = model.TrackStatusId,
         //                          TrackTypeID = model.TrackTypeId,

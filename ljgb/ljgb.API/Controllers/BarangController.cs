@@ -69,6 +69,8 @@ namespace ljgb.API.Controllers
             try
             {
                 BarangResponse post = await facade.GetBarangDetail(Id);
+                post.IsSuccess = true;
+                post.Message = "Success";
 
                 if (post == null)
                 {
@@ -77,9 +79,9 @@ namespace ljgb.API.Controllers
 
                 return Ok(post);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return BadRequest();
+                return BadRequest(ex);
             }
         }
 
@@ -152,7 +154,8 @@ namespace ljgb.API.Controllers
             try
             {
                 BarangResponse post = facade.GetAllAsksById(request);
-
+                post.IsSuccess = true;
+                post.Message = "Success";
                 if (post == null)
                 {
                     return NotFound();
@@ -160,9 +163,9 @@ namespace ljgb.API.Controllers
 
                 return Ok(post);
             }
-            catch (Exception)
-            {
-                return BadRequest();
+            catch (Exception ex)
+            {                
+                return BadRequest(ex);
             }
         }
 

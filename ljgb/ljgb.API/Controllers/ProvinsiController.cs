@@ -1,5 +1,6 @@
 ﻿using ljgb.BusinessLogic;
 using ljgb.Common.Requests;
+using ljgb.Common.Responses;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -10,7 +11,7 @@ namespace ljgb.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ProvinsiController :ControllerBase
+    public class ProvinsiController : ControllerBase
     {
         private ProvinsiFacade facade = new ProvinsiFacade();
         [HttpPost]
@@ -33,7 +34,29 @@ namespace ljgb.API.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("GetAllForDropdown")]
+        public async Task<IActionResult> GetAllForDropdown()
+        {
+            ProvinsiResponse response = new ProvinsiResponse();
+            try
+            {
+                response.ListProvinces = await facade.GetAllForDropdown();
+                response.IsSuccess = true;
+                response.Message = "Success";
 
+                if (response == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
 
         [HttpPost]
         [Route("GetModelWithID")]

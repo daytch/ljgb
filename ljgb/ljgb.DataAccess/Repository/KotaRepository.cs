@@ -20,6 +20,26 @@ namespace ljgb.DataAccess.Repository
         {
             db = _db;
         }
+
+        public async Task<List<Kota>> GetKotaByProvinsiID(int ProvinsiID)
+        {
+            List<Kota> response = new List<Kota>();
+
+            if (db != null)
+            {
+                try
+                {
+                    response = await db.Kota.Where(x => x.RowStatus == true && x.ProvinsiId == ProvinsiID).Select(x => new Kota() { Id = x.Id, Nama = x.Nama }).ToListAsync();
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+
+            }
+            return response;
+        }
+
         public async Task<KotaResponse> AddPost(KotaRequest request)
         {
             KotaResponse response = new KotaResponse();
@@ -88,13 +108,15 @@ namespace ljgb.DataAccess.Repository
             return response;
         }
 
-        public async Task<KotaResponse> GetAll()
+        public async Task<List<Kota>> GetAll()
         {
-            KotaResponse response = new KotaResponse();
+            List<Kota> response = new List<Kota>();
             if (db != null)
             {
                 try
                 {
+                    response = await db.Kota.Where(x => x.RowStatus == true).ToListAsync();
+                    #region Old
                     //response.ListKota = await(from model in db.Kota
                     //                           where model.RowStatus == true
                     //                           select new KotaViewModel
@@ -109,25 +131,25 @@ namespace ljgb.DataAccess.Repository
                     //                               ModifiedBy = model.ModifiedBy,
                     //                               RowStatus = model.RowStatus
                     //                           }).ToListAsync();
-                    response.ListProvinsi = await (from prov in db.Provinsi
-                                                   where prov.RowStatus == true
-                                                   select new ProvinsiViewModel
-                                                   {
-                                                       ID = prov.Id,
-                                                       Nama = prov.Nama,
-                                                       Created = prov.Created,
-                                                       CreatedBy = prov.CreatedBy,
-                                                       Description = prov.Description,
-                                                       Modified = prov.Modified,
-                                                       ModifiedBy = prov.ModifiedBy,
-                                                       RowStatus = prov.RowStatus
-                                                   }).ToListAsync();
-                    response.Message = "Success";
+                    //response.ListProvinsi = await (from prov in db.Provinsi
+                    //                               where prov.RowStatus == true
+                    //                               select new ProvinsiViewModel
+                    //                               {
+                    //                                   ID = prov.Id,
+                    //                                   Nama = prov.Nama,
+                    //                                   Created = prov.Created,
+                    //                                   CreatedBy = prov.CreatedBy,
+                    //                                   Description = prov.Description,
+                    //                                   Modified = prov.Modified,
+                    //                                   ModifiedBy = prov.ModifiedBy,
+                    //                                   RowStatus = prov.RowStatus
+                    //                               }).ToListAsync();
+                    //response.Message = "Success";
+                    #endregion
                 }
                 catch (Exception ex)
                 {
-                    response.IsSuccess = false;
-                    response.Message = ex.ToString();
+                    throw ex;
                 }
 
             }
@@ -142,20 +164,20 @@ namespace ljgb.DataAccess.Repository
             {
                 try
                 {
-                    //response.ListKota = await(from model in db.Kota
-                    //                           where model.RowStatus == true && model.Id == request.ID
-                    //                           select new KotaViewModel
-                    //                           {
-                    //                               ID = model.Id,
-                    //                               Nama = model.Nama,
-                    //                               Description = model.Description,
-                    //                               ProvinsiID = model.ProvinsiId,
-                    //                               Created = model.Created,
-                    //                               CreatedBy = model.CreatedBy,
-                    //                               Modified = model.Modified,
-                    //                               ModifiedBy = model.ModifiedBy,
-                    //                               RowStatus = model.RowStatus
-                    //                           }).ToListAsync();
+                    response.ListKota = await (from model in db.Kota
+                                               where model.RowStatus == true && model.Id == request.ID
+                                               select new KotaViewModel
+                                               {
+                                                   ID = model.Id,
+                                                   Nama = model.Nama,
+                                                   Description = model.Description,
+                                                   ProvinsiID = model.ProvinsiId,
+                                                   Created = model.Created,
+                                                   CreatedBy = model.CreatedBy,
+                                                   Modified = model.Modified,
+                                                   ModifiedBy = model.ModifiedBy,
+                                                   RowStatus = model.RowStatus
+                                               }).ToListAsync();
                 }
                 catch (Exception ex)
                 {

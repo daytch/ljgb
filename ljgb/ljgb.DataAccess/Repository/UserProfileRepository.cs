@@ -26,6 +26,16 @@ namespace ljgb.DataAccess.Repository
             emailSender = _emailSender;
             signInManager = _signInManager;
         }
+        
+        public async Task<sp_GetUserDetail> GetSalesmanById(int id)
+        {
+            if (db != null)
+            {
+                return await db.Set<sp_GetUserDetail>().FromSql("EXEC sp_GetUserDetail {0}", id).AsNoTracking().FirstOrDefaultAsync();
+            }
+
+            return null;
+        }
 
         public async Task<List<UserProfile>> GetUserProfiles()
         {
@@ -109,6 +119,16 @@ namespace ljgb.DataAccess.Repository
             return null;
         }
 
+        public async Task<UserProfile> Select(long id)
+        {
+            if (db != null)
+            {
+                return await db.UserProfile.Where(x => x.Id == id && x.RowStatus == true).FirstOrDefaultAsync();
+            }
+
+            return null;
+        }
+
         public async Task<long> AddPost(UserProfile user)
         {
             if (db != null)
@@ -120,49 +140,6 @@ namespace ljgb.DataAccess.Repository
             }
 
             return 0;
-        }
-
-        public async Task<bool> SaveUserDetail(UserDetail user)
-        {
-            bool result = false;
-            if (db != null)
-            {
-                try
-                {
-                    //Delete that warna
-                    db.UserDetail.Update(user);
-
-                    //Commit the transaction
-                    await db.SaveChangesAsync();
-                    result = true;
-                }
-                catch (Exception ex)
-                {
-
-                    throw ex;
-                }
-
-            }
-            return result;
-        }
-
-        public async Task<UserDetail> SelectUserDetail(long id)
-        {
-            UserDetail result = new UserDetail();
-            if (db != null)
-            {
-                try
-                {
-                    result = await db.UserDetail.Where(x => x.Id == id).FirstOrDefaultAsync();
-                }
-                catch (Exception ex)
-                {
-
-                    throw ex;
-                }
-
-            }
-            return result;
         }
 
         public async Task<long> DeletePost(long postId)
@@ -188,7 +165,7 @@ namespace ljgb.DataAccess.Repository
             return result;
         }
 
-        public async Task<bool> UpdatePost(UserProfile user)
+        public async Task<bool> Update(UserProfile user)
         {
             bool result = false;
             if (db != null)

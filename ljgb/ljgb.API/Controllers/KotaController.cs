@@ -1,5 +1,6 @@
 ﻿using ljgb.BusinessLogic;
 using ljgb.Common.Requests;
+using ljgb.Common.Responses;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -13,26 +14,50 @@ namespace ljgb.API.Controllers
     public class KotaController : ControllerBase
     {
         private KotaFacade facade = new KotaFacade();
-        [HttpPost]
-        [Route("GetAll")]
-        public async Task<IActionResult> GetAll()
+        //[HttpPost]
+        //[Route("GetAll")]
+        //public async Task<IActionResult> GetAll()
+        //{
+        //    try
+        //    {
+        //        var models = await facade.GetAll();
+        //        if (models == null)
+        //        {
+        //            return NotFound();
+        //        }
+
+        //        return Ok(models);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return BadRequest(ex);
+        //    }
+        //}
+
+
+        [HttpGet]
+        [Route("GetAllForDropdown")]
+        public async Task<IActionResult> GetAllForDropdown(int ProvinsiID)
         {
+            KotaResponse response = new KotaResponse();
             try
             {
-                var models = await facade.GetAll();
-                if (models == null)
+                response.ListKotas = await facade.GetAllForDropdown(ProvinsiID);
+                response.IsSuccess = true;
+                response.Message = "Success";
+
+                if (response == null)
                 {
                     return NotFound();
                 }
 
-                return Ok(models);
+                return Ok(response);
             }
             catch (Exception ex)
             {
                 return BadRequest(ex);
             }
         }
-
 
 
         [HttpPost]

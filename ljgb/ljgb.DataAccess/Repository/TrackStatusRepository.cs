@@ -63,7 +63,7 @@ namespace ljgb.DataAccess.Repository
         //                      select new TrackStatusViewModel
         //                      {
         //                          ID = model.Id,
-        //                          Name = model.Name,
+        //                          Name = model.Nama,
         //                          Description = model.Description,
         //                          Created = model.Created,
         //                          CreatedBy = model.CreatedBy,
@@ -85,7 +85,7 @@ namespace ljgb.DataAccess.Repository
         //                      select new TrackStatusViewModel
         //                      {
         //                          ID = model.Id,
-        //                          Name = model.Name,
+        //                          Name = model.Nama,
         //                          Description = model.Description,
         //                          Created = model.Created,
         //                          CreatedBy = model.CreatedBy,

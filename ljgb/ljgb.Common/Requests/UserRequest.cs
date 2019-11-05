@@ -16,5 +16,28 @@ namespace ljgb.Common.Requests
         public int DetailID { get; set; }
         public string VerifiedBy { get; set; }
         public DateTime VerifiedDate { get; set; }
+
+
+        public int Id { get; set; }
+        public string Nama { get; set; }
+        public string Email { get; set; }
+        public string Telp { get; set; }
+        public string Alamat { get; set; }
+        public string JenisKelamin { get; set; }
+        public int KotaId { get; set; }
+        public string KodeDealer { get; set; }
+    }
+
+    public class sp_GetUserDetail
+    {
+        public Int64 Id { get; set; }
+        public string Nama { get; set; }
+        public string Email { get; set; }
+        public string Telp { get; set; }
+        public string Alamat { get; set; }
+        public string JenisKelamin { get; set; }
+        public Int64 ProvinsiId { get; set; }
+        public Int64 KotaId { get; set; }
+        public string KodeDealer { get; set; }
     }
 }

@@ -126,7 +126,7 @@ namespace ljgb.DataAccess.Repository
                 }
                 catch (Exception ex)
                 {
-                    throw;
+                    throw ex;
                 }
 
             }
@@ -165,8 +165,7 @@ namespace ljgb.DataAccess.Repository
                 }
                 catch (Exception ex)
                 {
-
-                    throw;
+                    throw ex;
                 }
 
             }
@@ -197,8 +196,7 @@ namespace ljgb.DataAccess.Repository
                 }
                 catch (Exception ex)
                 {
-
-                    throw;
+                    throw ex;
                 }
 
             }

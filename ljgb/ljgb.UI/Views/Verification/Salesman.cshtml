@@ -34,6 +34,8 @@
             <div class="panel-container show">
                 <div class="panel-content">
                     <!-- datatable start -->
+                    <a class="btn btn-sm btn-outline-success waves-effect waves-themed" data-toggle="modal" data-target="#ModalEdit">Add <i class="fas fa-plus-circle"></i></a>
+                    <hr />
                     <table id="tableSalesman" class="table table-bordered table-hover table-striped w-100">
                         <thead>
                             <tr>
@@ -59,70 +61,129 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">
-                    Verification Salesman
-                    <small class="m-0 text-muted">
-                        Salesman
-                    </small>
-                </h4>
+                <h4 class="modal-title" id="modalTitle"></h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true"><i class="fal fa-times"></i></span>
                 </button>
             </div>
             <div class="modal-body">
-                <div class="form-group">
-                    <div class="row">
-                        <div class="col-md-3">
-                            <label for="Nama">Nama</label>
-                        </div>
-                        <div class="col-md-8">
-                            <input type="text" class="form-control col-md-10" id="Nama" placeholder="Nama" readonly="readonly" required>
-                        </div>
-                        <input type="hidden" class="form-control" id="SalesmanID">
-                        <input type="hidden" class="form-control" id="UserDetailID">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="row">
-                        <div class="col-md-3">
-                            <label for="Email">Email</label>
-                        </div>
-                        <div class="col-md-8">
-                            <input type="text" class="form-control col-md-10" id="Email" placeholder="Email" readonly="readonly" required>
+                <form class="needs-validation" novalidate>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <label for="Nama">Nama</label>
+                            </div>
+                            <div class="col-md-8">
+                                <input type="text" class="form-control col-md-12" id="Nama" placeholder="Nama" required>
+                                <div class="invalid-feedback">
+                                    Please input Name.
+                                </div>
+                            </div>
+                            <input type="hidden" class="form-control" id="UserID">
                         </div>
                     </div>
-                </div>
-                <div class="form-group">
-                    <div class="row">
-                        <div class="col-md-3">
-                            <label for="Telp">Telp</label>
-                        </div>
-                        <div class="col-md-8">
-                            <input type="text" class="form-control col-md-10" id="Telp" placeholder="Telp" readonly="readonly" required>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="row">
-                        <div class="col-md-3">
-                            <label for="VerifiedDate">Verified Date</label>
-                        </div>
-                        <div class="col-md-8">
-                            <input class="form-control col-md-10" id="VerifiedDate" type="date" name="date" value="2023-07-23">
-                            @*<input type="text" class="form-control col-md-10" id="VerifiedDate" placeholder="Verified Date" required>*@
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <label for="Email">Email</label>
+                            </div>
+                            <div class="col-md-8">
+                                <input type="email" class="form-control col-md-12" id="Email" placeholder="Email" required>
+                                <div class="invalid-feedback">
+                                    Please input Email.
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="form-group">
-                    <div class="row">
-                        <div class="col-md-3">
-                            <label for="Verified By">Verified By</label>
-                        </div>
-                        <div class="col-md-8">
-                            <input type="text" class="form-control col-md-10" id="VerifiedBy" placeholder="Verified By" required>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <label for="Telp">Telp</label>
+                            </div>
+                            <div class="col-md-8">
+                                <input type="tel" class="form-control col-md-12" id="Telp" placeholder="Telp" required>
+                                <div class="invalid-feedback">
+                                    Please input telp.
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <label for="JenisKelamin">Jenis Kelamin</label>
+                            </div>
+                            <div class="col-md-8">
+                                <select class="form-control col-md-12" id="JenisKelamin" type="text" name="Jenis Kelamin" required>
+                                    <option value="">-- Please Select --</option>
+                                    <option value="Pria">Pria</option>
+                                    <option value="Wanita">Wanita</option>
+                                </select>
+                                <div class="invalid-feedback">
+                                    Please select Gender.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <label for="Provinsi">Provinsi</label>
+                            </div>
+                            <div class="col-md-8">
+                                <select class="form-control col-md-12" id="Provinsi" type="text" name="Provinsi" required>
+                                    <option value="">-- Please Select --</option>
+                                </select>
+                                <div class="invalid-feedback">
+                                    Please select Province.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <label for="Kota">Kota</label>
+                            </div>
+                            <div class="col-md-8">
+                                <select class="form-control col-md-12" id="Kota" type="text" name="Kota" required>
+                                    <option value="">-- Please Select --</option>
+                                </select>
+                                <div class="invalid-feedback">
+                                    Please select City.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <label for="Dealer">Dealer</label>
+                            </div>
+                            <div class="col-md-8">
+                                <select class="form-control col-md-12" id="Dealer" type="text" name="Dealer" required>
+                                    <option value="">-- Please Select --</option>
+                                </select>
+                                <div class="invalid-feedback">
+                                    Please select Dealer.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <label for="Alamat">Alamat</label>
+                            </div>
+                            <div class="col-md-8">
+                                <textarea id="Alamat" class="form-control" required></textarea>
+                                <div class="invalid-feedback">
+                                    Please enter address in the textarea.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -155,9 +216,122 @@
 
 @section Scripts {
     <script type="text/javascript">
+
         $(document).ready(function () {
             moment.locale('ID');
             var url = "@ViewBag.url_api";
+
+            $.ajax({
+                url: url + "Provinsi/GetAllForDropdown",
+                contentType: 'application/json',
+                dataType: 'json',
+                type: "GET",
+
+                success: function (response) {
+                    if (response.isSuccess) {
+                        $.each(response.listProvinces, function (key, entry) {
+                            $("#Provinsi").append($('<option></option>').attr('value', entry.id).text(entry.text));
+                        })
+                    } else {
+                        toastr["error"](response.message);
+                    }
+                },
+                error: function (jqXHR, text, errorThrown) {
+                    console.log(jqXHR + " " + text + " " + errorThrown);
+                }
+            });
+
+            $("#Provinsi").on("change", function () {
+
+                $.ajax({
+                    url: url + "Kota/GetAllForDropdown?ProvinsiID="+$(this).val(),
+                    contentType: 'application/json',
+                    dataType: 'json',
+                    type: "GET",
+                    success: function (response) {
+                        if (response.isSuccess) {
+                            $.each(response.listKotas, function (key, entry) {
+                                $("#Kota").append($('<option></option>').attr('value', entry.id).text(entry.text));
+                            })
+                        } else {
+                            toastr["error"](response.message);
+                        }
+                    },
+                    error: function (jqXHR, text, errorThrown) {
+                        console.log(jqXHR + " " + text + " " + errorThrown);
+                    }
+                });
+            });
+
+            $("#Kota").on("change", function () {
+
+                $.ajax({
+                    url: url + "Dealer/GetAllForDropdown?KotaID="+$(this).val(),
+                    contentType: 'application/json',
+                    dataType: 'json',
+                    type: "GET",
+                    success: function (response) {
+                        if (response.isSuccess) {
+                            $.each(response.listDealer, function (key, entry) {
+                                $("#Dealer").append($('<option></option>').attr({ 'value': entry.id, 'data-code': entry.code }).text(entry.text));
+                            })
+                        } else {
+                            toastr["error"](response.message);
+                        }
+                    },
+                    error: function (jqXHR, text, errorThrown) {
+                        console.log(jqXHR + " " + text + " " + errorThrown);
+                    }
+                });
+            });
+
+            // Fetch all the forms we want to apply custom Bootstrap validation styles to
+            var forms = document.getElementsByClassName('needs-validation');
+            var button = document.getElementById("save");
+            // Loop over them and prevent submission
+            var validation = Array.prototype.filter.call(forms, function (form) {
+                button.addEventListener('click', function (event) {
+                    if (form.checkValidity() === false) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    } else {
+
+                        var userData = {
+                            Id: ($("#UserID").val()) ? $("#UserID").val() : 0,
+                            Nama: $("#Nama").val(),
+                            Email: $("#Email").val(),
+                            Telp: $("#Telp").val(),
+                            Alamat: $("#Alamat").val(),
+                            JenisKelamin: $("#JenisKelamin").val(),
+                            KotaId: $("#Kota").val(),
+                            KodeDealer: $('#Dealer option:selected').attr('data-code')
+                        }
+
+                        $.ajax({
+                            url: url + "User/SaveSalesman",
+                            type: "POST",
+                            dataType: 'json',
+                            contentType: "application/json",
+                            data: JSON.stringify(userData),
+                            success: function (response) {
+
+                                if (response.isSuccess) {
+                                    $("#tableSalesman").DataTable().ajax.reload();
+                                    $("#ModalEdit").modal('hide');
+                                    $(document.body).removeClass('modal-open');
+                                    $('.modal-backdrop').remove();
+                                    toastr["success"](response.message);
+                                    $('#tbuser').DataTable().ajax.reload();
+                                } else {
+                                    toastr["error"](response.message);
+                                }
+                            }
+                        });
+                    }
+                    form.classList.add('was-validated');
+                });
+                    });
+
             $('#tableSalesman').dataTable({
                 language: {
                     processing: "<div class='overlay custom-loader-background'><i class='fa fa-cog fa-spin custom-loader-color'></i></div>"
@@ -233,55 +407,109 @@
             }
 
             $("#ModalDelete").on("show.bs.modal", function (e) {
-                $('#UserDetailID').val(e.relatedTarget.getAttribute('data-detailid'));
+                $('#UserID').val(e.relatedTarget.getAttribute('data-detailid'));
             });
 
             $('#ModalEdit').on('show.bs.modal', function (e) {
+                debugger;
+                var id = e.relatedTarget.getAttribute('data-id');
+
                 resetModal();
+                var title = (e.relatedTarget.innerText.toLowerCase().indexOf("add") !== -1) ? e.relatedTarget.innerText : "Edit";
+                $('#JenisKelamin option:eq(0)').prop('selected', true);
+                $('#Provinsi option:eq(0)').prop('selected', true);
+                $('#Kota option:eq(0)').prop('selected', true);
+                $('#Dealer option:eq(0)').prop('selected', true);
 
-                $('#SalesmanID').val(e.relatedTarget.getAttribute('data-id'));
-                $('#UserDetailID').val(e.relatedTarget.getAttribute('data-detailid'));
-                $('#Nama').val(e.relatedTarget.getAttribute('data-nama'));
-                $('#Email').val(e.relatedTarget.getAttribute('data-email'));
-                $('#Telp').val(e.relatedTarget.getAttribute('data-telp'));
-            });
-
-            $('#save').on('click', function (e) {
-
-                if ($("#VerifiedDate").val() !== "" && $("#VerifiedBy").val() !== "") {
-                    var userData = {
-                        DetailID: ($("#UserDetailID").val()) ? $("#UserDetailID").val() : 0,
-                        VerifiedDate: $("#VerifiedDate").val(),
-                        VerifiedBy: $("#VerifiedBy").val()
-                    }
+                $("#modalTitle").html(title + " Salesman");
+                if (id !== null && id !== "") {
 
                     $.ajax({
-                        url: url + "User/SaveUserDetail",
-                        type: "POST",
+                        url: url + "User/GetSalesmanById?id=" + id,
+                        contentType: 'application/json',
                         dataType: 'json',
-                        contentType: "application/json",
-                        data: JSON.stringify(userData),
+                        type: "GET",
                         success: function (response) {
+                            debugger;
                             if (response.isSuccess) {
-                                $("#ModalEdit").modal('hide');
-                                $(document.body).removeClass('modal-open');
-                                $('.modal-backdrop').remove();
-                                toastr["success"](response.message);
-                                $('#tbuser').DataTable().ajax.reload();
+                                $('#Kota option').remove();
+                                $('#Dealer option').remove();
+
+                                $('#UserID').val(response.id);
+                                $('#Nama').val(response.nama);
+                                $('#Email').val(response.email);
+                                $('#Telp').val(response.telp);
+                                $('#JenisKelamin').val(response.jenisKelamin);
+                                $('#Provinsi').val(response.provinsiId);
+                                $('#Alamat').val(response.alamat);
+                                
+                                $.ajax({
+                                    url: url + "Kota/GetAllForDropdown?ProvinsiID=" + response.provinsiId,
+                                    contentType: 'application/json',
+                                    dataType: 'json',
+                                    type: "GET",
+                                    success: function (response) {
+                                        if (response.isSuccess) {
+                                            $.each(response.listKotas, function (key, entry) {
+                                                $("#Kota").append($('<option></option>').attr('value', entry.id).text(entry.text));
+                                            })
+                                        } else {
+                                            toastr["error"](response.message);
+                                        }
+                                    },
+                                    error: function (jqXHR, text, errorThrown) {
+                                        console.log(jqXHR + " " + text + " " + errorThrown);
+                                    }
+                                });
+
+
+                                $.ajax({
+                                    url: url + "Dealer/GetAllForDropdown?KotaID=" + response.kotaId,
+                                    contentType: 'application/json',
+                                    dataType: 'json',
+                                    type: "GET",
+                                    success: function (response) {
+                                        if (response.isSuccess) {
+                                            $.each(response.listDealer, function (key, entry) {
+                                                $("#Dealer").append($('<option></option>').attr({ 'value': entry.id, 'data-code': entry.code }).text(entry.text));
+                                            })
+                                            $('#Dealer option:selected').attr('data-code');
+                                        } else {
+                                            toastr["error"](response.message);
+                                        }
+                                    },
+                                    error: function (jqXHR, text, errorThrown) {
+                                        console.log(jqXHR + " " + text + " " + errorThrown);
+                                    }
+                                });
+
+                                $('#Kota').val(response.kotaId);
+                                $("#Dealer option").each(function () {
+                                    if ($(this).attr('data-code') == response.kodeDealer)
+                                        $(this).attr("selected", "selected");
+                                });
                             } else {
                                 toastr["error"](response.message);
                             }
+                        },
+                        error: function (jqXHR, text, errorThrown) {
+                            console.log(jqXHR + " " + text + " " + errorThrown);
                         }
                     });
+
                 } else {
-                    toastr["error"]("Please fill Verified Date and Verified By!.");
+                    $('#SalesmanID').val(e.relatedTarget.getAttribute('data-id'));
+                    $('#UserID').val(e.relatedTarget.getAttribute('data-detailid'));
+                    $('#Nama').val(e.relatedTarget.getAttribute('data-nama'));
+                    $('#Email').val(e.relatedTarget.getAttribute('data-email'));
+                    $('#Telp').val(e.relatedTarget.getAttribute('data-telp'));
                 }
             });
 
             $('#btn-delete').on('click', function (e) {
 
                 var userData = {
-                    DetailID: $("#UserDetailID").val()
+                    DetailID: $("#UserID").val()
                 }
 
                 $.ajax({

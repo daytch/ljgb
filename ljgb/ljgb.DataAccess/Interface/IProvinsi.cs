@@ -1,5 +1,6 @@
 ﻿using ljgb.Common.Requests;
 using ljgb.Common.Responses;
+using ljgb.DataAccess.Model;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -9,6 +10,8 @@ namespace ljgb.DataAccess.Interface
 {
     public interface IProvinsi
     {
+        Task<List<Provinsi>> GetAllForDropdown();
+
         Task<ProvinsiResponse> GetAll();
 
         Task<ProvinsiResponse> GetPost(ProvinsiRequest request);

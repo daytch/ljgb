@@ -32,7 +32,7 @@ namespace ljgb.DataAccess.Repository
                     await db.SaveChangesAsync();
                     TransactionID = model.Id;
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     return 0;
                 }
@@ -309,7 +309,7 @@ namespace ljgb.DataAccess.Repository
                                                           //    userProfieViewModel = new UserProfileViewModel
                                                           //    {
                                                           //        ID = userNegoBarang.Id,
-                                                          //        Name = userNegoBarang.Nama,
+                                                          //        Name = userNegoBarang.Name,
                                                           //        Email = userNegoBarang.Email,
                                                           //        Telp = userNegoBarang.Telp,
                                                           //        Facebook = userNegoBarang.Facebook,
@@ -321,7 +321,7 @@ namespace ljgb.DataAccess.Repository
                                                           //    {
                                                           //        Id = barang.Id,
                                                           //        HargaOtr = barang.HargaOtr,
-                                                          //        Name = barang.Nama,
+                                                          //        Name = barang.Name,
 
                                                           //    },
                                                           //    Harga = negoBarang.Harga,
@@ -460,7 +460,7 @@ namespace ljgb.DataAccess.Repository
                                                          //    userProfieViewModel = new UserProfileViewModel
                                                          //    {
                                                          //        ID = userNegoBarang.Id,
-                                                         //        Name = userNegoBarang.Nama,
+                                                         //        Name = userNegoBarang.Name,
                                                          //        Email = userNegoBarang.Email,
                                                          //        Telp = userNegoBarang.Telp,
                                                          //        Facebook = userNegoBarang.Facebook,
@@ -473,7 +473,7 @@ namespace ljgb.DataAccess.Repository
                                                          //    {
                                                          //        Id = barang.Id,
                                                          //        HargaOtr = barang.HargaOtr,
-                                                         //        Name = barang.Nama,
+                                                         //        Name = barang.Name,
 
                                                          //    },
                                                          //    Harga = negoBarang.Harga,
@@ -560,8 +560,8 @@ namespace ljgb.DataAccess.Repository
                 {
                     //case "0":
                     //    // Setting.    
-                    //    response.ListTransaction = orderDir.Equals("DESC", StringComparison.CurrentCultureIgnoreCase) ? response.ListTransaction.OrderByDescending(p => p.Nama).ToList()
-                    //                                         : response.ListTransaction.OrderBy(p => p.Nama).ToList();
+                    //    response.ListTransaction = orderDir.Equals("DESC", StringComparison.CurrentCultureIgnoreCase) ? response.ListTransaction.OrderByDescending(p => p.Name).ToList()
+                    //                                         : response.ListTransaction.OrderBy(p => p.Name).ToList();
                     //    break;
                     //case "1":
                     //    // Setting.    
@@ -593,6 +593,7 @@ namespace ljgb.DataAccess.Repository
             }
             catch (Exception ex)
             {
+                throw ex;
                 //log.Error("UserFacade.SortByColumnWithOrder :" + ex.ToString());
             }
             return response;

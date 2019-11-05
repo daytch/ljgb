@@ -1,4 +1,6 @@
 ﻿using System;
+using ljgb.Common.Requests;
+using ljgb.Common.Responses;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
@@ -43,13 +45,18 @@ namespace ljgb.DataAccess.Model
         public virtual DbSet<Warna> Warna { get; set; }
         public virtual DbSet<vw_buyer> vw_buyer { get; set; }
         public virtual DbSet<vw_salesman> vw_salesman { get; set; }
+        public virtual DbSet<Car> Car { get; set; }
+        public virtual DbSet<CarAsks> CarAsks { get; set; }
+        public virtual DbSet<CarDetail> CarDetail { get; set; }
+        public virtual DbSet<Position> Position { get; set; }
+        public virtual DbSet<sp_GetUserDetail> sp_GetUserDetail { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Server=GONNA-BE-GOOD\\SQLEXPRESS;Database=ljgb;Trusted_Connection=True;");
+// #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
+                optionsBuilder.UseSqlServer("Server=localhost\\SQLEXPRESS;Database=ljgb;Trusted_Connection=True;");
             }
         }
 

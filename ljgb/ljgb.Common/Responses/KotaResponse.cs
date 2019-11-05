@@ -10,7 +10,7 @@ namespace ljgb.Common.Responses
         public KotaViewModel Model { get; set; }
         public List<KotaViewModel> ListKota { get; set; }
         public List<ProvinsiViewModel> ListProvinsi { get; set; }
-
+        public List<Dropdown> ListKotas { get; set; }
         public KotaResponse()
         {
             Model = new KotaViewModel();

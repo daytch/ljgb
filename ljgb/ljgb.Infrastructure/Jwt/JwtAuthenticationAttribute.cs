@@ -77,7 +77,7 @@ namespace ljgb.Infrastructure.Jwt
                 // based on username to get more information from database in order to build local identity
                 var claims = new List<Claim>
                 {
-                    new Claim(ClaimTypes.Name, username)
+                    new Claim(ClaimTypes.Nama, username)
                     // Add more claims if needed: Roles, ...
                 };
 
@@ -102,7 +102,7 @@ namespace ljgb.Infrastructure.Jwt
             if (!identity.IsAuthenticated)
                 return false;
 
-            var usernameClaim = identity.FindFirst(ClaimTypes.Name);
+            var usernameClaim = identity.FindFirst(ClaimTypes.Nama);
             username = usernameClaim?.Value;
 
             if (string.IsNullOrEmpty(username))

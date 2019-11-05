@@ -1,6 +1,7 @@
 ﻿
 using ljgb.Common.Requests;
 using ljgb.Common.Responses;
+using ljgb.Common.ViewModel;
 using ljgb.DataAccess.Interface;
 using ljgb.DataAccess.Model;
 using ljgb.DataAccess.Repository;
@@ -9,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -37,17 +39,35 @@ namespace ljgb.BusinessLogic
         }
         #endregion
 
-        public async Task<KotaResponse> GetAll()
+        //public async Task<KotaResponse> GetAll()
+        //{
+        //    var models = await dep.GetAll();
+
+        //    if (models == null)
+        //    {
+        //        return null;
+        //    }
+        //    return models;
+        //}
+
+        public async Task<List<Dropdown>> GetAllForDropdown(int ProvinsiID)
         {
-            var models = await dep.GetAll();
-            if (models == null)
+            List<Kota> ListKota = new List<Kota>();
+            if (ProvinsiID < 1)
+            {
+                ListKota = await dep.GetAll();
+            }
+            else
+            {
+                ListKota = await dep.GetKotaByProvinsiID(ProvinsiID);
+            }
+            List<Dropdown> ListDropdown = ListKota.Select(x => new Dropdown() { ID = x.Id, Text = x.Nama }).ToList();
+            if (ListDropdown == null)
             {
                 return null;
             }
-            return models;
+            return ListDropdown;
         }
-
-
 
         public async Task<KotaResponse> GetPost(KotaRequest req)
         {

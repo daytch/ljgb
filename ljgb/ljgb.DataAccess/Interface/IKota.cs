@@ -1,5 +1,6 @@
 ﻿using ljgb.Common.Requests;
 using ljgb.Common.Responses;
+using ljgb.DataAccess.Model;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -9,7 +10,9 @@ namespace ljgb.DataAccess.Interface
 {
     public interface IKota
     {
-        Task<KotaResponse> GetAll();
+        Task<List<Kota>> GetKotaByProvinsiID(int ProvinsiID);
+
+        Task<List<Kota>> GetAll();
 
         Task<KotaResponse> GetPost(KotaRequest request);
 
