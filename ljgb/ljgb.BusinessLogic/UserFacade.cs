@@ -346,9 +346,11 @@ namespace ljgb.BusinessLogic
                     }
 
                     user.Nama = model.Nama;
+                    user.Email = model.Email;
                     user.Telp = model.Telp;
                     user.Alamat = model.Alamat;
                     user.KotaId = model.KotaId;
+                    user.JenisKelamin = model.JenisKelamin;
 
                     user.Modified = DateTime.Now;
                     user.ModifiedBy = "Admin";
