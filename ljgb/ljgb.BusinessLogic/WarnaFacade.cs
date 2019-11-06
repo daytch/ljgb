@@ -118,6 +118,14 @@ namespace ljgb.BusinessLogic
             return posts;
         }
 
+        public async Task<WarnaResponse> GetAllWithoutFilter()
+        {
+            WarnaResponse response = new WarnaResponse();
+            response.data =  await dep.GetAllWithoutFilter();
+            response.IsSuccess = true;
+            return response;
+        }
+
         public async Task<WarnaViewModel> GetPost(long postId)
         {
             var post = await dep.GetPost(postId);

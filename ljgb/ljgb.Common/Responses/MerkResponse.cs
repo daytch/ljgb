@@ -12,11 +12,19 @@ namespace ljgb.Common.Responses
         public int recordsFiltered { get; set; }
         public List<MerkViewModel> ListModel { get; set; }
 
+        public List<SP_MerkByKotaID> ListSP_MerkByKotaID { get; set; }
         public MerkViewModel Model { get; set; }
 
         public MerkResponse()
         {
             ListModel = new List<MerkViewModel>();
         }
+    }
+
+    public class SP_MerkByKotaID
+    {
+        public long ID { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
     }
 }

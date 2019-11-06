@@ -26,7 +26,6 @@ namespace ljgb.API.Controllers
                 string orderDir = HttpContext.Request.Query["order[0][dir]"];
                 int startRec = Convert.ToInt32(HttpContext.Request.Query["start"]);
                 int pageSize = Convert.ToInt32(HttpContext.Request.Query["length"]);
-                pageSize = 10;
                 var models = await facade.GetAll(search, order, orderDir, startRec, pageSize, draw);
                 if (models == null)
                 {
@@ -41,7 +40,27 @@ namespace ljgb.API.Controllers
             }
         }
 
+        //[HttpGet]
+        //[Route("GetAllWithoutFilter")]
+        //public async Task<IActionResult> GetAllWithoutFilter()
+        //{
+        //    try
+        //    {
+                
+        //        var models = await facade.GetAllWithoutFilter();
+        //        if (models == null)
+        //        {
+        //            return NotFound();
+        //        }
 
+        //        return Ok(models);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return BadRequest(ex);
+        //    }
+        //}
+        
 
         [HttpPost]
         [Route("GetModelWithID")]
@@ -55,6 +74,28 @@ namespace ljgb.API.Controllers
             try
             {
                 var post = await facade.GetPost(postId);
+
+                if (post == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(post);
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpPost]
+        [Route("GetModelWithMerkID")]
+        public async Task<IActionResult> GetModelWithMerkID([FromBody]ModelBarangRequest request)
+        {
+
+            try
+            {
+                var post = await facade.GetModelWithMerkID(request);
 
                 if (post == null)
                 {
@@ -145,6 +186,29 @@ namespace ljgb.API.Controllers
             }
 
             return BadRequest();
+        }
+
+        [HttpPost]
+        [Route("GetModelByKotaIDMerkID")]
+        public async Task<IActionResult> GetModelByKotaIDMerkID([FromBody]ModelBarangRequest model)
+        {
+           
+
+            try
+            {
+                var post = await facade.GetModelByKotaIDMerkID(model);
+
+                if (post == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(post);
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
         }
     }
 }

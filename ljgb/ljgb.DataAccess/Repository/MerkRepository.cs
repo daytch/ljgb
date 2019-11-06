@@ -28,7 +28,7 @@ namespace ljgb.DataAccess.Repository
                 try
                 {
                     Merk model = new Merk();
-                    model.Nama = request.Nama;
+                    model.Name = request.Name;
                     model.Description = request.Description;
                     model.Created = DateTime.Now;
                     model.CreatedBy = "xsivicto1905";
@@ -120,7 +120,7 @@ namespace ljgb.DataAccess.Repository
                     int totalRecords = query.Count();
                     if (!string.IsNullOrEmpty(search) && !string.IsNullOrWhiteSpace(search))
                     {
-                        query = query.Where(p => p.Nama.ToString().ToLower().Contains(search.ToLower()) ||
+                        query = query.Where(p => p.Name.ToString().ToLower().Contains(search.ToLower()) ||
                                     p.Description.ToLower().Contains(search.ToLower()));
                     }
                     int recFilter = query.Count();
@@ -130,7 +130,7 @@ namespace ljgb.DataAccess.Repository
                                                 select new MerkViewModel
                                                 {
                                                     ID = model.Id,
-                                                    Nama = model.Nama,
+                                                    Name = model.Name,
                                                     Description = model.Description,
                                                     Created = model.Created,
                                                     CreatedBy = model.CreatedBy,
@@ -166,7 +166,7 @@ namespace ljgb.DataAccess.Repository
                                                 select new MerkViewModel
                                                 {
                                                     ID = model.Id,
-                                                    Nama = model.Nama,
+                                                    Name = model.Name,
                                                     Description = model.Description,
                                                     Created = model.Created,
                                                     CreatedBy = model.CreatedBy,
@@ -214,7 +214,7 @@ namespace ljgb.DataAccess.Repository
                                   select new MerkViewModel
                                   {
                                       ID = model.Id,
-                                      Nama = model.Nama,
+                                      Name = model.Name,
                                       Description = model.Description,
                                       Created = model.Created,
                                       CreatedBy = model.CreatedBy,
@@ -247,7 +247,7 @@ namespace ljgb.DataAccess.Repository
                     Merk model = await db.Merk.Where(x => x.Id == request.ID).FirstAsync();
                     model.Modified = DateTime.Now;
                     model.ModifiedBy = "xsivicto1905";
-                    model.Nama = request.Nama;
+                    model.Name = request.Name;
                     model.Description = request.Description;
                     //Delete that warna
                     db.Merk.Update(model);
@@ -269,6 +269,24 @@ namespace ljgb.DataAccess.Repository
             return response;
         }
 
-       
+        public async Task<List<SP_MerkByKotaID>> GetMerkByKotaID(long KotaID)
+        {
+            if (db != null)
+            {
+                try
+                {
+                    int result = 0;
+                    return db.Set<SP_MerkByKotaID>().FromSql("EXEC sp_MerkByKotaID {0}",
+                        KotaID).AsNoTracking().ToList();
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+
+            }
+
+            return null;
+        }
     }
 }

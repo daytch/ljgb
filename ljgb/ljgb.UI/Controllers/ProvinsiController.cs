@@ -24,116 +24,11 @@ namespace ljgb.UI.Controllers
         }
         public async Task<IActionResult> Provinsi()
         {
-            returnUrl = returnUrl ?? Url.Content("~/");
-            ProvinsiRequest request = new ProvinsiRequest();
-            if (ModelState.IsValid)
-            {
-                string url_api = base_url_api + "Provinsi/GetAll";
-                ViewBag.url_api = base_url_api;
-
-
-                try
-                {
-                    var result = await url_api.PostJsonAsync(request).ReceiveJson<ProvinsiResponse>();
-                    ViewData["Response"] = result;
-                }
-                catch (FlurlHttpTimeoutException ext)
-                {
-                    // FlurlHttpTimeoutException derives from FlurlHttpException; catch here only
-                    // if you want to handle timeouts as a special case
-                    // Console.log("Request timed out.");
-                    var b = ext;
-                }
-                catch (FlurlHttpException ex)
-                {
-                    // ex.Message contains rich details, inclulding the URL, verb, response status,
-                    // and request and response bodies (if available)
-                    var a = ex;//(ex.Message);
-                }
-            }
-             
+            ViewBag.url_api = base_url_api; 
             return View(_settings);
         }
 
-        public async Task<IActionResult> CreateProvinsi(int request)
-        {
-
-            return View(_settings);
-
-        }
-
-        public async Task<IActionResult> Details(int id)
-        {
-            returnUrl = returnUrl ?? Url.Content("~/");
-            ProvinsiRequest request = new ProvinsiRequest();
-            request.ID = id;
-            if (ModelState.IsValid)
-            {
-                string url_api = base_url_api + "Provinsi/GetModelWithID";
-                ViewBag.url_api = base_url_api;
-
-
-                try
-                {
-                    var result = await url_api.PostJsonAsync(request).ReceiveJson<ProvinsiResponse>();
-                    ViewData["DetailResponse"] = result;
-                }
-                catch (FlurlHttpTimeoutException ext)
-                {
-                    // FlurlHttpTimeoutException derives from FlurlHttpException; catch here only
-                    // if you want to handle timeouts as a special case
-                    // Console.log("Request timed out.");
-                    var b = ext;
-                }
-                catch (FlurlHttpException ex)
-                {
-                    // ex.Message contains rich details, inclulding the URL, verb, response status,
-                    // and request and response bodies (if available)
-                    var a = ex;//(ex.Message);
-                }
-            }
-            return PartialView(2);
-        }
-
-        private async void Load()
-        {
-            //returnUrl = returnUrl ?? Url.Content("~/");
-            //if (ModelState.IsValid)
-            //{
-            //    var user = new IdentityUser { UserName = Input.Email, Email = Input.Email };
-            //    //IdentityResult result = await _userManager.CreateAsync(user, Input.Password);
-            //    //UserRequest u = new UserRequest() { user = user};
-            //    string url = base_url_api + "User/GetAll";
-            //    IdentityResult result = new IdentityResult();
-            //    try
-            //    {
-            //        result = await url.PostJsonAsync(u).ReceiveJson<ProvinsiResponse>();
-            //    }
-            //    catch (FlurlHttpTimeoutException ext)
-            //    {
-            //        // FlurlHttpTimeoutException derives from FlurlHttpException; catch here only
-            //        // if you want to handle timeouts as a special case
-            //        // Console.log("Request timed out.");
-            //        var b = ext;
-            //    }
-            //    catch (FlurlHttpException ex)
-            //    {
-            //        // ex.Message contains rich details, inclulding the URL, verb, response status,
-            //        // and request and response bodies (if available)
-            //        var a = ex;//(ex.Message);
-            //    }
-
-            //    if (result.Succeeded)
-            //    {
-
-            //    }
-
-            //    foreach (var error in result.Errors)
-            //    {
-            //        ModelState.AddModelError(string.Empty, error.Description);
-            //    }
-            //}
-        }
+      
 
     }
 }

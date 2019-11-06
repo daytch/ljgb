@@ -61,7 +61,25 @@ namespace ljgb.API.Controllers
                 return BadRequest(ex);
             }
         }
+        [HttpGet]
+        [Route("GetAllWithoutFilter")]
+        public async Task<IActionResult> GetAllWithoutFilter()
+        {
+            try
+            {
+                var posts = await facade.GetAllWithoutFilter();
+                if (posts == null)
+                {
+                    return NotFound();
+                }
 
+                return Ok(posts);
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+        }
 
         [HttpGet]
         [Route("GetPosts")]

@@ -24,36 +24,8 @@ namespace ljgb.UI.Controllers
         }
         public async Task<IActionResult> Kota()
         {
-            returnUrl = returnUrl ?? Url.Content("~/");
-            KotaRequest request = new KotaRequest();
-            if (ModelState.IsValid)
-            {
-                string url_api = base_url_api + "Kota/GetAll";
-                ViewBag.url_api = base_url_api;
 
-
-                try
-                {
-                    var result = await url_api.PostJsonAsync(request).ReceiveJson<KotaResponse>();
-                    ViewData["Response"] = result;
-
-                 
-                    //ViewBag["ProvinsiSelectList"] = result.ListProvinsi.Select(x => new SelectListItem { Value = x.ID.ToString(), Text = x.Nama }).ToList();
-                }
-                catch (FlurlHttpTimeoutException ext)
-                {
-                    // FlurlHttpTimeoutException derives from FlurlHttpException; catch here only
-                    // if you want to handle timeouts as a special case
-                    // Console.log("Request timed out.");
-                    var b = ext;
-                }
-                catch (FlurlHttpException ex)
-                {
-                    // ex.Message contains rich details, inclulding the URL, verb, response status,
-                    // and request and response bodies (if available)
-                    var a = ex;//(ex.Message);
-                }
-            }
+            ViewBag.url_api = base_url_api;
 
             return View(_settings);
           

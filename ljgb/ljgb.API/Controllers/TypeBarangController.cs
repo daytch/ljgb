@@ -1,4 +1,6 @@
 ﻿using ljgb.BusinessLogic;
+using ljgb.Common.Requests;
+using ljgb.Common.Responses;
 using ljgb.DataAccess.Model;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -13,13 +15,19 @@ namespace ljgb.API.Controllers
     public class TypeBarangController : ControllerBase
     {
         private TypeBarangFacade facade = new TypeBarangFacade();
-        [HttpPost]
+        [HttpGet]
         [Route("GetAll")]
         public async Task<IActionResult> GetAll()
         {
             try
             {
-                var models = await facade.GetAll();
+                string search = HttpContext.Request.Query["search[value]"].ToString();
+                int draw = Convert.ToInt32(HttpContext.Request.Query["draw"]);
+                string order = HttpContext.Request.Query["order[0][column]"];
+                string orderDir = HttpContext.Request.Query["order[0][dir]"];
+                int startRec = Convert.ToInt32(HttpContext.Request.Query["start"]);
+                int pageSize = Convert.ToInt32(HttpContext.Request.Query["length"]);
+                var models = await facade.GetAll(search, order, orderDir, startRec, pageSize, draw);
                 if (models == null)
                 {
                     return NotFound();
@@ -33,20 +41,35 @@ namespace ljgb.API.Controllers
             }
         }
 
+        [HttpPost]
+        [Route("GetAllWithModelBarangID")]
+        public async Task<IActionResult> GetAllWithModelID([FromBody]TypeBarangRequest request)
+        {
+            try
+            {
+                var models = await facade.GetAllWithModelID(request);
+                if (models == null)
+                {
+                    return NotFound();
+                }
 
+                return Ok(models);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
 
         [HttpPost]
         [Route("GetModelWithID")]
-        public async Task<IActionResult> GetPost(long postId)
+        public async Task<IActionResult> GetPost([FromBody]TypeBarangRequest request)
         {
-            if (postId < 1)
-            {
-                return BadRequest();
-            }
+           
 
             try
             {
-                var post = await facade.GetPost(postId);
+                var post = await facade.GetPost(request);
 
                 if (post == null)
                 {
@@ -63,21 +86,24 @@ namespace ljgb.API.Controllers
 
         [HttpPost]
         [Route("AddPost")]
-        public async Task<IActionResult> AddPost([FromBody]TypeBarang model)
+        public async Task<IActionResult> AddPost([FromBody]TypeBarangRequest model)
         {
+            TypeBarangResponse response = new TypeBarangResponse();
             if (ModelState.IsValid)
             {
                 try
                 {
-                    var postId = await facade.AddPost(model);
-                    if (postId > 0)
+                    if (model.ID >0)
                     {
-                        return Ok(postId);
+                        response = await facade.UpdatePost(model);
                     }
                     else
                     {
-                        return NotFound();
+                        response = await facade.AddPost(model);
                     }
+
+                    return Ok(response);
+                   
                 }
                 catch (Exception)
                 {
@@ -91,23 +117,14 @@ namespace ljgb.API.Controllers
 
         [HttpPost]
         [Route("DeletePost")]
-        public async Task<IActionResult> DeletePost(long postId)
+        public async Task<IActionResult> DeletePost([FromBody]TypeBarangRequest request)
         {
-            long result = 0;
-
-            if (postId < 1)
-            {
-                return BadRequest();
-            }
 
             try
             {
-                result = await facade.DeletePost(postId);
-                if (result == 0)
-                {
-                    return NotFound();
-                }
-                return Ok();
+                var result = await facade.DeletePost(request);
+               
+                return Ok(result);
             }
             catch (Exception)
             {
@@ -119,15 +136,42 @@ namespace ljgb.API.Controllers
 
         [HttpPost]
         [Route("UpdatePost")]
-        public async Task<IActionResult> UpdatePost([FromBody]TypeBarang model)
+        public async Task<IActionResult> UpdatePost([FromBody]TypeBarangRequest request)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    await facade.UpdatePost(model);
+                    var result = await facade.UpdatePost(request);
 
-                    return Ok();
+                    return Ok(result);
+                }
+                catch (Exception ex)
+                {
+                    if (ex.GetType().FullName ==
+                             "Microsoft.EntityFrameworkCore.DbUpdateConcurrencyException")
+                    {
+                        return NotFound();
+                    }
+
+                    return BadRequest();
+                }
+            }
+
+            return BadRequest();
+        }
+
+        [HttpPost]
+        [Route("GetTypeByKotaIDMerkIDModelID")]
+        public async Task<IActionResult> GetTypeByKotaIDMerkIDModelID([FromBody]TypeBarangRequest request)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    var result = await facade.GetTypeByKotaIDMerkIDModelID(request);
+
+                    return Ok(result);
                 }
                 catch (Exception ex)
                 {

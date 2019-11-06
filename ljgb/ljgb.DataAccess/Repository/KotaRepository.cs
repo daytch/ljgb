@@ -52,7 +52,7 @@ namespace ljgb.DataAccess.Repository
 
                     Kota model = new Kota();
 
-                    model.Nama = request.Nama;
+                    model.Name = request.Name;
                     model.ProvinsiId = request.ProvinsiID;
                     model.Created = DateTime.Now;
                     model.CreatedBy = "xsivicto1905";
@@ -203,7 +203,7 @@ namespace ljgb.DataAccess.Repository
 
                     Kota model = new Kota(); //await db.Kota.Where(x => x.RowStatus == true && x.Id == request.ID).FirstOrDefaultAsync();
 
-                    model.Nama = request.Nama;
+                    model.Name = request.Name;
                     model.Description = request.Description;
                     model.Modified = DateTime.Now;
                     model.ModifiedBy = "xsivicto1905";

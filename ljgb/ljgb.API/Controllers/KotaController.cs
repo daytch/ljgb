@@ -38,10 +38,21 @@ namespace ljgb.API.Controllers
         [HttpGet]
         [Route("GetAllForDropdown")]
         public async Task<IActionResult> GetAllForDropdown(int ProvinsiID)
+        [HttpGet]
+        [Route("GetAll")]
+        public async Task<IActionResult> GetAll()
         {
             KotaResponse response = new KotaResponse();
             try
             {
+                string search = HttpContext.Request.Query["search[value]"].ToString();
+                int draw = Convert.ToInt32(HttpContext.Request.Query["draw"]);
+                string order = HttpContext.Request.Query["order[0][column]"];
+                string orderDir = HttpContext.Request.Query["order[0][dir]"];
+                int startRec = Convert.ToInt32(HttpContext.Request.Query["start"]);
+                int pageSize = Convert.ToInt32(HttpContext.Request.Query["length"]);
+                var models = await facade.GetAll(search, order, orderDir, startRec, pageSize, draw);
+                if (models == null)
                 response.ListKotas = await facade.GetAllForDropdown(ProvinsiID);
                 response.IsSuccess = true;
                 response.Message = "Success";
@@ -58,6 +69,7 @@ namespace ljgb.API.Controllers
                 return BadRequest(ex);
             }
         }
+
 
 
         [HttpPost]

@@ -151,7 +151,7 @@
                 columns: [
                    
                     {
-                        data: "nama",
+                        data: "name",
                         width: "25%"
                     },
                     {
@@ -160,7 +160,7 @@
                     },
                     {
                         mRender: function (a, e, t) {
-                            return '<a class="btn btn-xs btn-success waves-effect waves-themed"  data-id="' + t.id + '" data-nama="' + t.nama + '" data-deskripsi="' + t.description + '" data-toggle="modal" data-target="#ModalEdit"><i class="fas fa-edit"></i></a> '
+                            return '<a class="btn btn-xs btn-success waves-effect waves-themed"  data-id="' + t.id + '" data-nama="' + t.name + '" data-deskripsi="' + t.description + '" data-toggle="modal" data-target="#ModalEdit"><i class="fas fa-edit"></i></a> '
                                 + '<a class="btn btn-xs btn-danger waves-effect waves-themed"   data-id="' + t.id + '" data-toggle="modal" data-target="#ModalDelete"><i class="fas fa-trash-alt"></i></a>';
                         },
                         width: "12%"

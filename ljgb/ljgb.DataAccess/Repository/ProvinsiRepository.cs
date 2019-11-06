@@ -19,9 +19,9 @@ namespace ljgb.DataAccess.Repository
         {
             db = _db;
         }
-        public async Task<ProvinsiResponse> AddPost(ProvinsiRequest request)
+        public async Task<long> AddPost(Provinsi request)
         {
-            ProvinsiResponse response = new ProvinsiResponse();
+            long result = 0;
 
 
             if (db != null)
@@ -29,29 +29,22 @@ namespace ljgb.DataAccess.Repository
                 try
                 {
 
-                    Provinsi model = new Provinsi();
+                  
 
-                    model.Nama = request.Nama;
-                    model.Description = request.Description;
-                    model.Created = DateTime.Now;
-                    model.CreatedBy = "xsivicto1905";
-                    model.RowStatus = true;
+                    await db.Provinsi.AddAsync(request);
+                    result = await db.SaveChangesAsync();
 
-                    await db.Provinsi.AddAsync(model);
-                    await db.SaveChangesAsync();
-
-                    response.Message = "Data has been saved";
+                   
                 }
                 catch (Exception ex)
                 {
 
-                    response.IsSuccess = false;
-                    response.Message = ex.ToString();
+                    result = 0;
                 }
             }
 
 
-            return response;
+            return result;
         }
 
         public async Task<ProvinsiResponse> DeletePost(ProvinsiRequest request)
@@ -87,7 +80,7 @@ namespace ljgb.DataAccess.Repository
             return response;
         }
 
-        public async Task<ProvinsiResponse> GetAll()
+        public async Task<ProvinsiResponse> GetAll(string search, string order, string orderDir, int startRec, int pageSize, int draw)
         {
             ProvinsiResponse response = new ProvinsiResponse();
 
@@ -95,20 +88,35 @@ namespace ljgb.DataAccess.Repository
             {
                 try
                 {
-                    response.ListProvinsi = await (from prov in db.Provinsi
-                                                   where prov.RowStatus == true
+                    var query = (from model in db.Provinsi
+                                 where model.RowStatus == true
+                                 select model
+                                 );
+                    int totalRecords = query.Count();
+                    if (!string.IsNullOrEmpty(search) && !string.IsNullOrWhiteSpace(search))
+                    {
+                        query = query.Where(p => p.Name.ToString().ToLower().Contains(search.ToLower()) ||
+                                    p.Description.ToLower().Contains(search.ToLower()));
+                    }
+                    int recFilter = query.Count();
+
+                    response.ListProvinsi = await (from prov in query
                                                    select new ProvinsiViewModel
                                                    {
                                                        ID = prov.Id,
-                                                       Nama = prov.Nama,
+                                                       Name = prov.Name,
                                                        Created = prov.Created,
                                                        CreatedBy = prov.CreatedBy,
                                                        Description = prov.Description,
                                                        Modified = prov.Modified,
                                                        ModifiedBy = prov.ModifiedBy,
                                                        RowStatus = prov.RowStatus
-                                                   }).ToListAsync();
+                                                   }).Skip(startRec).Take(pageSize).ToListAsync();
 
+                    response.Message = "Success";
+                    response.draw = Convert.ToInt32(draw);
+                    response.recordsTotal = totalRecords;
+                    response.recordsFiltered = recFilter;
                     response.Message = "Success";
                 }
                 catch (Exception ex)
@@ -154,7 +162,7 @@ namespace ljgb.DataAccess.Repository
                                                   select new ProvinsiViewModel
                                                   {
                                                       ID = prov.Id,
-                                                      Nama = prov.Nama,
+                                                      Name = prov.Name,
                                                       Created = prov.Created,
                                                       CreatedBy = prov.CreatedBy,
                                                       Description = prov.Description,
@@ -176,40 +184,54 @@ namespace ljgb.DataAccess.Repository
             return response;
         }
 
-        public async Task<ProvinsiResponse> UpdatePost(ProvinsiRequest request)
+        public async Task<Provinsi> GetPostByID(long ID)
+        {
+            Provinsi response = new Provinsi();
+            if (db != null)
+            {
+                try
+                {
+                   response = await db.Provinsi.Where(x=>x.RowStatus == true && x.Id == ID).FirstOrDefaultAsync();
+
+                  
+                }
+                catch (Exception ex)
+                {
+
+                    throw ex;
+                }
+
+            }
+            return response;
+        }
+        public async Task<long> UpdatePost(Provinsi request)
         {
 
-            ProvinsiResponse response = new ProvinsiResponse();
-
+           
+            long result = 0;
 
             if (db != null)
             {
                 try
                 {
+                    
+                    
 
-                    Provinsi model = await db.Provinsi.Where(x => x.RowStatus == true && x.Id == request.ID).FirstOrDefaultAsync();
 
-                    model.Nama = request.Nama;
-                    model.Description = request.Description;
-                    model.Modified = DateTime.Now;
-                    model.ModifiedBy = "xsivicto1905" ;
+                    db.Provinsi.Update(request);
+                    result = await db.SaveChangesAsync();
+
                    
-
-                  
-                    await db.SaveChangesAsync();
-
-                    response.Message = "Data has been saved";
                 }
                 catch (Exception ex)
                 {
 
-                    response.IsSuccess = false;
-                    response.Message = ex.ToString();
+                    result = 0;
                 }
             }
 
 
-            return response;
+            return result;
         }
     }
 }

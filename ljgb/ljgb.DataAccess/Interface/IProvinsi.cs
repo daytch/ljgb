@@ -10,16 +10,19 @@ namespace ljgb.DataAccess.Interface
 {
     public interface IProvinsi
     {
+        Task<ProvinsiResponse> GetAll(string search, string order, string orderDir, int startRec, int pageSize, int draw);
         Task<List<Provinsi>> GetAllForDropdown();
 
         Task<ProvinsiResponse> GetAll();
 
         Task<ProvinsiResponse> GetPost(ProvinsiRequest request);
 
-        Task<ProvinsiResponse> AddPost(ProvinsiRequest request);
+        Task<Provinsi> GetPostByID(long ID);
+
+        Task<long> AddPost(Provinsi request);
 
         Task<ProvinsiResponse> DeletePost(ProvinsiRequest request);
 
-        Task<ProvinsiResponse> UpdatePost(ProvinsiRequest request);
+        Task<long> UpdatePost(Provinsi request);
     }
 }
