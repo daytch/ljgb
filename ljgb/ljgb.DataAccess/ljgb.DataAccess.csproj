@@ -53,6 +53,10 @@
     <ProjectReference Include="..\ljgb.Common\ljgb.Common.csproj" />
   </ItemGroup>
 
+  <!--<ItemGroup>
+    <ProjectReference Include="..\ljgb.Common\ljgb.Common.csproj" />
+  </ItemGroup>-->
+
  
   <ItemGroup>
     <Reference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore">

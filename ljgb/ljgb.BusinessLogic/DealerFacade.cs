@@ -40,7 +40,7 @@ namespace ljgb.BusinessLogic
         public async Task<List<Dropdown>> GetAllForDropdown(int KotaID)
         {
             List<Dealer> ListDealer = await dep.GetDealerByKotaID(KotaID);
-            List<Dropdown> ListDropdown = ListDealer.Select(x => new Dropdown() { ID = x.Id, Text = x.Nama, Code = x.Kode }).ToList();
+            List<Dropdown> ListDropdown = ListDealer.Select(x => new Dropdown() { ID = x.Id, Text = x.Name, Code = x.Kode }).ToList();
             if (ListDropdown == null)
             {
                 return null;

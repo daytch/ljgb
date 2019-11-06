@@ -21,6 +21,7 @@ namespace ljgb.DataAccess.Interface
         Task<MerkResponse> UpdatePost(MerkRequest model);
 
         Task<MerkResponse> GetAllWithoutFilter();
-        Task<List<SP_MerkByKotaID>> GetMerkByKotaID(long KotaID);
+
+        List<SP_MerkByKotaID> GetMerkByKotaID(long KotaID);
     }
 }

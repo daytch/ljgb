@@ -23,7 +23,7 @@ namespace ljgb.Infrastructure
             {
                 Subject = new ClaimsIdentity(new[]
                         {
-                            new Claim(ClaimTypes.Nama, Username),
+                            new Claim(ClaimTypes.Name, Username),
                             new Claim(ClaimTypes.UserData, JsonConvert.SerializeObject(UserData))
                         }),
                 Expires = now.AddMinutes(Convert.ToInt32(expireMinutes)),

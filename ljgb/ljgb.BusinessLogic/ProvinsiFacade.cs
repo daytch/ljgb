@@ -61,7 +61,7 @@ namespace ljgb.BusinessLogic
         public async Task<List<Dropdown>> GetAllForDropdown()
         {
             List<Provinsi> ListProvinsi = await dep.GetAllForDropdown();
-            List<Dropdown> ListDropdown = ListProvinsi.Select(x => new Dropdown() { ID = x.Id, Text = x.Nama }).ToList();
+            List<Dropdown> ListDropdown = ListProvinsi.Select(x => new Dropdown() { ID = x.Id, Text = x.Name }).ToList();
             if (ListDropdown == null)
             {
                 return null;

@@ -84,10 +84,10 @@ namespace ljgb.BusinessLogic
 
            
         }
-        public async Task<MerkResponse> GetMerkByKotaID(long KotaID)
+        public MerkResponse GetMerkByKotaID(long KotaID)
         {
             MerkResponse response = new MerkResponse();
-            response.ListSP_MerkByKotaID = await dep.GetMerkByKotaID(KotaID);
+            response.ListSP_MerkByKotaID = dep.GetMerkByKotaID(KotaID);
 
             return response;
         }

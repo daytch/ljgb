@@ -130,6 +130,11 @@ namespace ljgb.DataAccess.Repository
             return response;
         }
 
+        public Task<ProvinsiResponse> GetAll()
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<List<Provinsi>> GetAllForDropdown()
         {
             List<Provinsi> response = new List<Provinsi>();
@@ -138,7 +143,7 @@ namespace ljgb.DataAccess.Repository
             {
                 try
                 {
-                    response = await db.Provinsi.Where(x => x.RowStatus == true).Select(x => new Provinsi() { Id = x.Id, Nama = x.Nama }).ToListAsync();
+                    response = await db.Provinsi.Where(x => x.RowStatus == true).Select(x => new Provinsi() { Id = x.Id, Name = x.Name }).ToListAsync();
                 }
                 catch (Exception ex)
                 {

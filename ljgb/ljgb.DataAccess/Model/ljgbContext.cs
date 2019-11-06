@@ -1,6 +1,4 @@
 ﻿using System;
-using ljgb.Common.Requests;
-using ljgb.Common.Responses;
 using ljgb.Common.Responses;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
@@ -46,11 +44,11 @@ namespace ljgb.DataAccess.Model
         public virtual DbSet<Warna> Warna { get; set; }
         public virtual DbSet<vw_buyer> vw_buyer { get; set; }
         public virtual DbSet<vw_salesman> vw_salesman { get; set; }
+
         public virtual DbSet<Car> Car { get; set; }
         public virtual DbSet<CarAsks> CarAsks { get; set; }
         public virtual DbSet<CarDetail> CarDetail { get; set; }
         public virtual DbSet<Position> Position { get; set; }
-        public virtual DbSet<sp_GetUserDetail> sp_GetUserDetail { get; set; }
         public virtual DbSet<SP_MerkByKotaID> SP_MerkByKotaID { get; set; }
         public virtual DbSet<SP_ModelByKotaIDMerkID> SP_ModelByKotaIDMerkID { get; set; }
         public virtual DbSet<SP_TypeByKotaIDMerkIDModelID> SP_TypeByKotaIDMerkIDModelID { get; set; }
@@ -67,18 +65,6 @@ namespace ljgb.DataAccess.Model
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasAnnotation("ProductVersion", "2.2.0-rtm-35687");
-
-            modelBuilder.Entity<vw_buyer>(entity =>
-            {
-                entity.HasIndex(e => e.ID);
-                entity.Property(e => e.DetailID).IsRequired();
-            }
-            );
-            modelBuilder.Entity<vw_salesman>(entity =>
-            {
-                entity.HasIndex(e => e.ID);
-                entity.Property(e => e.DetailID).IsRequired();
-            });
 
             modelBuilder.Entity<AspNetRoleClaims>(entity =>
             {

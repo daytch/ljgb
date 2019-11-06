@@ -269,13 +269,12 @@ namespace ljgb.DataAccess.Repository
             return response;
         }
 
-        public async Task<List<SP_MerkByKotaID>> GetMerkByKotaID(long KotaID)
+        public List<SP_MerkByKotaID> GetMerkByKotaID(long KotaID)
         {
             if (db != null)
             {
                 try
                 {
-                    int result = 0;
                     return db.Set<SP_MerkByKotaID>().FromSql("EXEC sp_MerkByKotaID {0}",
                         KotaID).AsNoTracking().ToList();
                 }

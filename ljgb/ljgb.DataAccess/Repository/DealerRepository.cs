@@ -20,7 +20,7 @@ namespace ljgb.DataAccess.Repository
         {
             if (db != null)
             {
-                return await db.Dealer.Where(x => x.RowStatus == true && x.KotaId == KotaID).Select(x => new Dealer() { Id = x.Id, Kode = x.Kode, Nama = x.Nama }).ToListAsync();
+                return await db.Dealer.Where(x => x.RowStatus == true && x.KotaId == KotaID).Select(x => new Dealer() { Id = x.Id, Kode = x.Kode, Name = x.Name }).ToListAsync();
             }
 
             return null;

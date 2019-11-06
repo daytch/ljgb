@@ -174,7 +174,7 @@ namespace ljgb.API.Controllers
 
         [HttpPost]
         [Route("GetMerkByKotaID")]
-        public async Task<IActionResult> GetMerkByKotaID([FromBody]long KotaID)
+        public IActionResult GetMerkByKotaID(long KotaID)
         {
             if (KotaID < 1)
             {
@@ -183,7 +183,7 @@ namespace ljgb.API.Controllers
 
             try
             {
-                var post = await facade.GetMerkByKotaID(KotaID);
+                var post = facade.GetMerkByKotaID(KotaID);
 
                 if (post == null)
                 {

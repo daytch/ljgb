@@ -13,7 +13,7 @@ namespace ljgb.DataAccess.Interface
         Task<List<Kota>> GetKotaByProvinsiID(int ProvinsiID);
 
         Task<List<Kota>> GetAll();
-        Task<KotaResponse> GetAll(string search, string order, string orderDir, int startRec, int pageSize, int draw);
+        //Task<KotaResponse> GetAll(string search, string order, string orderDir, int startRec, int pageSize, int draw);
 
         Task<KotaResponse> GetPost(KotaRequest request);
 

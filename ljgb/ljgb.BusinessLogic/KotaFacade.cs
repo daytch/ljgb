@@ -61,15 +61,7 @@ namespace ljgb.BusinessLogic
             {
                 ListKota = await dep.GetKotaByProvinsiID(ProvinsiID);
             }
-            List<Dropdown> ListDropdown = ListKota.Select(x => new Dropdown() { ID = x.Id, Text = x.Nama }).ToList();
-            if (ListDropdown == null)
-        public async Task<KotaResponse> GetAll(string search, string order, string orderDir, int startRec, int pageSize, int draw)
-        {
-            var models = await dep.GetAll(search, order, orderDir, startRec, pageSize, draw);
-            if (models == null)
-            {
-                return null;
-            }
+            List<Dropdown> ListDropdown = ListKota.Select(x => new Dropdown() { ID = x.Id, Text = x.Name }).ToList();
             return ListDropdown;
         }
 

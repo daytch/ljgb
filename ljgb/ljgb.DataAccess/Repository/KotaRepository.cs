@@ -29,7 +29,7 @@ namespace ljgb.DataAccess.Repository
             {
                 try
                 {
-                    response = await db.Kota.Where(x => x.RowStatus == true && x.ProvinsiId == ProvinsiID).Select(x => new Kota() { Id = x.Id, Nama = x.Nama }).ToListAsync();
+                    response = await db.Kota.Where(x => x.RowStatus == true && x.ProvinsiId == ProvinsiID).Select(x => new Kota() { Id = x.Id, Name = x.Name }).ToListAsync();
                 }
                 catch (Exception ex)
                 {
@@ -169,7 +169,7 @@ namespace ljgb.DataAccess.Repository
                                                select new KotaViewModel
                                                {
                                                    ID = model.Id,
-                                                   Nama = model.Nama,
+                                                   Name = model.Name,
                                                    Description = model.Description,
                                                    ProvinsiID = model.ProvinsiId,
                                                    Created = model.Created,
