@@ -341,12 +341,12 @@ namespace ljgb.DataAccess.Repository
                                                           //    }
 
                                                           //},
-                                                          NamaBarang = (merkBarang.Nama + " " + mdlBarang.Name + " " + tBarang.Name + " " + warna.Name),
-                                                          NamaDealerKota = dealer.Nama + "-" + kota.Nama,
-                                                          NamaDealer = dealer.Nama,
+                                                          NamaBarang = (merkBarang.Name + " " + mdlBarang.Name + " " + tBarang.Name + " " + warna.Name),
+                                                          NamaDealerKota = dealer.Name + "-" + kota.Name,
+                                                          NamaDealer = dealer.Name,
                                                           AlamatDealer = dealer.Alamat,
                                                           TelpDealer = dealer.Telepon,
-                                                          KotaDealer = kota.Nama,
+                                                          KotaDealer = kota.Name,
                                                           KodeDealer = dealer.Kode,
                                                            Created = transaction.Created,
                                                            CreatedBy = transaction.CreatedBy,
@@ -493,8 +493,8 @@ namespace ljgb.DataAccess.Repository
                                                              }
 
                                                          },
-                                                         NamaBarang = (merkBarang.Nama + " " + mdlBarang.Name + " " + tBarang.Name + " " + warna.Name),
-                                                          NamaDealer = dealer.Nama + "-" + kota.Nama,
+                                                         NamaBarang = (merkBarang.Name + " " + mdlBarang.Name + " " + tBarang.Name + " " + warna.Name),
+                                                          NamaDealer = dealer.Name + "-" + kota.Name,
                                                           Created = transaction.Created,
                                                           CreatedBy = transaction.CreatedBy,
                                                           Modified = transaction.Modified,

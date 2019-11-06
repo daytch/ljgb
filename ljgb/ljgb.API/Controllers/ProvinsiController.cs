@@ -1,5 +1,6 @@
 ﻿using ljgb.BusinessLogic;
 using ljgb.Common.Requests;
+using ljgb.Common.Responses;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -13,13 +14,20 @@ namespace ljgb.API.Controllers
     public class ProvinsiController :ControllerBase
     {
         private ProvinsiFacade facade = new ProvinsiFacade();
-        [HttpPost]
+        [HttpGet]
         [Route("GetAll")]
-        public async Task<IActionResult> GetAll(ProvinsiRequest req)
+        public async Task<IActionResult> GetAll()
         {
             try
             {
-                var models = await facade.GetAll();
+
+                string search = HttpContext.Request.Query["search[value]"].ToString();
+                int draw = Convert.ToInt32(HttpContext.Request.Query["draw"]);
+                string order = HttpContext.Request.Query["order[0][column]"];
+                string orderDir = HttpContext.Request.Query["order[0][dir]"];
+                int startRec = Convert.ToInt32(HttpContext.Request.Query["start"]);
+                int pageSize = Convert.ToInt32(HttpContext.Request.Query["length"]);
+                var models = await facade.GetAll(search, order, orderDir, startRec, pageSize, draw);
                 if (models == null)
                 {
                     return NotFound();
@@ -33,6 +41,27 @@ namespace ljgb.API.Controllers
             }
         }
 
+       
+        //[HttpGet]
+        //[Route("GetAllWithoutFilter")]
+        //public async Task<IActionResult> GetAllWithoutFilter()
+        //{
+        //    try
+        //    {
+
+        //        var models = await facade.GetAllWithoutFilter();
+        //        if (models == null)
+        //        {
+        //            return NotFound();
+        //        }
+
+        //        return Ok(models);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return BadRequest(ex);
+        //    }
+        //}
 
 
         [HttpPost]
@@ -65,13 +94,21 @@ namespace ljgb.API.Controllers
         [Route("AddPost")]
         public async Task<IActionResult> AddPost([FromBody]ProvinsiRequest req)
         {
+            ProvinsiResponse response = new ProvinsiResponse();
             if (ModelState.IsValid)
             {
                 try
                 {
-                    var postId = await facade.AddPost(req);
+                    if (req.ID >0)
+                    {
+                        response = await facade.UpdatePost(req);
+                    }
+                    else
+                    {
+                        response = await facade.AddPost(req);
+                    }
 
-                    return Ok(postId);
+                    return Ok(response);
 
                 }
                 catch (Exception)

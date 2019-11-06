@@ -43,6 +43,10 @@ namespace ljgb.BusinessLogic
     
         }
 
+        public async Task<TypeBarangResponse> GetAllWithModelID(TypeBarangRequest request)
+        {
+            return await dep.GetAllWithModelID(request);
+        }
 
 
         public async Task<TypeBarangResponse> GetPost(TypeBarangRequest request)
@@ -55,7 +59,7 @@ namespace ljgb.BusinessLogic
         {
             TypeBarang model = new TypeBarang();
             model.ModelBarangId = request.ModelBarangID;
-            model.Nama = request.Nama;
+            model.Name = request.Name;
             model.Description = request.Description;
             model.Created = DateTime.Now;
             model.CreatedBy = "xsivicto1905";
@@ -74,6 +78,23 @@ namespace ljgb.BusinessLogic
         public async Task<TypeBarangResponse> UpdatePost(TypeBarangRequest request)
         {
             return await dep.UpdatePost(request);
+        }
+
+        public async Task<TypeBarangResponse> GetTypeByKotaIDMerkIDModelID (TypeBarangRequest request)
+        {
+            TypeBarangResponse response = new TypeBarangResponse();
+            try
+            {
+
+                response.ListSP__TypeByKotaIDMerkIDModelID = await dep.GetTypeByKotaIDMerkIDModelID(request);
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+
+            return response;
         }
     }
 }

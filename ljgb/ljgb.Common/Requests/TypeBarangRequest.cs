@@ -8,8 +8,10 @@ namespace ljgb.Common.Requests
     public class TypeBarangRequest : RequestBase
     {
         public long ID { get; set; }
-        public string Nama { get; set; }
+        public string Name { get; set; }
         public long ModelBarangID { get; set; }
+        public long KotaID { get; set; }
+        public long MerkID { get; set; }
         public ModelBarangViewModel ModelBarang { get; set; }
         public string Description { get; set; }
         public DateTime Created { get; set; }

@@ -9,7 +9,7 @@ namespace ljgb.DataAccess.Interface
 {
     public interface IBarang
     {
-        Task<List<BarangViewModel>> GetAll();
+        Task<BarangResponse> GetAll(string search, string order, string orderDir, int startRec, int pageSize, int draw);
 
         List<Car> GetHighestBid(string kota,int total);
 

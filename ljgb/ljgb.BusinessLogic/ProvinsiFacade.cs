@@ -36,9 +36,9 @@ namespace ljgb.BusinessLogic
         }
         #endregion
 
-        public async Task<ProvinsiResponse> GetAll()
+        public async Task<ProvinsiResponse> GetAll(string search, string order, string orderDir, int startRec, int pageSize, int draw)
         {
-            var models = await dep.GetAll();
+            var models = await dep.GetAll(search, order, orderDir, startRec, pageSize, draw);
             if (models == null)
             {
                 return null;
@@ -46,7 +46,16 @@ namespace ljgb.BusinessLogic
             return models;
         }
 
-
+        //public async Task<ProvinsiResponse> GetAllWithoutFilter()
+        //{
+        //    var models = await dep.GetAll();
+        //    if (models == null)
+        //    {
+        //        return null;
+        //    }
+        //    return models;
+        //}
+        
 
         public async Task<ProvinsiResponse> GetPost(ProvinsiRequest req)
         {
@@ -62,8 +71,38 @@ namespace ljgb.BusinessLogic
 
         public async Task<ProvinsiResponse> AddPost(ProvinsiRequest req)
         {
-            return await dep.AddPost(req);
+            ProvinsiResponse response = new ProvinsiResponse();
+            long result = 0;
+            try
+            {
+                Provinsi provinsi = new Provinsi();
+                provinsi.Name = req.Name;
+                provinsi.Description = req.Description;
+                provinsi.Created = DateTime.Now;
+                provinsi.CreatedBy = "xsivicto1905";
+                provinsi.RowStatus = true;
+                result = await dep.AddPost(provinsi);
 
+                if (result>0)
+                {
+                    response.Message = "Data Already Saved";
+                    response.IsSuccess = true;
+                }
+                else
+                {
+                    response.Message = "Save data failed";
+                    response.IsSuccess = false;
+                }
+
+            }
+            catch (Exception ex)
+            {
+
+                response.Message = ex.ToString();
+                response.IsSuccess = false;
+            }
+
+            return response;
         }
 
         public async Task<ProvinsiResponse> DeletePost(ProvinsiRequest req)
@@ -75,7 +114,39 @@ namespace ljgb.BusinessLogic
 
         public async Task<ProvinsiResponse> UpdatePost(ProvinsiRequest req)
         {
-            return await dep.UpdatePost(req);
+
+            ProvinsiResponse response = new ProvinsiResponse();
+            long result = 0;
+            try
+            {
+                Provinsi provinsi = await dep.GetPostByID(req.ID);
+                provinsi.Name = req.Name;
+                provinsi.Description = req.Description;
+                provinsi.Modified = DateTime.Now;
+                provinsi.ModifiedBy = "xsivicto1905";
+               
+                result = await dep.UpdatePost(provinsi);
+
+                if (result > 0)
+                {
+                    response.Message = "Data Already Saved";
+                    response.IsSuccess = true;
+                }
+                else
+                {
+                    response.Message = "Save data failed";
+                    response.IsSuccess = false;
+                }
+
+            }
+            catch (Exception ex)
+            {
+
+                response.Message = ex.ToString();
+                response.IsSuccess = false;
+            }
+
+            return response;
         }
     }
 }

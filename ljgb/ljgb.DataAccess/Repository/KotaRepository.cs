@@ -32,7 +32,7 @@ namespace ljgb.DataAccess.Repository
 
                     Kota model = new Kota();
 
-                    model.Nama = request.Nama;
+                    model.Name = request.Name;
                     model.ProvinsiId = request.ProvinsiID;
                     model.Created = DateTime.Now;
                     model.CreatedBy = "xsivicto1905";
@@ -88,40 +88,62 @@ namespace ljgb.DataAccess.Repository
             return response;
         }
 
-        public async Task<KotaResponse> GetAll()
+        public async Task<KotaResponse> GetAll(string search, string order, string orderDir, int startRec, int pageSize, int draw)
         {
             KotaResponse response = new KotaResponse();
             if (db != null)
             {
                 try
                 {
-                    //response.ListKota = await(from model in db.Kota
-                    //                           where model.RowStatus == true
-                    //                           select new KotaViewModel
-                    //                           {
-                    //                               ID = model.Id,
-                    //                               Nama = model.Nama,
-                    //                               Description = model.Description,
-                    //                               ProvinsiID = model.ProvinsiId,
-                    //                               Created = model.Created,
-                    //                               CreatedBy = model.CreatedBy,
-                    //                               Modified = model.Modified,
-                    //                               ModifiedBy = model.ModifiedBy,
-                    //                               RowStatus = model.RowStatus
-                    //                           }).ToListAsync();
-                    response.ListProvinsi = await (from prov in db.Provinsi
-                                                   where prov.RowStatus == true
-                                                   select new ProvinsiViewModel
-                                                   {
-                                                       ID = prov.Id,
-                                                       Nama = prov.Nama,
-                                                       Created = prov.Created,
-                                                       CreatedBy = prov.CreatedBy,
-                                                       Description = prov.Description,
-                                                       Modified = prov.Modified,
-                                                       ModifiedBy = prov.ModifiedBy,
-                                                       RowStatus = prov.RowStatus
-                                                   }).ToListAsync();
+                    var query = (from kota in db.Kota
+                                 join provinsi in db.Provinsi
+                                 on kota.ProvinsiId equals provinsi.Id
+                                 where kota.RowStatus == true && provinsi.RowStatus == true
+                                 select new
+                                 {
+                                     ID = kota.Id,
+                                     Name = kota.Name,
+                                     kota.Description,
+                                     ProvinsiID = kota.ProvinsiId,
+                                     ProvinsiName = provinsi.Name
+                                 }
+                                );
+                    int totalRecords = query.Count();
+                    if (!string.IsNullOrEmpty(search) && !string.IsNullOrWhiteSpace(search))
+                    {
+                        query = query.Where(p => p.Name.ToString().ToLower().Contains(search.ToLower()) ||
+                                    p.ProvinsiName.ToLower().Contains(search.ToLower()) ||
+                                    p.Description.ToLower().Contains(search.ToLower()));
+                    }
+                    int recFilter = query.Count();
+
+                    response.ListKota = await (from model in query
+                                               select new KotaViewModel
+                                               {
+                                                   ID = model.ID,
+                                                   Name = model.Name,
+                                                   Description = model.Description,
+                                                   ProvinsiID = model.ProvinsiID,
+                                                   ProvinsiName = model.ProvinsiName,
+                                               }).Skip(startRec).Take(pageSize).ToListAsync();
+
+                    //response.ListProvinsi = await (from prov in db.Provinsi
+                    //                               where prov.RowStatus == true
+                    //                               select new ProvinsiViewModel
+                    //                               {
+                    //                                   ID = prov.Id,
+                    //                                   Nama = prov.Nama,
+                    //                                   Created = prov.Created,
+                    //                                   CreatedBy = prov.CreatedBy,
+                    //                                   Description = prov.Description,
+                    //                                   Modified = prov.Modified,
+                    //                                   ModifiedBy = prov.ModifiedBy,
+                    //                                   RowStatus = prov.RowStatus
+                    //                               }).ToListAsync();
+                    response.Message = "Success";
+                    response.draw = Convert.ToInt32(draw);
+                    response.recordsTotal = totalRecords;
+                    response.recordsFiltered = recFilter;
                     response.Message = "Success";
                 }
                 catch (Exception ex)
@@ -181,7 +203,7 @@ namespace ljgb.DataAccess.Repository
 
                     Kota model = new Kota(); //await db.Kota.Where(x => x.RowStatus == true && x.Id == request.ID).FirstOrDefaultAsync();
 
-                    model.Nama = request.Nama;
+                    model.Name = request.Name;
                     model.Description = request.Description;
                     model.Modified = DateTime.Now;
                     model.ModifiedBy = "xsivicto1905";

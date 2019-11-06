@@ -9,7 +9,7 @@ namespace ljgb.DataAccess.Interface
 {
     public interface IKota
     {
-        Task<KotaResponse> GetAll();
+        Task<KotaResponse> GetAll(string search, string order, string orderDir, int startRec, int pageSize, int draw);
 
         Task<KotaResponse> GetPost(KotaRequest request);
 

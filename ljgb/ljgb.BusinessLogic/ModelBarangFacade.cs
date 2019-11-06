@@ -94,5 +94,24 @@ namespace ljgb.BusinessLogic
         {
             return await dep.GetModelWithMerkID(model);
         }
+
+        public async Task<ModelBarangResponse> GetModelByKotaIDMerkID(ModelBarangRequest model)
+        {
+            ModelBarangResponse response = new ModelBarangResponse();
+            try
+            {
+               
+                response.ListSP_ModelByKotaIDMerkID = await dep.GetModelByKotaIDMerkID(model);
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+         
+
+            return response;
+        }
+        
     }
 }

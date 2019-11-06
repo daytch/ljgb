@@ -41,7 +41,25 @@ namespace ljgb.API.Controllers
             }
         }
 
+        [HttpPost]
+        [Route("GetAllWithModelBarangID")]
+        public async Task<IActionResult> GetAllWithModelID([FromBody]TypeBarangRequest request)
+        {
+            try
+            {
+                var models = await facade.GetAllWithModelID(request);
+                if (models == null)
+                {
+                    return NotFound();
+                }
 
+                return Ok(models);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
 
         [HttpPost]
         [Route("GetModelWithID")]
@@ -125,6 +143,33 @@ namespace ljgb.API.Controllers
                 try
                 {
                     var result = await facade.UpdatePost(request);
+
+                    return Ok(result);
+                }
+                catch (Exception ex)
+                {
+                    if (ex.GetType().FullName ==
+                             "Microsoft.EntityFrameworkCore.DbUpdateConcurrencyException")
+                    {
+                        return NotFound();
+                    }
+
+                    return BadRequest();
+                }
+            }
+
+            return BadRequest();
+        }
+
+        [HttpPost]
+        [Route("GetTypeByKotaIDMerkIDModelID")]
+        public async Task<IActionResult> GetTypeByKotaIDMerkIDModelID([FromBody]TypeBarangRequest request)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    var result = await facade.GetTypeByKotaIDMerkIDModelID(request);
 
                     return Ok(result);
                 }

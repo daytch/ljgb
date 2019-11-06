@@ -109,10 +109,10 @@ namespace ljgb.DataAccess.Repository
                                  select new
                                  {
                                      type.Id,
-                                     type.Nama,
-                                     namaModelBarang = model.Nama,
+                                     type.Name,
+                                     namaModelBarang = model.Name,
                                      type.ModelBarangId,
-                                     NamaMerk = merk.Nama,
+                                     NamaMerk = merk.Name,
                                      model.MerkId,
                                      type.Description,
                                      type.Created,
@@ -127,7 +127,7 @@ namespace ljgb.DataAccess.Repository
                     int totalRecords = query.Count();
                     if (!string.IsNullOrEmpty(search) && !string.IsNullOrWhiteSpace(search))
                     {
-                        query = query.Where(p => p.Nama.ToString().ToLower().Contains(search.ToLower()) ||
+                        query = query.Where(p => p.Name.ToString().ToLower().Contains(search.ToLower()) ||
                                             p.namaModelBarang.ToString().ToLower().Contains(search.ToLower()) ||
                                             p.NamaMerk.ToString().ToLower().Contains(search.ToLower()) ||
                                             p.Description.ToLower().Contains(search.ToLower()));
@@ -138,7 +138,7 @@ namespace ljgb.DataAccess.Repository
                                   select new TypeBarangViewModel
                                   {
                                       ID = model.Id,
-                                      Nama = model.Nama,
+                                      Name = model.Name,
                                       NamaMerk = model.NamaMerk,
                                       NamaModelBarang = model.namaModelBarang,
                                       MerkID = model.MerkId,
@@ -161,26 +161,87 @@ namespace ljgb.DataAccess.Repository
             }
             catch (Exception ex)
             {
-<<<<<<< HEAD
+
 
                 response.Message = ex.ToString();
                 response.IsSuccess = false;
-=======
-                return await (from model in db.TypeBarang
-                              where model.RowStatus == true
-                              select new TypeBarangViewModel
-                              {
-                                  ID = model.Id,
-                                  Name = model.Name,
-                                  ModelBarangID = model.ModelBarangId,
-                                  Description = model.Description,
-                                  Created = model.Created,
-                                  CreatedBy = model.CreatedBy,
-                                  Modified = model.Modified,
-                                  ModifiedBy = model.ModifiedBy,
-                                  RowStatus = model.RowStatus
-                              }).ToListAsync();
->>>>>>> 1ad68382c47205fb378ded98b05f8f688d92ea2f
+
+                //return await (from model in db.TypeBarang
+                //              where model.RowStatus == true
+                //              select new TypeBarangViewModel
+                //              {
+                //                  ID = model.Id,
+                //                  Nama = model.Name,
+                //                  ModelBarangID = model.ModelBarangId,
+                //                  Description = model.Description,
+                //                  Created = model.Created,
+                //                  CreatedBy = model.CreatedBy,
+                //                  Modified = model.Modified,
+                //                  ModifiedBy = model.ModifiedBy,
+                //                  RowStatus = model.RowStatus
+                //              }).ToListAsync();
+
+            }
+
+            return response;
+        }
+
+        public async Task<TypeBarangResponse> GetAllWithModelID(TypeBarangRequest request)
+        {
+            TypeBarangResponse response = new TypeBarangResponse();
+            try
+            {
+
+                if (db != null)
+                {
+                    response.ListModel = await(from model in db.TypeBarang
+                                           where model.ModelBarangId == request.ModelBarangID && model.RowStatus == true
+                                           select new TypeBarangViewModel
+                                           {
+                                               ID = model.Id,
+                                               Name = model.Name,
+                                               ModelBarangID = model.ModelBarangId,
+                                               Description = model.Description,
+                                               Created = model.Created,
+                                               CreatedBy = model.CreatedBy,
+                                               Modified = model.Modified,
+                                               ModifiedBy = model.ModifiedBy,
+                                               RowStatus = model.RowStatus
+                                           }).ToListAsync();
+                    if (response.ListModel == null)
+                    {
+                        response.IsSuccess = true;
+                        response.Message = "Data Not Found";
+                    }
+                    response.IsSuccess = true;
+                    response.Message = "Load Success";
+                }
+                else
+                {
+                    response.Message = "Opps, Something Error with System Righ Now !";
+                    response.IsSuccess = false;
+                }
+            }
+            catch (Exception ex)
+            {
+                response.Message = ex.ToString();
+                response.IsSuccess = false;
+
+                //return await (from model in db.TypeBarang
+                //              where model.Id == ID && model.RowStatus == true
+                //              select new TypeBarangViewModel
+                //              {
+                //                  ID = model.Id,
+                //                  Nama = model.Name,
+                //                  ModelBarangID = model.ModelBarangId,
+                //                  Description = model.Description,
+                //                  Created = model.Created,
+                //                  CreatedBy = model.CreatedBy,
+                //                  Modified = model.Modified,
+                //                  ModifiedBy = model.ModifiedBy,
+                //                  RowStatus = model.RowStatus
+                //              }).FirstOrDefaultAsync();
+
             }
 
             return response;
@@ -191,7 +252,7 @@ namespace ljgb.DataAccess.Repository
             TypeBarangResponse response = new TypeBarangResponse();
             try
             {
-<<<<<<< HEAD
+
                 if (db != null)
                 {
                     response.Model =  await (from model in db.TypeBarang
@@ -199,7 +260,7 @@ namespace ljgb.DataAccess.Repository
                                   select new TypeBarangViewModel
                                   {
                                       ID = model.Id,
-                                      Nama = model.Nama,
+                                      Name = model.Name,
                                       ModelBarangID = model.ModelBarangId,
                                       Description = model.Description,
                                       Created = model.Created,
@@ -226,25 +287,45 @@ namespace ljgb.DataAccess.Repository
             {
                 response.Message = ex.ToString();
                 response.IsSuccess = false;
-=======
-                return await (from model in db.TypeBarang
-                              where model.Id == ID && model.RowStatus == true
-                              select new TypeBarangViewModel
-                              {
-                                  ID = model.Id,
-                                  Name = model.Name,
-                                  ModelBarangID = model.ModelBarangId,
-                                  Description = model.Description,
-                                  Created = model.Created,
-                                  CreatedBy = model.CreatedBy,
-                                  Modified = model.Modified,
-                                  ModifiedBy = model.ModifiedBy,
-                                  RowStatus = model.RowStatus
-                              }).FirstOrDefaultAsync();
->>>>>>> 1ad68382c47205fb378ded98b05f8f688d92ea2f
+
+                //return await (from model in db.TypeBarang
+                //              where model.Id == ID && model.RowStatus == true
+                //              select new TypeBarangViewModel
+                //              {
+                //                  ID = model.Id,
+                //                  Nama = model.Name,
+                //                  ModelBarangID = model.ModelBarangId,
+                //                  Description = model.Description,
+                //                  Created = model.Created,
+                //                  CreatedBy = model.CreatedBy,
+                //                  Modified = model.Modified,
+                //                  ModifiedBy = model.ModifiedBy,
+                //                  RowStatus = model.RowStatus
+                //              }).FirstOrDefaultAsync();
+
             }
 
             return response;
+        }
+
+        public async Task<List<SP_TypeByKotaIDMerkIDModelID>> GetTypeByKotaIDMerkIDModelID(TypeBarangRequest request)
+        {
+            if (db != null)
+            {
+                try
+                {
+                    int result = 0;
+                    return db.Set<SP_TypeByKotaIDMerkIDModelID>().FromSql("EXEC sp_TypeByKotaIDMerkIDModelID {0},{1},{2}",
+                        request.KotaID, request.MerkID, request.ModelBarangID).AsNoTracking().ToList();
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+
+            }
+
+            return null;
         }
 
         public async Task<TypeBarangResponse> UpdatePost(TypeBarangRequest request)
@@ -257,7 +338,7 @@ namespace ljgb.DataAccess.Repository
                 {
                     TypeBarang model = await db.TypeBarang.Where(x => x.RowStatus == true && x.Id == request.ID).FirstAsync();
                     model.ModelBarangId = request.ModelBarangID;
-                    model.Nama = request.Nama;
+                    model.Name = request.Name;
                     model.Description = request.Description;
                     model.Modified = DateTime.Now;
                     model.ModifiedBy = "xsivicto1905";

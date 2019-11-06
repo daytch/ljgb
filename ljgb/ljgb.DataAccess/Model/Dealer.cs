@@ -6,7 +6,7 @@ namespace ljgb.DataAccess.Model
     public partial class Dealer
     {
         public long Id { get; set; }
-        public string Nama { get; set; }
+        public string Name { get; set; }
         public string Kode { get; set; }
         public string Alamat { get; set; }
         public long KotaId { get; set; }

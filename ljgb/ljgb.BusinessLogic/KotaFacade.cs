@@ -37,9 +37,9 @@ namespace ljgb.BusinessLogic
         }
         #endregion
 
-        public async Task<KotaResponse> GetAll()
+        public async Task<KotaResponse> GetAll(string search, string order, string orderDir, int startRec, int pageSize, int draw)
         {
-            var models = await dep.GetAll();
+            var models = await dep.GetAll(search, order, orderDir, startRec, pageSize, draw);
             if (models == null)
             {
                 return null;

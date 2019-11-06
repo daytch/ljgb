@@ -27,7 +27,6 @@ namespace ljgb.API.Controllers
                 string orderDir = HttpContext.Request.Query["order[0][dir]"];
                 int startRec = Convert.ToInt32(HttpContext.Request.Query["start"]);
                 int pageSize = Convert.ToInt32(HttpContext.Request.Query["length"]);
-                pageSize = 10;
                 var models = await facade.GetAll(search, order, orderDir, startRec, pageSize, draw);
                 if (models == null)
                 {
@@ -171,6 +170,32 @@ namespace ljgb.API.Controllers
             }
 
             return BadRequest();
+        }
+
+        [HttpPost]
+        [Route("GetMerkByKotaID")]
+        public async Task<IActionResult> GetMerkByKotaID([FromBody]long KotaID)
+        {
+            if (KotaID < 1)
+            {
+                return BadRequest();
+            }
+
+            try
+            {
+                var post = await facade.GetMerkByKotaID(KotaID);
+
+                if (post == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(post);
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
         }
     }
 }

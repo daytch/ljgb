@@ -10,9 +10,15 @@ namespace ljgb.Common.ViewModel
         public string Name { get; set; }
         public long HargaOtr { get; set; }
         public long WarnaId { get; set; }
+        public string NamaWarna { get; set; }
         public WarnaViewModel WarnaBarang { get; set; }
         public long TypeBarangId { get; set; }
+        public string NamaTypeBarang { get; set; }
         public TypeBarangViewModel TypeBarang { get; set; }
+        public long ModelBarangID { get; set; }
+        public string NamaModelBarang { get; set; }
+        public long MerkBarangID { get; set; }
+        public string NamaMerk { get; set; }
 
         public long LowestAsk { get; set; }
         public long HighestBid { get; set; }

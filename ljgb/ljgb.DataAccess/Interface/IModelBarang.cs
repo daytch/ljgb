@@ -22,7 +22,9 @@ namespace ljgb.DataAccess.Interface
 
         Task<ModelBarangResponse> GetModelWithMerkID(ModelBarangRequest model);
 
+        Task<List<SP_ModelByKotaIDMerkID>> GetModelByKotaIDMerkID(ModelBarangRequest model);
+
         //Task<ModelBarangResponse> GetAllWithoutFilter();
-        
+
     }
 }

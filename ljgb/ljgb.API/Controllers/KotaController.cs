@@ -13,13 +13,19 @@ namespace ljgb.API.Controllers
     public class KotaController : ControllerBase
     {
         private KotaFacade facade = new KotaFacade();
-        [HttpPost]
+        [HttpGet]
         [Route("GetAll")]
         public async Task<IActionResult> GetAll()
         {
             try
             {
-                var models = await facade.GetAll();
+                string search = HttpContext.Request.Query["search[value]"].ToString();
+                int draw = Convert.ToInt32(HttpContext.Request.Query["draw"]);
+                string order = HttpContext.Request.Query["order[0][column]"];
+                string orderDir = HttpContext.Request.Query["order[0][dir]"];
+                int startRec = Convert.ToInt32(HttpContext.Request.Query["start"]);
+                int pageSize = Convert.ToInt32(HttpContext.Request.Query["length"]);
+                var models = await facade.GetAll(search, order, orderDir, startRec, pageSize, draw);
                 if (models == null)
                 {
                     return NotFound();

@@ -378,6 +378,17 @@
       ]
     },
     {
+      "title": "Barang",
+      "icon": "fal fa-th-list",
+      "items": [
+        {
+          "title": "Barang",
+          "href": "Barang_ListBarang.cshtml"
+        }
+
+      ]
+    },
+    {
       "title": "Provinsi",
       "icon": "fal fa-th-list",
       "items": [

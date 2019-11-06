@@ -7,7 +7,7 @@ namespace ljgb.Common.ViewModel
     public class ModelBarangViewModel
     {
         public long ID { get; set; }
-        public string Nama { get; set; }
+        public string Name { get; set; }
         public MerkViewModel Merk { get; set; }
         public long MerkID { get; set; }
         public string NamaMerk { get; set; }

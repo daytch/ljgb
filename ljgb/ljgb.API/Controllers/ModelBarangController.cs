@@ -187,5 +187,28 @@ namespace ljgb.API.Controllers
 
             return BadRequest();
         }
+
+        [HttpPost]
+        [Route("GetModelByKotaIDMerkID")]
+        public async Task<IActionResult> GetModelByKotaIDMerkID([FromBody]ModelBarangRequest model)
+        {
+           
+
+            try
+            {
+                var post = await facade.GetModelByKotaIDMerkID(model);
+
+                if (post == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(post);
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+        }
     }
 }

@@ -45,7 +45,26 @@ namespace ljgb.DataAccess.Repository
 
             return null;
         }
+        public async Task<List<WarnaViewModel>> GetAllWithoutFilter()
+        {
+            if (db != null)
+            {
+                return await (from w in db.Warna
+                              where w.RowStatus == true
+                              select new WarnaViewModel
+                              {
+                                  Id = w.Id,
+                                  Name = w.Name,
+                                  Description = w.Description,
+                                  Created = w.Created,
+                                  CreatedBy = w.CreatedBy,
+                                  RowStatus = w.RowStatus
+                              }).ToListAsync();
+            }
 
+            return null;
+        }
+        
         public async Task<WarnaViewModel> GetPost(long postId)
         {
             if (db != null)

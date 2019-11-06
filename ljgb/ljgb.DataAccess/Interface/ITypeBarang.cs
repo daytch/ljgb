@@ -12,6 +12,7 @@ namespace ljgb.DataAccess.Interface
     {
 
         Task<TypeBarangResponse> GetAll(string search, string order, string orderDir, int startRec, int pageSize, int draw);
+        Task<TypeBarangResponse> GetAllWithModelID(TypeBarangRequest request);
 
         Task<TypeBarangResponse> GetPost(TypeBarangRequest request);
 
@@ -20,5 +21,7 @@ namespace ljgb.DataAccess.Interface
         Task<TypeBarangResponse> DeletePost(TypeBarangRequest request);
 
         Task<TypeBarangResponse> UpdatePost(TypeBarangRequest request);
+
+        Task<List<SP_TypeByKotaIDMerkIDModelID>> GetTypeByKotaIDMerkIDModelID(TypeBarangRequest request);
     }
 }

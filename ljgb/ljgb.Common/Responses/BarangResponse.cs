@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ljgb.Common.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -12,6 +13,13 @@ namespace ljgb.Common.Responses
         public CarDetail CarDetail { get; set; }
         public List<Car> RelatedProducts { get; set; }
         public dynamic ListAsks { get; set; }
+
+        public List<BarangViewModel> ListModel { get; set; }
+        public BarangViewModel Model { get; set; }
+
+        public int draw { get; set; }
+        public int recordsTotal { get; set; }
+        public int recordsFiltered { get; set; }
     }
     public class Car
     {

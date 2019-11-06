@@ -7,6 +7,9 @@ namespace ljgb.Common.Responses
 {
     public class KotaResponse : ResponseBase
     {
+        public int draw { get; set; }
+        public int recordsTotal { get; set; }
+        public int recordsFiltered { get; set; }
         public KotaViewModel Model { get; set; }
         public List<KotaViewModel> ListKota { get; set; }
         public List<ProvinsiViewModel> ListProvinsi { get; set; }

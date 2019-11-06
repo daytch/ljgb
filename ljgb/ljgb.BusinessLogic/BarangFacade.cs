@@ -38,14 +38,11 @@ namespace ljgb.BusinessLogic
         #endregion
 
 
-        public async Task<List<BarangViewModel>> GetAll()
+        public async Task<BarangResponse> GetAll(string search, string order, string orderDir, int startRec, int pageSize, int draw)
         {
-            var models = await dep.GetAll();
-            if (models == null)
-            {
-                return null;
-            }
-            return models;
+            
+            return await dep.GetAll(search, order, orderDir, startRec, pageSize, draw);
+          
         }
 
         public BarangResponse GetAllForHomePage(string city)
@@ -115,35 +112,107 @@ namespace ljgb.BusinessLogic
 
         }
 
-        public async Task<long> AddPost(Barang model)
+        public async Task<BarangResponse> AddPost(BarangRequest request)
         {
-            var postId = await dep.AddPost(model);
-            if (postId > 0)
+            BarangResponse response = new BarangResponse();
+            try
             {
-                return postId;
+                Barang model = new Barang();
+                model.HargaOtr = request.HargaOtr;
+                model.Name = request.Name;
+                model.WarnaId = request.WarnaId;
+                model.TypeBarangId = request.TypeBarangId;
+                model.Created = DateTime.Now;
+                model.CreatedBy = "xsivicto1905";
+                model.RowStatus = true;
+
+
+                var postId = await dep.AddPost(model);
+                if (postId > 0)
+                {
+                    response.Message = "Data Already Saved";
+                    response.IsSuccess = true;
+                }
+                else
+                {
+                    response.Message = "Save Failed";
+                    response.IsSuccess = false;
+                }
             }
-            else
+            catch (Exception ex)
             {
-                return 0;
+
+                response.Message = ex.ToString();
+                response.IsSuccess = false;
             }
+            return response;
+           
         }
 
-        public async Task<long> DeletePost(long ID)
+        public async Task<BarangResponse> DeletePost(long ID)
         {
-            long result = 0;
-            result = await dep.DeletePost(ID);
-            if (result == 0)
+            BarangResponse response = new BarangResponse();
+            try
             {
-                return 0;
+                long result = 0;
+                result = await dep.DeletePost(ID);
+                if (result == 0)
+                {
+                    response.IsSuccess = false;
+                    response.Message = "Delete Failed";
+                }
+                else
+                {
+                    response.IsSuccess = true;
+                    response.Message = "Data has been deleted";
+                }
             }
-            return result;
+            catch (Exception ex)
+            {
+
+                response.IsSuccess = false;
+                response.Message = ex.ToString();
+            }
+            
+            return response;
         }
 
-        public async Task<bool> UpdatePost(Barang model)
+        public async Task<BarangResponse> UpdatePost(BarangRequest request)
         {
-            bool result = await dep.UpdatePost(model);
+            BarangResponse response = new BarangResponse();
 
-            return result;
+            try
+            {
+                Barang model = new Barang();
+                model.Id = request.ID;
+                model.HargaOtr = request.HargaOtr;
+                model.Name = request.Name;
+                model.WarnaId = request.WarnaId;
+                model.TypeBarangId = request.TypeBarangId;
+                model.Modified = DateTime.Now;
+                model.ModifiedBy = "xsivicto1905";
+                bool result = await dep.UpdatePost(model);
+
+                if (result)
+                {
+                    response.Message = "Data Already Saved";
+                    response.IsSuccess = true;
+                }
+                else
+                {
+                    response.Message = "Update Failed";
+                    response.IsSuccess = false;
+                }
+            }
+            catch (Exception ex)
+            {
+
+                response.Message = ex.ToString();
+                response.IsSuccess = false;
+            }
+
+
+            return response;
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using ljgb.Common.Responses;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
@@ -43,6 +44,9 @@ namespace ljgb.DataAccess.Model
         public virtual DbSet<Warna> Warna { get; set; }
         public virtual DbSet<vw_buyer> vw_buyer { get; set; }
         public virtual DbSet<vw_salesman> vw_salesman { get; set; }
+        public virtual DbSet<SP_MerkByKotaID> SP_MerkByKotaID { get; set; }
+        public virtual DbSet<SP_ModelByKotaIDMerkID> SP_ModelByKotaIDMerkID { get; set; }
+        public virtual DbSet<SP_TypeByKotaIDMerkIDModelID> SP_TypeByKotaIDMerkIDModelID { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -245,7 +249,7 @@ namespace ljgb.DataAccess.Model
                     .HasMaxLength(250)
                     .IsUnicode(false);
 
-                entity.Property(e => e.Nama)
+                entity.Property(e => e.Name)
                     .IsRequired()
                     .HasMaxLength(250)
                     .IsUnicode(false);
@@ -281,7 +285,7 @@ namespace ljgb.DataAccess.Model
                     .HasMaxLength(250)
                     .IsUnicode(false);
 
-                entity.Property(e => e.Nama)
+                entity.Property(e => e.Name)
                     .IsRequired()
                     .HasMaxLength(250)
                     .IsUnicode(false);
@@ -316,7 +320,7 @@ namespace ljgb.DataAccess.Model
                     .HasMaxLength(250)
                     .IsUnicode(false);
 
-                entity.Property(e => e.Nama)
+                entity.Property(e => e.Name)
                     .IsRequired()
                     .HasMaxLength(250)
                     .IsUnicode(false);
@@ -452,7 +456,7 @@ namespace ljgb.DataAccess.Model
                     .HasMaxLength(250)
                     .IsUnicode(false);
 
-                entity.Property(e => e.Nama)
+                entity.Property(e => e.Name)
                     .IsRequired()
                     .HasMaxLength(250)
                     .IsUnicode(false);

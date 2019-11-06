@@ -13,10 +13,20 @@ namespace ljgb.Common.Responses
         public List<ModelBarangViewModel> ListModel { get; set; }
         public ModelBarangViewModel Model { get; set; }
 
+        public List<SP_ModelByKotaIDMerkID> ListSP_ModelByKotaIDMerkID { get; set; }
+
         public ModelBarangResponse()
         {
             ListModel = new List<ModelBarangViewModel>();
             Model = new ModelBarangViewModel();
         }
     }
+    public class SP_ModelByKotaIDMerkID
+    {
+        public long ID { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public long MerkID { get; set; }
+    }
+
 }

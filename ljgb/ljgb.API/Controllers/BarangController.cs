@@ -16,13 +16,19 @@ namespace ljgb.API.Controllers
     {
         private BarangFacade facade = new BarangFacade();
 
-        [HttpPost]
+        [HttpGet]
         [Route("GetAll")]
         public async Task<IActionResult> GetAll()
         {
             try
             {
-                var models = await facade.GetAll();
+                string search = HttpContext.Request.Query["search[value]"].ToString();
+                int draw = Convert.ToInt32(HttpContext.Request.Query["draw"]);
+                string order = HttpContext.Request.Query["order[0][column]"];
+                string orderDir = HttpContext.Request.Query["order[0][dir]"];
+                int startRec = Convert.ToInt32(HttpContext.Request.Query["start"]);
+                int pageSize = Convert.ToInt32(HttpContext.Request.Query["length"]);
+                var models = await facade.GetAll(search, order, orderDir, startRec, pageSize, draw);
                 if (models == null)
                 {
                     return NotFound();
@@ -139,7 +145,7 @@ namespace ljgb.API.Controllers
         [Route("GetAllAsksById")]
         public IActionResult GetAllAsksById([FromQuery]BarangRequest request)
         {
-            int Id = request.ID;//Convert.ToInt32(HttpContext.Request.Query["id"]);
+            long Id = request.ID;//Convert.ToInt32(HttpContext.Request.Query["id"]);
             int start = Convert.ToInt32(HttpContext.Request.Query["start"]);
             int limit = Convert.ToInt32(HttpContext.Request.Query["limit"]);
             int max = Convert.ToInt32(HttpContext.Request.Query["max"]);
@@ -195,52 +201,49 @@ namespace ljgb.API.Controllers
 
         [HttpPost]
         [Route("AddPost")]
-        public async Task<IActionResult> AddPost([FromBody]Barang model)
+        public async Task<IActionResult> AddPost([FromBody]BarangRequest model)
         {
+            BarangResponse result = new BarangResponse();
             if (ModelState.IsValid)
             {
                 try
                 {
-                    var postId = await facade.AddPost(model);
-                    if (postId > 0)
+                    if (model.ID>0)
                     {
-                        return Ok(postId);
+                        result = await facade.UpdatePost(model);
                     }
                     else
                     {
-                        return NotFound();
+                        result = await facade.AddPost(model);
                     }
+                    return Ok(result);
                 }
                 catch (Exception)
                 {
                     return BadRequest();
                 }
-
             }
-
             return BadRequest();
         }
 
 
         [HttpPost]
         [Route("DeletePost")]
-        public async Task<IActionResult> DeletePost(long postId)
+        public async Task<IActionResult> DeletePost(BarangRequest request)
         {
-            long result = 0;
+            BarangResponse response = new BarangResponse();
 
-            if (postId < 1)
-            {
-                return BadRequest();
-            }
-
+            
             try
             {
-                result = await facade.DeletePost(postId);
-                if (result == 0)
+                if (request.ID < 1)
                 {
-                    return NotFound();
+                    return BadRequest();
                 }
-                return Ok();
+
+                response = await facade.DeletePost(request.ID);
+              
+                return Ok(response);
             }
             catch (Exception)
             {
@@ -252,15 +255,15 @@ namespace ljgb.API.Controllers
 
         [HttpPost]
         [Route("UpdatePost")]
-        public async Task<IActionResult> UpdatePost([FromBody]Barang model)
+        public async Task<IActionResult> UpdatePost([FromBody]BarangRequest request)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    await facade.UpdatePost(model);
+                    var result = await facade.UpdatePost(request);
 
-                    return Ok();
+                    return Ok(result);
                 }
                 catch (Exception ex)
                 {
