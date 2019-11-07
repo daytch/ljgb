@@ -1,11 +1,8 @@
 ﻿using ljgb.BusinessLogic;
 using ljgb.Common.Requests;
 using ljgb.Common.Responses;
-using ljgb.DataAccess.Model;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace ljgb.API.Controllers
@@ -200,8 +197,7 @@ namespace ljgb.API.Controllers
                 return BadRequest();
             }
         }
-
-
+        
         [HttpPost]
         [Route("AddPost")]
         public async Task<IActionResult> AddPost([FromBody]BarangRequest model)
@@ -229,7 +225,6 @@ namespace ljgb.API.Controllers
             return BadRequest();
         }
 
-
         [HttpPost]
         [Route("DeletePost")]
         public async Task<IActionResult> DeletePost(BarangRequest request)
@@ -254,7 +249,6 @@ namespace ljgb.API.Controllers
                 return BadRequest();
             }
         }
-
 
         [HttpPost]
         [Route("UpdatePost")]

@@ -31,8 +31,6 @@ namespace ljgb.API.Controllers
             }
         }
 
-      
-
         [HttpPost]
         [Route("GetPost")]
         public async Task<IActionResult> GetPost(long postId)
@@ -113,7 +111,6 @@ namespace ljgb.API.Controllers
                 return BadRequest();
             }
         }
-
 
         [HttpPut]
         [Route("UpdatePost")]

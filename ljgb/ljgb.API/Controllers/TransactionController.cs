@@ -16,8 +16,7 @@ namespace ljgb.API.Controllers
         [HttpPost]
         [Route("GetAll")]
         public async Task<IActionResult> GetAll()
-        {
-            
+        {           
 
             try
             {
@@ -41,8 +40,6 @@ namespace ljgb.API.Controllers
                 return BadRequest(ex);
             }
         }
-
-
 
         [HttpPost]
         [Route("GetModelWithID")]
