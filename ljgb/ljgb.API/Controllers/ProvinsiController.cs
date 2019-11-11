@@ -3,8 +3,6 @@ using ljgb.Common.Requests;
 using ljgb.Common.Responses;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace ljgb.API.Controllers
@@ -20,7 +18,6 @@ namespace ljgb.API.Controllers
         {
             try
             {
-
                 string search = HttpContext.Request.Query["search[value]"].ToString();
                 int draw = Convert.ToInt32(HttpContext.Request.Query["draw"]);
                 string order = HttpContext.Request.Query["order[0][column]"];
@@ -85,7 +82,6 @@ namespace ljgb.API.Controllers
         //        return BadRequest(ex);
         //    }
         //}
-
 
         [HttpPost]
         [Route("GetModelWithID")]
@@ -162,7 +158,6 @@ namespace ljgb.API.Controllers
                 return BadRequest();
             }
         }
-
 
         [HttpPost]
         [Route("UpdatePost")]

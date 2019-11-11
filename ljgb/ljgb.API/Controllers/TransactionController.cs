@@ -15,9 +15,14 @@ namespace ljgb.API.Controllers
         private TransactionFacade facade = new TransactionFacade();
         [HttpPost]
         [Route("GetAll")]
+<<<<<<< HEAD
         public async Task<IActionResult> GetAll([FromBody]DTParameters param)
         {
             
+=======
+        public async Task<IActionResult> GetAll()
+        {           
+>>>>>>> a23181c11cd32eaf2d43d6d944d5c461df991b6f
 
             try
             {
@@ -44,8 +49,6 @@ namespace ljgb.API.Controllers
                 return BadRequest(ex);
             }
         }
-
-
 
         [HttpPost]
         [Route("GetModelWithID")]
