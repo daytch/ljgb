@@ -299,15 +299,13 @@
                 </button>
             </div>
             <table id="tableJurnalTransaksi" class="table table-bordered table-hover table-striped w-100">
-                <thead>
+                <thead id="tableJournal">
                     <tr>
-                        <th>Current Status</th>
-                        <th>Current Step</th>
-                        <th></th>
-                        <th>Nama Barang</th>
-                        <th>Nama Dealer</th>
-
+                        <th> Current Status</th>
+                        <th>Next Step</th>
+                        <th>Created</th>
                     </tr>
+
                 </thead>
                 <tbody></tbody>
             </table>
@@ -325,6 +323,7 @@
         $(document).ready(function () {
             moment.locale('ID');
             var url = "@ViewBag.url_api";
+           
             $('#tableTransaksi').dataTable({
                 language: {
                     processing: "<div class='overlay custom-loader-background'><i class='fa fa-cog fa-spin custom-loader-color'></i></div>"
@@ -337,12 +336,13 @@
                 ajax: {
                     //url: url + "User/GetSalesman",
                     url: url + "Transaction/GetAll",
-                    contentType: "application/json",
-                    serverSide: true,
+                    contentType: 'application/json; charset=utf-8',
                     type: "POST",
-                    dataType: "JSON",
-                    data: function (a) {
-                        return a;
+                    dataType: "json",
+                    data: function (d) {
+                        // Grab form values containing user options
+                      
+                        return JSON.stringify(d);
                     },
                     dataSrc: function (json) {
                         json.draw = json.draw;
@@ -358,7 +358,7 @@
                     {
                         data: "namaStatus",
                         mRender: function (a, e, t) {
-                            return '<a data-TransactionID="' + t.id + '" data-toggle="modal" data-target="#ModalEdit" >' + t.namaStatus + ' </a> '
+                            return '<a data-TransactionID="' + t.id + '" data-toggle="modal" data-target="#ModalTrackingStatus" >' + t.namaStatus + ' </a> '
 
                         },
                         width: "10%"
@@ -431,6 +431,61 @@
                 $('#TransactionID').val(e.relatedTarget.getAttribute('data-TransactionID'));
             });
 
+            $("#ModalTrackingStatus").on("show.bs.modal", function (e) {
+                $('#TransactionID').val(e.relatedTarget.getAttribute('data-TransactionID'));
+
+                $('#tableJurnalTransaksi').dataTable({
+                    language: {
+                        processing: "<div class='overlay custom-loader-background'><i class='fa fa-cog fa-spin custom-loader-color'></i></div>"
+                    },
+                    processing: false,
+                    serverSide: false,
+                    searching: false,
+                    paging: false,
+                    ordering: false,
+                    initComplete: function () {
+                        $(this.api().table().container()).find("input").parent().wrap("<form>").parent().attr("autocomplete", "off");
+                    },
+                    ajax: {
+                        //url: url + "User/GetSalesman",
+                        url: url + "Transaction/GetHistory",
+                        contentType: 'application/json; charset=utf-8',
+                        type: "POST",
+                        dataType: "json",
+                        data: function (d) {
+                            // Grab form values containing user options
+                            var values = {
+                                id: $("#TransactionID").val()
+                            };
+                            return JSON.stringify(values);
+                        },
+                        dataSrc: function (json) {
+                            json.draw = json.draw;
+                            json.recordsTotal = json.recordsTotal;
+                            json.recordsFiltered = json.recordsFiltered;
+                            json.data = json.listHistory;
+                            var return_data = json;
+                            return return_data.data;
+                        }
+                    },
+                    responsive: true,
+                    columns: [
+                        {
+                            data: "transactionStatus",
+                            width: "10%"
+                        },
+                        {
+                            data: "transactionStep",
+                            width: "10%"
+                        },
+                        {
+                            data: "created",
+                            width: "10%"
+                        },
+                    ]
+                });
+            });
+
             $('#ModalEdit').on('show.bs.modal', function (e) {
                 resetModal();
 
@@ -449,51 +504,31 @@
 
             });
 
-            $('#ModalTrackingStatus').on('show.bs.modal', function (e) {
-                resetModal();
+            //$('#ModalTrackingStatus').on('show.bs.modal', function (e) {
+            //    resetModal();
 
-                $('#tableTransaksi').dataTable({
-                    language: {
-                        processing: "<div class='overlay custom-loader-background'><i class='fa fa-cog fa-spin custom-loader-color'></i></div>"
-                    },
-                    processing: true,
-                    serverSide: true,
-                    initComplete: function () {
-                        $(this.api().table().container()).find("input").parent().wrap("<form>").parent().attr("autocomplete", "off");
-                    },
-                    ajax: {
-                        //url: url + "User/GetSalesman",
-                        url: url + "Transaction/GetJournalByTransaction",
-                        contentType: "application/json",
-                        serverSide: true,
-                        type: "POST",
-                        dataType: "JSON",
-                        data: function (a) {
-                            return a;
-                        },
-                        dataSrc: function (json) {
-                            json.draw = json.draw;
-                            json.recordsTotal = json.recordsTotal;
-                            json.recordsFiltered = json.recordsFiltered;
-                            json.data = json.listTransaction;
-                            var return_data = json;
-                            return return_data.data;
-                        }
-                    },
-                    responsive: true,
-                    columns: [
-                        {
-                            //data: "namaStatus",
-                            //mRender: function (a, e, t) {
-                            //    return '<a data-TransactionID="' + t.id + '" data-toggle="modal" data-target="#ModalEdit" >' + t.namaStatus + ' </a> '
+            //    $.ajax({
+            //        url: url + "Transaction/GetHistory",
+            //        contentType: "application/json",
+            //        serverSide: true,
+            //        type: "POST",
+            //        dataType: "JSON",
+            //        data: function (response) {
+            //            $("#tableJournal").append(" <tr>"+
+            //                "< th > Current Status</th >"+
+            //                "<th>Current Step</th>" +
+            //                "</tr >");
 
-                            //},
-                            //width: "10%"
-                        },
+            //            $.each(response.listHistory, function (key, entry) {
+            //                $("#tableJournal").append($('<td>' + entry.transactionStepName+'</td>'));
+            //                $("#tableJournal").append($('<td>' + entry.transactionStatusName + ' </td>'));
+            //                $("#tableJournal").append($('<td>' + entry.created + ' </td>'));
+            //            })
+                       
+            //        }
+            //    });
                     
-                    ]
-                });
-            });
+            //});
 
             $('#save').on('click', function (e) {
 

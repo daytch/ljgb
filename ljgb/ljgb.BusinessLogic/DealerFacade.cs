@@ -10,6 +10,7 @@ using ljgb.Common.ViewModel;
 using ljgb.Common.Responses;
 using System.Linq;
 using System;
+using ljgb.Common.Requests;
 
 namespace ljgb.BusinessLogic
 {
@@ -46,6 +47,118 @@ namespace ljgb.BusinessLogic
                 return null;
             }
             return ListDropdown;
+        }
+
+        public async Task<DealerResponse> GetAll(string search, string order, string orderDir, int startRec, int pageSize, int draw)
+        {
+            return await dep.GetAll(search, order, orderDir, startRec, pageSize, draw);
+        }
+
+        public async Task<DealerResponse> AddPost(DealerRequest request)
+        {
+            DealerResponse response = new DealerResponse();
+            try
+            {
+                Dealer model = new Dealer();
+                model.Name = request.Name;
+                model.Kode = request.Kode;
+                model.Alamat = request.Alamat;
+                model.KotaId = request.KotaID;
+                model.Telepon = request.Telepon;
+                model.PejabatDealer = request.PejabatDealer;
+                model.Created = DateTime.Now;
+                model.CreatedBy = "xsivicto1905";
+                model.RowStatus = true;
+
+                long result = 0;
+                result = await dep.AddPost(model);
+                if (result>0)
+                {
+                    response.Message = "success";
+                    response.IsSuccess = true;
+                }
+                else
+                {
+                    response.Message = "failed";
+                    response.IsSuccess = false;
+                }
+            }
+            catch (Exception ex)
+            {
+
+                response.Message = ex.ToString();
+                response.IsSuccess = false;
+            }
+            return response;
+        }
+
+        public async Task<DealerResponse> GetPost(long request)
+        {
+            DealerResponse response = new DealerResponse();
+
+            return response;
+        }
+
+        public async Task<DealerResponse> UpdatePost(DealerRequest request)
+        {
+            DealerResponse response = new DealerResponse();
+            
+            try
+            {
+                Dealer dealer = await dep.GetPost(request.ID);
+                dealer.KotaId = request.KotaID;
+                dealer.Kode = request.Kode;
+                dealer.Name = request.Name;
+                dealer.Alamat = request.Alamat;
+                dealer.Telepon = request.Telepon;
+                dealer.PejabatDealer = request.PejabatDealer;
+                dealer.Modified = DateTime.Now;
+                dealer.ModifiedBy = "xsivicto1905";
+
+                if (await dep.UpdatePost(dealer))
+                {
+
+                }
+                else
+                {
+                    response.IsSuccess = false;
+                    response.Message = "Update Failed";
+                }
+            }
+            catch (Exception ex)
+            {
+
+                response.IsSuccess = false;
+                response.Message = ex.ToString();
+            }
+
+            return response;
+        }
+
+        public async Task<DealerResponse> DeletePost(long ID)
+        {
+            DealerResponse response = new DealerResponse();
+            try
+            {
+                if (await dep.DeletePost(ID) > 0)
+                {
+                    response.IsSuccess = false;
+                    response.Message = "Delete Success";
+                }
+                else
+                {
+                    response.IsSuccess = false;
+                    response.Message = "Delete Failed";
+                }
+            }
+            catch (Exception ex)
+            {
+
+                response.IsSuccess = false;
+                response.Message = ex.ToString();
+            }
+
+            return response;
         }
 
     }

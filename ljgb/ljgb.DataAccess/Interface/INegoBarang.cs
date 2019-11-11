@@ -13,10 +13,20 @@ namespace ljgb.DataAccess.Interface
 
         Task<NegoBarangResponse> AddPost(NegoBarangRequest model);
 
+        Task<long> AddPost(NegoBarang model);
+
         Task<NegoBarang> GetNegoBarang(NegoBarang model);
 
         Task<NegoBarangResponse> DeletePost(NegoBarangRequest model);
 
         Task<NegoBarangResponse> UpdatePost(NegoBarangRequest model);
+
+        Task<long> UpdatePost(NegoBarang model);
+
+        Task<NegoBarangResponse> GetAllASK(string search, string order, string orderDir, int startRec, int pageSize, int dra);
+
+        Task<bool> DeletePost(long ID);
+
+        Task<NegoBarangResponse> GetAllBID(string search, string order, string orderDir, int startRec, int pageSize, int draw);
     }
 }

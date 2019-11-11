@@ -54,32 +54,32 @@ namespace ljgb.API.Controllers
             }
             return Ok(response);
         }
-        //[HttpGet]
-        //[Route("GetAll")]
-        //public async Task<IActionResult> GetAll()
-        //{
-        //    try
-        //    {
-        //        string search = HttpContext.Request.Query["search[value]"].ToString();
-        //        int draw = Convert.ToInt32(HttpContext.Request.Query["draw"]);
-        //        string order = HttpContext.Request.Query["order[0][column]"];
-        //        string orderDir = HttpContext.Request.Query["order[0][dir]"];
-        //        int startRec = Convert.ToInt32(HttpContext.Request.Query["start"]);
-        //        int pageSize = Convert.ToInt32(HttpContext.Request.Query["length"]);
-        //        var models = await facade.GetAll(search, order, orderDir, startRec, pageSize, draw);                
+        [HttpGet]
+        [Route("GetAll")]
+        public async Task<IActionResult> GetAll()
+        {
+            try
+            {
+                string search = HttpContext.Request.Query["search[value]"].ToString();
+                int draw = Convert.ToInt32(HttpContext.Request.Query["draw"]);
+                string order = HttpContext.Request.Query["order[0][column]"];
+                string orderDir = HttpContext.Request.Query["order[0][dir]"];
+                int startRec = Convert.ToInt32(HttpContext.Request.Query["start"]);
+                int pageSize = Convert.ToInt32(HttpContext.Request.Query["length"]);
+                var models = await facade.GetAll(search, order, orderDir, startRec, pageSize, draw);
 
-        //        if (models == null)
-        //        {
-        //            return NotFound();
-        //        }
+                if (models == null)
+                {
+                    return NotFound();
+                }
 
-        //        return Ok(models);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return BadRequest(ex);
-        //    }
-        //}
+                return Ok(models);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
 
 
 
@@ -113,13 +113,21 @@ namespace ljgb.API.Controllers
         [Route("AddPost")]
         public async Task<IActionResult> AddPost([FromBody]KotaRequest req)
         {
+            KotaResponse response = new KotaResponse();
             if (ModelState.IsValid)
             {
                 try
                 {
-                    var postId = await facade.AddPost(req);
+                    if (req.ID> 0)
+                    {
+                        response = await facade.UpdatePost(req);
+                    }
+                    else
+                    {
+                        response = await facade.AddPost(req);
+                    }
 
-                    return Ok(postId);
+                    return Ok(response);
 
                 }
                 catch (Exception)
@@ -161,6 +169,34 @@ namespace ljgb.API.Controllers
                 try
                 {
                     var result = await facade.UpdatePost(req);
+
+                    return Ok(result);
+                }
+                catch (Exception ex)
+                {
+                    if (ex.GetType().FullName ==
+                             "Microsoft.EntityFrameworkCore.DbUpdateConcurrencyException")
+                    {
+                        return NotFound();
+                    }
+
+                    return BadRequest();
+                }
+            }
+
+            return BadRequest();
+        }
+
+
+        [HttpGet]
+        [Route("GetAllKotaWithoutFilter")]
+        public async Task<IActionResult> GetAllKotaWithoutFilter()
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    var result = await facade.GetAllWithoutFilter();
 
                     return Ok(result);
                 }

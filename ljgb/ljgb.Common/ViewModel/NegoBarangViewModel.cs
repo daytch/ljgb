@@ -18,5 +18,12 @@ namespace ljgb.Common.ViewModel
         public DateTime? Modified { get; set; }
         public string ModifiedBy { get; set; }
         public bool RowStatus { get; set; }
+        public string NamaBarang { get; set; }
+        public string Warna { get; set; }
+        public long HargaOTR { get; set; }
+        public long MerkID { get; set; }
+        public long ModelBarangID { get; set; }
+        public long TypeBarangID { get; set; }
+        public long WarnaID { get; set; }
     }
 }

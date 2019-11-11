@@ -1,5 +1,6 @@
 ﻿using ljgb.Common.ViewModel;
 using System;
+using System.Collections.Generic;
 
 namespace ljgb.Common.Requests
 {
@@ -15,9 +16,21 @@ namespace ljgb.Common.Requests
         public DateTime? Modified { get; set; }
         public string ModifiedBy { get; set; }
         public bool RowStatus { get; set; }
+        public string draw { get; set; }
+        public string search { get; set; }
+        public List<string> order { get; set; }
+        public string start { get; set; }
+        public string length { get; set; }
+
+        public long BuyerID { get; set; }
+        public long SellerID { get; set; }
+        public long NegoBarangID { get; set; }
+
         public TransactionRequest()
         {
             TrasanctionLevel = new TransactionLevelViewModel();
         }
     }
+
+
 }

@@ -219,5 +219,58 @@ namespace ljgb.BusinessLogic
             return response;
 
         }
+
+        public async Task<TransactionResponse> SubmitSell(TransactionRequest req)
+        {
+            TransactionResponse response = new TransactionResponse();
+            Transaction tran = new Transaction()
+            {
+                BuyerId = req.BuyerID,
+                SellerId = req.SellerID,
+                NegoBarangId = req.NegoBarangID,
+                TransactionLevelId = 1,
+
+                CreatedBy = req.CreatedBy,
+                Created = DateTime.Now,
+                RowStatus = true
+            };
+            long TransID = await dep.SaveTransaction(tran);
+            if (TransID < 1)
+            {
+                response.Message = "Failed When Save Transaction";
+                response.IsSuccess = false;
+            }
+            else
+            {
+                TransactionJournal journal = new TransactionJournal()
+                {
+                    TransactionId = tran.Id,
+                    BuyerId = tran.BuyerId,
+                    SellerId = tran.SellerId,
+                    NegoBarangId = tran.NegoBarangId,
+                    TransactionLevelId = tran.TransactionLevelId,
+
+                    Created = tran.Created,
+                    CreatedBy = tran.CreatedBy,
+                    RowStatus = tran.RowStatus,
+                };
+                long JournalID = await IJournal.SaveTransactionJournal(journal);
+
+                if (JournalID < 1)
+                {
+                    log.Error("Failed when insert TransactionJournal, TransactionID = " + tran.Id);
+                }
+                response.Message = "Transaction Success.";
+                response.IsSuccess = true;
+            }
+            return response;
+        }
+
+        public async Task<TransactionResponse> GetHistory(TransactionRequest req)
+        {
+            return await IJournal.GetHistory(req.ID);
+        }
+
+
     }
 }

@@ -54,4 +54,10 @@ namespace ljgb.Common.ViewModel
         }
       
     }
+    public class TransactionHistoryViewModel
+    {
+        public string TransactionStatus { get; set; }
+        public string TransactionStep { get; set; }
+        public DateTime Created { get; set; }
+    }
 }

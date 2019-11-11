@@ -338,5 +338,22 @@ namespace ljgb.DataAccess.Repository
             }
             return true;
         }
+
+        public async Task<Barang> GetHargaOTR(Barang request)
+        {
+            Barang response = new Barang();
+            try
+            {
+                response = await db.Barang.Where(x => x.RowStatus == true
+                                                 && x.TypeBarangId == request.TypeBarangId
+                                                 && x.WarnaId == request.WarnaId).FirstOrDefaultAsync();
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+            return response;
+        }
     }
 }

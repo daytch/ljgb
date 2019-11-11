@@ -13,11 +13,14 @@ namespace ljgb.Common.Responses
         public List<TransactionViewModel> ListTransaction { get; set; }
 
         public List<TransactionJournalViewModel> ListJournalByTransaction { get; set; }
-
+        public List<TransactionHistoryViewModel> ListHistory { get; set; }
 
         public TransactionResponse()
         {
             ListTransaction = new List<TransactionViewModel>();
         }
+
     }
+
+   
 }

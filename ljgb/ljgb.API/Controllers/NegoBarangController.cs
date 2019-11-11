@@ -1,5 +1,6 @@
 ﻿using ljgb.BusinessLogic;
 using ljgb.Common.Requests;
+using ljgb.Common.Responses;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -39,7 +40,7 @@ namespace ljgb.API.Controllers
         [Route("GetModelWithID")]
         public async Task<IActionResult> GetPost(NegoBarangRequest req)
         {
-            if (req ==null)
+            if (req == null)
             {
                 return BadRequest();
             }
@@ -81,15 +82,16 @@ namespace ljgb.API.Controllers
         [Route("SubmitAsk")]
         public async Task<IActionResult> SubmitAsk([FromBody]NegoBarangRequest request)
         {
+            NegoBarangResponse response = new NegoBarangResponse();
             try
             {
-                var result = await facade.Submitask(request);
+                response = await facade.Submitask(request);
             }
             catch (Exception ex)
             {
                 return BadRequest(ex);
             }
-            return Ok();
+            return Ok(response);
         }
 
 
@@ -137,6 +139,66 @@ namespace ljgb.API.Controllers
             }
 
             return BadRequest();
+        }
+
+        [HttpPost]
+        [Route("GetAllASK")]
+        public async Task<IActionResult> GetAllASK([FromBody]DTParameters param)
+        {
+            try
+            {
+
+
+                //var test1 = HttpContext.Request.Form;
+
+                string search = HttpContext.Request.Query["search[value]"].ToString();
+                int draw = param.Draw;
+                string order = param.Order[0].Column.ToString();
+                string orderDir = param.Order[0].Dir.ToString();
+                int startRec = param.Start;
+                int pageSize = param.Length;
+                var models = await facade.GetAllASK(search, order, orderDir, startRec, pageSize, draw);
+                if (models == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(models);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+
+        [HttpPost]
+        [Route("GetAllBID")]
+        public async Task<IActionResult> GetAllBID([FromBody]DTParameters param)
+        {
+            try
+            {
+
+
+                //var test1 = HttpContext.Request.Form;
+
+                string search = HttpContext.Request.Query["search[value]"].ToString();
+                int draw = param.Draw;
+                string order = param.Order[0].Column.ToString();
+                string orderDir = param.Order[0].Dir.ToString();
+                int startRec = param.Start;
+                int pageSize = param.Length;
+                var models = await facade.GetAllBID(search, order, orderDir, startRec, pageSize, draw);
+                if (models == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(models);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
         }
     }
 }

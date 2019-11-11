@@ -1,4 +1,5 @@
-﻿using ljgb.DataAccess.Model;
+﻿using ljgb.Common.Responses;
+using ljgb.DataAccess.Model;
 using ljgb.DataAccess.ViewModel;
 using System;
 using System.Collections.Generic;
@@ -11,6 +12,6 @@ namespace ljgb.DataAccess.Interface
     {
 
         Task<long> SaveTransactionJournal(TransactionJournal model);
-
+        Task<TransactionResponse> GetHistory(long ID);
     }
 }

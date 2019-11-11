@@ -15,19 +15,22 @@ namespace ljgb.API.Controllers
         private TransactionFacade facade = new TransactionFacade();
         [HttpPost]
         [Route("GetAll")]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll([FromBody]DTParameters param)
         {
             
 
             try
             {
-                string search = HttpContext.Request.Query["search[value]"].ToString();
-                string order = HttpContext.Request.Query["order[0][column]"];
-                string orderDir = HttpContext.Request.Query["order[0][dir]"];
-                int startRec = Convert.ToInt32(HttpContext.Request.Query["start"]);
-                int pageSize = Convert.ToInt32(HttpContext.Request.Query["length"]);
-                int draw = Convert.ToInt32(HttpContext.Request.Query["draw"]);
 
+                
+                //var test1 = HttpContext.Request.Form;
+             
+                string search = HttpContext.Request.Query["search[value]"].ToString();
+                int draw = param.Draw;
+                string order = param.Order[0].Column.ToString();
+                string orderDir = param.Order[0].Dir.ToString();
+                int startRec = param.Start;
+                int pageSize = param.Length;
                 var models = await facade.GetAll(search, order, orderDir, startRec, pageSize, draw);
                 if (models == null)
                 {
@@ -234,6 +237,53 @@ namespace ljgb.API.Controllers
 
                     return BadRequest();
                 }
+            }
+
+            return BadRequest();
+        }
+
+        [HttpPost]
+        [Route("SubmitDeal")]
+        public async Task<IActionResult> SubmitDeal([FromBody]TransactionRequest req)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    var postId = await facade.SubmitSell(req);
+
+                    return Ok(postId);
+
+                }
+                catch (Exception)
+                {
+                    return BadRequest();
+                }
+
+            }
+
+            return BadRequest();
+        }
+
+
+        [HttpPost]
+        [Route("GetHistory")]
+        public async Task<IActionResult> GetHistory([FromBody]TransactionRequest req)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    var postId = await facade.GetHistory(req);
+
+                    return Ok(postId);
+
+                }
+                catch (Exception)
+                {
+                    return BadRequest();
+                }
+
             }
 
             return BadRequest();

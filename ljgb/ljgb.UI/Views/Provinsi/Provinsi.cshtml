@@ -83,7 +83,7 @@
 </div>
 <!-- Modal Add-->
 <div class="modal fade" id="ModalEdit" role="dialog">
-    <form>
+    <form class="needs-validation" novalidate>
         <div class="modal-dialog">
 
             <!-- Modal content-->
@@ -99,11 +99,15 @@
                     <div class="form-group">
                         <label class="form-label" for="simpleinput">Nama Provinsi</label>
 
-                        <input type="text" id="NamaProvinsi" name="Nama" class="form-control">
+                        <input type="text" id="NamaProvinsi" name="Nama" class="form-control" required>
+                        <div class="invalid-feedback">
+                            Please input Nama Provinsi.
+                        </div>
                     </div>
                     <div class="form-group">
                         <label class="form-label" for="example-textarea">Deskripsi</label>
-                        <textarea class="form-control" id="DeskripsiProvinsi" name="Description" rows="5"></textarea>
+                        <textarea class="form-control" id="DeskripsiProvinsi" name="Description" rows="5" required></textarea>
+
                     </div>
 
                 </div>
@@ -119,11 +123,55 @@
 </div>
 
 @section Scripts {
-    <script type="text/javascript">
+<script type="text/javascript">
         $(document).ready(function () {
             moment.locale('ID');
             var url = "@ViewBag.url_api";
-            var settings = $("#transactions").dataTable().fnSettings();
+
+            //Validation
+            var forms = document.getElementsByClassName('needs-validation');
+            var button = document.getElementById("btn-save");
+            // Loop over them and prevent submission
+            var validation = Array.prototype.filter.call(forms, function (form) {
+                button.addEventListener('click', function (event) {
+                    if (form.checkValidity() === false) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    } else {
+                        debugger;
+                        var values = {
+                            ID: ($("#ProvinsiID").val()) ? $("#ProvinsiID").val() : 0,
+                            Name: $('#NamaProvinsi').val(),
+                            Description: $('#DeskripsiProvinsi').val(),
+                        };
+
+                        $.ajax({
+                            url: url + "Provinsi/AddPost",
+                            contentType: 'application/json',
+                            dataType: 'json',
+                            type: "POST",
+                            data: JSON.stringify(values),
+                            success: function (response) {
+                                if (response.isSuccess) {
+                                    $("#ModalEdit").modal('hide');
+                                    $(document.body).removeClass('modal-open');
+                                    $('.modal-backdrop').remove();
+                                    toastr["success"](response.message);
+                                    $('#tableProvinsi').DataTable().ajax.reload();
+                                } else {
+                                    toastr["error"](response.message);
+                                }
+                            },
+                            error: function (jqXHR, text, errorThrown) {
+                                console.log(jqXHR + " " + text + " " + errorThrown);
+                            }
+                        });
+                    }
+                    form.classList.add('was-validated');
+                });
+            });
+
+            //End Validation
 
             $('#tableProvinsi').dataTable({
                 language: {
@@ -155,7 +203,7 @@
                 columns: [
 
                     {
-                        data: "nama",
+                        data: "name",
                         width: "25%"
                     },
                     {
@@ -164,7 +212,7 @@
                     },
                     {
                         mRender: function (a, e, t) {
-                            return '<a class="btn btn-xs btn-success waves-effect waves-themed"  data-id="' + t.id + '" data-nama="' + t.nama + '" data-deskripsi="' + t.description + '" data-toggle="modal" data-target="#ModalEdit"><i class="fas fa-edit"></i></a> '
+                            return '<a class="btn btn-xs btn-success waves-effect waves-themed"  data-id="' + t.id + '" data-nama="' + t.name + '" data-deskripsi="' + t.description + '" data-toggle="modal" data-target="#ModalEdit"><i class="fas fa-edit"></i></a> '
                                 + '<a class="btn btn-xs btn-danger waves-effect waves-themed"   data-id="' + t.id + '" data-toggle="modal" data-target="#ModalDelete"><i class="fas fa-trash-alt"></i></a>';
                         },
                         width: "12%"
@@ -198,38 +246,79 @@
 
             });
 
+            var forms = document.getElementsByClassName('needs-validation');
+            var button = document.getElementById("btn-save");
 
-            $('#btn-save').on('click', function () {
-                var values = {
-                    ID: ($("#ProvinsiID").val()) ? $("#ProvinsiID").val() : 0,
-                    Nama: $('#NamaProvinsi').val(),
-                    Description: $('#DeskripsiProvinsi').val(),
-                };
+            var validation = Array.prototype.filter.call(forms, function (form) {
+                button.addEventListener('click', function (event) {
+                    if (form.checkValidity() === false) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    } else {
+                        debugger;
+                        var values = {
+                            ID: ($("#ProvinsiID").val()) ? $("#ProvinsiID").val() : 0,
+                            Nama: $('#NamaProvinsi').val(),
+                            Description: $('#DeskripsiProvinsi').val(),
+                        };
 
-                $.ajax({
-                    url: url +"Provinsi/AddPost",
-                    contentType: 'application/json',
-                    dataType: 'json',
-                    type: "POST",
-                    data: JSON.stringify(values),
-                    success: function (response) {
-                        if (response.isSuccess) {
-                            $("#ModalEdit").modal('hide');
-                            $(document.body).removeClass('modal-open');
-                            $('.modal-backdrop').remove();
-                            toastr["success"](response.message);
-                            $('#tableProvinsi').DataTable().ajax.reload();
-                        } else {
-                            toastr["error"](response.message);
-                        }
-                    },
-                    error: function (jqXHR, text, errorThrown) {
-                        console.log(jqXHR + " " + text + " " + errorThrown);
+                        $.ajax({
+                            url: url + "Provinsi/AddPost",
+                            contentType: 'application/json',
+                            dataType: 'json',
+                            type: "POST",
+                            data: JSON.stringify(values),
+                            success: function (response) {
+                                if (response.isSuccess) {
+                                    $("#ModalEdit").modal('hide');
+                                    $(document.body).removeClass('modal-open');
+                                    $('.modal-backdrop').remove();
+                                    toastr["success"](response.message);
+                                    $('#tableProvinsi').DataTable().ajax.reload();
+                                } else {
+                                    toastr["error"](response.message);
+                                }
+                            },
+                            error: function (jqXHR, text, errorThrown) {
+                                console.log(jqXHR + " " + text + " " + errorThrown);
+                            }
+                        });
                     }
+                    form.classList.add('was-validated');
                 });
-
-
             });
+
+            //$('#btn-save').on('click', function () {
+            //    var values = {
+            //        ID: ($("#ProvinsiID").val()) ? $("#ProvinsiID").val() : 0,
+            //        Nama: $('#NamaProvinsi').val(),
+            //        Description: $('#DeskripsiProvinsi').val(),
+            //    };
+
+            //    $.ajax({
+            //        url: url +"Provinsi/AddPost",
+            //        contentType: 'application/json',
+            //        dataType: 'json',
+            //        type: "POST",
+            //        data: JSON.stringify(values),
+            //        success: function (response) {
+            //            if (response.isSuccess) {
+            //                $("#ModalEdit").modal('hide');
+            //                $(document.body).removeClass('modal-open');
+            //                $('.modal-backdrop').remove();
+            //                toastr["success"](response.message);
+            //                $('#tableProvinsi').DataTable().ajax.reload();
+            //            } else {
+            //                toastr["error"](response.message);
+            //            }
+            //        },
+            //        error: function (jqXHR, text, errorThrown) {
+            //            console.log(jqXHR + " " + text + " " + errorThrown);
+            //        }
+            //    });
+
+
+            //});
 
             $('#btn-delete').on('click', function (e) {
 
@@ -258,5 +347,5 @@
             });
         });
 
-    </script>
+</script>
 }

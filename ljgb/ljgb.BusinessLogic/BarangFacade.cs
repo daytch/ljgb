@@ -214,6 +214,39 @@ namespace ljgb.BusinessLogic
 
             return response;
         }
+
+        public async Task<BarangResponse> GetHargaOTR(BarangRequest request)
+        {
+            BarangResponse response = new BarangResponse();
+            try
+            {
+                Barang model = new Barang();
+                model.WarnaId = request.WarnaId;
+                model.TypeBarangId = request.TypeBarangId;
+
+                var result = await dep.GetHargaOTR(model);
+
+                if (result != null)
+                {
+                    response.Model.Id = result.Id;
+                    response.Model.HargaOtr = result.HargaOtr;
+                    response.IsSuccess = true;
+                    response.Message = "Load Harga OTR Success";
+                }
+                else
+                {
+                    response.Message = "Data dengan Warna dan Type tersebut Tidak ada";
+                    response.IsSuccess = false;
+                }
+            }
+            catch (Exception ex)
+            {
+
+                response.Message = ex.ToString();
+                response.IsSuccess = false;
+            }
+            return response;
+        }
     }
 }
 

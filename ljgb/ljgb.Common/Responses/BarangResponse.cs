@@ -17,6 +17,11 @@ namespace ljgb.Common.Responses
         public List<BarangViewModel> ListModel { get; set; }
         public BarangViewModel Model { get; set; }
 
+        public BarangResponse()
+        {
+            ListModel = new List<BarangViewModel>();
+            Model = new BarangViewModel();
+        }
         public int draw { get; set; }
         public int recordsTotal { get; set; }
         public int recordsFiltered { get; set; }

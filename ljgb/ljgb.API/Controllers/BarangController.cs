@@ -282,5 +282,33 @@ namespace ljgb.API.Controllers
 
             return BadRequest();
         }
+
+        [HttpPost]
+        [Route("GetHargaOTR")]
+        public async Task<IActionResult> GetHargaOTR([FromBody]BarangRequest request)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    var result = await facade.GetHargaOTR(request);
+
+                    return Ok(result);
+                }
+                catch (Exception ex)
+                {
+                    if (ex.GetType().FullName ==
+                             "Microsoft.EntityFrameworkCore.DbUpdateConcurrencyException")
+                    {
+                        return NotFound();
+                    }
+
+                    return BadRequest();
+                }
+            }
+
+            return BadRequest();
+        }
+
     }
 }

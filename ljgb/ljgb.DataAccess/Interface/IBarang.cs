@@ -34,5 +34,6 @@ namespace ljgb.DataAccess.Interface
         Task<long> DeletePost(long ID);
 
         Task<bool> UpdatePost(Barang model);
+        Task<Barang> GetHargaOTR(Barang request);
     }
 }

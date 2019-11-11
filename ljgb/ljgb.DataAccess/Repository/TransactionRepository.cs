@@ -243,6 +243,7 @@ namespace ljgb.DataAccess.Repository
             {
                 try
                 {
+                  
                     response.ListTransaction = await (from transaction in db.Transaction
                                                       join buyer in db.UserProfile
                                                       on transaction.BuyerId equals buyer.Id
@@ -303,44 +304,7 @@ namespace ljgb.DataAccess.Repository
                                                           TelpPenjual = seller.Telp,
                                                           EmailPembeli = buyer.Email,
                                                           EmailPenjual = seller.Email,
-                                                          //NegoBarang = new NegoBarangViewModel
-                                                          //{
-                                                          //    ID = negoBarang.Id,
-                                                          //    userProfieViewModel = new UserProfileViewModel
-                                                          //    {
-                                                          //        ID = userNegoBarang.Id,
-                                                          //        Name = userNegoBarang.Name,
-                                                          //        Email = userNegoBarang.Email,
-                                                          //        Telp = userNegoBarang.Telp,
-                                                          //        Facebook = userNegoBarang.Facebook,
-                                                          //        IG = userNegoBarang.Ig,
-                                                          //        JenisKelamin = userNegoBarang.JenisKelamin
-
-                                                          //    },
-                                                          //    Barang = new BarangViewModel
-                                                          //    {
-                                                          //        Id = barang.Id,
-                                                          //        HargaOtr = barang.HargaOtr,
-                                                          //        Name = barang.Name,
-
-                                                          //    },
-                                                          //    Harga = negoBarang.Harga,
-
-
-                                                          //},
-                                                          //TrasanctionLevel = new TransactionLevelViewModel
-                                                          //{
-                                                          //    ID = level.Id,
-                                                          //    Status = new TransactionStatusViewModel
-                                                          //    {
-                                                          //        Name = status.Name
-                                                          //    },
-                                                          //    Step = new TransactionStepViewModel
-                                                          //    {
-                                                          //        Name = step.Name
-                                                          //    }
-
-                                                          //},
+                                                        
                                                           NamaBarang = (merkBarang.Name + " " + mdlBarang.Name + " " + tBarang.Name + " " + warna.Name),
                                                           NamaDealerKota = dealer.Name + "-" + kota.Name,
                                                           NamaDealer = dealer.Name,

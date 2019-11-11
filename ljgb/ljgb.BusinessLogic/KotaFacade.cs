@@ -39,16 +39,16 @@ namespace ljgb.BusinessLogic
         }
         #endregion
 
-        //public async Task<KotaResponse> GetAll()
-        //{
-        //    var models = await dep.GetAll();
+        public async Task<KotaResponse> GetAll(string search, string order, string orderDir, int startRec, int pageSize, int draw)
+        {
+            var models = await dep.GetAll(search, order, orderDir, startRec, pageSize, draw);
 
-        //    if (models == null)
-        //    {
-        //        return null;
-        //    }
-        //    return models;
-        //}
+            if (models == null)
+            {
+                return null;
+            }
+            return models;
+        }
 
         public async Task<List<Dropdown>> GetAllForDropdown(int ProvinsiID)
         {
@@ -69,19 +69,40 @@ namespace ljgb.BusinessLogic
 
         public async Task<KotaResponse> GetPost(KotaRequest req)
         {
-            var model = await dep.GetPost(req);
+            KotaResponse response = new KotaResponse();
+               var model = await dep.GetPost(req);
 
             if (model == null)
             {
                 return null;
             }
-            return model;
+            return response;
 
         }
 
         public async Task<KotaResponse> AddPost(KotaRequest req)
         {
-            return await dep.AddPost(req);
+            KotaResponse response = new KotaResponse();
+            try
+            {
+                Kota model = new Kota();
+                model.ProvinsiId = req.ProvinsiID;
+                model.Name = req.Name;
+                model.Description = req.Description;
+                model.Created = DateTime.Now;
+                model.CreatedBy = "xsivicto1905";
+                model.RowStatus = true;
+                await dep.AddPost(model);
+                response.Message = "Success";
+                response.IsSuccess = true;
+            }
+            catch (Exception ex)
+            {
+
+                response.Message = "Failed";
+                response.IsSuccess = false;
+            }
+            return response;
 
         }
 
@@ -94,7 +115,56 @@ namespace ljgb.BusinessLogic
 
         public async Task<KotaResponse> UpdatePost(KotaRequest req)
         {
-            return await dep.UpdatePost(req);
+            KotaResponse response = new KotaResponse();
+            try
+            {
+                Kota model = new Kota();
+                model = await dep.GetPost(req);
+
+               
+                model.ProvinsiId = req.ProvinsiID;
+                model.Name = req.Name;
+                model.Description = req.Description;
+                model.Modified = DateTime.Now;
+                model.ModifiedBy = "xsivicto1905";
+                model.RowStatus = true;
+                await dep.UpdatePost(model);
+
+                var result = await dep.UpdatePost(model);
+                if (result)
+                {
+                    response.Message = "Success";
+                    response.IsSuccess = true;
+                }
+                else
+                {
+                    response.Message = "Failed";
+                    response.IsSuccess = false;
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+
+                response.Message = "Failed";
+                response.IsSuccess = false;
+            }
+            return response;
+        }
+
+        public async Task<KotaResponse> GetAllWithoutFilter()
+        {
+            KotaResponse response = new KotaResponse();
+
+            var listKota = await dep.GetAllWithoutFilter();
+            response.ListKota = (from kota in listKota
+                                 select new KotaViewModel
+                                 {
+                                     ID = kota.Id,
+                                     Name = kota.Name
+                                 }).ToList();
+            return response;
         }
     }
 }
