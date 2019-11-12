@@ -214,6 +214,21 @@ namespace ljgb.DataAccess.Repository
             return response;
         }
 
+        public async Task<ModelBarang> GetModelWithMerkIDModelName(ModelBarang request)
+        {
+            ModelBarang result = new ModelBarang();
+            try
+            {
+                result = db.ModelBarang.Where(x => x.RowStatus == true && x.MerkId == request.MerkId && x.Name.ToLower().Equals(request.Name)).FirstOrDefault();
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+            return result;
+        }
+
         public async Task<ModelBarangResponse> GetPost(long ID)
         {
             ModelBarangResponse response = new ModelBarangResponse();

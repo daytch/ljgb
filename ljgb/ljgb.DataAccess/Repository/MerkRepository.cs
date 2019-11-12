@@ -287,5 +287,18 @@ namespace ljgb.DataAccess.Repository
 
             return null;
         }
+
+        public async Task<Merk> GetMerkByName(string request)
+        {
+            try
+            {
+                return await db.Merk.Where(x => x.RowStatus == true && x.Name.ToLower() == request.ToLower()).FirstOrDefaultAsync();
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
     }
 }

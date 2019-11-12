@@ -23,5 +23,7 @@ namespace ljgb.DataAccess.Interface
         Task<TypeBarangResponse> UpdatePost(TypeBarangRequest request);
 
         Task<List<SP_TypeByKotaIDMerkIDModelID>> GetTypeByKotaIDMerkIDModelID(TypeBarangRequest request);
+
+        Task<TypeBarang> GetTypeByName(TypeBarang request);
     }
 }

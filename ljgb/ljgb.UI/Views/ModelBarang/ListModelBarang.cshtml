@@ -81,14 +81,14 @@
 </div>
 <!-- Modal Add-->
 <div class="modal fade" id="ModalEdit" role="dialog">
-    <form>
+    <form class="needs-validation" novalidate>
         <div class="modal-dialog">
 
             <!-- Modal content-->
             <div class="modal-content">
                 <div class="modal-header">
 
-                    <h4 class="modal-title">Maintain Merk</h4>
+                    <h4 class="modal-title">Maintain ModelBarang</h4>
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
 
                 </div>
@@ -97,21 +97,30 @@
                     <div class="form-group">
                         <label class="form-label" for="simpleinput">Merk</label>
 
-                        <select id="dropdownMerk" class="dropdown-item"></select>
+                        <select id="dropdownMerk" class="form-control col-md-12" type="text" name="dropdownMerk" required></select>
+                        <div class="invalid-feedback">
+                            Please Select Merk
+                        </div>
                     </div>
 
-                   
+
 
                     <div class="form-group">
                         <label class="form-label" for="simpleinput">Model Barang</label>
 
-                        <input type="text" id="NamaMerk" name="Nama" class="form-control">
+                        <input type="text" id="NamaMerk" name="Nama" class="form-control" required>
+                        <div class="invalid-feedback">
+                            Please Input Model Barang
+                        </div>
                     </div>
 
 
                     <div class="form-group">
                         <label class="form-label" for="example-textarea">Deskripsi</label>
-                        <textarea class="form-control" id="DeskripsiMerk" name="Description" rows="5"></textarea>
+                        <textarea class="form-control" id="DeskripsiMerk" name="Description" rows="5" required></textarea>
+                        <div class="invalid-feedback">
+                            Please Deskripsi
+                        </div>
                     </div>
 
                 </div>
@@ -238,27 +247,95 @@
             });
 
 
-            $('#btn-save').on('click', function () {
-                var values = {
-                    ID: ($("#ModelBarangID").val()) ? $("#ModelBarangID").val() : 0,
-                    Nama: $('#NamaMerk').val(),
-                    Description: $('#DeskripsiMerk').val(),
-                    merkID: $('#dropdownMerk').val()
-                };
+            var forms = document.getElementsByClassName('needs-validation');
+            var button = document.getElementById("btn-save");
 
+            var validation = Array.prototype.filter.call(forms, function (form) {
+                button.addEventListener('click', function (event) {
+                    if (form.checkValidity() === false) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    } else {
+                        debugger;
+                        var values = {
+                            ID: ($("#ModelBarangID").val()) ? $("#ModelBarangID").val() : 0,
+                            Name: $('#NamaMerk').val(),
+                            Description: $('#DeskripsiMerk').val(),
+                            merkID: $('#dropdownMerk').val()
+                        };
+
+                        $.ajax({
+                            url: url + "ModelBarang/AddPost",
+                            contentType: 'application/json',
+                            dataType: 'json',
+                            type: "POST",
+                            data: JSON.stringify(values),
+                            success: function (response) {
+                                if (response.isSuccess) {
+                                    $("#ModalEdit").modal('hide');
+                                    $(document.body).removeClass('modal-open');
+                                    $('.modal-backdrop').remove();
+                                    toastr["success"](response.message);
+                                    $('#tableModelBarang').DataTable().ajax.reload();
+                                } else {
+                                    toastr["error"](response.message);
+                                }
+                            },
+                            error: function (jqXHR, text, errorThrown) {
+                                console.log(jqXHR + " " + text + " " + errorThrown);
+                            }
+                        });
+                    }
+                    form.classList.add('was-validated');
+                });
+            });
+
+            //$('#btn-save').on('click', function () {
+            //    var values = {
+            //        ID: ($("#ModelBarangID").val()) ? $("#ModelBarangID").val() : 0,
+            //        Nama: $('#NamaMerk').val(),
+            //        Description: $('#DeskripsiMerk').val(),
+            //        merkID: $('#dropdownMerk').val()
+            //    };
+
+            //    $.ajax({
+            //        url: url +"ModelBarang/AddPost",
+            //        contentType: 'application/json',
+            //        dataType: 'json',
+            //        type: "POST",
+            //        data: JSON.stringify(values),
+            //        success: function (response) {
+            //            if (response.isSuccess) {
+            //                $("#ModalEdit").modal('hide');
+            //                $(document.body).removeClass('modal-open');
+            //                $('.modal-backdrop').remove();
+            //                toastr["success"](response.message);
+            //                $('#tableModelBarang').DataTable().ajax.reload();
+            //            } else {
+            //                toastr["error"](response.message);
+            //            }
+            //        },
+            //        error: function (jqXHR, text, errorThrown) {
+            //            console.log(jqXHR + " " + text + " " + errorThrown);
+            //        }
+            //    });
+
+
+            //});
+
+            function SetModelDropdown(values) {
                 $.ajax({
-                    url: url +"ModelBarang/AddPost",
+                    url: url + "ModelBarang/GetModelWithMerkID",
                     contentType: 'application/json',
                     dataType: 'json',
                     type: "POST",
                     data: JSON.stringify(values),
                     success: function (response) {
                         if (response.isSuccess) {
-                            $("#ModalEdit").modal('hide');
-                            $(document.body).removeClass('modal-open');
-                            $('.modal-backdrop').remove();
-                            toastr["success"](response.message);
-                            $('#tableModelBarang').DataTable().ajax.reload();
+                            $("#dropdownModelBarang").append($('<option></option>').attr('value', 0).text("Pilih Model"));
+                            $.each(response.listModel, function (key, entry) {
+                                $("#dropdownModelBarang").append($('<option></option>').attr('value', entry.id).text(entry.name));
+                            })
                         } else {
                             toastr["error"](response.message);
                         }
@@ -267,10 +344,7 @@
                         console.log(jqXHR + " " + text + " " + errorThrown);
                     }
                 });
-
-
-            });
-
+            }
             $('#btn-delete').on('click', function (e) {
 
                 var userData = {

@@ -1,6 +1,7 @@
 ﻿using ljgb.Common.Requests;
 using ljgb.Common.Responses;
 using ljgb.Common.ViewModel;
+using ljgb.DataAccess.Model;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -23,5 +24,7 @@ namespace ljgb.DataAccess.Interface
         Task<MerkResponse> GetAllWithoutFilter();
 
         List<SP_MerkByKotaID> GetMerkByKotaID(long KotaID);
+
+        Task<Merk> GetMerkByName(string request);
     }
 }

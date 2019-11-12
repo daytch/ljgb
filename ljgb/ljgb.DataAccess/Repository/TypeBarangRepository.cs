@@ -328,6 +328,23 @@ namespace ljgb.DataAccess.Repository
             return null;
         }
 
+        public async Task<TypeBarang> GetTypeByName(TypeBarang request)
+        {
+            TypeBarang result = new TypeBarang();
+
+            try
+            {
+                result = await db.TypeBarang.Where(x => x.RowStatus == true && x.Name.ToLower().Equals(request.Name)).FirstOrDefaultAsync();
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+
+            return result;
+        }
+
         public async Task<TypeBarangResponse> UpdatePost(TypeBarangRequest request)
         {
             TypeBarangResponse response = new TypeBarangResponse();

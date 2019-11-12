@@ -432,6 +432,7 @@
             });
 
             $("#ModalTrackingStatus").on("show.bs.modal", function (e) {
+                resetModal();
                 $('#TransactionID').val(e.relatedTarget.getAttribute('data-TransactionID'));
 
                 $('#tableJurnalTransaksi').dataTable({
@@ -485,7 +486,9 @@
                     ]
                 });
             });
-
+            $("#ModalTrackingStatus").on("hidden.bs.modal", function (e) {
+                $('#tableJurnalTransaksi').DataTable().clear().destroy();
+            });
             $('#ModalEdit').on('show.bs.modal', function (e) {
                 resetModal();
 

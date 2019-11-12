@@ -1,6 +1,6 @@
 ﻿using ljgb.Common.Requests;
 using ljgb.Common.Responses;
-
+using ljgb.DataAccess.Model;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -23,6 +23,8 @@ namespace ljgb.DataAccess.Interface
         Task<ModelBarangResponse> GetModelWithMerkID(ModelBarangRequest model);
 
         Task<List<SP_ModelByKotaIDMerkID>> GetModelByKotaIDMerkID(ModelBarangRequest model);
+
+        Task<ModelBarang> GetModelWithMerkIDModelName(ModelBarang request);
 
         //Task<ModelBarangResponse> GetAllWithoutFilter();
 

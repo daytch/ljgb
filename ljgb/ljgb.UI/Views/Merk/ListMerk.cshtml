@@ -79,7 +79,7 @@
 </div>
 <!-- Modal Add-->
 <div class="modal fade" id="ModalEdit" role="dialog">
-    <form>
+      <form class="needs-validation" novalidate>
         <div class="modal-dialog">
 
             <!-- Modal content-->
@@ -89,17 +89,25 @@
                     <h4 class="modal-title">Maintain Merk</h4>
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
 
+
                 </div>
                 <div class="modal-body">
 
                     <div class="form-group">
                         <label class="form-label" for="simpleinput">Nama Merk</label>
 
-                        <input type="text" id="NamaMerk" name="Nama" class="form-control">
+                        <input type="text" id="NamaMerk" name="Nama" class="form-control" required>
+                        <div class="invalid-feedback">
+                            Please Input Merk
+                        </div>
                     </div>
                     <div class="form-group">
                         <label class="form-label" for="example-textarea">Deskripsi</label>
-                        <textarea class="form-control" id="DeskripsiMerk" name="Description" rows="5"></textarea>
+                        <textarea class="form-control" id="DeskripsiMerk" name="Description" rows="5" required></textarea>
+                        <div class="invalid-feedback">
+                            Please Input Deskripsi
+                        </div>
+                       
                     </div>
 
                 </div>
@@ -194,38 +202,78 @@
 
             });
 
+            var forms = document.getElementsByClassName('needs-validation');
+            var button = document.getElementById("btn-save");
 
-            $('#btn-save').on('click', function () {
-                var values = {
-                    ID: ($("#MerkID").val()) ? $("#MerkID").val() : 0,
-                    Nama: $('#NamaMerk').val(),
-                    Description: $('#DeskripsiMerk').val(),
-                };
+            var validation = Array.prototype.filter.call(forms, function (form) {
+                button.addEventListener('click', function (event) {
+                    if (form.checkValidity() === false) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    } else {
+                        var values = {
+                            ID: ($("#MerkID").val()) ? $("#MerkID").val() : 0,
+                            Name: $('#NamaMerk').val(),
+                            Description: $('#DeskripsiMerk').val(),
+                        };
 
-                $.ajax({
-                    url: url +"Merk/AddPost",
-                    contentType: 'application/json',
-                    dataType: 'json',
-                    type: "POST",
-                    data: JSON.stringify(values),
-                    success: function (response) {
-                        if (response.isSuccess) {
-                            $("#ModalEdit").modal('hide');
-                            $(document.body).removeClass('modal-open');
-                            $('.modal-backdrop').remove();
-                            toastr["success"](response.message);
-                            $('#tableMerk').DataTable().ajax.reload();
-                        } else {
-                            toastr["error"](response.message);
-                        }
-                    },
-                    error: function (jqXHR, text, errorThrown) {
-                        console.log(jqXHR + " " + text + " " + errorThrown);
+                        $.ajax({
+                            url: url + "Merk/AddPost",
+                            contentType: 'application/json',
+                            dataType: 'json',
+                            type: "POST",
+                            data: JSON.stringify(values),
+                            success: function (response) {
+                                if (response.isSuccess) {
+                                    $("#ModalEdit").modal('hide');
+                                    $(document.body).removeClass('modal-open');
+                                    $('.modal-backdrop').remove();
+                                    toastr["success"](response.message);
+                                    $('#tableMerk').DataTable().ajax.reload();
+                                } else {
+                                    toastr["error"](response.message);
+                                }
+                            },
+                            error: function (jqXHR, text, errorThrown) {
+                                console.log(jqXHR + " " + text + " " + errorThrown);
+                            }
+                        });
                     }
+                    form.classList.add('was-validated');
                 });
-
-
             });
+
+            //$('#btn-save').on('click', function () {
+            //    var values = {
+            //        ID: ($("#MerkID").val()) ? $("#MerkID").val() : 0,
+            //        Nama: $('#NamaMerk').val(),
+            //        Description: $('#DeskripsiMerk').val(),
+            //    };
+
+            //    $.ajax({
+            //        url: url +"Merk/AddPost",
+            //        contentType: 'application/json',
+            //        dataType: 'json',
+            //        type: "POST",
+            //        data: JSON.stringify(values),
+            //        success: function (response) {
+            //            if (response.isSuccess) {
+            //                $("#ModalEdit").modal('hide');
+            //                $(document.body).removeClass('modal-open');
+            //                $('.modal-backdrop').remove();
+            //                toastr["success"](response.message);
+            //                $('#tableMerk').DataTable().ajax.reload();
+            //            } else {
+            //                toastr["error"](response.message);
+            //            }
+            //        },
+            //        error: function (jqXHR, text, errorThrown) {
+            //            console.log(jqXHR + " " + text + " " + errorThrown);
+            //        }
+            //    });
+
+
+            //});
 
             $('#btn-delete').on('click', function (e) {
 
