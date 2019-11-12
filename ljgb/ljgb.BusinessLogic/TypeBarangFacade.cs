@@ -55,17 +55,49 @@ namespace ljgb.BusinessLogic
 
         }
 
+        public async Task<TypeBarangResponse> GetTypeByName(TypeBarangRequest request)
+        {
+            TypeBarangResponse response = new TypeBarangResponse();
+            
+           
+
+            return response;
+        }
+
         public async Task<TypeBarangResponse> AddPost(TypeBarangRequest request)
         {
-            TypeBarang model = new TypeBarang();
-            model.ModelBarangId = request.ModelBarangID;
-            model.Name = request.Name;
-            model.Description = request.Description;
-            model.Created = DateTime.Now;
-            model.CreatedBy = "xsivicto1905";
-            model.RowStatus = true;
-            return await dep.AddPost(model);
-            
+            TypeBarangResponse response = new TypeBarangResponse();
+            try
+            {
+                TypeBarang req = new TypeBarang();
+                req.Name = request.Name;
+                TypeBarang model = await dep.GetTypeByName(req);
+                
+                if (model!= null)
+                {
+                    response.IsSuccess = false;
+                    response.Message = "Data Duplicate with Existing Data";
+                }
+                else{
+                   
+                    req.ModelBarangId = request.ModelBarangID;
+                    req.Name = request.Name;
+                    req.Description = request.Description;
+                    req.Created = DateTime.Now;
+                    req.CreatedBy = "xsivicto1905";
+                    req.RowStatus = true;
+                    response =  await dep.AddPost(req);
+                }
+            }
+            catch (Exception ex)
+            {
+
+                response.Message = ex.Message.ToString();
+                response.IsSuccess = false;
+            }
+            return response;
+
+
         }
 
         public async Task<TypeBarangResponse> DeletePost(TypeBarangRequest request)
@@ -77,7 +109,51 @@ namespace ljgb.BusinessLogic
 
         public async Task<TypeBarangResponse> UpdatePost(TypeBarangRequest request)
         {
-            return await dep.UpdatePost(request);
+            TypeBarangResponse response = new TypeBarangResponse();
+            try
+            {
+                TypeBarang req = new TypeBarang();
+                req.Name = request.Name;
+                TypeBarang model = await dep.GetTypeByName(req);
+
+                if (model != null)
+                {
+                    if (model.Id != request.ID)
+                    {
+                        response.IsSuccess = false;
+                        response.Message = "Data Duplicate with Existing Data";
+                    }
+                    else
+                    {
+
+                        req.ModelBarangId = request.ModelBarangID;
+                        req.Name = request.Name;
+                        req.Description = request.Description;
+                        req.Created = DateTime.Now;
+                        req.CreatedBy = "xsivicto1905";
+                        req.RowStatus = true;
+                        response = await dep.UpdatePost(request);
+                    }
+                }
+                else
+                {
+
+                    req.ModelBarangId = request.ModelBarangID;
+                    req.Name = request.Name;
+                    req.Description = request.Description;
+                    req.Created = DateTime.Now;
+                    req.CreatedBy = "xsivicto1905";
+                    req.RowStatus = true;
+                    response = await dep.UpdatePost(request);
+                }
+            }
+            catch (Exception ex)
+            {
+
+                response.Message = ex.Message.ToString();
+                response.IsSuccess = false;
+            }
+            return response;
         }
 
         public async Task<TypeBarangResponse> GetTypeByKotaIDMerkIDModelID (TypeBarangRequest request)
@@ -87,11 +163,13 @@ namespace ljgb.BusinessLogic
             {
 
                 response.ListSP__TypeByKotaIDMerkIDModelID = await dep.GetTypeByKotaIDMerkIDModelID(request);
+                response.Message = "Success";
+                response.IsSuccess = true;
             }
             catch (Exception ex)
             {
-
-                throw;
+                response.IsSuccess = false;
+                response.Message = "Failed";
             }
 
             return response;

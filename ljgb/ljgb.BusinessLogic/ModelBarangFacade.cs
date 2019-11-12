@@ -71,9 +71,39 @@ namespace ljgb.BusinessLogic
 
         }
 
+        public async Task<ModelBarangResponse> GetModelWithMerkIDModelName(ModelBarangRequest request)
+        {
+            ModelBarangResponse response = new ModelBarangResponse();
+            return response;
+
+        }
+
         public async Task<ModelBarangResponse> AddPost(ModelBarangRequest model)
         {
-            return await dep.AddPost(model);
+            ModelBarangResponse response = new ModelBarangResponse();
+            try
+            {
+                ModelBarang request = new ModelBarang();
+                request.MerkId = model.MerkID;
+                request.Name = model.Name;
+                ModelBarang result = await dep.GetModelWithMerkIDModelName(request);
+                if (result !=null)
+                {
+                    response.IsSuccess = false;
+                    response.Message = "Data Duplicate with Existing";
+                }
+                else
+                {
+                    response = await dep.AddPost(model);
+                }
+            }
+            catch (Exception ex)
+            {
+
+                response.Message = ex.ToString();
+                response.IsSuccess = false;
+            }
+            return response;
           
         }
 
@@ -97,7 +127,37 @@ namespace ljgb.BusinessLogic
 
         public async Task<ModelBarangResponse> UpdatePost(ModelBarangRequest model)
         {
-            return await dep.UpdatePost(model);
+            ModelBarangResponse response = new ModelBarangResponse();
+            try
+            {
+                ModelBarang request = new ModelBarang();
+                request.MerkId = model.MerkID;
+                request.Name = model.Name;
+                ModelBarang result = await dep.GetModelWithMerkIDModelName(request);
+                if (result != null )
+                {
+                    if (model.ID != result.Id)
+                    {
+                        response.IsSuccess = false;
+                        response.Message = "Data Duplicate with Existing";
+                    }
+                    else
+                    {
+                        response = await dep.UpdatePost(model);
+                    }
+                }
+                else
+                {
+                    response = await dep.UpdatePost(model);
+                }
+            }
+            catch (Exception ex)
+            {
+
+                response.Message = ex.ToString();
+                response.IsSuccess = false;
+            }
+            return response;
             
         }
 
@@ -113,11 +173,14 @@ namespace ljgb.BusinessLogic
             {
                
                 response.ListSP_ModelByKotaIDMerkID = await dep.GetModelByKotaIDMerkID(model);
+                response.Message = "Success";
+                response.IsSuccess = true;
             }
             catch (Exception ex)
             {
 
-                throw;
+                response.Message = ex.ToString(); ;
+                response.IsSuccess = false;
             }
          
 

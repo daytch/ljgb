@@ -1,10 +1,9 @@
-﻿@using ljgb.Common.Responses;
+﻿
 @{
-    ViewData["Title"] = "Daftar Transaksi";
-    ViewData["PageName"] = "provinsi_provinsi";
-    ViewData["Category1"] = "Provinsi";
-    var data = (TransactionResponse)ViewData["Response"];
-    int nomor = 0;
+    ViewData["Title"] = "Report";
+    ViewData["PageName"] = "Transaksi_Report";
+    ViewData["Category1"] = "Report";
+
 
 
 }
@@ -37,24 +36,7 @@
             </div>
             <div class="panel-container show">
                 <div class="panel-content">
-                    <!-- datatable start -->
-                    <table id="tableTransaksi" class="table table-bordered table-hover table-striped w-100">
-                        <thead>
-                            <tr>
-                                <th>Status</th>
-                                <th>Nama Pembeli</th>
-                                <th>Nama Penjual</th>
-                                <th>Nama Barang</th>
-                                <th>Nama Dealer</th>
-                                <th>Tipe Penawaran</th>
-                                <th>Harga Nego</th>
-                                <th>Harga OTR</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody></tbody>
-                    </table>
-                    <!-- datatable end -->
+                   
                 </div>
             </div>
         </div>
@@ -323,7 +305,7 @@
         $(document).ready(function () {
             moment.locale('ID');
             var url = "@ViewBag.url_api";
-           
+
             $('#tableTransaksi').dataTable({
                 language: {
                     processing: "<div class='overlay custom-loader-background'><i class='fa fa-cog fa-spin custom-loader-color'></i></div>"
@@ -341,7 +323,7 @@
                     dataType: "json",
                     data: function (d) {
                         // Grab form values containing user options
-                      
+
                         return JSON.stringify(d);
                     },
                     dataSrc: function (json) {
@@ -527,10 +509,10 @@
             //                $("#tableJournal").append($('<td>' + entry.transactionStatusName + ' </td>'));
             //                $("#tableJournal").append($('<td>' + entry.created + ' </td>'));
             //            })
-                       
+
             //        }
             //    });
-                    
+
             //});
 
             $('#save').on('click', function (e) {

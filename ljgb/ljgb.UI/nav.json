@@ -432,6 +432,10 @@
         {
           "title": "Daftar Transaksi",
           "href": "Transaksi_Transaksi.cshtml"
+        },
+        {
+          "title": "Report",
+          "href": "Transaksi_Report.cshtml"
         }
 
       ]

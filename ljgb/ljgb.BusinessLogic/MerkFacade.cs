@@ -67,7 +67,27 @@ namespace ljgb.BusinessLogic
 
         public async Task<MerkResponse> AddPost(MerkRequest model)
         {
-          return await dep.AddPost(model);
+            MerkResponse response = new MerkResponse();
+            try
+            {
+
+                if (await dep.GetMerkByName(model.Name) != null)
+                {
+                    response.Message = "Data is Duplicate with Existing Data";
+                    response.IsSuccess = false;
+                }
+                else
+                {
+                    response = await dep.AddPost(model);
+                }
+            }
+            catch (Exception ex)
+            {
+                response.Message = ex.ToString();
+                response.IsSuccess = false;
+            }
+
+          return response;
             
         }
 
@@ -80,14 +100,53 @@ namespace ljgb.BusinessLogic
 
         public async Task<MerkResponse> UpdatePost(MerkRequest model)
         {
-           return await dep.UpdatePost(model);
+            MerkResponse response = new MerkResponse();
+            try
+            {
+                Merk item = await dep.GetMerkByName(model.Name);
+                if (item != null)
+                {
+                    if (item.Id == model.ID)
+                    {
+                        response = await dep.UpdatePost(model);
+                    }
+                    else
+                    {
+                        response.Message = "Data is Duplicate with Existing Data";
+                        response.IsSuccess = false;
+                    }
+                    
+                }
+                else
+                {
+                    response = await dep.UpdatePost(model);
+                }
+            }
+            catch (Exception ex)
+            {
+                response.Message = ex.ToString();
+                response.IsSuccess = false;
+            }
+            return response;
 
            
         }
         public MerkResponse GetMerkByKotaID(long KotaID)
         {
             MerkResponse response = new MerkResponse();
-            response.ListSP_MerkByKotaID = dep.GetMerkByKotaID(KotaID);
+            try
+            {
+                response.ListSP_MerkByKotaID = dep.GetMerkByKotaID(KotaID);
+                response.IsSuccess = true;
+                response.Message = "Success Get Merk";
+            }
+            catch (Exception ex)
+            {
+
+                response.IsSuccess = false;
+                response.Message = "Something Error with System";
+            }
+           
 
             return response;
         }
