@@ -92,6 +92,17 @@ namespace ljgb.UI.Controllers
             return PartialView(2);
         }
 
+        public async Task<IActionResult> Report()
+        {
+            returnUrl = returnUrl ?? Url.Content("~/");
+            TransactionRequest request = new TransactionRequest();
+            if (ModelState.IsValid)
+            {
+                string url_api = base_url_api + "Transaction/GetAll";
+                ViewBag.url_api = base_url_api;
+            }
+            return View(_settings);
+        }
 
     }
 }
