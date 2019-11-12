@@ -384,6 +384,10 @@
         {
           "title": "Barang",
           "href": "Barang_ListBarang.cshtml"
+        },
+        {
+          "title": "Upload Barang",
+          "href": "Barang_Upload.cshtml"
         }
 
       ]

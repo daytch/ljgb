@@ -1,0 +1,104 @@
+﻿@{
+    ViewData["Title"] = "Upload Barang";
+    ViewData["PageName"] = "Upload Barang";
+    ViewData["Category1"] = "Upload Barang";
+}
+
+@section Header {
+}
+
+@section PageHeading {
+    @*<div class="subheader">
+            <h1 class="subheader-title">
+                <i class="subheader-icon fal fa-window"></i> Panels
+                <small>
+                    Panels can be used in almost any setuation, helping wrap everything in a slick &amp; lightweight container
+                </small>
+            </h1>
+        </div>*@
+}
+
+<div class="row">
+    <div class="col-xl-12">
+        <div id="panel-1" class="panel">
+            <div class="panel-hdr">
+                <h2>
+                    @ViewData["Title"]
+                </h2>
+                <div class="panel-toolbar">
+                    <button class="btn btn-panel" data-action="panel-collapse" data-toggle="tooltip" data-offset="0,10" data-original-title="Collapse"></button>
+                    <button class="btn btn-panel" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>
+                    <button class="btn btn-panel" data-action="panel-close" data-toggle="tooltip" data-offset="0,10" data-original-title="Close"></button>
+                </div>
+            </div>
+            <div class="panel-container show">
+                <div class="panel-content">
+                    <form>
+                        <div class="form-group">
+                            <label class="form-label">File (Browser)</label>
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input" id="customFile">
+                                <label class="custom-file-label" for="customFile">Choose file</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <button id="save" class="btn btn-outline-success waves-effect waves-themed">Submit</button>
+                        </div>
+                    </form>
+                    <hr />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    <script type="text/javascript">
+        var url =""
+        $(document).ready(function () {
+            moment.locale('ID');
+            url = "@ViewBag.url_api";
+
+            $("#customFile").on("change", function () {
+                if ($("#customFile").val() == "") {
+                    return;
+                }
+                debugger;
+                var inputFile = $('#customFile')[0].files[0];
+                var pathFile = inputFile.name;
+                var ekstensiOk = /(\.xlsx|\.xls)$/i;
+                if (!ekstensiOk.exec(pathFile)) {
+                    alert('Silakan upload file yang memiliki ekstensi .xlsx/.xls/');
+                    inputFile.name = '';
+                    return false;
+                }
+                // your ajax submit
+                var formData = new FormData();
+                formData.append('file', $('#customFile')[0].files[0]);
+                //formData.append('FileToBeDelete', FileLogoTobeDelete);
+                $.ajax({
+                    type: 'post',
+                    url: url +'Barang/UploadFile',
+                    data: formData,
+                    success: function (status) {
+                        if (status != 'error') {
+                            FileLogoTobeDelete = status;
+                            Logo = status;
+
+                            var my_path = "/MediaUploader/" + status;
+                            $("#Logo_img").attr("src", my_path);
+                            $("#Logo_img").show();
+
+                        }
+                    },
+                    processData: false,
+                    contentType: false,
+                    error: function (response) {
+                        console.log(response);
+                    }
+                });
+            });
+        });
+    </script>
+}
