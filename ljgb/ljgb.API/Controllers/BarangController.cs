@@ -3,7 +3,9 @@ using ljgb.Common.Requests;
 using ljgb.Common.Responses;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using OfficeOpenXml;
 using System;
+using System.Data;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -40,7 +42,7 @@ namespace ljgb.API.Controllers
                 return BadRequest(ex);
             }
         }
-        
+
         [HttpGet]
         [Route("GetAllForHomePage")]
         public IActionResult GetAllForHomePage([FromQuery]string city)
@@ -92,7 +94,7 @@ namespace ljgb.API.Controllers
 
         [HttpGet]
         [Route("GetBidPosition")]
-        public async Task<IActionResult> GetBidPosition(int Id,int Nominal)
+        public async Task<IActionResult> GetBidPosition(int Id, int Nominal)
         {
             if (Id < 1)
             {
@@ -101,7 +103,7 @@ namespace ljgb.API.Controllers
 
             try
             {
-                Position post = await facade.GetBidPosition(Id,Nominal);
+                Position post = await facade.GetBidPosition(Id, Nominal);
 
                 if (post == null)
                 {
@@ -169,7 +171,7 @@ namespace ljgb.API.Controllers
                 return Ok(post);
             }
             catch (Exception ex)
-            {                
+            {
                 return BadRequest(ex);
             }
         }
@@ -199,7 +201,7 @@ namespace ljgb.API.Controllers
                 return BadRequest();
             }
         }
-        
+
         [HttpPost]
         [Route("AddPost")]
         public async Task<IActionResult> AddPost([FromBody]BarangRequest model)
@@ -209,7 +211,7 @@ namespace ljgb.API.Controllers
             {
                 try
                 {
-                    if (model.ID>0)
+                    if (model.ID > 0)
                     {
                         result = await facade.UpdatePost(model);
                     }
@@ -233,7 +235,7 @@ namespace ljgb.API.Controllers
         {
             BarangResponse response = new BarangResponse();
 
-            
+
             try
             {
                 if (request.ID < 1)
@@ -242,7 +244,7 @@ namespace ljgb.API.Controllers
                 }
 
                 response = await facade.DeletePost(request.ID);
-              
+
                 return Ok(response);
             }
             catch (Exception)
@@ -308,28 +310,40 @@ namespace ljgb.API.Controllers
 
         [HttpPost]
         [Route("UploadFile")]
-        public async Task<string> Upload(IFormFile file)//, long userId)
+        public async Task<string> Upload(IFormFile file)
         {
             if (file == null || file.Length == 0)
                 return "Please select profile picture";
 
-            var folderName = Path.Combine("Resources", "ProfilePics");
-            var filePath = Path.Combine(Directory.GetCurrentDirectory(), folderName);
+            string folderName = Path.Combine("Resources", "UploadDocs");
+            string filePath = Path.Combine(Directory.GetCurrentDirectory(), folderName);
 
             if (!Directory.Exists(filePath))
             {
                 Directory.CreateDirectory(filePath);
             }
 
-            var uniqueFileName = "Test.jpg";//$"{userId}_profilepic.png";
-            var dbPath = Path.Combine(folderName, uniqueFileName);
+            string uniqueFileName = DateTime.Now.ToString("yyyyMMddHHmmssfff") + "_" + file.FileName;
+            string dbPath = Path.Combine(folderName, uniqueFileName);
 
             using (var fileStream = new FileStream(Path.Combine(filePath, uniqueFileName), FileMode.Create))
             {
                 await file.CopyToAsync(fileStream);
             }
 
-            return dbPath;
+            return uniqueFileName;
+        }
+
+        [HttpPost]
+        [Route("SubmitUpload")]
+        public async Task<string> SubmitUpload(string fileName)
+        {
+            if (fileName == null)
+                return "Please upload file please";
+
+            var serv = await facade.SubmitUpload(fileName);
+
+            return fileName;
         }
     }
 }
