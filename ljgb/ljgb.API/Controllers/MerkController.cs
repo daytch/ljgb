@@ -95,7 +95,7 @@ namespace ljgb.API.Controllers
                 MerkResponse response = new MerkResponse();
                 try
                 {
-                    if (model.ID != null && model.ID != 0)
+                    if (model.ID < 1)
                     {
                         response = await facade.UpdatePost(model);
                     }

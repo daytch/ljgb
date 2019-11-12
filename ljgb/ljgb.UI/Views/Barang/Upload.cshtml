@@ -59,6 +59,7 @@
         $(document).ready(function () {
             moment.locale('ID');
             url = "@ViewBag.url_api";
+            var fileName = "";
 
             $("#customFile").on("change", function () {
                 if ($("#customFile").val() == "") {
@@ -81,16 +82,26 @@
                     type: 'post',
                     url: url +'Barang/UploadFile',
                     data: formData,
-                    success: function (status) {
-                        if (status != 'error') {
-                            FileLogoTobeDelete = status;
-                            Logo = status;
+                    success: function (filename) {
+                        fileName = filename;
+                        $('.custom-file-label').html(filename);
+                    },
+                    processData: false,
+                    contentType: false,
+                    error: function (response) {
+                        console.log(response);
+                    }
+                });
+            });
 
-                            var my_path = "/MediaUploader/" + status;
-                            $("#Logo_img").attr("src", my_path);
-                            $("#Logo_img").show();
+            $("#save").on("click", function () {
 
-                        }
+                $.ajax({
+                    type: 'post',
+                    url: url + 'Barang/UploadFile',
+                    data: formData,
+                    success: function (filename) {
+                        $('.custom-file-label').html(filename);
                     },
                     processData: false,
                     contentType: false,

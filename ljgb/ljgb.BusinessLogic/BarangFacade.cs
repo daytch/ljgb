@@ -6,8 +6,10 @@ using ljgb.DataAccess.Model;
 using ljgb.DataAccess.Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
@@ -40,9 +42,9 @@ namespace ljgb.BusinessLogic
 
         public async Task<BarangResponse> GetAll(string search, string order, string orderDir, int startRec, int pageSize, int draw)
         {
-            
+
             return await dep.GetAll(search, order, orderDir, startRec, pageSize, draw);
-          
+
         }
 
         public BarangResponse GetAllForHomePage(string city)
@@ -146,7 +148,7 @@ namespace ljgb.BusinessLogic
                 response.IsSuccess = false;
             }
             return response;
-           
+
         }
 
         public async Task<BarangResponse> DeletePost(long ID)
@@ -173,7 +175,7 @@ namespace ljgb.BusinessLogic
                 response.IsSuccess = false;
                 response.Message = ex.ToString();
             }
-            
+
             return response;
         }
 
@@ -246,6 +248,71 @@ namespace ljgb.BusinessLogic
                 response.IsSuccess = false;
             }
             return response;
+        }
+
+        public async Task<BarangResponse> SubmitUpload(string fileName)
+        {
+            BarangResponse response = new BarangResponse();
+            try
+            {
+                string folderName = Path.Combine("Resources", "UploadDocs");
+                string filePath = Path.Combine(Directory.GetCurrentDirectory(), folderName);
+                string sheetName = "Sheet1";
+                DataTable dt = new DataTable();
+
+                string dbPath = Path.Combine(folderName, fileName);
+                using (ExcelPackage pck = new ExcelPackage())
+                {
+                    using (FileStream stream = new FileStream(dbPath, FileMode.Open))
+                    {
+                        pck.Load(stream);
+                        ExcelWorksheet oSheet = pck.Workbook.Worksheets[sheetName];
+                        dt = WorkSheetToDatatable(oSheet);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+
+                response.Message = ex.ToString();
+                response.IsSuccess = false;
+            }
+            return response;
+        }
+
+        private DataTable WorkSheetToDatatable(ExcelWorksheet oSheet)
+        {
+            int totalRows = oSheet.Dimension.End.Row;
+            int totalCols = 8;
+
+            DataTable dt = new DataTable(oSheet.Name);
+            DataRow dr = dt.NewRow();
+            try
+            {
+                for (int i = 1; i < totalRows; i++)
+                {
+                    if (oSheet.Cells[1, i].Value != null)
+                    {
+                        if (i > 1) dr = dt.Rows.Add();
+                        for (int j = 1; j <= totalCols; j++)
+                        {
+                            if (i == 1)
+                                dt.Columns.Add(oSheet.Cells[i, j].Value.ToString());
+                            else
+                                dr[j - 1] = (oSheet.Cells[i, j].Value == null) ? "" : oSheet.Cells[i, j].Value.ToString();
+                        }
+                    }
+                    else
+                    {
+                        return dt;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return dt;
         }
     }
 }
