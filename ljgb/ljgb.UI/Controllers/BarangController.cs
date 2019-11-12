@@ -17,11 +17,17 @@ namespace ljgb.UI.Controllers
             _settings = settings.Value;
             _config = config.Value;
         }
+
         public IActionResult ListBarang()
         {
             ViewBag.url_api = _config.base_api_url;
             return View(_settings);
         }
 
+        public IActionResult Upload()
+        {
+            ViewBag.url_api = _config.base_api_url;
+            return View(_settings);
+        }
     }
 }

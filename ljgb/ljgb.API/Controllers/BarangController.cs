@@ -1,8 +1,10 @@
 ﻿using ljgb.BusinessLogic;
 using ljgb.Common.Requests;
 using ljgb.Common.Responses;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace ljgb.API.Controllers
@@ -304,5 +306,30 @@ namespace ljgb.API.Controllers
             return BadRequest();
         }
 
+        [HttpPost]
+        [Route("UploadFile")]
+        public async Task<string> Upload(IFormFile file)//, long userId)
+        {
+            if (file == null || file.Length == 0)
+                return "Please select profile picture";
+
+            var folderName = Path.Combine("Resources", "ProfilePics");
+            var filePath = Path.Combine(Directory.GetCurrentDirectory(), folderName);
+
+            if (!Directory.Exists(filePath))
+            {
+                Directory.CreateDirectory(filePath);
+            }
+
+            var uniqueFileName = "Test.jpg";//$"{userId}_profilepic.png";
+            var dbPath = Path.Combine(folderName, uniqueFileName);
+
+            using (var fileStream = new FileStream(Path.Combine(filePath, uniqueFileName), FileMode.Create))
+            {
+                await file.CopyToAsync(fileStream);
+            }
+
+            return dbPath;
+        }
     }
 }
