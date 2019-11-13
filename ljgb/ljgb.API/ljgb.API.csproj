@@ -24,6 +24,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Resources\UploadDocs\~%2420191112230415586_Mapping Toyota.xlsx" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="EPPlus" Version="4.5.3.2" />
     <PackageReference Include="JqueryDataTables.ServerSide.AspNetCoreWeb" Version="3.0.0" />
     <PackageReference Include="log4net" Version="2.0.8" />
@@ -41,7 +45,11 @@
 
   <ItemGroup>
     <Folder Include="Resources\" />
+<<<<<<< HEAD
     <Folder Include="Resources\UploadImageBarang\" />
+=======
+    <Folder Include="Resources\UploadDocs\" />
+>>>>>>> 15a594b0fdbc78fe58646565d6f52f4400440e4f
   </ItemGroup>
 
 </Project>

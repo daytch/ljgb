@@ -10,9 +10,13 @@ namespace ljgb.DataAccess.Interface
 {
     public interface IModelBarang
     {
+        Task<List<ModelBarang>> GetAllModel();
+
         Task<ModelBarangResponse> GetAll(string search, string order, string orderDir, int startRec, int pageSize, int draw);
 
         Task<ModelBarangResponse> GetPost(long ID);
+
+        Task<long> Add(ModelBarang model);
 
         Task<ModelBarangResponse> AddPost(ModelBarangRequest model);
 

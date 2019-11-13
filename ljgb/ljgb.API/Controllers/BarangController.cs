@@ -336,14 +336,19 @@ namespace ljgb.API.Controllers
 
         [HttpPost]
         [Route("SubmitUpload")]
-        public async Task<string> SubmitUpload(string fileName)
+        public async Task<IActionResult> SubmitUpload(string fileName)
         {
-            if (fileName == null)
-                return "Please upload file please";
+            BarangResponse resp = new BarangResponse();
+            try
+            {
+                resp = await facade.SubmitUpload(fileName);
 
-            var serv = await facade.SubmitUpload(fileName);
-
-            return fileName;
+                return Ok(resp);
+            }
+            catch (Exception)
+            {
+                return BadRequest(resp);
+            }
         }
 
 

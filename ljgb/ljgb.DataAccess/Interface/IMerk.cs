@@ -13,7 +13,11 @@ namespace ljgb.DataAccess.Interface
     {
         Task<MerkResponse> GetAll(string search, string order, string orderDir, int startRec, int pageSize, int draw);
 
+        Task<List<Merk>> GetAllMerk();
+
         Task<MerkResponse> GetPost(long ID);
+
+        Task<long> Add(Merk model);
 
         Task<MerkResponse> AddPost(MerkRequest model);
 

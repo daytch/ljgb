@@ -65,7 +65,6 @@
                 if ($("#customFile").val() == "") {
                     return;
                 }
-                debugger;
                 var inputFile = $('#customFile')[0].files[0];
                 var pathFile = inputFile.name;
                 var ekstensiOk = /(\.xlsx|\.xls)$/i;
@@ -83,6 +82,7 @@
                     url: url +'Barang/UploadFile',
                     data: formData,
                     success: function (filename) {
+                        debugger;
                         fileName = filename;
                         $('.custom-file-label').html(filename);
                     },
@@ -95,10 +95,12 @@
             });
 
             $("#save").on("click", function () {
-
+                debugger;
+                var formData = new Object();
+                formData.fileName = fileName;
                 $.ajax({
                     type: 'post',
-                    url: url + 'Barang/UploadFile',
+                    url: url + 'Barang/SubmitUpload?fileName=' + fileName,
                     data: formData,
                     success: function (filename) {
                         $('.custom-file-label').html(filename);

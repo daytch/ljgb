@@ -20,6 +20,30 @@ namespace ljgb.DataAccess.Repository
         {
             db = _db;
         }
+
+        public async Task<List<Merk>> GetAllMerk()
+        {
+            List<Merk> Result = new List<Merk>();
+            if (db!=null)
+            {
+                Result = await db.Merk.Where(x => x.RowStatus == true).ToListAsync();
+            }
+            return Result;
+        }
+
+        public async Task<long> Add(Merk merk)
+        {
+            if (db != null)
+            {
+                await db.Merk.AddAsync(merk);
+                await db.SaveChangesAsync();
+
+                return merk.Id;
+            }
+
+            return 0;
+        }
+
         public async Task<MerkResponse> AddPost(MerkRequest request)
         {
             MerkResponse respose = new MerkResponse();
@@ -44,7 +68,7 @@ namespace ljgb.DataAccess.Repository
                 {
                     respose.Message = ex.ToString();
                     respose.IsSuccess = false;
-                    
+
                 }
             }
 
@@ -79,7 +103,7 @@ namespace ljgb.DataAccess.Repository
                         response.Message = "Data not Found";
                         response.IsSuccess = false;
                     }
-                   
+
                 }
                 catch (Exception ex)
                 {
@@ -174,7 +198,7 @@ namespace ljgb.DataAccess.Repository
                                                     ModifiedBy = model.ModifiedBy,
                                                     RowStatus = model.RowStatus
                                                 }).ToListAsync();
-                                
+
                     //response.ListModel = await (from model in db.Merk
                     //              where model.RowStatus == true
                     //              select new MerkViewModel
@@ -188,7 +212,7 @@ namespace ljgb.DataAccess.Repository
                     //                  ModifiedBy = model.ModifiedBy,
                     //                  RowStatus = model.RowStatus
                     //              }).ToListAsync();
-                   
+
                     response.Message = "Success";
                     response.IsSuccess = true;
                 }
@@ -209,19 +233,19 @@ namespace ljgb.DataAccess.Repository
             {
                 try
                 {
-                     response.Model = await (from model in db.Merk
-                                  where model.Id == ID && model.RowStatus == true
-                                  select new MerkViewModel
-                                  {
-                                      ID = model.Id,
-                                      Name = model.Name,
-                                      Description = model.Description,
-                                      Created = model.Created,
-                                      CreatedBy = model.CreatedBy,
-                                      Modified = model.Modified,
-                                      ModifiedBy = model.ModifiedBy,
-                                      RowStatus = model.RowStatus
-                                  }).FirstOrDefaultAsync();
+                    response.Model = await (from model in db.Merk
+                                            where model.Id == ID && model.RowStatus == true
+                                            select new MerkViewModel
+                                            {
+                                                ID = model.Id,
+                                                Name = model.Name,
+                                                Description = model.Description,
+                                                Created = model.Created,
+                                                CreatedBy = model.CreatedBy,
+                                                Modified = model.Modified,
+                                                ModifiedBy = model.ModifiedBy,
+                                                RowStatus = model.RowStatus
+                                            }).FirstOrDefaultAsync();
                     response.IsSuccess = true;
                     response.Message = "Load Success";
                 }
@@ -256,7 +280,7 @@ namespace ljgb.DataAccess.Repository
                     await db.SaveChangesAsync();
                     response.Message = "Data Already Updated";
                     response.IsSuccess = true;
-                   
+
                 }
                 catch (Exception ex)
                 {

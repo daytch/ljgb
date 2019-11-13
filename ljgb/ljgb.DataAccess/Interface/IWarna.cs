@@ -10,9 +10,12 @@ namespace ljgb.DataAccess.Interface
         Task<List<Warna>> GetWarna();
 
         Task<List<WarnaViewModel>> GetPosts();
+
         Task<List<WarnaViewModel>> GetAllWithoutFilter(); 
 
         Task<WarnaViewModel> GetPost(long postId);
+
+        Task<long> Add(Warna warna);
 
         Task<long> AddPost(Warna warna);
 
