@@ -26,6 +26,19 @@ namespace ljgb.DataAccess.Repository
             return null;
         }
 
+        public async Task<long> Add(Warna model)
+        {
+            if (db != null)
+            {
+                await db.Warna.AddAsync(model);
+                await db.SaveChangesAsync();
+
+                return model.Id;
+            }
+
+            return 0;
+        }
+
         public async Task<List<WarnaViewModel>> GetPosts()
         {
             if (db != null)

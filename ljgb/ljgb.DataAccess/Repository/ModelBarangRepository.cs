@@ -19,6 +19,30 @@ namespace ljgb.DataAccess.Repository
         {
             db = _db;
         }
+
+        public async Task<List<ModelBarang>> GetAllModel()
+        {
+            List<ModelBarang> Result = new List<ModelBarang>();
+            if (db != null)
+            {
+                Result = await db.ModelBarang.Where(x => x.RowStatus == true).ToListAsync();
+            }
+            return Result;
+        }
+
+        public async Task<long> Add(ModelBarang model)
+        {
+            if (db != null)
+            {
+                await db.ModelBarang.AddAsync(model);
+                await db.SaveChangesAsync();
+
+                return model.Id;
+            }
+
+            return 0;
+        }
+
         public async Task<ModelBarangResponse> AddPost(ModelBarangRequest request)
         {
             ModelBarangResponse response = new ModelBarangResponse();
