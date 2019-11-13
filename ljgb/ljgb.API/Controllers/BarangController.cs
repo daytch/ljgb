@@ -345,5 +345,52 @@ namespace ljgb.API.Controllers
 
             return fileName;
         }
+
+
+        [HttpPost]
+        [Route("UploadImageBarang")]
+        public async Task<string> UploadImage(IFormFile file)
+        {
+            if (file == null || file.Length == 0)
+                return "Please select profile picture";
+
+            string folderName = Path.Combine("Resources", "UploadImageBarang");
+            string filePath = Path.Combine(Directory.GetCurrentDirectory(), folderName);
+
+            if (!Directory.Exists(filePath))
+            {
+                Directory.CreateDirectory(filePath);
+            }
+
+            string uniqueFileName = DateTime.Now.ToString("yyyyMMddHHmmssfff") + "_" + file.FileName;
+            string dbPath = Path.Combine(folderName, uniqueFileName);
+
+            using (var fileStream = new FileStream(Path.Combine(filePath, uniqueFileName), FileMode.Create))
+            {
+                await file.CopyToAsync(fileStream);
+            }
+            var test = new Uri(Path.Combine(folderName, uniqueFileName)).ToString();
+            return dbPath;
+        }
+
+        [HttpPost]
+        [Route("GetBarangByHomeParameter")]
+        public async Task<IActionResult> GetBarangByHomeParameter([FromBody]BarangRequest request)
+        {
+            BarangResponse result = new BarangResponse();
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    result = await facade.AddPost(request);
+                    return Ok(result);
+                }
+                catch (Exception)
+                {
+                    return BadRequest();
+                }
+            }
+            return BadRequest();
+        }
     }
 }

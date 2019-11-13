@@ -41,6 +41,7 @@
 
   <ItemGroup>
     <Folder Include="Resources\" />
+    <Folder Include="Resources\UploadImageBarang\" />
   </ItemGroup>
 
 </Project>

@@ -37,6 +37,7 @@
                         <button type="button" class="btn btn-primary waves-effect waves-themed" data-id="0" data-nama="" data-merk="" data-toggle="modal" data-target="#ModalEdit" id="0" tittle="Add Provinsi"><i class="fal fa-plus-circle"></i>Add</button>
                     </h5>
                     <input type="hidden" class="form-control" id="BarangID">
+                    <input type="hidden" class="form-control" id="ImagePath"/>
                    
                     <!-- datatable start -->
                     <table id="tableBarang" class="table table-bordered table-hover table-striped w-100">
@@ -139,6 +140,11 @@
                         <div class="invalid-feedback">
                             Please Input Harga OTR
                         </div>
+                    </div>
+
+                    <div>
+                        <input type='file' id="imgInp" />
+                        <img id="uploadImage" src="#" width="200" height="200" alt="your image" />
                     </div>
 
                 </div>
@@ -278,6 +284,7 @@
             });
 
             $('#ModalEdit').on('show.bs.modal', function (e) {
+                $('#uploadImage').attr('src', "~/UploadImageBarang/20191113193851014_city_big-ben_london_clock_tower_england_25574_3840x2160.jpg");
                 resetModal();
                 $('#dropdownModelBarang option').remove();
                 $('#dropdownType option').remove();
@@ -316,6 +323,7 @@
                             HargaOtr: $('#hargaOTR').val(),
                             WarnaID: $('#dropdownWarna').val(),
                             TypeBarangID: $('#dropdownType').val(),
+                            PhotoPath: $('#ImagePath').val(),
                         };
 
                         $.ajax({
@@ -468,5 +476,56 @@
                 }
             });
         }
+
+
+
+        function readURL(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    $('#uploadImage').attr('src', e.target.result);
+                }
+
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        $("#imgInp").change(function () {
+            if ($("#imgInp").val() == "") {
+                $('#ImagePath').val("");
+                return;
+            }
+            debugger;
+            var inputFile = $('#imgInp')[0].files[0];
+            var pathFile = inputFile.name;
+            var ekstensiOk = /(\.jpg|\.png)$/i;
+            if (!ekstensiOk.exec(pathFile)) {
+                alert('Silakan upload file yang memiliki ekstensi .jpg/.png/');
+                inputFile.name = '';
+                return false;
+            }
+            // your ajax submit
+            var formData = new FormData();
+            formData.append('file', $('#imgInp')[0].files[0]);
+            //formData.append('FileToBeDelete', FileLogoTobeDelete);
+            $.ajax({
+                type: 'post',
+                url: url + 'Barang/UploadImageBarang',
+                data: formData,
+                success: function (filename) {
+                    fileName = filename;
+                    $('.custom-file-label').html(filename);
+                    $('#ImagePath').val(filename);
+                   
+                },
+                processData: false,
+                contentType: false,
+                error: function (response) {
+                    console.log(response);
+                }
+            });
+            readURL(this);
+        });
     </script>
 }

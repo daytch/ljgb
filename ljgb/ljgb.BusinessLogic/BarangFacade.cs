@@ -191,6 +191,7 @@ namespace ljgb.BusinessLogic
                 model.Name = request.Name;
                 model.WarnaId = request.WarnaId;
                 model.TypeBarangId = request.TypeBarangId;
+                model.PhotoPath = request.PhotoPath;
                 model.Modified = DateTime.Now;
                 model.ModifiedBy = "xsivicto1905";
                 bool result = await dep.UpdatePost(model);
@@ -313,6 +314,13 @@ namespace ljgb.BusinessLogic
                 throw ex;
             }
             return dt;
+        }
+
+        public async Task<BarangResponse> GetBarangByHomeParameter(BarangRequest request)
+        {
+            BarangResponse response = new BarangResponse();
+
+            return response;
         }
     }
 }

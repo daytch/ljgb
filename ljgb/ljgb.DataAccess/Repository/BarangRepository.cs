@@ -355,5 +355,20 @@ namespace ljgb.DataAccess.Repository
             }
             return response;
         }
+
+        public async Task<SP_GetBarangByHomeParameter> GetBarangByHomeParameter(BarangRequest request)
+        {
+         
+            try
+            {
+                return await db.Set<SP_GetBarangByHomeParameter>().FromSql("EXEC sp_GetBarangByHomeParameter {0},{1},{2},{3}", request.KotaID, request.MerkID, request.ModelBarangID, request.TypeID).AsNoTracking().FirstAsync();
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+
+        }
     }
 }

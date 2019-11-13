@@ -17,6 +17,8 @@ namespace ljgb.Common.Responses
         public List<BarangViewModel> ListModel { get; set; }
         public BarangViewModel Model { get; set; }
 
+        public List<SP_GetBarangByHomeParameter> sp_GetBarangByHomeParameters { get; set; }
+
         public BarangResponse()
         {
             ListModel = new List<BarangViewModel>();
@@ -51,5 +53,13 @@ namespace ljgb.Common.Responses
     {
         public Int64 ID { get; set; }
         public Int64? price_rank { get; set; }
+    }
+
+    public class SP_GetBarangByHomeParameter
+    {
+        public long KotaID { get; set; }
+        public long MerkID { get; set; }
+        public long ModelID { get; set; }
+        public long TypeID { get; set; }
     }
 }
