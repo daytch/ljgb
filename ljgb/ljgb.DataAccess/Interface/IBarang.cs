@@ -37,5 +37,6 @@ namespace ljgb.DataAccess.Interface
 
         Task<bool> UpdatePost(Barang model);
         Task<Barang> GetHargaOTR(Barang request);
+        Task<List<SP_GetBarangByHomeParameter>> GetBarangByHomeParameter(BarangRequest request);
     }
 }

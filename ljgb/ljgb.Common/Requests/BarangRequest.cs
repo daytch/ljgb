@@ -24,5 +24,10 @@ namespace ljgb.Common.Requests
         public DateTime? Modified { get; set; }
         public string ModifiedBy { get; set; }
         public bool RowStatus { get; set; }
+
+        public long? KotaID { get; set; }
+        public long? MerkID { get; set; }
+        public long? ModelBarangID { get; set; }
+        public int? TypeID { get; set; }
     }
 }

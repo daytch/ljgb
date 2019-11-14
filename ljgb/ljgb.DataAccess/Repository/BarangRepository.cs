@@ -245,7 +245,8 @@ namespace ljgb.DataAccess.Repository
                                      brg.CreatedBy,
                                      brg.Modified,
                                      brg.ModifiedBy,
-                                     brg.RowStatus
+                                     brg.RowStatus,
+                                     brg.PhotoPath
 
                                  }
                            );
@@ -274,6 +275,7 @@ namespace ljgb.DataAccess.Repository
                                                     NamaMerk = model.NamaMerk,
                                                     MerkBarangID = model.MerkId,
                                                     NamaWarna = model.namaWarna,
+                                                    PhotoPath = model.PhotoPath,
                                                     WarnaId = model.WarnaId,
                                                     Created = model.Created,
                                                     CreatedBy = model.CreatedBy,
@@ -365,6 +367,21 @@ namespace ljgb.DataAccess.Repository
                 throw ex;
             }
             return response;
+        }
+
+        public async Task<List<SP_GetBarangByHomeParameter>> GetBarangByHomeParameter(BarangRequest request)
+        {
+         
+            try
+            {
+                return await db.Set<SP_GetBarangByHomeParameter>().FromSql("EXEC sp_GetBarangByHomeParameter {0},{1},{2},{3}", request.KotaID, request.MerkID, request.ModelBarangID, request.TypeID).AsNoTracking().ToListAsync();
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+
         }
     }
 }

@@ -52,6 +52,8 @@ namespace ljgb.DataAccess.Model
         public virtual DbSet<SP_MerkByKotaID> SP_MerkByKotaID { get; set; }
         public virtual DbSet<SP_ModelByKotaIDMerkID> SP_ModelByKotaIDMerkID { get; set; }
         public virtual DbSet<SP_TypeByKotaIDMerkIDModelID> SP_TypeByKotaIDMerkIDModelID { get; set; }
+        public virtual DbSet<SP_GetBarangByHomeParameter> SP_GetBarangByHomeParameters { get; set; }
+
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

@@ -1,8 +1,10 @@
 ﻿using ljgb.BusinessLogic;
+
 using ljgb.Common.Requests;
 using ljgb.Common.Responses;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using OfficeOpenXml;
 using System;
 using System.Data;
@@ -15,7 +17,14 @@ namespace ljgb.API.Controllers
     [ApiController]
     public class BarangController : ControllerBase
     {
+        private readonly IConfiguration _config;
         private BarangFacade facade = new BarangFacade();
+        private string url = "";
+        public BarangController(IConfiguration config)
+        {
+            url = config.GetSection("API_url").Value;
+        }
+
 
         [HttpGet]
         [Route("GetAll")]
@@ -349,6 +358,53 @@ namespace ljgb.API.Controllers
             {
                 return BadRequest(resp);
             }
+        }
+
+
+        [HttpPost]
+        [Route("UploadImageBarang")]
+        public async Task<string> UploadImage(IFormFile file)
+        {
+            if (file == null || file.Length == 0)
+                return "Please select profile picture";
+         
+            string folderName = Path.Combine("Resources", "UploadImageBarang");
+            string filePath = Path.Combine(Directory.GetCurrentDirectory(), folderName);
+
+            if (!Directory.Exists(filePath))
+            {
+                Directory.CreateDirectory(filePath);
+            }
+          
+            string uniqueFileName = DateTime.Now.ToString("yyyyMMddHHmmssfff") + "_" + file.FileName;
+            string dbPath = Path.Combine(folderName, uniqueFileName);
+
+            using (var fileStream = new FileStream(Path.Combine(filePath, uniqueFileName), FileMode.Create))
+            {
+                await file.CopyToAsync(fileStream);
+            }
+            
+            return url + dbPath;
+        }
+
+        [HttpPost]
+        [Route("GetBarangByHomeParameter")]
+        public async Task<IActionResult> GetBarangByHomeParameter([FromBody]BarangRequest request)
+        {
+            BarangResponse result = new BarangResponse();
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    result = await facade.GetBarangByHomeParameter(request);
+                    return Ok(result);
+                }
+                catch (Exception)
+                {
+                    return BadRequest();
+                }
+            }
+            return BadRequest();
         }
     }
 }

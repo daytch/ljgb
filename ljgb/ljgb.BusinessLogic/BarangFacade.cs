@@ -202,6 +202,7 @@ namespace ljgb.BusinessLogic
                 model.Name = request.Name;
                 model.WarnaId = request.WarnaId;
                 model.TypeBarangId = request.TypeBarangId;
+                model.PhotoPath = request.PhotoPath;
                 model.Modified = DateTime.Now;
                 model.ModifiedBy = "xsivicto1905";
                 bool result = await dep.UpdatePost(model);
@@ -467,6 +468,26 @@ namespace ljgb.BusinessLogic
                 throw ex;
             }
             return dt;
+        }
+
+        public async Task<BarangResponse> GetBarangByHomeParameter(BarangRequest request)
+        {
+            BarangResponse response = new BarangResponse();
+            try
+            {
+               
+                response.sp_GetBarangByHomeParameters = await dep.GetBarangByHomeParameter(request);
+                response.IsSuccess = true;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+
+                response.IsSuccess = false;
+                response.Message = ex.ToString();
+            }
+           
+            return response;
         }
     }
 }
