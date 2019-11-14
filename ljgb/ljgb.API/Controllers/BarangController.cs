@@ -2,6 +2,7 @@
 
 using ljgb.Common.Requests;
 using ljgb.Common.Responses;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;

@@ -28,6 +28,7 @@ namespace ljgb.BusinessLogic
         private IModelBarang da_model;
         private INegoBarang da_nego;
         private string errMerk, errModel, errType, errWarna, errBarang, errOTR, errHargaFinal = string.Empty;
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         public BarangFacade()
         {
@@ -398,6 +399,7 @@ namespace ljgb.BusinessLogic
                             #region Insert to Barang
                             Barang brg = new Barang()
                             {
+                                RowStatus = true,
                                 Created = DateTime.Now,
                                 CreatedBy = "Admin",
                                 HargaOtr = OTR,
@@ -411,6 +413,7 @@ namespace ljgb.BusinessLogic
                             #region Insert to NegoBarang
                             NegoBarang nb = new NegoBarang()
                             {
+                                RowStatus = true,
                                 BarangId = BarangID,
                                 UserProfileId = 3,
                                 TypePenawaran = "ask",
@@ -428,6 +431,7 @@ namespace ljgb.BusinessLogic
             }
             catch (Exception ex)
             {
+                log.Error(ex);
                 string Ket = string.Format("Merk={0}, Model={1}, Type={2}, Warna={3}, Barang={4}, HargaOTR={5}, Harga Final={6}, Error={7} ",
                     errMerk, errModel, errType, errWarna, errBarang, errOTR, errHargaFinal, ex.ToString());
                 response.Message = Ket;// ex.ToString();
@@ -475,7 +479,7 @@ namespace ljgb.BusinessLogic
             BarangResponse response = new BarangResponse();
             try
             {
-               
+
                 response.sp_GetBarangByHomeParameters = await dep.GetBarangByHomeParameter(request);
                 response.IsSuccess = true;
                 response.Message = "Success";
@@ -486,7 +490,7 @@ namespace ljgb.BusinessLogic
                 response.IsSuccess = false;
                 response.Message = ex.ToString();
             }
-           
+
             return response;
         }
     }
