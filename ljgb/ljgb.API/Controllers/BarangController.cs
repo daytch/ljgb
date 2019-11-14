@@ -1,8 +1,10 @@
 ﻿using ljgb.BusinessLogic;
+
 using ljgb.Common.Requests;
 using ljgb.Common.Responses;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using OfficeOpenXml;
 using System;
 using System.Data;
@@ -15,7 +17,14 @@ namespace ljgb.API.Controllers
     [ApiController]
     public class BarangController : ControllerBase
     {
+        private readonly IConfiguration _config;
         private BarangFacade facade = new BarangFacade();
+        private string url = "";
+        public BarangController(IConfiguration config)
+        {
+            url = config.GetSection("API_url").Value;
+        }
+
 
         [HttpGet]
         [Route("GetAll")]
@@ -358,7 +367,7 @@ namespace ljgb.API.Controllers
         {
             if (file == null || file.Length == 0)
                 return "Please select profile picture";
-
+         
             string folderName = Path.Combine("Resources", "UploadImageBarang");
             string filePath = Path.Combine(Directory.GetCurrentDirectory(), folderName);
 
@@ -366,7 +375,7 @@ namespace ljgb.API.Controllers
             {
                 Directory.CreateDirectory(filePath);
             }
-
+          
             string uniqueFileName = DateTime.Now.ToString("yyyyMMddHHmmssfff") + "_" + file.FileName;
             string dbPath = Path.Combine(folderName, uniqueFileName);
 
@@ -374,8 +383,8 @@ namespace ljgb.API.Controllers
             {
                 await file.CopyToAsync(fileStream);
             }
-            var test = new Uri(Path.Combine(folderName, uniqueFileName)).ToString();
-            return dbPath;
+            
+            return url + dbPath;
         }
 
         [HttpPost]
@@ -387,7 +396,7 @@ namespace ljgb.API.Controllers
             {
                 try
                 {
-                    result = await facade.AddPost(request);
+                    result = await facade.GetBarangByHomeParameter(request);
                     return Ok(result);
                 }
                 catch (Exception)

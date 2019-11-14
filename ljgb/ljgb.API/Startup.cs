@@ -1,4 +1,5 @@
-﻿using ljgb.DataAccess;
+﻿
+using ljgb.DataAccess;
 using ljgb.DataAccess.Interface;
 using ljgb.DataAccess.Model;
 using ljgb.DataAccess.Repository;
@@ -79,7 +80,6 @@ namespace ljgb.API
                         ClockSkew = TimeSpan.Zero // remove delay of token when expire
                     };
                 });
-
             services.AddSingleton<IConfiguration>(Configuration);
 
             // Register the Swagger generator, defining 1 or more Swagger documents

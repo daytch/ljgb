@@ -45,11 +45,7 @@
 
   <ItemGroup>
     <Folder Include="Resources\" />
-<<<<<<< HEAD
-    <Folder Include="Resources\UploadImageBarang\" />
-=======
-    <Folder Include="Resources\UploadDocs\" />
->>>>>>> 15a594b0fdbc78fe58646565d6f52f4400440e4f
+
   </ItemGroup>
 
 </Project>

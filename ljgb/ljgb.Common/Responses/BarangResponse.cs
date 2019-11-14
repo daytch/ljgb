@@ -57,9 +57,9 @@ namespace ljgb.Common.Responses
 
     public class SP_GetBarangByHomeParameter
     {
-        public long KotaID { get; set; }
-        public long MerkID { get; set; }
-        public long ModelID { get; set; }
-        public long TypeID { get; set; }
+        public long id { get; set; }
+        public string name { get; set; }
+        public string photopath { get; set; }
+        //public long TypeID { get; set; }
     }
 }

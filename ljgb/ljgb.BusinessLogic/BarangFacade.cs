@@ -448,7 +448,20 @@ namespace ljgb.BusinessLogic
         public async Task<BarangResponse> GetBarangByHomeParameter(BarangRequest request)
         {
             BarangResponse response = new BarangResponse();
+            try
+            {
+               
+                response.sp_GetBarangByHomeParameters = await dep.GetBarangByHomeParameter(request);
+                response.IsSuccess = true;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
 
+                response.IsSuccess = false;
+                response.Message = ex.ToString();
+            }
+           
             return response;
         }
     }
