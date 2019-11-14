@@ -27,6 +27,7 @@ namespace ljgb.BusinessLogic
         private IWarna da_warna;
         private IModelBarang da_model;
         private INegoBarang da_nego;
+        private string errMerk, errModel, errType, errWarna, errBarang, errOTR, errHargaFinal = string.Empty;
 
         public BarangFacade()
         {
@@ -260,7 +261,7 @@ namespace ljgb.BusinessLogic
             return response;
         }
 
-        public async Task<BarangResponse> SubmitUpload(string fileName)
+        public BarangResponse SubmitUpload(string fileName)
         {
             BarangResponse response = new BarangResponse();
             try
@@ -272,11 +273,11 @@ namespace ljgb.BusinessLogic
 
                 string dbPath = Path.Combine(folderName, fileName);
 
-                List<Merk> ListMerk = await da_merk.GetAllMerk();
-                List<ModelBarang> ListModel = await da_model.GetAllModel();
-                List<TypeBarang> ListType = await da_type.GetAllType();
-                List<Warna> ListWarna = await da_warna.GetWarna();
-                List<Barang> ListBarang = await dep.GetAllBarang();
+                List<Merk> ListMerk = da_merk.GetAllMerk().Result;
+                List<ModelBarang> ListModel = da_model.GetAllModel().Result;
+                List<TypeBarang> ListType = da_type.GetAllType().Result;
+                List<Warna> ListWarna = da_warna.GetWarna().Result;
+                List<Barang> ListBarang = dep.GetAllBarang().Result;
 
                 using (ExcelPackage pck = new ExcelPackage())
                 {
@@ -294,6 +295,14 @@ namespace ljgb.BusinessLogic
                             long BarangID = 0;
                             long NegoBarangID = 0;
 
+                            errMerk = dt.Rows[i].ItemArray.GetValue(1).ToString();
+                            errModel = dt.Rows[i].ItemArray.GetValue(2).ToString();
+                            errType = dt.Rows[i].ItemArray.GetValue(3).ToString();
+                            errWarna = dt.Rows[i].ItemArray.GetValue(4).ToString();
+                            errBarang = dt.Rows[i].ItemArray.GetValue(3).ToString();
+                            errOTR = dt.Rows[i].ItemArray.GetValue(5).ToString();
+                            errHargaFinal = dt.Rows[i].ItemArray.GetValue(7).ToString();
+
                             #region Insert To Merk 
                             string Merk = dt.Rows[i].ItemArray.GetValue(1).ToString();
                             if (!ListMerk.Where(x => x.Name == Merk).Any())
@@ -304,7 +313,8 @@ namespace ljgb.BusinessLogic
                                 m.RowStatus = true;
                                 m.Created = DateTime.Now;
                                 m.CreatedBy = "Admin";
-                                MerkID = await da_merk.Add(m);
+                                MerkID = da_merk.Add(m).Result;
+                                ListMerk.Add(m);
                             }
                             else
                             {
@@ -314,15 +324,17 @@ namespace ljgb.BusinessLogic
 
                             #region Insert to ModelBarang
                             string Model = dt.Rows[i].ItemArray.GetValue(2).ToString();
-                            if (!ListModel.Where(x => x.Name == Model).Any())
+                            if (!ListModel.Where(x => x.Name.ToUpper() == Model.ToUpper()).Any())
                             {
                                 ModelBarang mb = new ModelBarang();
                                 mb.MerkId = MerkID;
                                 mb.Name = Model;
+                                mb.Description = Model;
                                 mb.RowStatus = true;
                                 mb.Created = DateTime.Now;
                                 mb.Createdby = "Admin";
-                                ModelID = await da_model.Add(mb);
+                                ModelID = da_model.Add(mb).Result;
+                                ListModel.Add(mb);
                             }
                             else
                             {
@@ -336,11 +348,13 @@ namespace ljgb.BusinessLogic
                             {
                                 TypeBarang tb = new TypeBarang();
                                 tb.Name = Type;
+                                tb.ModelBarangId = ModelID;
                                 tb.Description = Type;
                                 tb.RowStatus = true;
                                 tb.Created = DateTime.Now;
                                 tb.CreatedBy = "Admin";
-                                TypeID = await da_type.Add(tb);
+                                TypeID = da_type.Add(tb).Result;
+                                ListType.Add(tb);
                             }
                             else
                             {
@@ -358,7 +372,8 @@ namespace ljgb.BusinessLogic
                                 w.RowStatus = true;
                                 w.Created = DateTime.Now;
                                 w.CreatedBy = "Admin";
-                                WarnaID = await da_warna.Add(w);
+                                WarnaID = da_warna.Add(w).Result;
+                                ListWarna.Add(w);
                             }
                             else
                             {
@@ -366,9 +381,18 @@ namespace ljgb.BusinessLogic
                             }
                             #endregion
 
-                            int OTR = (dt.Rows[i].ItemArray.GetValue(5) != null) ? Convert.ToInt32(dt.Rows[i].ItemArray.GetValue(6)) : 0;
-                            int Discount = (dt.Rows[i].ItemArray.GetValue(6) != null) ? Convert.ToInt32(dt.Rows[i].ItemArray.GetValue(7)) : 0;
-                            int HargaFinal = (dt.Rows[i].ItemArray.GetValue(7) != null) ? Convert.ToInt32(dt.Rows[i].ItemArray.GetValue(8)) : 0;
+                            string OTRstrRaw = dt.Rows[i].ItemArray.GetValue(5).ToString();
+                            string OTRstr = OTRstrRaw.Contains('.') ? OTRstrRaw.Substring(0, OTRstrRaw.LastIndexOf('.')) : OTRstrRaw;
+
+                            string DiscstrRaw = dt.Rows[i].ItemArray.GetValue(6).ToString();
+                            string Discstr = DiscstrRaw.Contains('.') ? DiscstrRaw.Substring(0, DiscstrRaw.LastIndexOf('.')) : DiscstrRaw;
+
+                            string FinalRaw = dt.Rows[i].ItemArray.GetValue(7).ToString();
+                            string Finalstr = FinalRaw.Contains('.') ? FinalRaw.Substring(0, FinalRaw.LastIndexOf('.')) : FinalRaw;
+
+                            long OTR = Convert.ToInt64(OTRstr);//(dt.Rows[i].ItemArray.GetValue(5) != null) ? Convert.ToInt64(dt.Rows[i].ItemArray.GetValue(6)) : 0;
+                            long Discount = Convert.ToInt64(Discstr);//(dt.Rows[i].ItemArray.GetValue(6) != null) ? Convert.ToInt64(dt.Rows[i].ItemArray.GetValue(7)) : 0;
+                            long HargaFinal = Convert.ToInt64(Finalstr);//(dt.Rows[i].ItemArray.GetValue(7) != null) ? Convert.ToInt64(dt.Rows[i].ItemArray.GetValue(8)) : 0;
 
                             #region Insert to Barang
                             Barang brg = new Barang()
@@ -380,7 +404,7 @@ namespace ljgb.BusinessLogic
                                 WarnaId = WarnaID,
                                 TypeBarangId = TypeID
                             };
-                            BarangID = await dep.AddPost(brg);
+                            BarangID = dep.AddPost(brg).Result;
                             #endregion
 
                             #region Insert to NegoBarang
@@ -393,7 +417,7 @@ namespace ljgb.BusinessLogic
                                 Created = DateTime.Now,
                                 CreatedBy = "Admin"
                             };
-                            NegoBarangID = await da_nego.AddPost(nb);
+                            NegoBarangID = da_nego.AddPost(nb).Result;
                             #endregion
                         }
                         response.IsSuccess = true;
@@ -403,8 +427,9 @@ namespace ljgb.BusinessLogic
             }
             catch (Exception ex)
             {
-
-                response.Message = ex.ToString();
+                string Ket = string.Format("Merk={0}, Model={1}, Type={2}, Warna={3}, Barang={4}, HargaOTR={5}, Harga Final={6}, Error={7} ",
+                    errMerk, errModel, errType, errWarna, errBarang, errOTR, errHargaFinal, ex.ToString());
+                response.Message = Ket;// ex.ToString();
                 response.IsSuccess = false;
             }
             return response;
