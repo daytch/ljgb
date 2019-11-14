@@ -282,11 +282,13 @@
             }
 
             $("#ModalDelete").on("show.bs.modal", function (e) {
-                $('#BarangID').val(e.relatedTarget.getAttribute('data-Photo'));
+
+                $('#BarangID').val(e.relatedTarget.getAttribute('data-id'));
             });
 
             $('#ModalEdit').on('show.bs.modal', function (e) {
-                $('#uploadImage').attr('src', e.relatedTarget.getAttribute('data-id'));
+                debugger;
+                $('#uploadImage').attr('src', e.relatedTarget.getAttribute('data-Photo'));
                 resetModal();
                 $('#dropdownModelBarang option').remove();
                 $('#dropdownType option').remove();
