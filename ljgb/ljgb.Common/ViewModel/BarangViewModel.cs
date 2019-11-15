@@ -30,5 +30,6 @@ namespace ljgb.Common.ViewModel
         public DateTime? Modified { get; set; }
         public string ModifiedBy { get; set; }
         public bool RowStatus { get; set; }
+        public long KotaID { get; set; }
     }
 }

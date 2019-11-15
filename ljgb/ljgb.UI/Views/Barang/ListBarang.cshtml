@@ -37,8 +37,8 @@
                         <button type="button" class="btn btn-primary waves-effect waves-themed" data-id="0" data-nama="" data-merk="" data-toggle="modal" data-target="#ModalEdit" id="0" tittle="Add Provinsi"><i class="fal fa-plus-circle"></i>Add</button>
                     </h5>
                     <input type="hidden" class="form-control" id="BarangID">
-                    <input type="hidden" class="form-control" id="ImagePath"/>
-                   
+                    <input type="hidden" class="form-control" id="ImagePath" />
+
                     <!-- datatable start -->
                     <table id="tableBarang" class="table table-bordered table-hover table-striped w-100">
                         <thead>
@@ -48,6 +48,7 @@
                                 <th>Type</th>
                                 <th>Warna</th>
                                 <th>Harga OTR</th>
+                                <th>Foto</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -133,6 +134,14 @@
                         </div>
                     </div>
 
+                    <div class="form-group">
+                        <label class="form-label" for="simpleinput">Kota</label>
+
+                        <select id="dropdownKota" class="form-control col-md-12" type="text" name="dropdownKota" required></select>
+                        <div class="invalid-feedback">
+                            Please Select Kota
+                        </div>
+                    </div>
 
                     <div class="form-group">
                         <label class="form-label" for="example-textarea">Harga OTR</label>
@@ -141,6 +150,7 @@
                             Please Input Harga OTR
                         </div>
                     </div>
+
 
                     <div>
                         <input type='file' id="imgInp" />
@@ -188,6 +198,25 @@
                 }
             });
             $.ajax({
+                url: url + "Kota/GetAllKotaWithoutFilter",
+                contentType: 'application/json',
+                dataType: 'json',
+                type: "GET",
+
+                success: function (response) {
+                    if (response.isSuccess) {
+                        $.each(response.listKota, function (key, entry) {
+                            $("#dropdownKota").append($('<option></option>').attr('value', entry.id).text(entry.name));
+                        })
+                    } else {
+                        toastr["error"](response.message);
+                    }
+                },
+                error: function (jqXHR, text, errorThrown) {
+                    console.log(jqXHR + " " + text + " " + errorThrown);
+                }
+            });
+            $.ajax({
                 url: url + "Warna/GetAllWithoutFilter",
                 contentType: 'application/json',
                 dataType: 'json',
@@ -206,7 +235,7 @@
                     console.log(jqXHR + " " + text + " " + errorThrown);
                 }
             });
-            
+
 
 
             $('#tableBarang').dataTable({
@@ -257,10 +286,21 @@
                         data: "hargaOtr",
                         width: "15%"
                     },
-                   
                     {
                         mRender: function (a, e, t) {
-                            return '<a class="btn btn-xs btn-success waves-effect waves-themed"  data-id="' + t.id + '" data-merkID="' + t.merkBarangID + '" data-modelID="' + t.modelBarangID + '" data-typeBarangID="' + t.typeBarangId + '" data-warnaID="' + t.warnaId + '"   data-hargaOTR="' + t.hargaOtr + '"  data-Photo="' + t.PhotoPath+'" data-toggle="modal" data-target="#ModalEdit"><i class="fas fa-edit"></i></a> '
+                            if (t.photoPath != "" && t.photoPath != null) {
+                                return '<img src="' + t.photoPath + '" width="50" height="50" alt="your image" />';
+                            }
+                            else {
+                               
+                                return '<img src="#" width="20px" height="20px" alt="No Image" />';
+                            }
+
+                        }
+                    },
+                    {
+                        mRender: function (a, e, t) {
+                            return '<a class="btn btn-xs btn-success waves-effect waves-themed"  data-id="' + t.id + '" data-merkID="' + t.merkBarangID + '" data-modelID="' + t.modelBarangID + '" data-typeBarangID="' + t.typeBarangId + '" data-warnaID="' + t.warnaId + '"   data-hargaOTR="' + t.hargaOtr + '"  data-Photo="' + t.photoPath+'" data-KotaID="'+t.kotaID+'" data-toggle="modal" data-target="#ModalEdit"><i class="fas fa-edit"></i></a> '
                                 + '<a class="btn btn-xs btn-danger waves-effect waves-themed"   data-id="' + t.id + '" data-toggle="modal" data-target="#ModalDelete"><i class="fas fa-trash-alt"></i></a>';
                         },
                         width: "12%"
@@ -294,7 +334,7 @@
                 $('#dropdownType option').remove();
                 $('#BarangID').val(e.relatedTarget.getAttribute('data-id'));
                 $('#dropdownMerk').val(e.relatedTarget.getAttribute('data-merkID'))
-               
+                $('#dropdownKota').val(e.relatedTarget.getAttribute('data-KotaID'))
                 $('#dropdownWarna').val(e.relatedTarget.getAttribute('data-warnaID'))
                 $('#hargaOTR').val(e.relatedTarget.getAttribute('data-hargaOTR'));
                 var valuesMerk = {
@@ -328,6 +368,7 @@
                             WarnaID: $('#dropdownWarna').val(),
                             TypeBarangID: $('#dropdownType').val(),
                             PhotoPath: $('#ImagePath').val(),
+                            KotaID: $('#dropdownKota').val(),
                         };
 
                         $.ajax({
@@ -444,7 +485,7 @@
                 data: JSON.stringify(values),
                 success: function (response) {
                     if (response.isSuccess) {
-                        
+
                         $.each(response.listModel, function (key, entry) {
                             $("#dropdownType").append($('<option></option>').attr('value', entry.id).text(entry.name));
                         })
@@ -530,7 +571,7 @@
                     console.log(response);
                 }
             });
- 
+
         });
     </script>
 }

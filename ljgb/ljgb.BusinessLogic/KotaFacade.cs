@@ -124,6 +124,7 @@ namespace ljgb.BusinessLogic
                
                 model.ProvinsiId = req.ProvinsiID;
                 model.Name = req.Name;
+
                 model.Description = req.Description;
                 model.Modified = DateTime.Now;
                 model.ModifiedBy = "xsivicto1905";

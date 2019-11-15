@@ -226,6 +226,8 @@ namespace ljgb.DataAccess.Repository
                                  on type.ModelBarangId equals model.Id
                                  join merk in db.Merk
                                  on model.MerkId equals merk.Id
+                                 join kota in db.Kota
+                                 on brg.KotaId equals kota.Id
                                  where merk.RowStatus == true
                                  && model.RowStatus == true
                                  select new
@@ -246,7 +248,8 @@ namespace ljgb.DataAccess.Repository
                                      brg.Modified,
                                      brg.ModifiedBy,
                                      brg.RowStatus,
-                                     brg.PhotoPath
+                                     brg.PhotoPath,
+                                     kotaID = kota.Id
 
                                  }
                            );
@@ -281,7 +284,8 @@ namespace ljgb.DataAccess.Repository
                                                     CreatedBy = model.CreatedBy,
                                                     Modified = model.Modified,
                                                     ModifiedBy = model.ModifiedBy,
-                                                    RowStatus = model.RowStatus
+                                                    RowStatus = model.RowStatus,
+                                                    KotaID = model.kotaID
                                                 }).Skip(startRec).Take(pageSize).ToListAsync();
                     response.draw = Convert.ToInt32(draw);
                     response.recordsTotal = totalRecords;

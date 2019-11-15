@@ -154,6 +154,21 @@ namespace ljgb.DataAccess.Repository
             return response;
         }
 
+        public async Task<Provinsi> GetByName(string req)
+        {
+            Provinsi response = new Provinsi();
+            try
+            {
+                response = await db.Provinsi.Where(x => x.RowStatus == true && x.Name.ToLower().Equals(req.ToLower())).FirstOrDefaultAsync();
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+            return response;
+        }
+
         public async Task<ProvinsiResponse> GetPost(ProvinsiRequest request)
         {
             ProvinsiResponse response = new ProvinsiResponse();
