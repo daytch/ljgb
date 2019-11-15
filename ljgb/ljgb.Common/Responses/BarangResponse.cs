@@ -60,6 +60,7 @@ namespace ljgb.Common.Responses
         public long id { get; set; }
         public string name { get; set; }
         public string photopath { get; set; }
+        public long price { get; set; }
         //public long TypeID { get; set; }
     }
 }

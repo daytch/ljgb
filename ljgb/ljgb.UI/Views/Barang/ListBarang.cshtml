@@ -34,10 +34,11 @@
             <div class="panel-container show">
                 <div class="panel-content">
                     <h5 class="frame-heading">
-                        <button type="button" class="btn btn-primary waves-effect waves-themed" data-id="0" data-nama="" data-merk="" data-toggle="modal" data-target="#ModalEdit" id="0" tittle="Add Provinsi"><i class="fal fa-plus-circle"></i>Add</button>
+                        @*<button type="button" class="btn btn-primary waves-effect waves-themed" data-id="0" data-nama="" data-merk="" data-toggle="modal" data-target="#ModalEdit" id="0" tittle="Add Provinsi"><i class="fal fa-plus-circle"></i>Add</button>*@
                     </h5>
                     <input type="hidden" class="form-control" id="BarangID">
                     <input type="hidden" class="form-control" id="ImagePath" />
+                    <input type="hidden" class="form-control" id="HiddenModelID" />
 
                     <!-- datatable start -->
                     <table id="tableBarang" class="table table-bordered table-hover table-striped w-100">
@@ -327,7 +328,8 @@
             });
 
             $('#ModalEdit').on('show.bs.modal', function (e) {
-                debugger;
+                $('#HiddenModelID').val(e.relatedTarget.getAttribute('data-modelID'));
+                $('#HiddenTypeID').val(e.relatedTarget.getAttribute('data-typeBarangID'));
                 $('#uploadImage').attr('src', e.relatedTarget.getAttribute('data-Photo'));
                 resetModal();
                 $('#dropdownModelBarang option').remove();
@@ -342,7 +344,7 @@
                     merkID: $('#dropdownMerk').val()
                 }
                 SetModelDropdown(valuesMerk);
-                $('#dropdownModelBarang').val(e.relatedTarget.getAttribute('data-modelID'))
+               
                 var valuesModelBarang = {
 
                     ModelBarangID: e.relatedTarget.getAttribute('data-modelID')
@@ -488,9 +490,13 @@
 
                         $.each(response.listModel, function (key, entry) {
                             $("#dropdownType").append($('<option></option>').attr('value', entry.id).text(entry.name));
+                            
                         })
                     } else {
                         toastr["error"](response.message);
+                    }
+                    if (($("#HiddenTypeID").val()) ? $("#HiddenTypeID").val() : 0 > 0) {
+                        $("#dropdownType").val($("#HiddenTypeID").val());
                     }
                 },
                 error: function (jqXHR, text, errorThrown) {
@@ -514,6 +520,9 @@
                         })
                     } else {
                         toastr["error"](response.message);
+                    }
+                    if (($("#HiddenModelID").val()) ? $("#HiddenModelID").val() : 0 > 0) {
+                        $("#dropdownModelBarang").val($("#HiddenModelID").val());
                     }
                 },
                 error: function (jqXHR, text, errorThrown) {

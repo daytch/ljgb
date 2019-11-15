@@ -201,7 +201,7 @@ namespace ljgb.BusinessLogic
                 Barang model = new Barang();
                 model.Id = request.ID;
                 model.HargaOtr = request.HargaOtr;
-                model.Name = request.Name;
+                //model.Name = request.Name;
                 model.WarnaId = request.WarnaId;
                 model.TypeBarangId = request.TypeBarangId;
                 model.KotaId = request.KotaID.Value;
