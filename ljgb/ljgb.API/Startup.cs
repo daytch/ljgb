@@ -31,7 +31,6 @@ namespace ljgb.API
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
-
         }
 
         public IConfiguration Configuration { get; }
@@ -86,7 +85,6 @@ namespace ljgb.API
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new Swashbuckle.AspNetCore.Swagger.Info { Title = "LoJualGueBeli API", Version = "v1" });
-
             });
             services.AddMvc().AddJsonOptions(ConfigureJson);
         }
@@ -97,7 +95,7 @@ namespace ljgb.API
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();
@@ -127,6 +125,7 @@ namespace ljgb.API
 
             app.UseAuthentication();
             //app.UseHttpsRedirection();
+            loggerFactory.AddLog4Net();
             app.UseMvc();
 
         }
