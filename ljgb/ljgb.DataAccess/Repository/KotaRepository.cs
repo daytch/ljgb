@@ -47,22 +47,16 @@ namespace ljgb.DataAccess.Repository
             if (db != null)
             {
                 try
-                {
-
-              
-
+                {     
                     await db.Kota.AddAsync(request);
-                    result = await db.SaveChangesAsync();
-                
+                    result = await db.SaveChangesAsync();               
 
                 }
                 catch (Exception ex)
                 {
-
                     throw ex;
                 }
             }
-
 
             return result;
         }
@@ -108,36 +102,6 @@ namespace ljgb.DataAccess.Repository
                 try
                 {
                     response = await db.Kota.Where(x => x.RowStatus == true).ToListAsync();
-                    #region Old
-                    //response.ListKota = await(from model in db.Kota
-                    //                           where model.RowStatus == true
-                    //                           select new KotaViewModel
-                    //                           {
-                    //                               ID = model.Id,
-                    //                               Nama = model.Nama,
-                    //                               Description = model.Description,
-                    //                               ProvinsiID = model.ProvinsiId,
-                    //                               Created = model.Created,
-                    //                               CreatedBy = model.CreatedBy,
-                    //                               Modified = model.Modified,
-                    //                               ModifiedBy = model.ModifiedBy,
-                    //                               RowStatus = model.RowStatus
-                    //                           }).ToListAsync();
-                    //response.ListProvinsi = await (from prov in db.Provinsi
-                    //                               where prov.RowStatus == true
-                    //                               select new ProvinsiViewModel
-                    //                               {
-                    //                                   ID = prov.Id,
-                    //                                   Nama = prov.Nama,
-                    //                                   Created = prov.Created,
-                    //                                   CreatedBy = prov.CreatedBy,
-                    //                                   Description = prov.Description,
-                    //                                   Modified = prov.Modified,
-                    //                                   ModifiedBy = prov.ModifiedBy,
-                    //                                   RowStatus = prov.RowStatus
-                    //                               }).ToListAsync();
-                    //response.Message = "Success";
-                    #endregion
                 }
                 catch (Exception ex)
                 {

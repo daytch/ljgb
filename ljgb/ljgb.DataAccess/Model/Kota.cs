@@ -5,8 +5,13 @@ namespace ljgb.DataAccess.Model
 {
     public partial class Kota
     {
+        public Kota()
+        {
+            Barang = new HashSet<Barang>();
+        }
+
         public long Id { get; set; }
-        public long ProvinsiId { get; set; }
+        public long? ProvinsiId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public DateTime Created { get; set; }
@@ -16,5 +21,6 @@ namespace ljgb.DataAccess.Model
         public bool RowStatus { get; set; }
 
         public virtual Provinsi Provinsi { get; set; }
+        public virtual ICollection<Barang> Barang { get; set; }
     }
 }

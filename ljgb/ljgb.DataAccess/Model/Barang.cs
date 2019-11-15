@@ -22,7 +22,9 @@ namespace ljgb.DataAccess.Model
         public string ModifiedBy { get; set; }
         public bool RowStatus { get; set; }
         public long? JumlahKlik { get; set; }
+        public long KotaId { get; set; }
 
+        public virtual Kota Kota { get; set; }
         public virtual TypeBarang TypeBarang { get; set; }
         public virtual Warna Warna { get; set; }
         public virtual ICollection<NegoBarang> NegoBarang { get; set; }
