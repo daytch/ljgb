@@ -22,12 +22,13 @@ namespace ljgb.BusinessLogic
         #region Important
         private ljgbContext db;
         private IBarang dep;
+        private IKota da_kota;
         private IMerk da_merk;
         private ITypeBarang da_type;
         private IWarna da_warna;
         private IModelBarang da_model;
         private INegoBarang da_nego;
-        private string errMerk, errModel, errType, errWarna, errBarang, errOTR, errHargaFinal = string.Empty;
+        private string errMerk, errModel, errType, errWarna, errBarang, errOTR, errHargaFinal, errKota = string.Empty;
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         public BarangFacade()
@@ -49,6 +50,7 @@ namespace ljgb.BusinessLogic
             da_warna = new WarnaRepository(db);
             da_model = new ModelBarangRepository(db);
             da_nego = new NegoBarangRepository(db);
+            da_kota = new KotaRepository(db);
         }
         #endregion
 
@@ -265,7 +267,7 @@ namespace ljgb.BusinessLogic
             return response;
         }
 
-        public BarangResponse SubmitUpload(string fileName)
+        public async Task<BarangResponse> SubmitUpload(string fileName)
         {
             BarangResponse response = new BarangResponse();
             try
@@ -277,12 +279,14 @@ namespace ljgb.BusinessLogic
 
                 string dbPath = Path.Combine(folderName, fileName);
 
-                List<Merk> ListMerk = da_merk.GetAllMerk().Result;
-                List<ModelBarang> ListModel = da_model.GetAllModel().Result;
-                List<TypeBarang> ListType = da_type.GetAllType().Result;
-                List<Warna> ListWarna = da_warna.GetWarna().Result;
-                List<Barang> ListBarang = dep.GetAllBarang().Result;
-
+                List<Kota> ListKota = await da_kota.GetAll();
+                
+                List<Merk> ListMerk = await da_merk.GetAllMerk();
+                List<ModelBarang> ListModel = await da_model.GetAllModel();
+                List<TypeBarang> ListType = await da_type.GetAllType();
+                List<Warna> ListWarna = await da_warna.GetWarna();
+                List<Barang> ListBarang = await dep.GetAllBarang();
+                
                 using (ExcelPackage pck = new ExcelPackage())
                 {
                     using (FileStream stream = new FileStream(dbPath, FileMode.Open))
@@ -292,6 +296,7 @@ namespace ljgb.BusinessLogic
                         dt = WorksheetToDataTable(oSheet);
                         for (int i = 0; i < dt.Rows.Count; i++)
                         {
+                            long KotaID = 0;
                             long MerkID = 0;
                             long ModelID = 0;
                             long TypeID = 0;
@@ -306,6 +311,26 @@ namespace ljgb.BusinessLogic
                             errBarang = dt.Rows[i].ItemArray.GetValue(3).ToString();
                             errOTR = dt.Rows[i].ItemArray.GetValue(5).ToString();
                             errHargaFinal = dt.Rows[i].ItemArray.GetValue(7).ToString();
+
+                            #region Insert To Kota 
+                            string Kota = dt.Rows[i].ItemArray.GetValue(0).ToString();
+                            if (!ListKota.Where(x => x.Name.ToLower() == Kota.ToLower()).Any())
+                            {
+                                Kota k = new Kota();
+                                k.Name = Kota;
+                                k.Description = Kota;
+
+                                k.RowStatus = true;
+                                k.Created = DateTime.Now;
+                                k.CreatedBy = "Admin";
+                                KotaID = da_kota.AddPost(k).Result;
+                                ListKota.Add(k);
+                            }
+                            else
+                            {
+                                KotaID = ListKota.Where(x => x.Name == Kota && x.RowStatus == true).First().Id;
+                            }
+                            #endregion
 
                             #region Insert To Merk 
                             string Merk = dt.Rows[i].ItemArray.GetValue(1).ToString();
@@ -407,7 +432,8 @@ namespace ljgb.BusinessLogic
                                 HargaOtr = OTR,
                                 Name = Type,
                                 WarnaId = WarnaID,
-                                TypeBarangId = TypeID
+                                TypeBarangId = TypeID,
+                                KotaId = KotaID
                             };
                             BarangID = dep.AddPost(brg).Result;
                             #endregion

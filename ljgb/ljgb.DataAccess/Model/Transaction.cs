@@ -22,7 +22,6 @@ namespace ljgb.DataAccess.Model
         public bool RowStatus { get; set; }
 
         public virtual UserProfile Buyer { get; set; }
-        public virtual NegoBarang NegoBarang { get; set; }
         public virtual TransactionLevel TransactionLevel { get; set; }
         public virtual ICollection<TransactionJournal> TransactionJournal { get; set; }
     }

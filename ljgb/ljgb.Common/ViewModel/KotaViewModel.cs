@@ -7,7 +7,7 @@ namespace ljgb.Common.ViewModel
     public class KotaViewModel
     {
         public long ID { get; set; }
-        public long ProvinsiID { get; set; }
+        public long? ProvinsiID { get; set; }
         public string ProvinsiName { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }

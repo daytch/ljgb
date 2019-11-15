@@ -5,11 +5,6 @@ namespace ljgb.DataAccess.Model
 {
     public partial class NegoBarang
     {
-        public NegoBarang()
-        {
-            Transaction = new HashSet<Transaction>();
-        }
-
         public long Id { get; set; }
         public long UserProfileId { get; set; }
         public long BarangId { get; set; }
@@ -23,6 +18,5 @@ namespace ljgb.DataAccess.Model
 
         public virtual Barang Barang { get; set; }
         public virtual UserProfile UserProfile { get; set; }
-        public virtual ICollection<Transaction> Transaction { get; set; }
     }
 }
