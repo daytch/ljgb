@@ -88,24 +88,34 @@ namespace ljgb.BusinessLogic
             long result = 0;
             try
             {
-                Provinsi provinsi = new Provinsi();
-                provinsi.Name = req.Name;
-                provinsi.Description = req.Description;
-                provinsi.Created = DateTime.Now;
-                provinsi.CreatedBy = "xsivicto1905";
-                provinsi.RowStatus = true;
-                result = await dep.AddPost(provinsi);
-
-                if (result>0)
+                Provinsi getModel = await dep.GetByName(req.Name);
+                if (getModel == null)
                 {
-                    response.Message = "Data Already Saved";
-                    response.IsSuccess = true;
+                    Provinsi provinsi = new Provinsi();
+                    provinsi.Name = req.Name;
+                    provinsi.Description = req.Description;
+                    provinsi.Created = DateTime.Now;
+                    provinsi.CreatedBy = "xsivicto1905";
+                    provinsi.RowStatus = true;
+                    result = await dep.AddPost(provinsi);
+
+                    if (result > 0)
+                    {
+                        response.Message = "Data Already Saved";
+                        response.IsSuccess = true;
+                    }
+                    else
+                    {
+                        response.Message = "Save data failed";
+                        response.IsSuccess = false;
+                    }
                 }
                 else
                 {
-                    response.Message = "Save data failed";
+                    response.Message = "Duplicate with Existing Data";
                     response.IsSuccess = false;
                 }
+              
 
             }
             catch (Exception ex)
@@ -125,6 +135,12 @@ namespace ljgb.BusinessLogic
 
         }
 
+        //public async Task<ProvinsiResponse> GetByName(ProvinsiRequest req)
+        //{
+        //    ProvinsiResponse response = new ProvinsiResponse();
+        //    return response;
+        //}
+
         public async Task<ProvinsiResponse> UpdatePost(ProvinsiRequest req)
         {
 
@@ -132,24 +148,59 @@ namespace ljgb.BusinessLogic
             long result = 0;
             try
             {
-                Provinsi provinsi = await dep.GetPostByID(req.ID);
-                provinsi.Name = req.Name;
-                provinsi.Description = req.Description;
-                provinsi.Modified = DateTime.Now;
-                provinsi.ModifiedBy = "xsivicto1905";
-               
-                result = await dep.UpdatePost(provinsi);
 
-                if (result > 0)
+                Provinsi getModel = await dep.GetByName(req.Name);
+                if (getModel == null)
                 {
-                    response.Message = "Data Already Saved";
-                    response.IsSuccess = true;
+                    Provinsi provinsi = await dep.GetPostByID(req.ID);
+                    provinsi.Name = req.Name;
+                    provinsi.Description = req.Description;
+                    provinsi.Modified = DateTime.Now;
+                    provinsi.ModifiedBy = "xsivicto1905";
+
+                    result = await dep.UpdatePost(provinsi);
+
+                    if (result > 0)
+                    {
+                        response.Message = "Data Already Saved";
+                        response.IsSuccess = true;
+                    }
+                    else
+                    {
+                        response.Message = "Save data failed";
+                        response.IsSuccess = false;
+                    }
                 }
                 else
                 {
-                    response.Message = "Save data failed";
-                    response.IsSuccess = false;
+                    if (req.ID == getModel.Id)
+                    {
+                        Provinsi provinsi = await dep.GetPostByID(req.ID);
+                        provinsi.Name = req.Name;
+                        provinsi.Description = req.Description;
+                        provinsi.Modified = DateTime.Now;
+                        provinsi.ModifiedBy = "xsivicto1905";
+
+                        result = await dep.UpdatePost(provinsi);
+
+                        if (result > 0)
+                        {
+                            response.Message = "Data Already Saved";
+                            response.IsSuccess = true;
+                        }
+                        else
+                        {
+                            response.Message = "Save data failed";
+                            response.IsSuccess = false;
+                        }
+                    }
+                    else
+                    {
+                        response.Message = "Duplicate With Existing Data";
+                        response.IsSuccess = false;
+                    }
                 }
+                
 
             }
             catch (Exception ex)

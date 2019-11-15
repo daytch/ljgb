@@ -1,6 +1,7 @@
 ﻿using ljgb.Common.Requests;
 using ljgb.Common.Responses;
 using ljgb.DataAccess.Model;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace ljgb.DataAccess.Interface
@@ -22,5 +23,7 @@ namespace ljgb.DataAccess.Interface
         Task<TransactionResponse> ApproveTransaction(TransactionRequest req);
 
         Task<TransactionResponse> GetJournalByTransaction(TransactionRequest req);
+
+        Task<List<TransactionStatus>> GetAllStatus();
     }
 }

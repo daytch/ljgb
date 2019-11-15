@@ -44,7 +44,6 @@ namespace ljgb.DataAccess.Model
         public virtual DbSet<Warna> Warna { get; set; }
         public virtual DbSet<vw_buyer> vw_buyer { get; set; }
         public virtual DbSet<vw_salesman> vw_salesman { get; set; }
-
         public virtual DbSet<Car> Car { get; set; }
         public virtual DbSet<CarAsks> CarAsks { get; set; }
         public virtual DbSet<CarDetail> CarDetail { get; set; }
@@ -53,14 +52,12 @@ namespace ljgb.DataAccess.Model
         public virtual DbSet<SP_ModelByKotaIDMerkID> SP_ModelByKotaIDMerkID { get; set; }
         public virtual DbSet<SP_TypeByKotaIDMerkIDModelID> SP_TypeByKotaIDMerkIDModelID { get; set; }
         public virtual DbSet<SP_GetBarangByHomeParameter> SP_GetBarangByHomeParameters { get; set; }
-
-
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
-// #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Server=localhost\\SQLEXPRESS;Database=ljgb;Trusted_Connection=True;");
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
+                optionsBuilder.UseSqlServer("Server=GONNA-BE-GOOD\\SQLEXPRESS;Database=ljgb;Trusted_Connection=True;");
             }
         }
 
@@ -183,6 +180,8 @@ namespace ljgb.DataAccess.Model
 
                 entity.Property(e => e.HargaOtr).HasColumnName("HargaOTR");
 
+                entity.Property(e => e.KotaId).HasColumnName("KotaID");
+
                 entity.Property(e => e.Modified).HasColumnType("datetime");
 
                 entity.Property(e => e.ModifiedBy)
@@ -201,6 +200,12 @@ namespace ljgb.DataAccess.Model
                 entity.Property(e => e.TypeBarangId).HasColumnName("TypeBarangID");
 
                 entity.Property(e => e.WarnaId).HasColumnName("WarnaID");
+
+                entity.HasOne(d => d.Kota)
+                    .WithMany(p => p.Barang)
+                    .HasForeignKey(d => d.KotaId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Barang_Kota");
 
                 entity.HasOne(d => d.TypeBarang)
                     .WithMany(p => p.Barang)

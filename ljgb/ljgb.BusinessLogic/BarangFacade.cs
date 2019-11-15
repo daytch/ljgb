@@ -134,11 +134,12 @@ namespace ljgb.BusinessLogic
                 model.HargaOtr = request.HargaOtr;
                 model.Name = request.Name;
                 model.WarnaId = request.WarnaId;
+                model.PhotoPath = request.PhotoPath;
                 model.TypeBarangId = request.TypeBarangId;
                 model.Created = DateTime.Now;
                 model.CreatedBy = "xsivicto1905";
                 model.RowStatus = true;
-
+                model.KotaId = request.KotaID.Value;
 
                 var postId = await dep.AddPost(model);
                 if (postId > 0)
@@ -202,6 +203,7 @@ namespace ljgb.BusinessLogic
                 model.Name = request.Name;
                 model.WarnaId = request.WarnaId;
                 model.TypeBarangId = request.TypeBarangId;
+                model.KotaId = request.KotaID.Value;
                 model.PhotoPath = request.PhotoPath;
                 model.Modified = DateTime.Now;
                 model.ModifiedBy = "xsivicto1905";

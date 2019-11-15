@@ -601,5 +601,21 @@ namespace ljgb.DataAccess.Repository
             }
             return response;
         }
+
+        public async Task<List<TransactionStatus>> GetAllStatus()
+        {
+            List<TransactionStatus> result = new List<TransactionStatus>();
+
+            try
+            {
+                result = await db.TransactionStatus.Where(x => x.RowStatus == true).ToListAsync();
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+            return result;
+        }
     }
 }

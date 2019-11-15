@@ -1,5 +1,6 @@
 ﻿using ljgb.Common.Requests;
 using ljgb.Common.Responses;
+using ljgb.Common.ViewModel;
 using ljgb.DataAccess.Interface;
 using ljgb.DataAccess.Model;
 using ljgb.DataAccess.Repository;
@@ -271,6 +272,33 @@ namespace ljgb.BusinessLogic
             return await IJournal.GetHistory(req.ID);
         }
 
+        public async Task<TransactionResponse> GetAllStatus()
+        {
+            TransactionResponse response = new TransactionResponse();
+            try
+            {
+                var model = await dep.GetAllStatus();
+                response.ListStatus = (from m in model
+                                       orderby m.Name ascending
+                                       select new TransactionStatusViewModel
+                                       {
+                                           ID = m.Id,
+                                           Name = m.Name,
+                                       }).ToList();
 
+                response.IsSuccess = true;
+                response.Message = "sucess";
+            }
+            catch (Exception ex)
+            {
+
+                response.Message = ex.ToString();
+                response.IsSuccess = false;
+            }
+           
+
+            
+            return response;
+        }
     }
 }

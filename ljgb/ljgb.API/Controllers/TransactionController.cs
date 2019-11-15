@@ -280,5 +280,29 @@ namespace ljgb.API.Controllers
 
             return BadRequest();
         }
+
+        [HttpGet]
+        [Route("GetAllStatus")]
+        public async Task<IActionResult> GetAllHistory()
+        {
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    var postId = await facade.GetAllStatus();
+
+                    return Ok(postId);
+
+                }
+                catch (Exception)
+                {
+                    return BadRequest();
+                }
+
+            }
+
+            return BadRequest();
+        }
     }
 }

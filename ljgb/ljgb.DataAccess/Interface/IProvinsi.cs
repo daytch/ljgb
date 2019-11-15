@@ -24,5 +24,6 @@ namespace ljgb.DataAccess.Interface
         Task<ProvinsiResponse> DeletePost(ProvinsiRequest request);
 
         Task<long> UpdatePost(Provinsi request);
+        Task<Provinsi> GetByName(string req);
     }
 }
