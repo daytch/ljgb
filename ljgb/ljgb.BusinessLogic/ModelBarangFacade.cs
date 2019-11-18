@@ -71,12 +71,12 @@ namespace ljgb.BusinessLogic
 
         }
 
-        public async Task<ModelBarangResponse> GetModelWithMerkIDModelName(ModelBarangRequest request)
-        {
-            ModelBarangResponse response = new ModelBarangResponse();
-            return response;
+        //public async Task<ModelBarangResponse> GetModelWithMerkIDModelName(ModelBarangRequest request)
+        //{
+        //    ModelBarangResponse response = new ModelBarangResponse();
+        //    return response;
 
-        }
+        //}
 
         public async Task<ModelBarangResponse> AddPost(ModelBarangRequest model)
         {

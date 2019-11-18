@@ -1,14 +1,10 @@
 ﻿using ljgb.BusinessLogic;
-
 using ljgb.Common.Requests;
 using ljgb.Common.Responses;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
-using OfficeOpenXml;
 using System;
-using System.Data;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -18,14 +14,12 @@ namespace ljgb.API.Controllers
     [ApiController]
     public class BarangController : ControllerBase
     {
-        private readonly IConfiguration _config;
         private BarangFacade facade = new BarangFacade();
         private string url = "";
         public BarangController(IConfiguration config)
         {
             url = config.GetSection("API_url").Value;
         }
-
 
         [HttpGet]
         [Route("GetAll")]

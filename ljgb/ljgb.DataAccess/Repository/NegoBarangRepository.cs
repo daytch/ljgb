@@ -161,7 +161,7 @@ namespace ljgb.DataAccess.Repository
 
                         result = true;
                     }
-                    
+
                 }
                 catch (Exception ex)
                 {
@@ -305,24 +305,24 @@ namespace ljgb.DataAccess.Repository
                                  mdlBarang.RowStatus == true &&
                                  merkBarang.RowStatus == true &&
                                  negoBarang.TypePenawaran == "ASK"
-                                  select new 
-                                  {
-                                      negoBarang.Id,
-                                      NamaBarang = (merkBarang.Name + " " + mdlBarang.Name + " " + tBarang.Name + " " + warna.Name),
-                                      negoBarang.Created,
-                                      negoBarang.CreatedBy,
-                                      negoBarang.Modified,
-                                      negoBarang.ModifiedBy,
-                                      negoBarang.RowStatus,
-                                      barang.HargaOtr,
-                                      negoBarang.Harga,
-                                      MerkID = merkBarang.Id,
-                                      ModelBarangID = mdlBarang.Id,
-                                      TypeBarangID = tBarang.Id,
-                                      WarnaID = warna.Id,
-                                      barangID = barang.Id
+                                 select new
+                                 {
+                                     negoBarang.Id,
+                                     NamaBarang = (merkBarang.Name + " " + mdlBarang.Name + " " + tBarang.Name + " " + warna.Name),
+                                     negoBarang.Created,
+                                     negoBarang.CreatedBy,
+                                     negoBarang.Modified,
+                                     negoBarang.ModifiedBy,
+                                     negoBarang.RowStatus,
+                                     barang.HargaOtr,
+                                     negoBarang.Harga,
+                                     MerkID = merkBarang.Id,
+                                     ModelBarangID = mdlBarang.Id,
+                                     TypeBarangID = tBarang.Id,
+                                     WarnaID = warna.Id,
+                                     barangID = barang.Id
 
-                                  });
+                                 });
                     int totalRecords = query.Count();
                     if (!string.IsNullOrEmpty(search) && !string.IsNullOrWhiteSpace(search))
                     {
@@ -337,22 +337,22 @@ namespace ljgb.DataAccess.Repository
 
                     int recFilter = query.Count();
 
-                    response.ListModel = (from q in query
-                                          select new NegoBarangViewModel
-                                          {
-                                              ID = q.Id,
-                                              Harga = q.Harga,
-                                              HargaOTR = q.HargaOtr,
-                                              NamaBarang = q.NamaBarang,
-                                              MerkID = q.MerkID,
-                                              ModelBarangID = q.ModelBarangID,
-                                              TypeBarangID = q.TypeBarangID,
-                                              WarnaID = q.WarnaID,
-                                              BarangID = q.barangID
-                                              
-                                          }
+                    response.ListModel = await (from q in query
+                                                select new NegoBarangViewModel
+                                                {
+                                                    ID = q.Id,
+                                                    Harga = q.Harga,
+                                                    HargaOTR = q.HargaOtr,
+                                                    NamaBarang = q.NamaBarang,
+                                                    MerkID = q.MerkID,
+                                                    ModelBarangID = q.ModelBarangID,
+                                                    TypeBarangID = q.TypeBarangID,
+                                                    WarnaID = q.WarnaID,
+                                                    BarangID = q.barangID
 
-                                        ).Skip(startRec).Take(pageSize).ToList();
+                                                }
+
+                                        ).Skip(startRec).Take(pageSize).ToListAsync();
 
                     response.draw = Convert.ToInt32(draw);
                     response.recordsTotal = totalRecords;
@@ -388,7 +388,7 @@ namespace ljgb.DataAccess.Repository
                         negoBarang.Modified = DateTime.Now;
                         negoBarang.ModifiedBy = model.ModifiedBy;
                         result = await db.SaveChangesAsync();
-                        
+
 
                     }
                 }
@@ -460,23 +460,23 @@ namespace ljgb.DataAccess.Repository
 
                     int recFilter = query.Count();
 
-                    response.ListModel = (from q in query
-                                          select new NegoBarangViewModel
-                                          {
-                                              ID = q.Id,
-                                              Harga = q.Harga,
-                                              HargaOTR = q.HargaOtr,
-                                              NamaBarang = q.NamaBarang,
-                                              MerkID = q.MerkID,
-                                              ModelBarangID = q.ModelBarangID,
-                                              TypeBarangID = q.TypeBarangID,
-                                              WarnaID = q.WarnaID,
-                                              BarangID = q.barangID,
-                                              UserProfileID = q.UserProfileId
+                    response.ListModel = await (from q in query
+                                                select new NegoBarangViewModel
+                                                {
+                                                    ID = q.Id,
+                                                    Harga = q.Harga,
+                                                    HargaOTR = q.HargaOtr,
+                                                    NamaBarang = q.NamaBarang,
+                                                    MerkID = q.MerkID,
+                                                    ModelBarangID = q.ModelBarangID,
+                                                    TypeBarangID = q.TypeBarangID,
+                                                    WarnaID = q.WarnaID,
+                                                    BarangID = q.barangID,
+                                                    UserProfileID = q.UserProfileId
 
-                                          }
+                                                }
 
-                                        ).Skip(startRec).Take(pageSize).ToList();
+                                        ).Skip(startRec).Take(pageSize).ToListAsync();
 
                     response.draw = Convert.ToInt32(draw);
                     response.recordsTotal = totalRecords;

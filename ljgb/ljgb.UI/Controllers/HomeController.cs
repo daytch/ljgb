@@ -1,15 +1,10 @@
-﻿using Flurl;
-using Flurl.Http;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using ljgb.UI.Models;
-using ljgb.DataAccess.Model;
 
 namespace ljgb.UI.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : BaseController
     {
         public IActionResult Index()
         {

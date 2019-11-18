@@ -6,7 +6,9 @@ namespace ljgb.Common.Requests
     public class UserRequest : BaseRequest
     {
         public IdentityUser user { get; set; }
-        public string password { get; set; }
+
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
 
         public string HTMLTag { get; set; }
         public string EmailSubject { get; set; }
@@ -21,6 +23,7 @@ namespace ljgb.Common.Requests
         public int Id { get; set; }
         public string Nama { get; set; }
         public string Email { get; set; }
+        public string Password { get; set; }
         public string Telp { get; set; }
         public string Alamat { get; set; }
         public string JenisKelamin { get; set; }

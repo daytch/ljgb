@@ -87,7 +87,7 @@ namespace ljgb.UI
             // Set API url
             Action<ConfigOptions> configOptions = (options =>
             {
-                options.base_api_url = Configuration["API_url"];
+                options.base_api_url = Configuration.GetSection("API_url").Value; //Configuration["API_url"];
             });
             services.Configure(configOptions);
             services.AddSingleton(resolver => resolver.GetRequiredService<IOptions<ConfigOptions>>().Value);

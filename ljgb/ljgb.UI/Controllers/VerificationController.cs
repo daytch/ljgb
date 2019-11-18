@@ -4,7 +4,7 @@ using Microsoft.Extensions.Options;
 
 namespace ljgb.UI.Controllers
 {
-    public class VerificationController : Controller
+    public class VerificationController : BaseController
     {
         private readonly ApplicationSettings _settings;
         private readonly ConfigOptions _config;

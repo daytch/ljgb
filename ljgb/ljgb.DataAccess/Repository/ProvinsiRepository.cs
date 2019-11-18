@@ -27,23 +27,15 @@ namespace ljgb.DataAccess.Repository
             if (db != null)
             {
                 try
-                {
-
-                  
-
+                {                
                     await db.Provinsi.AddAsync(request);
-                    result = await db.SaveChangesAsync();
-
-                   
+                    result = await db.SaveChangesAsync();                   
                 }
-                catch (Exception ex)
+                catch (Exception )
                 {
-
                     result = 0;
                 }
             }
-
-
             return result;
         }
 
@@ -225,31 +217,21 @@ namespace ljgb.DataAccess.Repository
             return response;
         }
         public async Task<long> UpdatePost(Provinsi request)
-        {
-
-           
+        {           
             long result = 0;
 
             if (db != null)
             {
                 try
                 {
-                    
-                    
-
-
                     db.Provinsi.Update(request);
-                    result = await db.SaveChangesAsync();
-
-                   
+                    result = await db.SaveChangesAsync();                   
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-
                     result = 0;
                 }
             }
-
 
             return result;
         }

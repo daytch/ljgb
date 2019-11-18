@@ -140,9 +140,8 @@ namespace ljgb.BusinessLogic
                 response.IsSuccess = true;
                 response.Message = "Success Get Merk";
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-
                 response.IsSuccess = false;
                 response.Message = "Something Error with System";
             }

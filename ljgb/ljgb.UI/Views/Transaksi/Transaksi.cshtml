@@ -4,9 +4,6 @@
     ViewData["PageName"] = "provinsi_provinsi";
     ViewData["Category1"] = "Provinsi";
     var data = (TransactionResponse)ViewData["Response"];
-    int nomor = 0;
-
-
 }
 
 @section Header {
@@ -323,7 +320,7 @@
         $(document).ready(function () {
             moment.locale('ID');
             var url = "@ViewBag.url_api";
-           
+
             $('#tableTransaksi').dataTable({
                 language: {
                     processing: "<div class='overlay custom-loader-background'><i class='fa fa-cog fa-spin custom-loader-color'></i></div>"
@@ -339,9 +336,12 @@
                     contentType: 'application/json; charset=utf-8',
                     type: "POST",
                     dataType: "json",
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader('Authorization', 'Bearer ' + Cookies.get("access_token"));
+                    },
                     data: function (d) {
                         // Grab form values containing user options
-                      
+
                         return JSON.stringify(d);
                     },
                     dataSrc: function (json) {
@@ -453,6 +453,9 @@
                         contentType: 'application/json; charset=utf-8',
                         type: "POST",
                         dataType: "json",
+                        beforeSend: function (xhr) {
+                            xhr.setRequestHeader('Authorization', 'Bearer ' + Cookies.get("access_token"));
+                        },
                         data: function (d) {
                             // Grab form values containing user options
                             var values = {
@@ -527,10 +530,10 @@
             //                $("#tableJournal").append($('<td>' + entry.transactionStatusName + ' </td>'));
             //                $("#tableJournal").append($('<td>' + entry.created + ' </td>'));
             //            })
-                       
+
             //        }
             //    });
-                    
+
             //});
 
             $('#save').on('click', function (e) {
@@ -546,6 +549,9 @@
                         url: url + "User/SaveUserDetail",
                         type: "POST",
                         dataType: 'json',
+                        beforeSend: function (xhr) {
+                            xhr.setRequestHeader('Authorization', 'Bearer ' + Cookies.get("access_token"));
+                        },
                         contentType: "application/json",
                         data: JSON.stringify(userData),
                         success: function (response) {
@@ -571,10 +577,13 @@
                     id: $("#TransactionID").val()
                 };
                 $.ajax({
-                    url: "https://localhost:44325/api/Transaction/ApproveTransaction",
+                    url: url+"Transaction/ApproveTransaction",
                     contentType: 'application/json',
                     dataType: 'json',
                     type: "POST",
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader('Authorization', 'Bearer ' + Cookies.get("access_token"));
+                    },
                     data: JSON.stringify(values),
                     success: function (data) {
                         console.log(data);
@@ -588,10 +597,6 @@
                         console.log(jqXHR + " " + text + " " + errorThrown);
                     }
                 });
-
-
-
-
             });
             $('#btn-Cancel').on('click', function (e) {
 
@@ -599,10 +604,13 @@
                     id: $("#TransactionID").val()
                 };
                 $.ajax({
-                    url: "https://localhost:44325/api/Transaction/CancelTransaction",
+                    url: url+"Transaction/CancelTransaction",
                     contentType: 'application/json',
                     dataType: 'json',
                     type: "POST",
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader('Authorization', 'Bearer ' + Cookies.get("access_token"));
+                    },
                     data: JSON.stringify(values),
                     success: function (data) {
                         console.log(data);
@@ -616,7 +624,6 @@
                         console.log(jqXHR + " " + text + " " + errorThrown);
                     }
                 });
-
             });
         });
 

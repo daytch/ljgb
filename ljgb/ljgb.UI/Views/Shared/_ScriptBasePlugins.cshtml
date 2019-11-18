@@ -14,9 +14,18 @@
 
 <!-- ToastJS -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+<!-- Cookie -->
+<script src="https://cdn.jsdelivr.net/npm/js-cookie@beta/dist/js.cookie.min.js"></script>
+
+<!-- jquery BlockUI -->
+<script src="~/js/jquery.blockUI.js"></script>
+
+<script src="~/js/site.js"></script>
+
 <script type="text/javascript">
     $(document).ready(function () {
-
+        console.log(Cookies.get("access_token"));
         toastr.options = {
             "closeButton": false,
             "debug": false,

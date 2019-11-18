@@ -184,9 +184,8 @@ namespace ljgb.DataAccess.Repository
             {
                 try
                 {
-                    int result = 0;
-                    return db.Set<SP_ModelByKotaIDMerkID>().FromSql("EXEC sp_ModelByKotaIDMerkID {0},{1}",
-                        model.KotaID, model.MerkID).AsNoTracking().ToList();
+                    return await db.Set<SP_ModelByKotaIDMerkID>().FromSql("EXEC sp_ModelByKotaIDMerkID {0},{1}",
+                        model.KotaID, model.MerkID).AsNoTracking().ToListAsync();
                 }
                 catch (Exception ex)
                 {
@@ -243,7 +242,7 @@ namespace ljgb.DataAccess.Repository
             ModelBarang result = new ModelBarang();
             try
             {
-                result = db.ModelBarang.Where(x => x.RowStatus == true && x.MerkId == request.MerkId && x.Name.ToLower().Equals(request.Name)).FirstOrDefault();
+                result = await db.ModelBarang.Where(x => x.RowStatus == true && x.MerkId == request.MerkId && x.Name.ToLower().Equals(request.Name)).FirstOrDefaultAsync();
             }
             catch (Exception ex)
             {

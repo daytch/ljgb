@@ -89,7 +89,7 @@ namespace ljgb.DataAccess.Repository
                         model.RowStatus = false;
 
                         //Commit the transaction
-                        db.SaveChangesAsync();
+                        await db.SaveChangesAsync();
                         response.Message = "Data Already Saved";
                         response.IsSuccess = true;
                     }
@@ -338,9 +338,8 @@ namespace ljgb.DataAccess.Repository
             {
                 try
                 {
-                    int result = 0;
-                    return db.Set<SP_TypeByKotaIDMerkIDModelID>().FromSql("EXEC sp_TypeByKotaIDMerkIDModelID {0},{1},{2}",
-                        request.KotaID, request.MerkID, request.ModelBarangID).AsNoTracking().ToList();
+                    return await db.Set<SP_TypeByKotaIDMerkIDModelID>().FromSql("EXEC sp_TypeByKotaIDMerkIDModelID {0},{1},{2}",
+                        request.KotaID, request.MerkID, request.ModelBarangID).AsNoTracking().ToListAsync();
                 }
                 catch (Exception ex)
                 {

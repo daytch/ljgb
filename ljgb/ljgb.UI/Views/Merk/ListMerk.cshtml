@@ -146,6 +146,9 @@
                     data: function (a) {
                         return a;
                     },
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader('Authorization', 'Bearer ' + Cookies.get("access_token"));
+                    },
                     dataSrc: function (json) {
                         json.draw = json.draw;
                         json.recordsTotal = json.recordsTotal;
@@ -222,6 +225,9 @@
                             contentType: 'application/json',
                             dataType: 'json',
                             type: "POST",
+                            beforeSend: function (xhr) {
+                                xhr.setRequestHeader('Authorization', 'Bearer ' + Cookies.get("access_token"));
+                            },
                             data: JSON.stringify(values),
                             success: function (response) {
                                 if (response.isSuccess) {
@@ -286,6 +292,9 @@
                     type: "POST",
                     dataType: 'json',
                     contentType: "application/json",
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader('Authorization', 'Bearer ' + Cookies.get("access_token"));
+                    },
                     data: JSON.stringify(userData),
                     success: function (response) {
                         if (response.isSuccess) {

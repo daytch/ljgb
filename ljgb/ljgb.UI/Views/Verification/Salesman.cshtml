@@ -226,7 +226,9 @@
                 contentType: 'application/json',
                 dataType: 'json',
                 type: "GET",
-
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader('Authorization', 'Bearer ' + Cookies.get("access_token"));
+                },
                 success: function (response) {
                     if (response.isSuccess) {
                         $.each(response.listProvinces, function (key, entry) {
@@ -248,6 +250,9 @@
                     contentType: 'application/json',
                     dataType: 'json',
                     type: "GET",
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader('Authorization', 'Bearer ' + Cookies.get("access_token"));
+                    },
                     success: function (response) {
                         if (response.isSuccess) {
                             $.each(response.listKotas, function (key, entry) {
@@ -270,6 +275,9 @@
                     contentType: 'application/json',
                     dataType: 'json',
                     type: "GET",
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader('Authorization', 'Bearer ' + Cookies.get("access_token"));
+                    },
                     success: function (response) {
                         if (response.isSuccess) {
                             $.each(response.listDealer, function (key, entry) {
@@ -311,6 +319,9 @@
                             url: url + "User/SaveSalesman",
                             type: "POST",
                             dataType: 'json',
+                            beforeSend: function (xhr) {
+                                xhr.setRequestHeader('Authorization', 'Bearer ' + Cookies.get("access_token"));
+                            },
                             contentType: "application/json",
                             data: JSON.stringify(userData),
                             success: function (response) {
@@ -345,6 +356,9 @@
                     url: url + "User/GetSalesman",
                     contentType: "application/json",
                     type: "GET",
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader('Authorization', 'Bearer ' + Cookies.get("access_token"));
+                    },
                     dataType: "JSON",
                     data: function (a) {
                         return a;
@@ -433,6 +447,9 @@
                         contentType: 'application/json',
                         dataType: 'json',
                         type: "GET",
+                        beforeSend: function (xhr) {
+                            xhr.setRequestHeader('Authorization', 'Bearer ' + Cookies.get("access_token"));
+                        },
                         success: function (response) {
                             
                             if (response.isSuccess) {
@@ -452,6 +469,9 @@
                                     contentType: 'application/json',
                                     dataType: 'json',
                                     type: "GET",
+                                    beforeSend: function (xhr) {
+                                        xhr.setRequestHeader('Authorization', 'Bearer ' + Cookies.get("access_token"));
+                                    },
                                     success: function (response) {
                                         if (response.isSuccess) {
                                             $.each(response.listKotas, function (key, entry) {
@@ -472,6 +492,9 @@
                                     contentType: 'application/json',
                                     dataType: 'json',
                                     type: "GET",
+                                    beforeSend: function (xhr) {
+                                        xhr.setRequestHeader('Authorization', 'Bearer ' + Cookies.get("access_token"));
+                                    },
                                     success: function (response) {
                                         if (response.isSuccess) {
                                             $.each(response.listDealer, function (key, entry) {
@@ -520,6 +543,9 @@
                     url: url + "User/DeleteUserDetail",
                     type: "POST",
                     dataType: 'json',
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader('Authorization', 'Bearer ' + Cookies.get("access_token"));
+                    },
                     contentType: "application/json",
                     data: JSON.stringify(userData),
                     success: function (response) {

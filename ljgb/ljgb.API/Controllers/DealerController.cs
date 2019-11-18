@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
-using ljgb.API.Core;
 using ljgb.BusinessLogic;
 using ljgb.Common.Requests;
 using ljgb.Common.Responses;
-using ljgb.DataAccess.Model;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ljgb.API.Controllers
@@ -64,31 +62,31 @@ namespace ljgb.API.Controllers
             }
         }
 
-        [HttpPost]
-        [Route("GetModelWithID")]
-        public async Task<IActionResult> GetPost(long postId)
-        {
-            if (postId < 1)
-            {
-                return BadRequest();
-            }
+        //[HttpPost]
+        //[Route("GetModelWithID")]
+        //public async Task<IActionResult> GetPost(long postId)
+        //{
+        //    if (postId < 1)
+        //    {
+        //        return BadRequest();
+        //    }
 
-            try
-            {
-                var post = await facade.GetPost(postId);
+        //    try
+        //    {
+        //        var post = await facade.GetPost(postId);
 
-                if (post == null)
-                {
-                    return NotFound();
-                }
+        //        if (post == null)
+        //        {
+        //            return NotFound();
+        //        }
 
-                return Ok(post);
-            }
-            catch (Exception)
-            {
-                return BadRequest();
-            }
-        }
+        //        return Ok(post);
+        //    }
+        //    catch (Exception)
+        //    {
+        //        return BadRequest();
+        //    }
+        //}
 
         [HttpPost]
         [Route("AddPost")]

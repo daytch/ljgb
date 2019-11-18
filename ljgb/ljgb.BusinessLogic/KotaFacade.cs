@@ -96,9 +96,8 @@ namespace ljgb.BusinessLogic
                 response.Message = "Success";
                 response.IsSuccess = true;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-
                 response.Message = "Failed";
                 response.IsSuccess = false;
             }
@@ -142,12 +141,9 @@ namespace ljgb.BusinessLogic
                     response.Message = "Failed";
                     response.IsSuccess = false;
                 }
-
-
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-
                 response.Message = "Failed";
                 response.IsSuccess = false;
             }

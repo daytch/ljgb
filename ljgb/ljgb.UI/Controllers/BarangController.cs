@@ -2,14 +2,11 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ljgb.UI.Controllers
 {
-    public class BarangController : Controller
+    //[Authorize]
+    public class BarangController : BaseController
     {
         private readonly ApplicationSettings _settings;
         private readonly ConfigOptions _config;

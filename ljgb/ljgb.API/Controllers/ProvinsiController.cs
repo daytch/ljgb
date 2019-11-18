@@ -144,17 +144,14 @@ namespace ljgb.API.Controllers
         [Route("DeletePost")]
         public async Task<IActionResult> DeletePost(ProvinsiRequest req)
         {
-
-
             try
-            {
+            {                
                 var result = await facade.DeletePost(req);
 
                 return Ok(result);
             }
             catch (Exception)
             {
-
                 return BadRequest();
             }
         }

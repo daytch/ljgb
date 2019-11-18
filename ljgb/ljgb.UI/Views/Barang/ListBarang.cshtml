@@ -171,6 +171,8 @@
 
 @section Scripts {
     <script type="text/javascript">
+        console.log(Cookies.get("access_token"));
+
         var url = ""
         var imageUrl = ""
         $(document).ready(function () {
@@ -183,7 +185,9 @@
                 contentType: 'application/json',
                 dataType: 'json',
                 type: "GET",
-
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader('Authorization', 'Bearer ' + Cookies.get("access_token"));
+                },
                 success: function (response) {
                     if (response.isSuccess) {
                         $.each(response.listModel, function (key, entry) {
@@ -202,7 +206,9 @@
                 contentType: 'application/json',
                 dataType: 'json',
                 type: "GET",
-
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader('Authorization', 'Bearer ' + Cookies.get("access_token"));
+                },
                 success: function (response) {
                     if (response.isSuccess) {
                         $.each(response.listKota, function (key, entry) {
@@ -221,7 +227,9 @@
                 contentType: 'application/json',
                 dataType: 'json',
                 type: "GET",
-
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader('Authorization', 'Bearer ' + Cookies.get("access_token"));
+                },
                 success: function (response) {
                     if (response.isSuccess) {
                         $.each(response.data, function (key, entry) {
@@ -254,6 +262,9 @@
                     dataType: "JSON",
                     data: function (a) {
                         return a;
+                    },
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader('Authorization', 'Bearer '+ Cookies.get("access_token"));
                     },
                     dataSrc: function (json) {
                         json.draw = json.draw;
@@ -292,7 +303,7 @@
                                 return '<img src="' + t.photoPath + '" width="50" height="50" alt="your image" />';
                             }
                             else {
-                               
+
                                 return '<img src="#" width="20px" height="20px" alt="No Image" />';
                             }
 

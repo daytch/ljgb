@@ -199,7 +199,7 @@ namespace ljgb.DataAccess.Repository
             IdentityResult result = new IdentityResult();
             try
             {
-                result = await userManager.CreateAsync(user.user, user.password);
+                result = await userManager.CreateAsync(user.user, user.Password);
                 //await userManager.UpdateSecurityStampAsync(user.user);
             }
             catch (Exception ex)
@@ -274,7 +274,7 @@ namespace ljgb.DataAccess.Repository
             SignInResult result = new SignInResult();
             try
             {
-                result = await signInManager.PasswordSignInAsync(user.user.Email, user.password, user.RememberMe, user.lockoutOnFailure);
+                result = await signInManager.PasswordSignInAsync(user.user.Email, user.Password, user.RememberMe, user.lockoutOnFailure);
             }
             catch (Exception ex)
             {

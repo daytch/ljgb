@@ -75,7 +75,9 @@
             $.ajax({
                 type: 'GET',
                 url: url + '/Transaction/GetAllStatus',
-               
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader('Authorization', 'Bearer ' + Cookies.get("access_token"));
+                },
                 success: function (response) {
                     if (response.isSuccess) {
                         $.each(response.listStatus, function (key, entry) {
@@ -104,7 +106,10 @@
                 //formData.append('FileToBeDelete', FileLogoTobeDelete);
                 $.ajax({
                     type: 'post',
-                    url: url +'Barang/UploadFile',
+                    url: url + 'Barang/UploadFile',
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader('Authorization', 'Bearer ' + Cookies.get("access_token"));
+                    },
                     data: formData,
                     success: function (filename) {
                         debugger;
@@ -127,6 +132,9 @@
                     type: 'post',
                     url: url + 'Barang/SubmitUpload?fileName=' + fileName,
                     data: formData,
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader('Authorization', 'Bearer ' + Cookies.get("access_token"));
+                    },
                     success: function (filename) {
                         $('.custom-file-label').html(filename);
                     },

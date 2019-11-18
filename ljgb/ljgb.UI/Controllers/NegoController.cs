@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using ljgb.UI.Models;
+﻿using ljgb.UI.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 
 namespace ljgb.UI.Controllers
 {
-    public class NegoController : Controller
+    public class NegoController : BaseController
     {
         private readonly ApplicationSettings _settings;
         private readonly ConfigOptions _config;

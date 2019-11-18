@@ -43,7 +43,6 @@ namespace ljgb.DataAccess.Model
         public virtual DbSet<UserProfile> UserProfile { get; set; }
         public virtual DbSet<Warna> Warna { get; set; }
 
-
         public virtual DbSet<Car> Car { get; set; }
         public virtual DbSet<CarAsks> CarAsks { get; set; }
         public virtual DbSet<CarDetail> CarDetail { get; set; }
@@ -297,7 +296,6 @@ namespace ljgb.DataAccess.Model
                 entity.HasOne(d => d.Provinsi)
                     .WithMany(p => p.Kota)
                     .HasForeignKey(d => d.ProvinsiId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Kota_Provinsi");
             });
 
@@ -811,6 +809,8 @@ namespace ljgb.DataAccess.Model
                     .IsRequired()
                     .HasMaxLength(250)
                     .IsUnicode(false);
+
+                entity.Property(e => e.Password).HasMaxLength(50);
 
                 entity.Property(e => e.PhotoPath)
                     .HasMaxLength(250)

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using ljgb.API.Core;
 using ljgb.BusinessLogic;
 using ljgb.DataAccess.Model;
 using Microsoft.AspNetCore.Mvc;

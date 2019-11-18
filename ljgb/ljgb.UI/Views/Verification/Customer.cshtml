@@ -172,6 +172,9 @@
                     contentType: "application/json",
                     type: "GET",
                     dataType: "JSON",
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader('Authorization', 'Bearer ' + Cookies.get("access_token"));
+                    },
                     data: function (a) {
                         return a;
                     },
@@ -259,6 +262,9 @@
                         url: url + "User/SaveUserDetail",
                         type: "POST",
                         dataType: 'json',
+                        beforeSend: function (xhr) {
+                            xhr.setRequestHeader('Authorization', 'Bearer ' + Cookies.get("access_token"));
+                        },
                         contentType: "application/json",
                         data: JSON.stringify(userData),
                         success: function (response) {
@@ -288,6 +294,9 @@
                     url: url + "User/DeleteUserDetail",
                     type: "POST",
                     dataType: 'json',
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader('Authorization', 'Bearer ' + Cookies.get("access_token"));
+                    },
                     contentType: "application/json",
                     data: JSON.stringify(userData),
                     success: function (response) {

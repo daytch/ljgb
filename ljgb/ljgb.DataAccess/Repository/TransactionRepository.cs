@@ -520,8 +520,8 @@ namespace ljgb.DataAccess.Repository
             try
             {
                 #region Sorting Salesman  
-                switch (order)
-                {
+                //switch (order)
+                //{
                     //case "0":
                     //    // Setting.    
                     //    response.ListTransaction = orderDir.Equals("DESC", StringComparison.CurrentCultureIgnoreCase) ? response.ListTransaction.OrderByDescending(p => p.Name).ToList()
@@ -552,7 +552,7 @@ namespace ljgb.DataAccess.Repository
                     //    // Setting.    
                     //    response.ListTransaction = response.ListTransaction.OrderByDescending(p => p.ID).ToList();
                     //    break;
-                }
+                //}
                 #endregion
             }
             catch (Exception ex)

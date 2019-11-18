@@ -12,7 +12,7 @@ using System.Collections.Generic;
 namespace ljgb.UI.Controllers
 {
  
-    public class IntelController : Controller
+    public class IntelController : BaseController
     {
         private readonly ApplicationSettings _settings;
 

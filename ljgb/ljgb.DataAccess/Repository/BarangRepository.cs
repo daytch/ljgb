@@ -16,7 +16,7 @@ namespace ljgb.DataAccess.Repository
     public class BarangRepository : IBarang
     {
         ljgbContext db;
-        //private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         public BarangRepository(ljgbContext _db)
         {
             db = _db;

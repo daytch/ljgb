@@ -55,14 +55,14 @@ namespace ljgb.BusinessLogic
 
         }
 
-        public async Task<TypeBarangResponse> GetTypeByName(TypeBarangRequest request)
-        {
-            TypeBarangResponse response = new TypeBarangResponse();
+        //public async Task<TypeBarangResponse> GetTypeByName(TypeBarangRequest request)
+        //{
+        //    TypeBarangResponse response = new TypeBarangResponse();
             
            
 
-            return response;
-        }
+        //    return response;
+        //}
 
         public async Task<TypeBarangResponse> AddPost(TypeBarangRequest request)
         {
@@ -166,7 +166,7 @@ namespace ljgb.BusinessLogic
                 response.Message = "Success";
                 response.IsSuccess = true;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 response.IsSuccess = false;
                 response.Message = "Failed";

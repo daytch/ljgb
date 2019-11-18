@@ -1,18 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Flurl.Http;
-using ljgb.Common.Requests;
-using ljgb.Common.Responses;
-using ljgb.UI.Models;
+﻿using ljgb.UI.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Options;
 
 namespace ljgb.UI.Controllers
 {
-    public class KotaController : Controller
+    public class KotaController : BaseController
     {
         private readonly ApplicationSettings _settings;
         public string returnUrl { get; set; }
@@ -22,7 +14,7 @@ namespace ljgb.UI.Controllers
             _settings = settings.Value;
             base_url_api = _urlapi.base_api_url;
         }
-        public async Task<IActionResult> Kota()
+        public IActionResult Kota()
         {
 
             ViewBag.url_api = base_url_api;

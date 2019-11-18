@@ -167,7 +167,9 @@
                 contentType: 'application/json',
                 dataType: 'json',
                 type: "GET",
-
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader('Authorization', 'Bearer ' + Cookies.get("access_token"));
+                },
                 success: function (response) {
                     if (response.isSuccess) {
                         $("#dropdownMerk").append($('<option></option>').attr('value', -1).text("Pilih Model"));
@@ -187,7 +189,9 @@
                 contentType: 'application/json',
                 dataType: 'json',
                 type: "GET",
-
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader('Authorization', 'Bearer ' + Cookies.get("access_token"));
+                },
                 success: function (response) {
                     if (response.isSuccess) {
                         $.each(response.data, function (key, entry) {
@@ -215,6 +219,9 @@
                     contentType: "application/json",
                     type: "POST",
                     dataType: "JSON",
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader('Authorization', 'Bearer ' + Cookies.get("access_token"));
+                    },
                     data: function (d) {
                         return JSON.stringify(d);
                     },
@@ -301,13 +308,8 @@
                 //    $("#dropdownType").val(e.relatedTarget.getAttribute('data-typeID'));
                 //});
                
-
-                
-
                 $('#HargaOTR').val(e.relatedTarget.getAttribute('data-hargaOTR'));
                 $('#HargaNego').val(e.relatedTarget.getAttribute('data-harga'));
-                
-
             });
 
             var forms = document.getElementsByClassName('needs-validation');
@@ -333,6 +335,9 @@
                             contentType: 'application/json',
                             dataType: 'json',
                             type: "POST",
+                            beforeSend: function (xhr) {
+                                xhr.setRequestHeader('Authorization', 'Bearer ' + Cookies.get("access_token"));
+                            },
                             data: JSON.stringify(values),
                             success: function (response) {
                                 if (response.isSuccess) {
@@ -399,6 +404,9 @@
                     type: "POST",
                     dataType: 'json',
                     contentType: "application/json",
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader('Authorization', 'Bearer ' + Cookies.get("access_token"));
+                    },
                     data: JSON.stringify(userData),
                     success: function (response) {
                         if (response.isSuccess) {
@@ -439,6 +447,9 @@
                     contentType: 'application/json',
                     dataType: 'json',
                     type: "POST",
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader('Authorization', 'Bearer ' + Cookies.get("access_token"));
+                    },
                     data: JSON.stringify(values),
                     success: function (response) {
                         if (response.isSuccess) {
@@ -465,6 +476,9 @@
                     contentType: 'application/json',
                     dataType: 'json',
                     type: "POST",
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader('Authorization', 'Bearer ' + Cookies.get("access_token"));
+                    },
                     data: JSON.stringify(values),
                     success: function (response) {
                         if (response.isSuccess) {
@@ -503,6 +517,9 @@
                         contentType: 'application/json',
                         dataType: 'json',
                         type: "POST",
+                        beforeSend: function (xhr) {
+                            xhr.setRequestHeader('Authorization', 'Bearer ' + Cookies.get("access_token"));
+                        },
                         data: JSON.stringify(values),
                         success: function (response) {
                             if (response.isSuccess) {
@@ -537,6 +554,9 @@
                         contentType: 'application/json',
                         dataType: 'json',
                         type: "POST",
+                        beforeSend: function (xhr) {
+                            xhr.setRequestHeader('Authorization', 'Bearer ' + Cookies.get("access_token"));
+                        },
                         data: JSON.stringify(values),
                         success: function (response) {
                             if (response.isSuccess) {

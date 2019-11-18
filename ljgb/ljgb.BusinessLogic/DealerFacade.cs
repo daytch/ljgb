@@ -92,12 +92,12 @@ namespace ljgb.BusinessLogic
             return response;
         }
 
-        public async Task<DealerResponse> GetPost(long request)
-        {
-            DealerResponse response = new DealerResponse();
-
-            return response;
-        }
+        //public async Task<DealerResponse> GetPost(long request)
+        //{
+        //    DealerResponse response = new DealerResponse();
+            
+        //    return response;
+        //}
 
         public async Task<DealerResponse> UpdatePost(DealerRequest request)
         {

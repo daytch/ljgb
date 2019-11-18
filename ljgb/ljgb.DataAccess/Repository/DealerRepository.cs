@@ -23,7 +23,7 @@ namespace ljgb.DataAccess.Repository
             long result = 0;
             try
             {
-                db.Dealer.Add(Request);
+                await db.Dealer.AddAsync(Request);
                 result = db.SaveChanges();
             }
             catch (Exception ex)
@@ -42,7 +42,7 @@ namespace ljgb.DataAccess.Repository
             {
                 try
                 {
-                   
+
                     var dealer = await db.Dealer.FirstOrDefaultAsync(x => x.Id == ID);
 
                     if (dealer != null)
@@ -52,7 +52,7 @@ namespace ljgb.DataAccess.Repository
 
                         result = await db.SaveChangesAsync();
                     }
-                   
+
                 }
                 catch (Exception ex)
                 {
@@ -66,7 +66,7 @@ namespace ljgb.DataAccess.Repository
         public async Task<DealerResponse> GetAll(string search, string order, string orderDir, int startRec, int pageSize, int draw)
         {
             DealerResponse response = new DealerResponse();
-            if (db !=null)
+            if (db != null)
             {
                 try
                 {
@@ -101,14 +101,14 @@ namespace ljgb.DataAccess.Repository
                     response.ListModel = await (from model in query
                                                 select new DealerViewModel
                                                 {
-                                                 ID = model.Id,
-                                                 Name = model.Name,
-                                                 Kode = model.Kode,
-                                                 Alamat = model.Alamat,
-                                                 KotaID = model.KotaID,
-                                                 KotaName = model.KotaName,
-                                                 Telepon = model.Telepon,
-                                                 PejabatDealer = model.PejabatDealer
+                                                    ID = model.Id,
+                                                    Name = model.Name,
+                                                    Kode = model.Kode,
+                                                    Alamat = model.Alamat,
+                                                    KotaID = model.KotaID,
+                                                    KotaName = model.KotaName,
+                                                    Telepon = model.Telepon,
+                                                    PejabatDealer = model.PejabatDealer
                                                 }).Skip(startRec).Take(pageSize).ToListAsync();
                     response.draw = Convert.ToInt32(draw);
                     response.recordsTotal = totalRecords;
@@ -142,9 +142,9 @@ namespace ljgb.DataAccess.Repository
             {
                 try
                 {
-                    return await(from dealer in db.Dealer
-                                 where dealer.RowStatus == true && dealer.Id == ID
-                                 select dealer
+                    return await (from dealer in db.Dealer
+                                  where dealer.RowStatus == true && dealer.Id == ID
+                                  select dealer
                                 ).FirstOrDefaultAsync();
                 }
                 catch (Exception ex)
@@ -159,7 +159,7 @@ namespace ljgb.DataAccess.Repository
 
         public async Task<bool> UpdatePost(Dealer request)
         {
-            if (db!=null)
+            if (db != null)
             {
                 try
                 {

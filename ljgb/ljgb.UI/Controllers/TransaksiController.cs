@@ -11,7 +11,7 @@ using Microsoft.Extensions.Options;
 
 namespace ljgb.UI.Controllers
 {
-    public class TransaksiController : Controller
+    public class TransaksiController : BaseController
     {
         private readonly ApplicationSettings _settings;
         public string returnUrl { get; set; }
@@ -92,7 +92,7 @@ namespace ljgb.UI.Controllers
             return PartialView(2);
         }
 
-        public async Task<IActionResult> Report()
+        public IActionResult Report()
         {
             returnUrl = returnUrl ?? Url.Content("~/");
             TransactionRequest request = new TransactionRequest();

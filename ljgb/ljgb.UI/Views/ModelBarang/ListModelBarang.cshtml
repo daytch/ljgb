@@ -146,7 +146,9 @@
                 contentType: 'application/json',
                 dataType: 'json',
                 type: "GET",
-              
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader('Authorization', 'Bearer ' + Cookies.get("access_token"));
+                },
                 success: function (response) {
                     if (response.isSuccess) {
                         $.each(response.listModel, function (key, entry) {
@@ -177,6 +179,9 @@
                     contentType: "application/json",
                     type: "GET",
                     dataType: "JSON",
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader('Authorization', 'Bearer ' + Cookies.get("access_token"));
+                    },
                     data: function (a) {
                         return a;
                     },
@@ -329,6 +334,9 @@
                     contentType: 'application/json',
                     dataType: 'json',
                     type: "POST",
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader('Authorization', 'Bearer ' + Cookies.get("access_token"));
+                    },
                     data: JSON.stringify(values),
                     success: function (response) {
                         if (response.isSuccess) {
@@ -356,6 +364,9 @@
                     type: "POST",
                     dataType: 'json',
                     contentType: "application/json",
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader('Authorization', 'Bearer ' + Cookies.get("access_token"));
+                    },
                     data: JSON.stringify(userData),
                     success: function (response) {
                         if (response.isSuccess) {

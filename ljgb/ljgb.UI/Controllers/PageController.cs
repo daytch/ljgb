@@ -3,7 +3,7 @@ using Microsoft.Extensions.Options;
 
 namespace ljgb.UI.Controllers
 {
-    public class PageController : Controller
+    public class PageController : BaseController
     {
         private readonly ApplicationSettings _settings;
 

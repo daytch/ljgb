@@ -378,28 +378,28 @@ namespace ljgb.API.Controllers
             return result;
         }
 
-        [HttpPost]
-        [Route("PasswordSignIn")]
-        public async Task<SignInResponse> PasswordSignIn([FromBody]UserRequest user)
-        {
-            SignInResponse result = new SignInResponse();
-            try
-            {
-                //Microsoft.AspNetCore.Identity.SignInResult res = await facade.PasswordSignIn(model);
-                var res = await signInManager.PasswordSignInAsync(user.user.Email, user.password, user.RememberMe, user.lockoutOnFailure);
-                result = new SignInResponse()
-                {
-                    Succeeded = res.Succeeded,
-                    IsLockedOut = res.IsLockedOut,
-                    IsNotAllowed = res.RequiresTwoFactor
-                };
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-            return result;
-        }
+        //[HttpPost]
+        //[Route("PasswordSignIn")]
+        //public async Task<SignInResponse> PasswordSignIn([FromBody]UserRequest user)
+        //{
+        //    SignInResponse result = new SignInResponse();
+        //    try
+        //    {
+        //        //Microsoft.AspNetCore.Identity.SignInResult res = await facade.PasswordSignIn(model);
+        //        var res = await signInManager.PasswordSignInAsync(user.user.Email, user.password, user.RememberMe, user.lockoutOnFailure);
+        //        result = new SignInResponse()
+        //        {
+        //            Succeeded = res.Succeeded,
+        //            IsLockedOut = res.IsLockedOut,
+        //            IsNotAllowed = res.RequiresTwoFactor
+        //        };
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw ex;
+        //    }
+        //    return result;
+        //}
 
     }
 }

@@ -33,18 +33,16 @@
             </div>
             <div class="panel-container show">
                 <div class="panel-content">
-                    <form>
-                        <div class="form-group">
-                            <label class="form-label">File (Browser)</label>
-                            <div class="custom-file">
-                                <input type="file" class="custom-file-input" id="customFile">
-                                <label class="custom-file-label" for="customFile">Choose file</label>
-                            </div>
+                    <div class="form-group">
+                        <label class="form-label">File (Browser)</label>
+                        <div class="custom-file">
+                            <input type="file" class="custom-file-input" id="customFile">
+                            <label class="custom-file-label" for="customFile">Choose file</label>
                         </div>
-                        <div class="form-group">
-                            <button id="save" class="btn btn-outline-success waves-effect waves-themed">Submit</button>
-                        </div>
-                    </form>
+                    </div>
+                    <div class="form-group">
+                        <button id="save" class="btn btn-outline-success waves-effect waves-themed" type="button">Submit</button>
+                    </div>
                     <hr />
                 </div>
             </div>
@@ -55,13 +53,16 @@
 
 @section Scripts {
     <script type="text/javascript">
-        var url =""
+        var url = "";
+
         $(document).ready(function () {
             moment.locale('ID');
             url = "@ViewBag.url_api";
             var fileName = "";
 
             $("#customFile").on("change", function () {
+
+                LoadingMask.show();
                 if ($("#customFile").val() == "") {
                     return;
                 }
@@ -76,38 +77,45 @@
                 // your ajax submit
                 var formData = new FormData();
                 formData.append('file', $('#customFile')[0].files[0]);
-                //formData.append('FileToBeDelete', FileLogoTobeDelete);
+
                 $.ajax({
                     type: 'post',
                     url: url +'Barang/UploadFile',
                     data: formData,
                     success: function (filename) {
-                        debugger;
+                        toastr["success"]("Document has been uploaded.");
                         fileName = filename;
                         $('.custom-file-label').html(filename);
                     },
                     processData: false,
                     contentType: false,
                     error: function (response) {
+                        toastr["error"](response);
                         console.log(response);
                     }
                 });
             });
 
-            $("#save").on("click", function () {
-                debugger;
+            $("#save").on("click", function (e) {
+                e.preventDefault();
+
+                LoadingMask.show();
+
                 var formData = new Object();
                 formData.fileName = fileName;
                 $.ajax({
                     type: 'post',
                     url: url + 'Barang/SubmitUpload?fileName=' + fileName,
                     data: formData,
+                    contentType: 'application/json',
+                    dataType: 'json',
                     success: function (filename) {
+                        LoadingMask.hide();
+                        toastr["error"]("Data has been saved.");
                         $('.custom-file-label').html(filename);
                     },
-                    processData: false,
-                    contentType: false,
                     error: function (response) {
+                        toastr["error"](response);
                         console.log(response);
                     }
                 });

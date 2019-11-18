@@ -4,8 +4,10 @@ using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using Flurl.Http;
 using ljgb.Common.Requests;
+using ljgb.Common.Responses;
 using ljgb.UI.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -48,12 +50,20 @@ namespace ljgb.UI.Areas.Identity.Pages.Account
             {
                 var user = new IdentityUser { UserName = Input.Email, Email = Input.Email };
                 //IdentityResult result = await _userManager.CreateAsync(user, Input.Password);
-                UserRequest u = new UserRequest() { user = user, password = Input.Password };
-                string url = base_url_api + "User/Register";
+                UserRequest u = new UserRequest()
+                {
+                    Email = Input.Email,
+                    Password = Input.Password,
+                    FirstName = Input.FirstName,
+                    LastName = Input.LastName,
+                    Telp = Input.Phone
+                };
+                string url = base_url_api + "Authentication/Register";
                 IdentityResult result = new IdentityResult();
+                AuthenticationResponse resp = new AuthenticationResponse();
                 try
                 {
-                    result = await url.PostJsonAsync(u).ReceiveJson<IdentityResult>();
+                    resp = await url.PostJsonAsync(u).ReceiveJson<AuthenticationResponse>();
                 }
                 catch (FlurlHttpTimeoutException ext)
                 {
@@ -69,17 +79,23 @@ namespace ljgb.UI.Areas.Identity.Pages.Account
                     var a = ex;//(ex.Message);
                 }
 
-                if (result.Succeeded)
+                if (resp.IsSuccess) //(result.Succeeded)
                 {
-                    _logger.LogInformation("User created a new account with password.");
+                    #region
+                    //_logger.LogInformation("User created a new account with password.");
 
-                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                    var callbackUrl = Url.Page("/Account/ConfirmEmail", null, new { userId = user.Id, code }, Request.Scheme);
+                    //var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                    //var callbackUrl = Url.Page("/Account/ConfirmEmail", null, new { userId = user.Id, code }, Request.Scheme);
 
-                    await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
-                        $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                    //await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
+                    //    $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
 
-                    await _signInManager.SignInAsync(user, false);
+                    //await _signInManager.SignInAsync(user, false);
+                    #endregion
+
+                    var option = new CookieOptions();
+                    option.Expires = DateTime.Now.AddMinutes(10);
+                    Response.Cookies.Append("Token", resp.Token, option);
                     return LocalRedirect(returnUrl);
                 }
 
@@ -105,6 +121,10 @@ namespace ljgb.UI.Areas.Identity.Pages.Account
             [EmailAddress]
             [Display(Name = "Email")]
             public string Email { get; set; }
+
+            [Required]
+            [Display(Name = "Phone")]
+            public string Phone { get; set; }
 
             [Required]
             [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]

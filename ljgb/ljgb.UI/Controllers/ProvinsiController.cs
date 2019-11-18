@@ -12,7 +12,7 @@ using static ljgb.UI.Areas.Identity.Pages.Account.ExternalLoginModel;
 
 namespace ljgb.UI.Controllers
 {
-    public class ProvinsiController : Controller
+    public class ProvinsiController : BaseController
     {
         private readonly ApplicationSettings _settings;
         public string returnUrl { get; set; }
@@ -22,7 +22,7 @@ namespace ljgb.UI.Controllers
             _settings = settings.Value;
             base_url_api = _urlapi.base_api_url;
         }
-        public async Task<IActionResult> Provinsi()
+        public IActionResult Provinsi()
         {
             ViewBag.url_api = base_url_api; 
             return View(_settings);

@@ -8,7 +8,7 @@ using Microsoft.Extensions.Options;
 
 namespace ljgb.UI.Controllers
 {
-    public class MerkController : Controller
+    public class MerkController : BaseController
     {
         private readonly ApplicationSettings _settings;
         private readonly ConfigOptions _config;
