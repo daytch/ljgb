@@ -526,7 +526,7 @@ namespace ljgb.BusinessLogic
             {
 
                 response.sp_GetBarangByHomeParameters = await dep.GetBarangByHomeParameter(request);
-                response.SP_GetBarangByHomeParameterCount = await dep.GetBarangByHomeParameterCount(request);
+                //response.SP_GetBarangByHomeParameterCount = await dep.GetBarangByHomeParameterCount(request);
                 response.IsSuccess = true;
                 response.Message = "Success";
             }
