@@ -82,6 +82,9 @@
                     type: 'post',
                     url: url +'Barang/UploadFile',
                     data: formData,
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader('Authorization', 'Bearer ' + Cookies.get("access_token"));
+                    },
                     success: function (filename) {
                         toastr["success"]("Document has been uploaded.");
                         fileName = filename;
@@ -108,6 +111,9 @@
                     url: url + 'Barang/SubmitUpload?fileName=' + fileName,
                     data: formData,
                     contentType: 'application/json',
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader('Authorization', 'Bearer ' + Cookies.get("access_token"));
+                    },
                     dataType: 'json',
                     success: function (filename) {
                         LoadingMask.hide();

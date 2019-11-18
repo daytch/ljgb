@@ -58,7 +58,7 @@ namespace ljgb.UI.Areas.Identity.Pages.Account
                     LastName = Input.LastName,
                     Telp = Input.Phone
                 };
-                string url = base_url_api + "Authentication/Register";
+                string url = base_url_api + "Auth/Register";
                 IdentityResult result = new IdentityResult();
                 AuthenticationResponse resp = new AuthenticationResponse();
                 try
@@ -93,9 +93,7 @@ namespace ljgb.UI.Areas.Identity.Pages.Account
                     //await _signInManager.SignInAsync(user, false);
                     #endregion
 
-                    var option = new CookieOptions();
-                    option.Expires = DateTime.Now.AddMinutes(10);
-                    Response.Cookies.Append("Token", resp.Token, option);
+                    Response.Cookies.Append("access_token", resp.Token);
                     return LocalRedirect(returnUrl);
                 }
 

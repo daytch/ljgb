@@ -199,7 +199,9 @@
                 contentType: 'application/json',
                 dataType: 'json',
                 type: "GET",
-
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader('Authorization', 'Bearer ' + Cookies.get("access_token"));
+                },
                 success: function (response) {
                     if (response.isSuccess) {
                         $.each(response.listModel, function (key, entry) {
@@ -218,7 +220,9 @@
                 contentType: 'application/json',
                 dataType: 'json',
                 type: "GET",
-
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader('Authorization', 'Bearer ' + Cookies.get("access_token"));
+                },
                 success: function (response) {
                     if (response.isSuccess) {
                         $.each(response.listKota, function (key, entry) {
@@ -237,7 +241,9 @@
                 contentType: 'application/json',
                 dataType: 'json',
                 type: "GET",
-
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader('Authorization', 'Bearer ' + Cookies.get("access_token"));
+                },
                 success: function (response) {
                     if (response.isSuccess) {
                         $.each(response.data, function (key, entry) {
@@ -268,6 +274,9 @@
                     contentType: "application/json",
                     type: "GET",
                     dataType: "JSON",
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader('Authorization', 'Bearer ' + Cookies.get("access_token"));
+                    },
                     data: function (a) {
                         return a;
                     },
@@ -400,6 +409,9 @@
                             contentType: 'application/json',
                             dataType: 'json',
                             type: "POST",
+                            beforeSend: function (xhr) {
+                                xhr.setRequestHeader('Authorization', 'Bearer ' + Cookies.get("access_token"));
+                            },
                             data: JSON.stringify(values),
                             success: function (response) {
                                 if (response.isSuccess) {
@@ -465,6 +477,9 @@
                     url: url + "Barang/DeletePost",
                     type: "POST",
                     dataType: 'json',
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader('Authorization', 'Bearer ' + Cookies.get("access_token"));
+                    },
                     contentType: "application/json",
                     data: JSON.stringify(values),
                     success: function (response) {
@@ -506,6 +521,9 @@
                 contentType: 'application/json',
                 dataType: 'json',
                 type: "POST",
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader('Authorization', 'Bearer ' + Cookies.get("access_token"));
+                },
                 data: JSON.stringify(values),
                 success: function (response) {
                     if (response.isSuccess) {
@@ -533,6 +551,9 @@
                 contentType: 'application/json',
                 dataType: 'json',
                 type: "POST",
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader('Authorization', 'Bearer ' + Cookies.get("access_token"));
+                },
                 data: JSON.stringify(values),
                 success: function (response) {
                     if (response.isSuccess) {
@@ -589,6 +610,9 @@
                 type: 'post',
                 url: url + 'Barang/UploadImageBarang',
                 data: formData,
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader('Authorization', 'Bearer ' + Cookies.get("access_token"));
+                },
                 success: function (filename) {
                     debugger
                     fileName = filename;
