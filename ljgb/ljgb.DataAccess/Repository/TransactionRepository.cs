@@ -617,5 +617,46 @@ namespace ljgb.DataAccess.Repository
             }
             return result;
         }
+
+        public async Task<List<SP_ReportByStatusID>> GetReportByStatusID(long id)
+        {
+            try
+            {
+                return  db.Set<SP_ReportByStatusID>().FromSql("EXEC sp_ReportByStatusID {0}", id).AsNoTracking().ToList();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public async Task<List<SP_GetAllBidByUserProfileID>> GetAllBidByUserProfileID(long UserProfileID)
+        {
+           
+            try
+            {
+                return db.Set<SP_GetAllBidByUserProfileID>().FromSql("EXEC sp_GetAllBidByUserProfileID {0}", UserProfileID).AsNoTracking().ToList();
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+        public async Task<List<SP_GetAllAskByUserProfileID>> GetAllAskByUserProfileID(long UserProfileID)
+        {
+            try
+            {
+                return db.Set<SP_GetAllAskByUserProfileID>().FromSql("EXEC sp_GetAllAskByUserProfileID {0}", UserProfileID).AsNoTracking().ToList();
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+
     }
 }

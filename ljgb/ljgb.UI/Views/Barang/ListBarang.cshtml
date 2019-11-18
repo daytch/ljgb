@@ -34,10 +34,11 @@
             <div class="panel-container show">
                 <div class="panel-content">
                     <h5 class="frame-heading">
-                        <button type="button" class="btn btn-primary waves-effect waves-themed" data-id="0" data-nama="" data-merk="" data-toggle="modal" data-target="#ModalEdit" id="0" tittle="Add Provinsi"><i class="fal fa-plus-circle"></i>Add</button>
+                        @*<button type="button" class="btn btn-primary waves-effect waves-themed" data-id="0" data-nama="" data-merk="" data-toggle="modal" data-target="#ModalEdit" id="0" tittle="Add Provinsi"><i class="fal fa-plus-circle"></i>Add</button>*@
                     </h5>
                     <input type="hidden" class="form-control" id="BarangID">
                     <input type="hidden" class="form-control" id="ImagePath" />
+                    <input type="hidden" class="form-control" id="HiddenModelID" />
 
                     <!-- datatable start -->
                     <table id="tableBarang" class="table table-bordered table-hover table-striped w-100">
@@ -48,6 +49,7 @@
                                 <th>Type</th>
                                 <th>Warna</th>
                                 <th>Harga OTR</th>
+                                <th>Tahun</th>
                                 <th>Foto</th>
                                 <th>Action</th>
                             </tr>
@@ -145,13 +147,19 @@
 
                     <div class="form-group">
                         <label class="form-label" for="example-textarea">Harga OTR</label>
-                        <input type="text" id="hargaOTR" name="Nama" class="form-control" required>
+                        <input type="text" id="hargaOTR" name="Nama" onkeypress="return isNumberKey(event)"  class="form-control" required>
                         <div class="invalid-feedback">
                             Please Input Harga OTR
                         </div>
                     </div>
 
-
+                    <div class="form-group">
+                        <label class="form-label" for="example-textarea">Tahun</label>
+                        <input type="text" id="tahun" name="Tahun" onkeypress="return isNumberKey(event)"  class="form-control" required>
+                        <div class="invalid-feedback">
+                            Please Input Tahun
+                        </div>
+                    </div>
                     <div>
                         <input type='file' id="imgInp" />
                         <img id="uploadImage" src="#" width="200" height="200" alt="your image" />
@@ -171,8 +179,14 @@
 
 @section Scripts {
     <script type="text/javascript">
-        console.log(Cookies.get("access_token"));
 
+        function isNumberKey(evt) {
+            var charCode = (evt.which) ? evt.which : event.keyCode
+            if (charCode > 31 && (charCode < 48 || charCode > 57))
+                return false;
+
+            return true;
+        }
         var url = ""
         var imageUrl = ""
         $(document).ready(function () {
@@ -185,9 +199,7 @@
                 contentType: 'application/json',
                 dataType: 'json',
                 type: "GET",
-                beforeSend: function (xhr) {
-                    xhr.setRequestHeader('Authorization', 'Bearer ' + Cookies.get("access_token"));
-                },
+
                 success: function (response) {
                     if (response.isSuccess) {
                         $.each(response.listModel, function (key, entry) {
@@ -206,9 +218,7 @@
                 contentType: 'application/json',
                 dataType: 'json',
                 type: "GET",
-                beforeSend: function (xhr) {
-                    xhr.setRequestHeader('Authorization', 'Bearer ' + Cookies.get("access_token"));
-                },
+
                 success: function (response) {
                     if (response.isSuccess) {
                         $.each(response.listKota, function (key, entry) {
@@ -227,9 +237,7 @@
                 contentType: 'application/json',
                 dataType: 'json',
                 type: "GET",
-                beforeSend: function (xhr) {
-                    xhr.setRequestHeader('Authorization', 'Bearer ' + Cookies.get("access_token"));
-                },
+
                 success: function (response) {
                     if (response.isSuccess) {
                         $.each(response.data, function (key, entry) {
@@ -263,9 +271,6 @@
                     data: function (a) {
                         return a;
                     },
-                    beforeSend: function (xhr) {
-                        xhr.setRequestHeader('Authorization', 'Bearer '+ Cookies.get("access_token"));
-                    },
                     dataSrc: function (json) {
                         json.draw = json.draw;
                         json.recordsTotal = json.recordsTotal;
@@ -293,8 +298,13 @@
                         data: "namaWarna",
                         width: "15%"
                     },
+                   
                     {
                         data: "hargaOtr",
+                        width: "15%"
+                    },
+                    {
+                        data: "year",
                         width: "15%"
                     },
                     {
@@ -303,7 +313,7 @@
                                 return '<img src="' + t.photoPath + '" width="50" height="50" alt="your image" />';
                             }
                             else {
-
+                               
                                 return '<img src="#" width="20px" height="20px" alt="No Image" />';
                             }
 
@@ -311,7 +321,7 @@
                     },
                     {
                         mRender: function (a, e, t) {
-                            return '<a class="btn btn-xs btn-success waves-effect waves-themed"  data-id="' + t.id + '" data-merkID="' + t.merkBarangID + '" data-modelID="' + t.modelBarangID + '" data-typeBarangID="' + t.typeBarangId + '" data-warnaID="' + t.warnaId + '"   data-hargaOTR="' + t.hargaOtr + '"  data-Photo="' + t.photoPath+'" data-KotaID="'+t.kotaID+'" data-toggle="modal" data-target="#ModalEdit"><i class="fas fa-edit"></i></a> '
+                            return '<a class="btn btn-xs btn-success waves-effect waves-themed"  data-id="' + t.id + '" data-merkID="' + t.merkBarangID + '" data-modelID="' + t.modelBarangID + '" data-typeBarangID="' + t.typeBarangId + '" data-warnaID="' + t.warnaId + '"   data-hargaOTR="' + t.hargaOtr + '"  data-Photo="' + t.photoPath + '" data-KotaID="' + t.kotaID + '" data-Year="' + t.year +'" data-toggle="modal" data-target="#ModalEdit"><i class="fas fa-edit"></i></a> '
                                 + '<a class="btn btn-xs btn-danger waves-effect waves-themed"   data-id="' + t.id + '" data-toggle="modal" data-target="#ModalDelete"><i class="fas fa-trash-alt"></i></a>';
                         },
                         width: "12%"
@@ -338,7 +348,8 @@
             });
 
             $('#ModalEdit').on('show.bs.modal', function (e) {
-                debugger;
+                $('#HiddenModelID').val(e.relatedTarget.getAttribute('data-modelID'));
+                $('#HiddenTypeID').val(e.relatedTarget.getAttribute('data-typeBarangID'));
                 $('#uploadImage').attr('src', e.relatedTarget.getAttribute('data-Photo'));
                 resetModal();
                 $('#dropdownModelBarang option').remove();
@@ -348,12 +359,13 @@
                 $('#dropdownKota').val(e.relatedTarget.getAttribute('data-KotaID'))
                 $('#dropdownWarna').val(e.relatedTarget.getAttribute('data-warnaID'))
                 $('#hargaOTR').val(e.relatedTarget.getAttribute('data-hargaOTR'));
+                $('#tahun').val(e.relatedTarget.getAttribute('data-Year'));
                 var valuesMerk = {
 
                     merkID: $('#dropdownMerk').val()
                 }
                 SetModelDropdown(valuesMerk);
-                $('#dropdownModelBarang').val(e.relatedTarget.getAttribute('data-modelID'))
+               
                 var valuesModelBarang = {
 
                     ModelBarangID: e.relatedTarget.getAttribute('data-modelID')
@@ -380,6 +392,7 @@
                             TypeBarangID: $('#dropdownType').val(),
                             PhotoPath: $('#ImagePath').val(),
                             KotaID: $('#dropdownKota').val(),
+                            Year: $('#tahun').val()
                         };
 
                         $.ajax({
@@ -499,9 +512,13 @@
 
                         $.each(response.listModel, function (key, entry) {
                             $("#dropdownType").append($('<option></option>').attr('value', entry.id).text(entry.name));
+                            
                         })
                     } else {
                         toastr["error"](response.message);
+                    }
+                    if (($("#HiddenTypeID").val()) ? $("#HiddenTypeID").val() : 0 > 0) {
+                        $("#dropdownType").val($("#HiddenTypeID").val());
                     }
                 },
                 error: function (jqXHR, text, errorThrown) {
@@ -525,6 +542,9 @@
                         })
                     } else {
                         toastr["error"](response.message);
+                    }
+                    if (($("#HiddenModelID").val()) ? $("#HiddenModelID").val() : 0 > 0) {
+                        $("#dropdownModelBarang").val($("#HiddenModelID").val());
                     }
                 },
                 error: function (jqXHR, text, errorThrown) {

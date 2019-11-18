@@ -1,9 +1,14 @@
 ﻿using ljgb.BusinessLogic;
 using ljgb.Common.Requests;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 
 namespace ljgb.API.Controllers
@@ -12,6 +17,12 @@ namespace ljgb.API.Controllers
     [ApiController]
     public class TransactionController : ControllerBase
     {
+        private readonly IConfiguration _config;
+        private string url = "";
+        public TransactionController(IConfiguration config)
+        {
+            url = config.GetSection("API_url").Value;
+        }
         private TransactionFacade facade = new TransactionFacade();
         [HttpPost]
         [Route("GetAll")]
@@ -291,6 +302,97 @@ namespace ljgb.API.Controllers
                 try
                 {
                     var postId = await facade.GetAllStatus();
+
+                    return Ok(postId);
+
+                }
+                catch (Exception)
+                {
+                    return BadRequest();
+                }
+
+            }
+
+            return BadRequest();
+        }
+
+        [HttpGet]
+        [Route("DownloadTransactionByStatus")]
+        public HttpResponseMessage DownloadTransactionByStatus(string TransactionStatusID, string ID)
+        {
+            //if (ModelState.IsValid)
+            //{
+            //    try
+            //    {
+                    TransactionRequest req = new TransactionRequest();
+                    req.TransactionStatusID = long.Parse(TransactionStatusID);
+                    var postId = facade.downloadExcel(req);
+
+                    //HttpContext.Current.Response.ClearContent();
+                    //HttpContext.Current.Response.ClearHeaders();
+                    //HttpContext.Current.Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                    //HttpContext.Current.Response.AddHeader("content-disposition", "attachment; filename=" + "SP3 Document.xlsx");
+                    //HttpContext.Current.Response.BinaryWrite(pck.GetAsByteArray());
+                    //HttpContext.Current.Response.End();
+
+                    //var file = File(postId, "application/octet-stream");
+                    //return Ok("adsadsadasd");
+                    HttpResponseMessage result = new HttpResponseMessage(HttpStatusCode.OK);
+                   
+                        result.Content = new ByteArrayContent(postId);
+                        result.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment");
+                    result.Content.Headers.ContentDisposition.FileName = "Report.xslx";
+                        result.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"); // Text file
+                        result.Content.Headers.ContentLength = postId.Length;
+
+                    //return File(postId, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Report Document.xlsx");
+                    //return File(postId, "application/octet-stream");
+                    return result;
+
+                    //return Ok(Path.Combine(url,postId));
+                //}
+                //catch (Exception ex)
+                //{
+                //    return BadRequest();
+                //}
+
+            //}
+
+            //return BadRequest();
+        }
+
+        [HttpPost]
+        [Route("GetAllBidByUserProfileID")]
+        public async Task<IActionResult> GetAllBidByUserProfileID([FromBody]TransactionRequest request)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    var postId = await facade.GetAllBidByUserProfileID(request);
+
+                    return Ok(postId);
+
+                }
+                catch (Exception)
+                {
+                    return BadRequest();
+                }
+
+            }
+
+            return BadRequest();
+        }
+
+        [HttpPost]
+        [Route("GetAllAskByUserProfileID")]
+        public async Task<IActionResult> GetAlAskByUserProfileID([FromBody]TransactionRequest request)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    var postId = await facade.GetAllAskByUserProfileID(request);
 
                     return Ok(postId);
 

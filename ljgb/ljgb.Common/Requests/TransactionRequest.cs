@@ -26,6 +26,9 @@ namespace ljgb.Common.Requests
         public long SellerID { get; set; }
         public long NegoBarangID { get; set; }
 
+        public long TransactionStatusID { get; set; }
+        public long UserProfileID { get; set; }
+
         public TransactionRequest()
         {
             TrasanctionLevel = new TransactionLevelViewModel();

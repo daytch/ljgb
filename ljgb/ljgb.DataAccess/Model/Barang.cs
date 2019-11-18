@@ -23,6 +23,7 @@ namespace ljgb.DataAccess.Model
         public bool RowStatus { get; set; }
         public long? JumlahKlik { get; set; }
         public long KotaId { get; set; }
+        public int? Year { get; set; }
 
         public virtual Kota Kota { get; set; }
         public virtual TypeBarang TypeBarang { get; set; }

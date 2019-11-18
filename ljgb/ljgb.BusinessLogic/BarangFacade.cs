@@ -28,7 +28,7 @@ namespace ljgb.BusinessLogic
         private IWarna da_warna;
         private IModelBarang da_model;
         private INegoBarang da_nego;
-        private string errMerk, errModel, errType, errWarna, errBarang, errOTR, errHargaFinal, errKota = string.Empty;
+        private string errMerk, errModel, errType, errWarna, errYear, errBarang, errOTR, errHargaFinal, errKota = string.Empty;
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         public BarangFacade()
@@ -105,6 +105,8 @@ namespace ljgb.BusinessLogic
             resp.CarDetail = await dep.GetBarangDetail(ID);
             resp.RelatedProducts = dep.GetRelatedProducts(ID);
 
+            resp.IsSuccess = true;
+            resp.Message = "Success";
             return resp;
         }
 
@@ -133,9 +135,12 @@ namespace ljgb.BusinessLogic
             BarangResponse response = new BarangResponse();
             try
             {
+                TypeBarangRequest typeRequest = new TypeBarangRequest();
+                typeRequest.ID = request.TypeBarangId;
+                var getTYpe = da_type.GetPost(typeRequest).Result;
                 Barang model = new Barang();
                 model.HargaOtr = request.HargaOtr;
-                model.Name = request.Name;
+                model.Name = getTYpe.Model.Name;
                 model.WarnaId = request.WarnaId;
                 model.PhotoPath = request.PhotoPath;
                 model.TypeBarangId = request.TypeBarangId;
@@ -197,17 +202,22 @@ namespace ljgb.BusinessLogic
         public async Task<BarangResponse> UpdatePost(BarangRequest request)
         {
             BarangResponse response = new BarangResponse();
-
+            
             try
             {
+                TypeBarangRequest typeRequest = new TypeBarangRequest();
+                typeRequest.ID = request.TypeBarangId;
+                var getTYpe = da_type.GetPost(typeRequest).Result;
                 Barang model = new Barang();
                 model.Id = request.ID;
                 model.HargaOtr = request.HargaOtr;
-                model.Name = request.Name;
+                model.Name = getTYpe.Model.Name;
                 model.WarnaId = request.WarnaId;
                 model.TypeBarangId = request.TypeBarangId;
                 model.KotaId = request.KotaID.Value;
                 model.PhotoPath = request.PhotoPath;
+                model.Year = request.Year.Value;
+
                 model.Modified = DateTime.Now;
                 model.ModifiedBy = "xsivicto1905";
                 bool result = await dep.UpdatePost(model);
@@ -303,14 +313,15 @@ namespace ljgb.BusinessLogic
                             long WarnaID = 0;
                             long BarangID = 0;
                             long NegoBarangID = 0;
+                         
 
                             errMerk = dt.Rows[i].ItemArray.GetValue(1).ToString();
                             errModel = dt.Rows[i].ItemArray.GetValue(2).ToString();
                             errType = dt.Rows[i].ItemArray.GetValue(3).ToString();
                             errWarna = dt.Rows[i].ItemArray.GetValue(4).ToString();
-                            errBarang = dt.Rows[i].ItemArray.GetValue(3).ToString();
-                            errOTR = dt.Rows[i].ItemArray.GetValue(5).ToString();
-                            errHargaFinal = dt.Rows[i].ItemArray.GetValue(7).ToString();
+                            errBarang = dt.Rows[i].ItemArray.GetValue(5).ToString();
+                            errOTR = dt.Rows[i].ItemArray.GetValue(6).ToString();
+                            errHargaFinal = dt.Rows[i].ItemArray.GetValue(8).ToString();
 
                             #region Insert To Kota 
                             string Kota = dt.Rows[i].ItemArray.GetValue(0).ToString();
@@ -410,18 +421,22 @@ namespace ljgb.BusinessLogic
                             }
                             #endregion
 
-                            string OTRstrRaw = dt.Rows[i].ItemArray.GetValue(5).ToString();
+                            string OTRstrRaw = dt.Rows[i].ItemArray.GetValue(6).ToString();
                             string OTRstr = OTRstrRaw.Contains('.') ? OTRstrRaw.Substring(0, OTRstrRaw.LastIndexOf('.')) : OTRstrRaw;
 
-                            string DiscstrRaw = dt.Rows[i].ItemArray.GetValue(6).ToString();
+                            string DiscstrRaw = dt.Rows[i].ItemArray.GetValue(7).ToString();
                             string Discstr = DiscstrRaw.Contains('.') ? DiscstrRaw.Substring(0, DiscstrRaw.LastIndexOf('.')) : DiscstrRaw;
 
-                            string FinalRaw = dt.Rows[i].ItemArray.GetValue(7).ToString();
+                            string FinalRaw = dt.Rows[i].ItemArray.GetValue(8).ToString();
                             string Finalstr = FinalRaw.Contains('.') ? FinalRaw.Substring(0, FinalRaw.LastIndexOf('.')) : FinalRaw;
+
+                            string YearstrRaw = dt.Rows[i].ItemArray.GetValue(5).ToString();
+                            string Yearstr = YearstrRaw.Contains('.') ? YearstrRaw.Substring(0, OTRstrRaw.LastIndexOf('.')) : YearstrRaw;
 
                             long OTR = Convert.ToInt64(OTRstr);//(dt.Rows[i].ItemArray.GetValue(5) != null) ? Convert.ToInt64(dt.Rows[i].ItemArray.GetValue(6)) : 0;
                             long Discount = Convert.ToInt64(Discstr);//(dt.Rows[i].ItemArray.GetValue(6) != null) ? Convert.ToInt64(dt.Rows[i].ItemArray.GetValue(7)) : 0;
                             long HargaFinal = Convert.ToInt64(Finalstr);//(dt.Rows[i].ItemArray.GetValue(7) != null) ? Convert.ToInt64(dt.Rows[i].ItemArray.GetValue(8)) : 0;
+                            int Year = Convert.ToInt32(Yearstr);
 
                             #region Insert to Barang
                             Barang brg = new Barang()
@@ -433,7 +448,9 @@ namespace ljgb.BusinessLogic
                                 Name = Type,
                                 WarnaId = WarnaID,
                                 TypeBarangId = TypeID,
-                                KotaId = KotaID
+                                KotaId = KotaID,
+                                Year = Year
+                                
                             };
                             BarangID = dep.AddPost(brg).Result;
                             #endregion
@@ -509,6 +526,7 @@ namespace ljgb.BusinessLogic
             {
 
                 response.sp_GetBarangByHomeParameters = await dep.GetBarangByHomeParameter(request);
+                //response.SP_GetBarangByHomeParameterCount = await dep.GetBarangByHomeParameterCount(request);
                 response.IsSuccess = true;
                 response.Message = "Success";
             }
