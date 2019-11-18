@@ -1,8 +1,6 @@
 ﻿using ljgb.Common.ViewModel;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Text;
 
 namespace ljgb.Common.Responses
 {
