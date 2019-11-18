@@ -86,57 +86,70 @@
                     }
                 }
             });
-            $("#customFile").on("change", function () {
-                if ($("#customFile").val() == "") {
-                    return;
-                }
-                var inputFile = $('#customFile')[0].files[0];
-                var pathFile = inputFile.name;
-                var ekstensiOk = /(\.xlsx|\.xls)$/i;
-                if (!ekstensiOk.exec(pathFile)) {
-                    alert('Silakan upload file yang memiliki ekstensi .xlsx/.xls/');
-                    inputFile.name = '';
-                    return false;
-                }
-                // your ajax submit
-                var formData = new FormData();
-                formData.append('file', $('#customFile')[0].files[0]);
-                //formData.append('FileToBeDelete', FileLogoTobeDelete);
-                $.ajax({
-                    type: 'post',
-                    url: url +'Barang/UploadFile',
-                    data: formData,
-                    success: function (filename) {
-                        debugger;
-                        fileName = filename;
-                        $('.custom-file-label').html(filename);
-                    },
-                    processData: false,
-                    contentType: false,
-                    error: function (response) {
-                        console.log(response);
-                    }
-                });
-            });
 
-            $("#save").on("click", function () {
-                debugger;
-                var formData = new Object();
-                formData.fileName = fileName;
-                $.ajax({
-                    type: 'post',
-                    url: url + 'Barang/SubmitUpload?fileName=' + fileName,
-                    data: formData,
-                    success: function (filename) {
-                        $('.custom-file-label').html(filename);
-                    },
-                    processData: false,
-                    contentType: false,
-                    error: function (response) {
-                        console.log(response);
-                    }
-                });
-            });
+           
+            //$("#save").on("click", function () {
+            //    debugger;
+            
+            //    $.ajax({
+            //        type: 'POST',
+            //        url: url + 'Transaction/DownloadTransactionByStatus',
+            //        type: "POST",
+            //        dataType: 'json',
+            //        contentType: "application/json",
+            //        data: {
+            //            TransactionStatusID: $("#dropdownStatus").val()
+            //        },
+            //        success: function (filename) {
+            //            $('.custom-file-label').html(filename);
+            //        },
+            //        processData: false,
+            //        contentType: false,
+            //        error: function (response) {
+            //            console.log(response);
+            //        }
+            //    });
+            //});
         });
+        $('#save').on('click', function (e) {
+            e.preventDefault();
+
+            debugger;
+            var values = {
+                TransactionStatusID: $("#dropdownStatus").val(),
+                ID: $("#dropdownStatus").val(),
+            }
+            $.ajax({
+                url: url + "Transaction/DownloadTransactionByStatus?TransactionStatusID=" + values.TransactionStatusID,
+                contentType: 'application/json',
+                type: "GET",
+                data: {
+                    TransactionStatusID: $("#dropdownStatus").val(),
+                },
+                        
+                    success: function (response) {
+                        //fetch(response)
+                        //    .then(resp => resp.blob())
+                        //    .then(blob => {
+                        //        const url = window.URL.createObjectURL(blob);
+                        //        const a = document.createElement('a');
+                        //        a.style.display = 'none';
+                        //        a.href = url;
+                        //        // the filename you want
+                        //        a.download = 'todo-1.json';
+                        //        document.body.appendChild(a);
+                        //        a.click();
+                        //        window.URL.revokeObjectURL(response);
+                        //        alert('your file has downloaded!'); // or you know, something with better UX...
+                        //    })
+                        //    .catch(() => alert('oh no!'));
+                        
+                        //window.location = '/Report/Download?fileGuid=' + response.FileGuid
+                        //    + '&filename=' + response.FileName;
+                    }
+                }).done(function (e) {
+                    debugger;
+                    });
+        }); 
     </script>
 }

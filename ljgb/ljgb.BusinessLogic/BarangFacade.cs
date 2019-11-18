@@ -105,6 +105,8 @@ namespace ljgb.BusinessLogic
             resp.CarDetail = await dep.GetBarangDetail(ID);
             resp.RelatedProducts = dep.GetRelatedProducts(ID);
 
+            resp.IsSuccess = true;
+            resp.Message = "Success";
             return resp;
         }
 
@@ -133,9 +135,12 @@ namespace ljgb.BusinessLogic
             BarangResponse response = new BarangResponse();
             try
             {
+                TypeBarangRequest typeRequest = new TypeBarangRequest();
+                typeRequest.ID = request.TypeBarangId;
+                var getTYpe = da_type.GetPost(typeRequest).Result;
                 Barang model = new Barang();
                 model.HargaOtr = request.HargaOtr;
-                model.Name = request.Name;
+                model.Name = getTYpe.Model.Name;
                 model.WarnaId = request.WarnaId;
                 model.PhotoPath = request.PhotoPath;
                 model.TypeBarangId = request.TypeBarangId;
@@ -509,6 +514,7 @@ namespace ljgb.BusinessLogic
             {
 
                 response.sp_GetBarangByHomeParameters = await dep.GetBarangByHomeParameter(request);
+                //response.SP_GetBarangByHomeParameterCount = await dep.GetBarangByHomeParameterCount(request);
                 response.IsSuccess = true;
                 response.Message = "Success";
             }

@@ -41,9 +41,8 @@ namespace ljgb.DataAccess.Model
         public virtual DbSet<TypePembayaran> TypePembayaran { get; set; }
         public virtual DbSet<UserDetail> UserDetail { get; set; }
         public virtual DbSet<UserProfile> UserProfile { get; set; }
+        public virtual DbSet<Vincode> Vincode { get; set; }
         public virtual DbSet<Warna> Warna { get; set; }
-
-
         public virtual DbSet<Car> Car { get; set; }
         public virtual DbSet<CarAsks> CarAsks { get; set; }
         public virtual DbSet<CarDetail> CarDetail { get; set; }
@@ -54,12 +53,17 @@ namespace ljgb.DataAccess.Model
         public virtual DbSet<SP_GetBarangByHomeParameter> SP_GetBarangByHomeParameters { get; set; }
         public virtual DbSet<vw_salesman> vw_salesman { get; set; }
         public virtual DbSet<vw_buyer> vw_buyer { get; set; }
+        public virtual DbSet<SP_ReportByStatusID> SP_ReportByStatusID { get; set; }
+        public virtual DbSet<SP_GetAllAskByUserProfileID> SP_GetAllAskByUserProfileID { get; set; }
+        public virtual DbSet<SP_GetAllBidByUserProfileID> SP_GetAllBitByUserProfileID { get; set; }
+        public virtual DbSet<SP_GetBarangByHomeParameterCount> SP_GetBarangByHomeParameterCount { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer("Server=localhost\\SQLEXPRESS;Database=ljgb;Trusted_Connection=True;");
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
+                optionsBuilder.UseSqlServer("Server=GONNA-BE-GOOD\\SQLEXPRESS;Database=ljgb;Trusted_Connection=True;");
             }
         }
 
@@ -297,7 +301,6 @@ namespace ljgb.DataAccess.Model
                 entity.HasOne(d => d.Provinsi)
                     .WithMany(p => p.Kota)
                     .HasForeignKey(d => d.ProvinsiId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Kota_Provinsi");
             });
 
@@ -521,6 +524,12 @@ namespace ljgb.DataAccess.Model
                     .HasForeignKey(d => d.BuyerId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Transaction_UserProfile");
+
+                entity.HasOne(d => d.NegoBarang)
+                    .WithMany(p => p.Transaction)
+                    .HasForeignKey(d => d.NegoBarangId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Transaction_NegoBarang");
 
                 entity.HasOne(d => d.TransactionLevel)
                     .WithMany(p => p.Transaction)
@@ -819,6 +828,31 @@ namespace ljgb.DataAccess.Model
                 entity.Property(e => e.Telp)
                     .IsRequired()
                     .HasMaxLength(20)
+                    .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<Vincode>(entity =>
+            {
+                entity.ToTable("VINCode");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.Created).HasColumnType("datetime");
+
+                entity.Property(e => e.CreatedBy)
+                    .IsRequired()
+                    .HasMaxLength(250)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Modified).HasColumnType("datetime");
+
+                entity.Property(e => e.ModifiedBy)
+                    .HasMaxLength(250)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasMaxLength(50)
                     .IsUnicode(false);
             });
 

@@ -27,7 +27,7 @@
         <div id="panel-1" class="panel">
             <div class="panel-hdr">
                 <h2>
-                    Example <span class="fw-300"><i>Table</i></span>
+                    Transaksi
                 </h2>
                 <div class="panel-toolbar">
                     <button class="btn btn-panel" data-action="panel-collapse" data-toggle="tooltip" data-offset="0,10" data-original-title="Collapse"></button>
@@ -67,9 +67,9 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">
-                    Verification Salesman
+                    Detail DEaler
                     <small class="m-0 text-muted">
-                        Salesman
+                        Dealer
                     </small>
                 </h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -132,9 +132,9 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">
-                    Verification Salesman
+                    Detail
                     <small class="m-0 text-muted">
-                        Salesman
+                        Detail
                     </small>
                 </h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -289,7 +289,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">
-                    Verification Salesman
+                    Transaksi Tracking
                     <small class="m-0 text-muted">
                         Salesman
                     </small>
@@ -404,8 +404,13 @@
                     },
                     {
                         mRender: function (a, e, t) {
-                            return '<a class="btn btn-xs btn-success waves-effect waves-themed"  data-TransactionID="' + t.id + '" data-toggle="modal" data-target="#ModalSave" ><i class="fas fa-edit">' + t.namaLangkah + ' </i></a> '
-                                + '<a class="btn btn-xs btn-danger waves-effect waves-themed"  data-TransactionID="' + t.id + '" data-toggle="modal" data-target="#ModalCancel"><i class="fas fa-trash-alt">Cancel </i></a>';
+                            if (t.namaStatus == "Canceled"|| t.namaStatus == "Done") {
+                                return '';
+                            }
+                            else {
+                             return '<a class="btn btn-xs btn-success waves-effect waves-themed"  data-TransactionID="' + t.id + '" data-toggle="modal" data-target="#ModalSave" ><i class="fas fa-edit">' + t.namaLangkah + ' </i></a> '
+                                 + '<a class="btn btn-xs btn-danger waves-effect waves-themed"  data-TransactionID="' + t.id + '" data-toggle="modal" data-target="#ModalCancel"><i class="fas fa-trash-alt">Cancel </i></a>';
+                             }
                         },
                         width: "5%"
                     }
@@ -480,6 +485,11 @@
                             width: "10%"
                         },
                         {
+                            mRender: function(a,e,t) {
+                                date = new Date(t.created);
+                                var shortDate = date.getDate() + '-' + (date.getMonth() + 1) + '-' + date.getFullYear();
+                                return shortDate;
+                            },
                             data: "created",
                             width: "10%"
                         },
@@ -571,7 +581,7 @@
                     id: $("#TransactionID").val()
                 };
                 $.ajax({
-                    url: "https://localhost:44325/api/Transaction/ApproveTransaction",
+                    url: url+"Transaction/ApproveTransaction",
                     contentType: 'application/json',
                     dataType: 'json',
                     type: "POST",

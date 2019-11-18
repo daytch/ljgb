@@ -178,7 +178,7 @@ namespace ljgb.DataAccess.Repository
                 try
                 {
                     int result = 0;
-                    return db.Set<CarAsks>().FromSql("EXEC sp_GetAllbIDSByID_With_Paging {0},{1},{2},{3},{4},{5},{6}",
+                    return db.Set<CarAsks>().FromSql("EXEC sp_GetAllAsksByID_With_Paging {0},{1},{2},{3},{4},{5},{6}",
                         req.ID, req.start, req.limit, null, null, req.max, result).AsNoTracking().ToList();
                 }
                 catch (Exception ex)
@@ -198,7 +198,7 @@ namespace ljgb.DataAccess.Repository
             {
                 try
                 {
-                    return await db.Set<CarDetail>().FromSql("EXEC sp_GetDetailBareng {0}", id).AsNoTracking().FirstAsync();
+                    return await db.Set<CarDetail>().FromSql("EXEC sp_GetDetailBarang {0}", id).AsNoTracking().FirstOrDefaultAsync();
                 }
                 catch (Exception ex)
                 {
@@ -215,7 +215,7 @@ namespace ljgb.DataAccess.Repository
             BarangResponse response = new BarangResponse();
             try
             {
-                if (db !=null)
+                if (db != null)
                 {
                     var query = (from brg in db.Barang
                                  join warna in db.Warna
@@ -249,7 +249,8 @@ namespace ljgb.DataAccess.Repository
                                      brg.ModifiedBy,
                                      brg.RowStatus,
                                      brg.PhotoPath,
-                                     kotaID = kota.Id
+                                     kotaID = kota.Id,
+                                     brg.Year
 
                                  }
                            );
@@ -261,7 +262,10 @@ namespace ljgb.DataAccess.Repository
                                             p.namaType.ToString().ToLower().Contains(search.ToLower()) ||
                                             p.namaModelBarang.ToString().ToLower().Contains(search.ToLower()) ||
                                             p.namaWarna.ToString().ToLower().Contains(search.ToLower()) ||
-                                            p.NamaMerk.ToLower().Contains(search.ToLower()));
+                                            p.NamaMerk.ToLower().Contains(search.ToLower())||
+                                            p.HargaOtr.ToString().ToLower().Contains(search.ToLower()) ||
+                                            p.Year.ToString().ToLower().Contains(search.ToLower())
+                                            );
                     }
                     int recFilter = query.Count();
                     response.ListModel = await (from model in query
@@ -285,7 +289,8 @@ namespace ljgb.DataAccess.Repository
                                                     Modified = model.Modified,
                                                     ModifiedBy = model.ModifiedBy,
                                                     RowStatus = model.RowStatus,
-                                                    KotaID = model.kotaID
+                                                    KotaID = model.kotaID,
+                                                    Year = model.Year
                                                 }).Skip(startRec).Take(pageSize).ToListAsync();
                     response.draw = Convert.ToInt32(draw);
                     response.recordsTotal = totalRecords;
@@ -327,7 +332,7 @@ namespace ljgb.DataAccess.Repository
 
                     if (barang != null)
                     {
-                        barang.Name = model.Name;
+                        //barang.Name = model.Name;
                         barang.HargaOtr = model.HargaOtr;
                         barang.WarnaId = model.WarnaId;
                         barang.TypeBarangId = model.TypeBarangId;
@@ -378,7 +383,7 @@ namespace ljgb.DataAccess.Repository
          
             try
             {
-                return await db.Set<SP_GetBarangByHomeParameter>().FromSql("EXEC sp_GetBarangByHomeParameter {0},{1},{2},{3}", request.KotaID, request.MerkID, request.ModelBarangID, request.TypeID).AsNoTracking().ToListAsync();
+                return await db.Set<SP_GetBarangByHomeParameter>().FromSql("EXEC sp_GetBarangByHomeParameter {0},{1},{2},{3},{4},{5},{6}", request.KotaID, request.MerkID, request.ModelBarangID, request.TypeID, request.Year, request.start, request.limit).AsNoTracking().ToListAsync();
             }
             catch (Exception ex)
             {
@@ -386,6 +391,19 @@ namespace ljgb.DataAccess.Repository
                 throw ex;
             }
 
+        }
+
+        public async Task<SP_GetBarangByHomeParameterCount> GetBarangByHomeParameterCount(BarangRequest request)
+        {
+            try
+            {
+                return await db.Set<SP_GetBarangByHomeParameterCount>().FromSql("EXEC sp_GetBarangByHomeParameter {0},{1},{2},{3},{4},{5},{6}", request.KotaID, request.MerkID, request.ModelBarangID, request.TypeID, request.Year, request.start, request.limit).AsNoTracking().FirstOrDefaultAsync();
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
         }
     }
 }

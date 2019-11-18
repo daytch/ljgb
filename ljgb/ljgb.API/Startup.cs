@@ -52,7 +52,13 @@ namespace ljgb.API
                     .AddConsole()
                     .AddDebug();
             });
-
+            // enable CORS 
+            services.AddCors(o => o.AddPolicy("AllowAll", builder =>
+            {
+                builder.AllowAnyOrigin()
+                       .AllowAnyMethod()
+                       .AllowAnyHeader();
+            }));
 
             // ===== Add Identity ========
             //services.AddIdentity<IdentityUser, IdentityRole>()
@@ -97,6 +103,9 @@ namespace ljgb.API
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
+            //enable all cors
+            app.UseCors("AllowAll");
+
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();
 
@@ -127,6 +136,8 @@ namespace ljgb.API
             //app.UseHttpsRedirection();
             loggerFactory.AddLog4Net();
             app.UseMvc();
+
+            
 
         }
     }

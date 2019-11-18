@@ -23,6 +23,7 @@ namespace ljgb.Common.ViewModel
         public long LowestAsk { get; set; }
         public long HighestBid { get; set; }
         public string Description { get; set; }
+        public int? Year { get; set; }
 
         public string PhotoPath { get; set; }
         public DateTime Created { get; set; }
