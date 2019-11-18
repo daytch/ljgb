@@ -57,7 +57,6 @@ namespace ljgb.DataAccess.Model
         public virtual DbSet<SP_GetAllAskByUserProfileID> SP_GetAllAskByUserProfileID { get; set; }
         public virtual DbSet<SP_GetAllBidByUserProfileID> SP_GetAllBitByUserProfileID { get; set; }
         public virtual DbSet<SP_GetBarangByHomeParameterCount> SP_GetBarangByHomeParameterCount { get; set; }
-
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
@@ -392,12 +391,6 @@ namespace ljgb.DataAccess.Model
 
                 entity.Property(e => e.UserProfileId).HasColumnName("UserProfileID");
 
-                entity.HasOne(d => d.Barang)
-                    .WithMany(p => p.NegoBarang)
-                    .HasForeignKey(d => d.BarangId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_NegoBarang_Barang");
-
                 entity.HasOne(d => d.UserProfile)
                     .WithMany(p => p.NegoBarang)
                     .HasForeignKey(d => d.UserProfileId)
@@ -524,12 +517,6 @@ namespace ljgb.DataAccess.Model
                     .HasForeignKey(d => d.BuyerId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Transaction_UserProfile");
-
-                entity.HasOne(d => d.NegoBarang)
-                    .WithMany(p => p.Transaction)
-                    .HasForeignKey(d => d.NegoBarangId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Transaction_NegoBarang");
 
                 entity.HasOne(d => d.TransactionLevel)
                     .WithMany(p => p.Transaction)
@@ -820,6 +807,8 @@ namespace ljgb.DataAccess.Model
                     .IsRequired()
                     .HasMaxLength(250)
                     .IsUnicode(false);
+
+                entity.Property(e => e.Password).HasMaxLength(50);
 
                 entity.Property(e => e.PhotoPath)
                     .HasMaxLength(250)
