@@ -68,7 +68,7 @@ namespace ljgb.API.Core
             else
             {
                 #region Development Setting
-                if (requester_url.ToLower().Contains("swagger") || requester_url.ToLower().Contains("auth"))
+                if (requester_url.ToLower().Contains(url.ToLower()) || requester_url.ToLower().Contains("swagger") || requester_url.ToLower().Contains("auth"))
                 {
                     await next.Invoke(context);
                 }
