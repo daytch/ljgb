@@ -147,13 +147,19 @@
 
                     <div class="form-group">
                         <label class="form-label" for="example-textarea">Harga OTR</label>
-                        <input type="text" id="hargaOTR" name="Nama" class="form-control" required>
+                        <input type="text" id="hargaOTR" name="Nama" onkeypress="return isNumberKey(event)"  class="form-control" required>
                         <div class="invalid-feedback">
                             Please Input Harga OTR
                         </div>
                     </div>
 
-
+                    <div class="form-group">
+                        <label class="form-label" for="example-textarea">Tahun</label>
+                        <input type="text" id="tahun" name="Tahun" onkeypress="return isNumberKey(event)"  class="form-control" required>
+                        <div class="invalid-feedback">
+                            Please Input Tahun
+                        </div>
+                    </div>
                     <div>
                         <input type='file' id="imgInp" />
                         <img id="uploadImage" src="#" width="200" height="200" alt="your image" />
@@ -173,6 +179,14 @@
 
 @section Scripts {
     <script type="text/javascript">
+
+        function isNumberKey(evt) {
+            var charCode = (evt.which) ? evt.which : event.keyCode
+            if (charCode > 31 && (charCode < 48 || charCode > 57))
+                return false;
+
+            return true;
+        }
         var url = ""
         var imageUrl = ""
         $(document).ready(function () {
@@ -307,7 +321,7 @@
                     },
                     {
                         mRender: function (a, e, t) {
-                            return '<a class="btn btn-xs btn-success waves-effect waves-themed"  data-id="' + t.id + '" data-merkID="' + t.merkBarangID + '" data-modelID="' + t.modelBarangID + '" data-typeBarangID="' + t.typeBarangId + '" data-warnaID="' + t.warnaId + '"   data-hargaOTR="' + t.hargaOtr + '"  data-Photo="' + t.photoPath+'" data-KotaID="'+t.kotaID+'" data-toggle="modal" data-target="#ModalEdit"><i class="fas fa-edit"></i></a> '
+                            return '<a class="btn btn-xs btn-success waves-effect waves-themed"  data-id="' + t.id + '" data-merkID="' + t.merkBarangID + '" data-modelID="' + t.modelBarangID + '" data-typeBarangID="' + t.typeBarangId + '" data-warnaID="' + t.warnaId + '"   data-hargaOTR="' + t.hargaOtr + '"  data-Photo="' + t.photoPath + '" data-KotaID="' + t.kotaID + '" data-Year="' + t.year +'" data-toggle="modal" data-target="#ModalEdit"><i class="fas fa-edit"></i></a> '
                                 + '<a class="btn btn-xs btn-danger waves-effect waves-themed"   data-id="' + t.id + '" data-toggle="modal" data-target="#ModalDelete"><i class="fas fa-trash-alt"></i></a>';
                         },
                         width: "12%"
@@ -345,6 +359,7 @@
                 $('#dropdownKota').val(e.relatedTarget.getAttribute('data-KotaID'))
                 $('#dropdownWarna').val(e.relatedTarget.getAttribute('data-warnaID'))
                 $('#hargaOTR').val(e.relatedTarget.getAttribute('data-hargaOTR'));
+                $('#tahun').val(e.relatedTarget.getAttribute('data-Year'));
                 var valuesMerk = {
 
                     merkID: $('#dropdownMerk').val()
@@ -377,6 +392,7 @@
                             TypeBarangID: $('#dropdownType').val(),
                             PhotoPath: $('#ImagePath').val(),
                             KotaID: $('#dropdownKota').val(),
+                            Year: $('#tahun').val()
                         };
 
                         $.ajax({

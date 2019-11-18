@@ -332,7 +332,8 @@ namespace ljgb.DataAccess.Repository
 
                     if (barang != null)
                     {
-                        //barang.Name = model.Name;
+                        barang.Name = model.Name;
+                        barang.Year = model.Year;
                         barang.HargaOtr = model.HargaOtr;
                         barang.WarnaId = model.WarnaId;
                         barang.TypeBarangId = model.TypeBarangId;
