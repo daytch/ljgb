@@ -99,11 +99,20 @@ namespace ljgb.BusinessLogic
             return pos;
         }
 
-        public async Task<BarangResponse> GetBarangDetail(int ID)
+        public async Task<BarangResponse> GetBarangDetail(int id)
         {
             BarangResponse resp = new BarangResponse();
-            resp.CarDetail = await dep.GetBarangDetail(ID);
-            resp.RelatedProducts = dep.GetRelatedProducts(ID);
+
+
+            BarangRequest req = new BarangRequest();
+            req.ID = id;
+            resp.CarDetail = await dep.GetBarangDetail(id);
+            resp.RelatedProducts = dep.GetRelatedProducts(id);
+            //req.NegoType = "ask";
+            resp.SP_GetPhotoAndWarnaByBarangIDS = await dep.GetPhotoAndWarnaByID(req);
+            //resp.SP_GetPhotoAndWarnaByBarangASKS = await dep.GetPhotoAndWarnaByID(req);
+            ////req.NegoType = "bid";
+            //resp.SP_GetPhotoAndWarnaByBarangIBIDS = await dep.GetPhotoAndWarnaByID(req);
 
             resp.IsSuccess = true;
             resp.Message = "Success";
@@ -117,7 +126,13 @@ namespace ljgb.BusinessLogic
 
             return resp;
         }
+        //public BarangResponse GetAllBidsById(BarangRequest req)
+        //{
+        //    BarangResponse resp = new BarangResponse();
+        //    resp.ListAsks = dep.GetAllBidsById(req);
 
+        //    return resp;
+        //}
         public async Task<BarangViewModel> GetPost(long ID)
         {
             var model = await dep.GetPost(ID);
@@ -347,6 +362,7 @@ namespace ljgb.BusinessLogic
                             string Merk = dt.Rows[i].ItemArray.GetValue(1).ToString();
                             if (!ListMerk.Where(x => x.Name == Merk).Any())
                             {
+
                                 Merk m = new Merk();
                                 m.Name = Merk;
                                 m.Description = Merk;
@@ -404,7 +420,7 @@ namespace ljgb.BusinessLogic
 
                             #region Insert to Warna
                             string Warna = dt.Rows[i].ItemArray.GetValue(4).ToString();
-                            if (!ListWarna.Where(x => x.Name == Type).Any())
+                            if (!ListWarna.Where(x => x.Name == Warna).Any())
                             {
                                 Warna w = new Warna();
                                 w.Name = Warna;
@@ -526,7 +542,8 @@ namespace ljgb.BusinessLogic
             {
 
                 response.sp_GetBarangByHomeParameters = await dep.GetBarangByHomeParameter(request);
-                //response.SP_GetBarangByHomeParameterCount = await dep.GetBarangByHomeParameterCount(request);
+                response.SP_GetBarangByHomeParameterCount = await dep.GetBarangByHomeParameterCount(request);
+                response.Total = response.SP_GetBarangByHomeParameterCount.total;
                 response.IsSuccess = true;
                 response.Message = "Success";
             }
@@ -538,6 +555,31 @@ namespace ljgb.BusinessLogic
             }
 
             return response;
+        }
+
+
+        public async Task<BarangResponse> GetPhotoAndWarnaByID(BarangRequest request)
+        {
+            BarangResponse response = new BarangResponse();
+            try
+            {
+
+                //response.sp_GetBarangByHomeParameters = await dep.GetBarangByHomeParameter(request);
+                //response.SP_GetBarangByHomeParameterCount = await dep.GetBarangByHomeParameterCount(request);
+                //response.Total = response.SP_GetBarangByHomeParameterCount.total;
+                response.SP_GetPhotoAndWarnaByBarangIDS = await dep.GetPhotoAndWarnaByID(request);
+                response.IsSuccess = true;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+
+                response.IsSuccess = false;
+                response.Message = ex.ToString();
+            }
+
+            return response;
+
         }
     }
 }

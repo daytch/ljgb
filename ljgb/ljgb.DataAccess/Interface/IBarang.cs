@@ -25,6 +25,8 @@ namespace ljgb.DataAccess.Interface
 
         List<CarAsks> GetAllAsksById(BarangRequest req);
 
+        //List<>
+
         Task<CarDetail> GetBarangDetail(int id);        
 
         List<Car> GetListNormal(string kota, int total);
@@ -39,6 +41,8 @@ namespace ljgb.DataAccess.Interface
         Task<Barang> GetHargaOTR(Barang request);
         Task<List<SP_GetBarangByHomeParameter>> GetBarangByHomeParameter(BarangRequest request);
         Task<SP_GetBarangByHomeParameterCount> GetBarangByHomeParameterCount(BarangRequest request);
-        
+        Task<List<SP_GetPhotoAndWarnaByBarangID>> GetPhotoAndWarnaByID(BarangRequest request);
+
+
     }
 }

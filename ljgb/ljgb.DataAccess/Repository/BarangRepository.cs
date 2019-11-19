@@ -398,7 +398,22 @@ namespace ljgb.DataAccess.Repository
         {
             try
             {
-                return await db.Set<SP_GetBarangByHomeParameterCount>().FromSql("EXEC sp_GetBarangByHomeParameter {0},{1},{2},{3},{4},{5},{6}", request.KotaID, request.MerkID, request.ModelBarangID, request.TypeID, request.Year, request.start, request.limit).AsNoTracking().FirstOrDefaultAsync();
+                return await db.Set<SP_GetBarangByHomeParameterCount>().FromSql("EXEC SP_GetBarangByHomeParameterCount {0},{1},{2},{3},{4},{5},{6}", request.KotaID, request.MerkID, request.ModelBarangID, request.TypeID, request.Year, request.start, request.limit).AsNoTracking().FirstOrDefaultAsync();
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+       
+
+        public async Task<List<SP_GetPhotoAndWarnaByBarangID>> GetPhotoAndWarnaByID(BarangRequest request)
+        {
+            try
+            {
+                return await db.Set<SP_GetPhotoAndWarnaByBarangID>().FromSql("EXEC SP_GetPhotoAndWarnaByBarangID {0}", request.ID).AsNoTracking().ToListAsync();
             }
             catch (Exception ex)
             {

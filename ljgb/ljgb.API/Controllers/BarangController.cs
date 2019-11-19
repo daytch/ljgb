@@ -79,7 +79,7 @@ namespace ljgb.API.Controllers
 
             try
             {
-                BarangResponse post = await facade.GetBarangDetail(Id);
+                BarangResponse post = await facade.GetBarangDetail( Id);
                 post.IsSuccess = true;
                 post.Message = "Success";
 
@@ -179,6 +179,38 @@ namespace ljgb.API.Controllers
                 return BadRequest(ex);
             }
         }
+
+        //[HttpGet]
+        //[Route("GetAllBidsById")]
+        //public IActionResult GetAllBidsById([FromQuery]BarangRequest request)
+        //{
+        //    long Id = request.ID;//Convert.ToInt32(HttpContext.Request.Query["id"]);
+        //    int start = Convert.ToInt32(HttpContext.Request.Query["start"]);
+        //    int limit = Convert.ToInt32(HttpContext.Request.Query["limit"]);
+        //    int max = Convert.ToInt32(HttpContext.Request.Query["max"]);
+
+        //    if (Id < 1)
+        //    {
+        //        return BadRequest();
+        //    }
+
+        //    try
+        //    {
+        //        BarangResponse post = facade.GetAllBidsById(request);
+        //        post.IsSuccess = true;
+        //        post.Message = "Success";
+        //        if (post == null)
+        //        {
+        //            return NotFound();
+        //        }
+
+        //        return Ok(post);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return BadRequest(ex);
+        //    }
+        //}
 
         [HttpPost]
         [Route("GetModelWithID")]
@@ -401,7 +433,28 @@ namespace ljgb.API.Controllers
             }
             return BadRequest();
         }
+        [HttpPost]
+        [Route("GetPhotoAndWarnaByID")]
+        public async Task<IActionResult> GetPhotoAndWarnaByID([FromBody]BarangRequest request)
 
-       
+        {
+            BarangResponse result = new BarangResponse();
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    result = await facade.GetPhotoAndWarnaByID(request);
+                    return Ok(result);
+                }
+                catch (Exception)
+                {
+                    return BadRequest();
+                }
+            }
+            return BadRequest();
+        }
+
+
+
     }
 }

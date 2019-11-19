@@ -8,6 +8,7 @@
 LoadingMask = {
     show: function () {
         //$.blockUI({ message: '<div class="boxes"><div class="box"><div></div><div></div><div></div><div></div></div><div class="box"><div></div><div></div><div></div><div></div></div><div class="box"><div></div><div></div><div></div><div></div></div><div class="box"><div></div><div></div><div></div><div></div></div></div>' });
+        debugger;
         $.blockUI({
             css: {
                 padding: '15px',
