@@ -295,39 +295,6 @@
                 });
             });
 
-            //$('#btn-save').on('click', function () {
-            //    var values = {
-            //        ID: ($("#ModelBarangID").val()) ? $("#ModelBarangID").val() : 0,
-            //        Nama: $('#NamaMerk').val(),
-            //        Description: $('#DeskripsiMerk').val(),
-            //        merkID: $('#dropdownMerk').val()
-            //    };
-
-            //    $.ajax({
-            //        url: url +"ModelBarang/AddPost",
-            //        contentType: 'application/json',
-            //        dataType: 'json',
-            //        type: "POST",
-            //        data: JSON.stringify(values),
-            //        success: function (response) {
-            //            if (response.isSuccess) {
-            //                $("#ModalEdit").modal('hide');
-            //                $(document.body).removeClass('modal-open');
-            //                $('.modal-backdrop').remove();
-            //                toastr["success"](response.message);
-            //                $('#tableModelBarang').DataTable().ajax.reload();
-            //            } else {
-            //                toastr["error"](response.message);
-            //            }
-            //        },
-            //        error: function (jqXHR, text, errorThrown) {
-            //            console.log(jqXHR + " " + text + " " + errorThrown);
-            //        }
-            //    });
-
-
-            //});
-
             function SetModelDropdown(values) {
                 $.ajax({
                     url: url + "ModelBarang/GetModelWithMerkID",

@@ -26,6 +26,7 @@ namespace ljgb.UI.Areas.Identity.Pages.Account
         private readonly UserManager<IdentityUser> _userManager;
 
         private static string base_url_api;
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         public RegisterModel(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, ILogger<RegisterModel> logger,
             IEmailSender emailSender, ConfigOptions _urlapi)

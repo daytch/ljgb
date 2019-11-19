@@ -258,8 +258,6 @@
                 }
             });
 
-
-
             $('#tableBarang').dataTable({
                 language: {
                     processing: "<div class='overlay custom-loader-background'><i class='fa fa-cog fa-spin custom-loader-color'></i></div>"
@@ -436,40 +434,6 @@
                     form.classList.add('was-validated');
                 });
             });
-
-            //$('#btn-save').on('click', function () {
-            //    var values = {
-            //        ID: ($("#BarangID").val()) ? $("#BarangID").val() : 0,
-            //        Name: $('#dropdownMerk option:selected').text() + " " + $('#dropdownModelBarang option:selected').text()+ "" + $('#dropdownType option:selected').text(),
-            //        HargaOtr: $('#hargaOTR').val(),
-            //        WarnaID: $('#dropdownWarna').val(),
-            //        TypeBarangID: $('#dropdownType').val(),
-            //    };
-
-            //    $.ajax({
-            //        url: url +"Barang/AddPost",
-            //        contentType: 'application/json',
-            //        dataType: 'json',
-            //        type: "POST",
-            //        data: JSON.stringify(values),
-            //        success: function (response) {
-            //            if (response.isSuccess) {
-            //                $("#ModalEdit").modal('hide');
-            //                $(document.body).removeClass('modal-open');
-            //                $('.modal-backdrop').remove();
-            //                toastr["success"](response.message);
-            //                $('#tableBarang').DataTable().ajax.reload();
-            //            } else {
-            //                toastr["error"](response.message);
-            //            }
-            //        },
-            //        error: function (jqXHR, text, errorThrown) {
-            //            console.log(jqXHR + " " + text + " " + errorThrown);
-            //        }
-            //    });
-
-
-            //});
 
             $('#btn-delete').on('click', function (e) {
 

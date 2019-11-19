@@ -622,7 +622,7 @@ namespace ljgb.DataAccess.Repository
         {
             try
             {
-                return  db.Set<SP_ReportByStatusID>().FromSql("EXEC sp_ReportByStatusID {0}", id).AsNoTracking().ToList();
+                return await db.Set<SP_ReportByStatusID>().FromSql("EXEC sp_ReportByStatusID {0}", id).AsNoTracking().ToListAsync();
             }
             catch (Exception ex)
             {
@@ -635,7 +635,7 @@ namespace ljgb.DataAccess.Repository
            
             try
             {
-                return db.Set<SP_GetAllBidByUserProfileID>().FromSql("EXEC sp_GetAllBidByUserProfileID {0}", UserProfileID).AsNoTracking().ToList();
+                return await db.Set<SP_GetAllBidByUserProfileID>().FromSql("EXEC sp_GetAllBidByUserProfileID {0}", UserProfileID).AsNoTracking().ToListAsync();
             }
             catch (Exception ex)
             {
@@ -648,7 +648,7 @@ namespace ljgb.DataAccess.Repository
         {
             try
             {
-                return db.Set<SP_GetAllAskByUserProfileID>().FromSql("EXEC sp_GetAllAskByUserProfileID {0}", UserProfileID).AsNoTracking().ToList();
+                return await db.Set<SP_GetAllAskByUserProfileID>().FromSql("EXEC sp_GetAllAskByUserProfileID {0}", UserProfileID).AsNoTracking().ToListAsync();
             }
             catch (Exception ex)
             {

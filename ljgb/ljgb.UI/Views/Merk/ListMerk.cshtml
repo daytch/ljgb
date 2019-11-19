@@ -249,38 +249,6 @@
                 });
             });
 
-            //$('#btn-save').on('click', function () {
-            //    var values = {
-            //        ID: ($("#MerkID").val()) ? $("#MerkID").val() : 0,
-            //        Nama: $('#NamaMerk').val(),
-            //        Description: $('#DeskripsiMerk').val(),
-            //    };
-
-            //    $.ajax({
-            //        url: url +"Merk/AddPost",
-            //        contentType: 'application/json',
-            //        dataType: 'json',
-            //        type: "POST",
-            //        data: JSON.stringify(values),
-            //        success: function (response) {
-            //            if (response.isSuccess) {
-            //                $("#ModalEdit").modal('hide');
-            //                $(document.body).removeClass('modal-open');
-            //                $('.modal-backdrop').remove();
-            //                toastr["success"](response.message);
-            //                $('#tableMerk').DataTable().ajax.reload();
-            //            } else {
-            //                toastr["error"](response.message);
-            //            }
-            //        },
-            //        error: function (jqXHR, text, errorThrown) {
-            //            console.log(jqXHR + " " + text + " " + errorThrown);
-            //        }
-            //    });
-
-
-            //});
-
             $('#btn-delete').on('click', function (e) {
 
                 var userData = {

@@ -50,7 +50,7 @@
                                 <label class="form-label" for="example-date">Date</label>
                                 <input class="form-control col-auto col-3" id="example-date" type="date" name="date" value="" data-date-format="DD/MM/yyyy">
                             </div>
-                           
+
                         </div>
                         <div class="form-group">
                             <button id="save" class="btn btn-outline-success waves-effect waves-themed">Submit</button>
@@ -75,7 +75,7 @@
             $.ajax({
                 type: 'GET',
                 url: url + '/Transaction/GetAllStatus',
-               
+
                 success: function (response) {
                     if (response.isSuccess) {
                         $.each(response.listStatus, function (key, entry) {
@@ -86,70 +86,19 @@
                     }
                 }
             });
-
-           
-            //$("#save").on("click", function () {
-            //    debugger;
-            
-            //    $.ajax({
-            //        type: 'POST',
-            //        url: url + 'Transaction/DownloadTransactionByStatus',
-            //        type: "POST",
-            //        dataType: 'json',
-            //        contentType: "application/json",
-            //        data: {
-            //            TransactionStatusID: $("#dropdownStatus").val()
-            //        },
-            //        success: function (filename) {
-            //            $('.custom-file-label').html(filename);
-            //        },
-            //        processData: false,
-            //        contentType: false,
-            //        error: function (response) {
-            //            console.log(response);
-            //        }
-            //    });
-            //});
         });
+
         $('#save').on('click', function (e) {
             e.preventDefault();
 
             debugger;
             var values = {
-                TransactionStatusID: $("#dropdownStatus").val(),
-                ID: $("#dropdownStatus").val(),
+                TransactionStatusID: 1,//$("#dropdownStatus").val(),
+                ID: 10// $("#dropdownStatus").val(),
             }
-            $.ajax({
-                url: url + "Transaction/DownloadTransactionByStatus?TransactionStatusID=" + values.TransactionStatusID,
-                contentType: 'application/json',
-                type: "GET",
-                data: {
-                    TransactionStatusID: $("#dropdownStatus").val(),
-                },
-                        
-                    success: function (response) {
-                        //fetch(response)
-                        //    .then(resp => resp.blob())
-                        //    .then(blob => {
-                        //        const url = window.URL.createObjectURL(blob);
-                        //        const a = document.createElement('a');
-                        //        a.style.display = 'none';
-                        //        a.href = url;
-                        //        // the filename you want
-                        //        a.download = 'todo-1.json';
-                        //        document.body.appendChild(a);
-                        //        a.click();
-                        //        window.URL.revokeObjectURL(response);
-                        //        alert('your file has downloaded!'); // or you know, something with better UX...
-                        //    })
-                        //    .catch(() => alert('oh no!'));
-                        
-                        //window.location = '/Report/Download?fileGuid=' + response.FileGuid
-                        //    + '&filename=' + response.FileName;
-                    }
-                }).done(function (e) {
-                    debugger;
-                    });
-        }); 
+
+            post_to_url(url + "Transaction/DownloadTransactionByStatus?TransactionStatusID=" + 1 + "&ID=" + 10, null,"get");
+      
+        });
     </script>
 }

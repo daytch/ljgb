@@ -19,9 +19,6 @@
         </div>*@
 }
 
-
-
-
 <div class="row">
     <div class="col-xl-12">
         <div id="panel-1" class="panel">
@@ -62,8 +59,6 @@
         </div>
     </div>
 </div>
-
-
 
 <!-- modal Delete alert -->
 <div class="modal modal-alert fade" id="ModalDelete" tabindex="-1" role="dialog" aria-hidden="true">
@@ -358,40 +353,6 @@
                     form.classList.add('was-validated');
                 });
             });
-
-            //$('#btn-save').on('click', function () {
-            //    var values = {
-            //        ID: ($("#NegoBarangID").val()) ? $("#NegoBarangID").val() : 0,
-            //        BarangID: ($("#BarangID").val()) ? $("#BarangID").val() : 0,
-            //        Harga: $("#HargaNego").val(),
-            //        UserProfileID: 3,
-            //        CreatedBy: "xsivicto1905",
-            //    };
-
-            //    $.ajax({
-            //        url: url +"NegoBarang/SubmitAsk",
-            //        contentType: 'application/json',
-            //        dataType: 'json',
-            //        type: "POST",
-            //        data: JSON.stringify(values),
-            //        success: function (response) {
-            //            if (response.isSuccess) {
-            //                $("#ModalEdit").modal('hide');
-            //                $(document.body).removeClass('modal-open');
-            //                $('.modal-backdrop').remove();
-            //                toastr["success"](response.message);
-            //                $('#tableAsk').DataTable().ajax.reload();
-            //            } else {
-            //                toastr["error"](response.message);
-            //            }
-            //        },
-            //        error: function (jqXHR, text, errorThrown) {
-            //            console.log(jqXHR + " " + text + " " + errorThrown);
-            //        }
-            //    });
-
-
-            //});
 
             $('#btn-delete').on('click', function (e) {
 

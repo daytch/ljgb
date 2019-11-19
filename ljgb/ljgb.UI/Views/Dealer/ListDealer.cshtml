@@ -193,8 +193,6 @@
                 }
             });
 
-
-
             $('#tableDealer').dataTable({
                 language: {
                     processing: "<div class='overlay custom-loader-background'><i class='fa fa-cog fa-spin custom-loader-color'></i></div>"
@@ -341,42 +339,6 @@
                     form.classList.add('was-validated');
                 });
             });
-
-            //$('#btn-save').on('click', function () {
-            //    var values = {
-            //        ID: ($("#DealerID").val()) ? $("#DealerID").val() : 0,
-            //        Name: $('#NamaDealer').val(),
-            //        Kode: $('#KodeDealer').val(),
-            //        Telepon: $('#Telepon').val(),
-            //        Alamat: $('#AlamatDealer').val(),
-            //        KotaID: $('#dropdownKota').val(),
-            //        PejabatDealer: $('#PejabatDealer').val()
-            //    };
-
-            //    $.ajax({
-            //        url: url +"Dealer/AddPost",
-            //        contentType: 'application/json',
-            //        dataType: 'json',
-            //        type: "POST",
-            //        data: JSON.stringify(values),
-            //        success: function (response) {
-            //            if (response.isSuccess) {
-            //                $("#ModalEdit").modal('hide');
-            //                $(document.body).removeClass('modal-open');
-            //                $('.modal-backdrop').remove();
-            //                toastr["success"](response.message);
-            //                $('#tableDealer').DataTable().ajax.reload();
-            //            } else {
-            //                toastr["error"](response.message);
-            //            }
-            //        },
-            //        error: function (jqXHR, text, errorThrown) {
-            //            console.log(jqXHR + " " + text + " " + errorThrown);
-            //        }
-            //    });
-
-
-            //});
 
             $('#btn-delete').on('click', function (e) {
 
