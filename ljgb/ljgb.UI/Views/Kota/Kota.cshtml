@@ -160,6 +160,9 @@
                     contentType: "application/json",
                     type: "GET",
                     dataType: "JSON",
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader('Authorization', 'Bearer ' + Cookies.get("access_token"));
+                    },
                     data: function (a) {
                         return a;
                     },
@@ -266,38 +269,6 @@
                     form.classList.add('was-validated');
                 });
             });
-            //$('#btn-save').on('click', function () {
-            //    var values = {
-            //        ID: ($("#KotaID").val()) ? $("#KotaID").val() : 0,
-            //        ProvinsiID: $("#dropdownProvinsi").val(),
-            //        Name: $('#NamaKota').val(),
-            //        Description: $('#DeskripsiKota').val(),
-            //    };
-
-            //    $.ajax({
-            //        url: url +"Kota/AddPost",
-            //        contentType: 'application/json',
-            //        dataType: 'json',
-            //        type: "POST",
-            //        data: JSON.stringify(values),
-            //        success: function (response) {
-            //            if (response.isSuccess) {
-            //                $("#ModalEdit").modal('hide');
-            //                $(document.body).removeClass('modal-open');
-            //                $('.modal-backdrop').remove();
-            //                toastr["success"](response.message);
-            //                $('#tableKota').DataTable().ajax.reload();
-            //            } else {
-            //                toastr["error"](response.message);
-            //            }
-            //        },
-            //        error: function (jqXHR, text, errorThrown) {
-            //            console.log(jqXHR + " " + text + " " + errorThrown);
-            //        }
-            //    });
-
-
-            //});
 
             $('#btn-delete').on('click', function (e) {
 

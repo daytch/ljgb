@@ -10,7 +10,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using ljgb.UI.Data;
 using ljgb.UI.Models;
-using Flurl;
 using Flurl.Http;
 using Microsoft.Extensions.Logging;
 using System;
@@ -97,7 +96,7 @@ namespace ljgb.UI
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
             if (env.IsDevelopment())
             {

@@ -28,7 +28,7 @@ namespace ljgb.BusinessLogic
         private IWarna da_warna;
         private IModelBarang da_model;
         private INegoBarang da_nego;
-        private string errMerk, errModel, errType, errWarna, errYear, errBarang, errOTR, errHargaFinal, errKota = string.Empty;
+        private string errMerk, errModel, errType, errWarna, errBarang, errOTR, errHargaFinal, errKota = string.Empty;
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         public BarangFacade()
