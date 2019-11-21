@@ -43,6 +43,8 @@ namespace ljgb.DataAccess.Model
         public virtual DbSet<UserProfile> UserProfile { get; set; }
         public virtual DbSet<Vincode> Vincode { get; set; }
         public virtual DbSet<Warna> Warna { get; set; }
+
+
         public virtual DbSet<Car> Car { get; set; }
         public virtual DbSet<CarAsks> CarAsks { get; set; }
         public virtual DbSet<CarDetail> CarDetail { get; set; }
@@ -53,12 +55,17 @@ namespace ljgb.DataAccess.Model
         public virtual DbSet<SP_GetBarangByHomeParameter> SP_GetBarangByHomeParameters { get; set; }
         public virtual DbSet<vw_salesman> vw_salesman { get; set; }
         public virtual DbSet<vw_buyer> vw_buyer { get; set; }
+<<<<<<< HEAD
         public virtual DbSet<SP_ReportByStatusID> SP_ReportByStatusID { get; set; }
         public virtual DbSet<SP_GetAllAskByUserProfileID> SP_GetAllAskByUserProfileID { get; set; }
         public virtual DbSet<SP_GetAllBidByUserProfileID> SP_GetAllBitByUserProfileID { get; set; }
         public virtual DbSet<SP_GetBarangByHomeParameterCount> SP_GetBarangByHomeParameterCount { get; set; }
         public virtual DbSet<SP_GetPhotoAndWarnaByBarangID> SP_GetPhotoAndWarnaByBarangID { get; set; }
         public virtual DbSet<SP_GetTypeBarangByBarangID> SP_GetTypeBarangByBarangID { get; set; }
+=======
+
+
+>>>>>>> 85ba346c4910d45f015d63a4915ff5ceeb46dfa9
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
@@ -185,6 +192,10 @@ namespace ljgb.DataAccess.Model
                     .IsUnicode(false);
 
                 entity.Property(e => e.HargaOtr).HasColumnName("HargaOTR");
+
+                entity.Property(e => e.KodeType)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.KotaId).HasColumnName("KotaID");
 
@@ -391,6 +402,12 @@ namespace ljgb.DataAccess.Model
                     .IsUnicode(false);
 
                 entity.Property(e => e.UserProfileId).HasColumnName("UserProfileID");
+
+                entity.HasOne(d => d.Barang)
+                    .WithMany(p => p.NegoBarang)
+                    .HasForeignKey(d => d.BarangId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_NegoBarang_Barang");
 
                 entity.HasOne(d => d.UserProfile)
                     .WithMany(p => p.NegoBarang)
@@ -870,6 +887,11 @@ namespace ljgb.DataAccess.Model
                 entity.Property(e => e.Name)
                     .IsRequired()
                     .HasMaxLength(250)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Sapcode)
+                    .HasColumnName("SAPCode")
+                    .HasMaxLength(50)
                     .IsUnicode(false);
             });
         }

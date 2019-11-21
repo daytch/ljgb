@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.IO;
+using System.Net.Mail;
 using System.Threading.Tasks;
 
 namespace ljgb.BusinessLogic
@@ -95,9 +96,12 @@ namespace ljgb.BusinessLogic
             long id = await dataAccess.Save(up);
             if (id > 0)
             {
-                response.Token = security.GenerateToken(user.Email);
+                //response.Token = security.GenerateToken(user.Email);
                 response.Message = "Success created user profile.";
                 response.IsSuccess = true;
+
+                #region Sent
+                #endregion
             }
             else
             {

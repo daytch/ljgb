@@ -434,6 +434,7 @@ namespace ljgb.API.Controllers
             }
             return BadRequest();
         }
+
         [HttpPost]
         [Route("GetPhotoAndWarnaByID")]
         public async Task<IActionResult> GetPhotoAndWarnaByID([FromBody]BarangRequest request)
@@ -454,8 +455,6 @@ namespace ljgb.API.Controllers
             }
             return BadRequest();
         }
-
-
 
     }
 }
