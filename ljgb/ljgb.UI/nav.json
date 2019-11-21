@@ -321,17 +321,9 @@
       ]
     },
     {
-      "title": "Tables",
-      "icon": "fal fa-th-list",
+      "title": "Verification",
+      "icon": "fal far fa-barcode-read",
       "items": [
-        {
-          "title": "Basic Tables",
-          "href": "tables_basic.html"
-        },
-        {
-          "title": "Generate Table Style",
-          "href": "tables_generate_style.html"
-        },
         {
           "title": "Verification Salesman",
           "href": "verification_salesman.html"
@@ -340,46 +332,41 @@
           "title": "Verification Customer",
           "href": "verification_customer.html"
         }
-
-
       ]
     },
     {
       "title": "Merk",
-      "icon": "fal fa-th-list",
+      "icon": "fal fa-conveyor-belt",
       "items": [
         {
           "title": "Merk",
           "href": "Merk_ListMerk.cshtml"
         }
-
       ]
     },
     {
       "title": "Model Barang",
-      "icon": "fal fa-th-list",
+      "icon": "fal fa-tags",
       "items": [
         {
           "title": "Model Barang",
           "href": "ModelBarang_ListModelBarang.cshtml"
         }
-
       ]
     },
     {
       "title": "Type Barang",
-      "icon": "fal fa-th-list",
+      "icon": "fal fa-dolly-flatbed",
       "items": [
         {
           "title": "Type Barang",
           "href": "TypeBarang_ListTypeBarang.cshtml"
         }
-
       ]
     },
     {
       "title": "Barang",
-      "icon": "fal fa-th-list",
+      "icon": "fal fa-pallet",
       "items": [
         {
           "title": "Barang",
@@ -389,45 +376,41 @@
           "title": "Upload Barang",
           "href": "Barang_Upload.cshtml"
         }
-
       ]
     },
     {
       "title": "Provinsi",
-      "icon": "fal fa-th-list",
+      "icon": "fal fa-map",
       "items": [
         {
           "title": "List Provinsi",
           "href": "provinsi_provinsi.cshtml"
         }
-
       ]
     },
     {
       "title": "Kota",
-      "icon": "fal fa-th-list",
+      "icon": "fal fa-map-marker-alt",
       "items": [
         {
           "title": "List Kota",
           "href": "Kota_Kota.cshtml"
         }
-
       ]
     },
     {
       "title": "Dealer",
-      "icon": "fal fa-th-list",
+      "icon": "fal fa-industry-alt",
       "items": [
         {
           "title": "List Dealer",
           "href": "Dealer_ListDealer.cshtml"
         }
-
       ]
     },
     {
       "title": "Transaksi",
-      "icon": "fal fa-th-list",
+      "icon": "fal fa-chart-line",
       "items": [
         {
           "title": "Daftar Transaksi",
@@ -437,12 +420,11 @@
           "title": "Report",
           "href": "Transaksi_Report.cshtml"
         }
-
       ]
     },
     {
       "title": "Nego",
-      "icon": "fal fa-th-list",
+      "icon": "fal fa-shopping-cart",
       "items": [
         {
           "title": "List ASK",
@@ -452,7 +434,6 @@
           "title": "List BID",
           "href": "Nego_ListBID.cshtml"
         }
-
       ]
     },
     {
