@@ -258,7 +258,7 @@ namespace ljgb.BusinessLogic
 
         public async Task<UserProfileViewModel> GetPost(string postId)
         {
-            var post = await dep.GetPost(postId);
+            var post = await dep.GetPost(1);
 
             if (post == null)
             {

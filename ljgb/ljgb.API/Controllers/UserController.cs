@@ -206,7 +206,7 @@ namespace ljgb.API.Controllers
             {
                 try
                 {
-                    var post = await facade.GetPost(postId);
+                    var post = await facade.GetPost(username);
 
                     if (post == null)
                     {
