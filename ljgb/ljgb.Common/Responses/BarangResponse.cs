@@ -12,13 +12,17 @@ namespace ljgb.Common.Responses
         public CarDetail CarDetail { get; set; }
         public List<Car> RelatedProducts { get; set; }
         public dynamic ListAsks { get; set; }
+        public dynamic ListBids { get; set; }
 
         public List<BarangViewModel> ListModel { get; set; }
         public BarangViewModel Model { get; set; }
 
         public List<SP_GetBarangByHomeParameter> sp_GetBarangByHomeParameters { get; set; }
         public SP_GetBarangByHomeParameterCount SP_GetBarangByHomeParameterCount { get; set; }
-        public int Total { get; set; }
+        public List<SP_GetPhotoAndWarnaByBarangID> SP_GetPhotoAndWarnaByBarangIDS { get; set; }
+        public List<SP_GetPhotoAndWarnaByBarangID> SP_GetPhotoAndWarnaByBarangIBIDS { get; set; }
+        public List<SP_GetPhotoAndWarnaByBarangID> SP_GetPhotoAndWarnaByBarangASKS { get; set; }
+        public long Total { get; set; }
 
         public BarangResponse()
         {
@@ -51,11 +55,19 @@ namespace ljgb.Common.Responses
         public Int64? lowestask { get; set; }
         public Int64? highestbid { get; set; }
         public int? year { get; set; }
+        public string photopath { get; set; }
     }
     public class CarAsks
     {
         public Int64 ID { get; set; }
         public Int64 Price { get; set; }
+        public int Quantity { get; set; }
+        public string Name { get; set; }
+    }
+    public class CarBids
+    {
+        public long ID { get; set; }
+        public long Price { get; set; }
         public int Quantity { get; set; }
         public string Name { get; set; }
     }
@@ -76,9 +88,21 @@ namespace ljgb.Common.Responses
     }
     public class SP_GetBarangByHomeParameterCount
     {
-        public int id { get; set; }
+        public long ID { get; set; }
         
         public int total { get; set; }
-        public int count { get; set; }
+       
+    }
+
+    public class SP_GetPhotoAndWarnaByBarangID
+    {
+        public long id { get; set; }
+        public string name { get; set; }
+        public string description { get; set; }
+        public long? lowestask { get; set; }
+        public long? highestbid { get; set; }
+        public int year { get; set; }
+        public string photopath { get; set; }
+        public string color { get; set; }
     }
 }

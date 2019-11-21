@@ -7,6 +7,7 @@ namespace ljgb.Common.Requests
     public class BarangRequest: BaseRequestPaging
     {
         public long ID { get; set; }
+        public string NegoType { get; set; }
         public string Name { get; set; }
         public long HargaOtr { get; set; }
         public long WarnaId { get; set; }
@@ -17,6 +18,7 @@ namespace ljgb.Common.Requests
         public long LowestAsk { get; set; }
         public long HighestBid { get; set; }
         public string Description { get; set; }
+     
 
         public string PhotoPath { get; set; }
         public DateTime Created { get; set; }

@@ -391,6 +391,7 @@
                         event.stopPropagation();
                     } else {
                         debugger;
+                        LoadingMask.show();
                         var values = {
                             ID: ($("#BarangID").val()) ? $("#BarangID").val() : 0,
                             Name: $('#dropdownMerk option:selected').text() + " " + $('#dropdownModelBarang option:selected').text() + "" + $('#dropdownType option:selected').text(),
@@ -418,14 +419,17 @@
                                     $('.modal-backdrop').remove();
                                     toastr["success"](response.message);
                                     $('#tableBarang').DataTable().ajax.reload();
+                                    LoadingMask.hide();
                                 } else {
                                     toastr["error"](response.message);
+                                    LoadingMask.hide();
                                 }
                             },
                             error: function (jqXHR, text, errorThrown) {
                                 console.log(jqXHR + " " + text + " " + errorThrown);
                             }
                         });
+
                     }
                     form.classList.add('was-validated');
                 });
@@ -570,6 +574,7 @@
             var formData = new FormData();
             formData.append('file', $('#imgInp')[0].files[0]);
             //formData.append('FileToBeDelete', FileLogoTobeDelete);
+            LoadingMask.show();
             $.ajax({
                 type: 'post',
                 url: url + 'Barang/UploadImageBarang',
@@ -583,14 +588,16 @@
                     $('.custom-file-label').html(filename);
                     $('#ImagePath').val(filename);
                     $('#uploadImage').attr('src', filename);
+                    LoadingMask.hide();
                 },
                 processData: false,
                 contentType: false,
                 error: function (response) {
+                    LoadingMask.hide();
                     console.log(response);
                 }
             });
-
+            LoadingMask.hide();
         });
     </script>
 }
