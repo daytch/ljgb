@@ -11,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
 using System.IO;
+using ljgb.API.Helper;
 
 namespace ljgb.API
 {
@@ -30,8 +31,7 @@ namespace ljgb.API
 
             services.AddDbContext<ApplicationDbContext>(item => item.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             //services.AddScoped<IWarna, WarnaRepository>();
-
-
+            
             services.AddDefaultIdentity<IdentityUser>().AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
 
             services.AddLogging(builder =>
@@ -84,6 +84,8 @@ namespace ljgb.API
                 c.SwaggerDoc("v1", new Swashbuckle.AspNetCore.Swagger.Info { Title = "LoJualGueBeli API", Version = "v1" });
             });
             services.AddMvc().AddJsonOptions(ConfigureJson);
+            services.AddSingleton<IEmailConfiguration>(Configuration.GetSection("EmailConfiguration").Get<EmailConfiguration>());
+            services.AddTransient<IEmailService, EmailService>();
         }
 
         private void ConfigureJson(MvcJsonOptions obj)

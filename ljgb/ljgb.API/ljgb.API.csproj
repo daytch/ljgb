@@ -31,6 +31,7 @@
     <PackageReference Include="EPPlus" Version="4.5.3.2" />
     <PackageReference Include="JqueryDataTables.ServerSide.AspNetCoreWeb" Version="3.0.0" />
     <PackageReference Include="log4net" Version="2.0.8" />
+    <PackageReference Include="MailKit" Version="2.4.1" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Cors" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />

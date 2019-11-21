@@ -23,13 +23,10 @@ namespace ljgb.UI.Areas.Identity.Pages.Account
 
         public async Task OnGet()
         {
-            //await _signInManager.SignOutAsync();
             Response.Cookies.Append("access_token", "", new CookieOptions()
             {
                 Expires = DateTime.Now.AddDays(-1)
             });
-
-            //_logger.LogInformation("User logged out.");
         }
 
         public async Task<IActionResult> OnPost(string returnUrl = null)

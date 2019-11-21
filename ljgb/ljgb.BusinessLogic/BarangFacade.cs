@@ -217,7 +217,7 @@ namespace ljgb.BusinessLogic
         public async Task<BarangResponse> UpdatePost(BarangRequest request)
         {
             BarangResponse response = new BarangResponse();
-            
+
             try
             {
                 TypeBarangRequest typeRequest = new TypeBarangRequest();
@@ -305,13 +305,13 @@ namespace ljgb.BusinessLogic
                 string dbPath = Path.Combine(folderName, fileName);
 
                 List<Kota> ListKota = await da_kota.GetAll();
-                
+
                 List<Merk> ListMerk = await da_merk.GetAllMerk();
                 List<ModelBarang> ListModel = await da_model.GetAllModel();
                 List<TypeBarang> ListType = await da_type.GetAllType();
                 List<Warna> ListWarna = await da_warna.GetWarna();
                 List<Barang> ListBarang = await dep.GetAllBarang();
-                
+
                 using (ExcelPackage pck = new ExcelPackage())
                 {
                     using (FileStream stream = new FileStream(dbPath, FileMode.Open))
@@ -328,7 +328,6 @@ namespace ljgb.BusinessLogic
                             long WarnaID = 0;
                             long BarangID = 0;
                             long NegoBarangID = 0;
-                         
 
                             errMerk = dt.Rows[i].ItemArray.GetValue(1).ToString();
                             errModel = dt.Rows[i].ItemArray.GetValue(2).ToString();
@@ -399,7 +398,7 @@ namespace ljgb.BusinessLogic
                             #endregion
 
                             #region Insert to TypeBarang
-                            string Type = dt.Rows[i].ItemArray.GetValue(3).ToString();
+                            string Type = dt.Rows[i].ItemArray.GetValue(4).ToString();
                             if (!ListType.Where(x => x.Name == Type).Any())
                             {
                                 TypeBarang tb = new TypeBarang();
@@ -419,12 +418,13 @@ namespace ljgb.BusinessLogic
                             #endregion
 
                             #region Insert to Warna
-                            string Warna = dt.Rows[i].ItemArray.GetValue(4).ToString();
+                            string Warna = dt.Rows[i].ItemArray.GetValue(6).ToString();
                             if (!ListWarna.Where(x => x.Name == Warna).Any())
                             {
                                 Warna w = new Warna();
                                 w.Name = Warna;
                                 w.Description = Warna;
+                                w.Sapcode = dt.Rows[i].ItemArray.GetValue(5).ToString();
                                 w.RowStatus = true;
                                 w.Created = DateTime.Now;
                                 w.CreatedBy = "Admin";
@@ -437,21 +437,21 @@ namespace ljgb.BusinessLogic
                             }
                             #endregion
 
-                            string OTRstrRaw = dt.Rows[i].ItemArray.GetValue(6).ToString();
+                            string OTRstrRaw = dt.Rows[i].ItemArray.GetValue(8).ToString();
                             string OTRstr = OTRstrRaw.Contains('.') ? OTRstrRaw.Substring(0, OTRstrRaw.LastIndexOf('.')) : OTRstrRaw;
 
-                            string DiscstrRaw = dt.Rows[i].ItemArray.GetValue(7).ToString();
+                            string DiscstrRaw = dt.Rows[i].ItemArray.GetValue(9).ToString();
                             string Discstr = DiscstrRaw.Contains('.') ? DiscstrRaw.Substring(0, DiscstrRaw.LastIndexOf('.')) : DiscstrRaw;
 
-                            string FinalRaw = dt.Rows[i].ItemArray.GetValue(8).ToString();
+                            string FinalRaw = dt.Rows[i].ItemArray.GetValue(10).ToString();
                             string Finalstr = FinalRaw.Contains('.') ? FinalRaw.Substring(0, FinalRaw.LastIndexOf('.')) : FinalRaw;
 
-                            string YearstrRaw = dt.Rows[i].ItemArray.GetValue(5).ToString();
+                            string YearstrRaw = dt.Rows[i].ItemArray.GetValue(7).ToString();
                             string Yearstr = YearstrRaw.Contains('.') ? YearstrRaw.Substring(0, OTRstrRaw.LastIndexOf('.')) : YearstrRaw;
 
-                            long OTR = Convert.ToInt64(OTRstr);//(dt.Rows[i].ItemArray.GetValue(5) != null) ? Convert.ToInt64(dt.Rows[i].ItemArray.GetValue(6)) : 0;
-                            long Discount = Convert.ToInt64(Discstr);//(dt.Rows[i].ItemArray.GetValue(6) != null) ? Convert.ToInt64(dt.Rows[i].ItemArray.GetValue(7)) : 0;
-                            long HargaFinal = Convert.ToInt64(Finalstr);//(dt.Rows[i].ItemArray.GetValue(7) != null) ? Convert.ToInt64(dt.Rows[i].ItemArray.GetValue(8)) : 0;
+                            long OTR = Convert.ToInt64(OTRstr);
+                            long Discount = Convert.ToInt64(Discstr);
+                            long HargaFinal = Convert.ToInt64(Finalstr);
                             int Year = Convert.ToInt32(Yearstr);
 
                             #region Insert to Barang
@@ -465,8 +465,9 @@ namespace ljgb.BusinessLogic
                                 WarnaId = WarnaID,
                                 TypeBarangId = TypeID,
                                 KotaId = KotaID,
-                                Year = Year
-                                
+                                Year = Year,
+                                KodeType = dt.Rows[i].ItemArray.GetValue(3).ToString()
+
                             };
                             BarangID = dep.AddPost(brg).Result;
                             #endregion
