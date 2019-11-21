@@ -110,6 +110,8 @@ namespace ljgb.BusinessLogic
             resp.RelatedProducts = dep.GetRelatedProducts(id);
             //req.NegoType = "ask";
             resp.SP_GetPhotoAndWarnaByBarangIDS = await dep.GetPhotoAndWarnaByID(req);
+
+            resp.ListModelForDetail = await dep.GetTypeBarangByBarangID(req);
             //resp.SP_GetPhotoAndWarnaByBarangASKS = await dep.GetPhotoAndWarnaByID(req);
             ////req.NegoType = "bid";
             //resp.SP_GetPhotoAndWarnaByBarangIBIDS = await dep.GetPhotoAndWarnaByID(req);

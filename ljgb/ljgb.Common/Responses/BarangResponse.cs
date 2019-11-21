@@ -22,6 +22,7 @@ namespace ljgb.Common.Responses
         public List<SP_GetPhotoAndWarnaByBarangID> SP_GetPhotoAndWarnaByBarangIDS { get; set; }
         public List<SP_GetPhotoAndWarnaByBarangID> SP_GetPhotoAndWarnaByBarangIBIDS { get; set; }
         public List<SP_GetPhotoAndWarnaByBarangID> SP_GetPhotoAndWarnaByBarangASKS { get; set; }
+        public List<SP_GetTypeBarangByBarangID> ListModelForDetail { get; set; }
         public long Total { get; set; }
 
         public BarangResponse()
@@ -88,7 +89,7 @@ namespace ljgb.Common.Responses
     }
     public class SP_GetBarangByHomeParameterCount
     {
-        public long ID { get; set; }
+        public Nullable<long> ID { get; set; }
         
         public int total { get; set; }
        
@@ -104,5 +105,14 @@ namespace ljgb.Common.Responses
         public int year { get; set; }
         public string photopath { get; set; }
         public string color { get; set; }
+    }
+
+    public class SP_GetTypeBarangByBarangID
+    {
+        public long ID { get; set; }
+        public long TypeBarangID { get; set; }
+        public string Name { get; set; }
+        public long BarangID { get; set; }
+
     }
 }

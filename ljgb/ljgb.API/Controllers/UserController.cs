@@ -6,6 +6,7 @@ using ljgb.Common.Requests;
 using ljgb.Common.Responses;
 using ljgb.DataAccess.Model;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -20,6 +21,8 @@ namespace ljgb.API.Controllers
         private readonly UserFacade facade;
         private readonly IEmailSender emailSender;
         private readonly SignInManager<IdentityUser> signInManager;
+        private Security sec = new Security();
+        private string access_token = "";
         public UserController(UserManager<IdentityUser> _userManager, IEmailSender _emailSender, SignInManager<IdentityUser> _signInManager)
         {
             userManager = _userManager;
@@ -93,7 +96,7 @@ namespace ljgb.API.Controllers
                 return BadRequest(ex);
             }
         }
-        
+
         [HttpGet]
         [Route("GetBuyer")]
         public async Task<IActionResult> GetAllBuyer()
@@ -119,7 +122,7 @@ namespace ljgb.API.Controllers
                 return BadRequest(ex);
             }
         }
-        
+
         //[HttpPost]
         //[Route("SaveUserDetail")]
         //public async Task<IActionResult> SaveUserDetail([FromBody]UserRequest request)
@@ -195,28 +198,31 @@ namespace ljgb.API.Controllers
 
         [HttpPost]
         [Route("GetPost")]
-        public async Task<IActionResult> GetPost(long postId)
+        public async Task<IActionResult> GetPost([FromBody]UserRequest request)
         {
-            if (postId < 1)
+            
+            string username = sec.ValidateToken(request.Token);
+            if (username != "")
             {
-                return BadRequest();
-            }
-
-            try
-            {
-                var post = await facade.GetPost(postId);
-
-                if (post == null)
+                try
                 {
-                    return NotFound();
-                }
+                    var post = await facade.GetPost(postId);
 
-                return Ok(post);
+                    if (post == null)
+                    {
+                        return NotFound();
+                    }
+
+                    return Ok(post);
+                }
+                catch (Exception)
+                {
+                    return BadRequest();
+                }
             }
-            catch (Exception)
-            {
-                return BadRequest();
-            }
+
+           
+            return BadRequest();
         }
 
         [HttpPost]

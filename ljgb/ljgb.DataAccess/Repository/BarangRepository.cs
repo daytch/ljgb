@@ -421,5 +421,18 @@ namespace ljgb.DataAccess.Repository
                 throw ex;
             }
         }
+
+        public async Task<List<SP_GetTypeBarangByBarangID>> GetTypeBarangByBarangID(BarangRequest request)
+        {
+            try
+            {
+                return await db.Set<SP_GetTypeBarangByBarangID>().FromSql("EXEC sp_GetTypeBarangByBarangID {0}", request.ID).AsNoTracking().ToListAsync();
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
     }
 }

@@ -370,7 +370,7 @@ namespace ljgb.BusinessLogic
 
                     #region Generate SPDocument sheet
 
-                    List<SP_ReportByStatusID> report = dep.GetReportByStatusID(request.TransactionStatusID).Result;
+                    List<SP_ReportByStatusID> report = dep.GetReportByStatusID(request.TransactionStatusID, request.EndDate).Result;
 
 
 
@@ -402,7 +402,7 @@ namespace ljgb.BusinessLogic
                         wsDocument.Cells["W" + (2 + i)].Value = (report[i].BarangWarna != null) ? report[i].BarangWarna.ToString() : "";
                         wsDocument.Cells["X" + (2 + i)].Value = (report[i].BarangOTR != null) ? report[i].BarangOTR.ToString() : "";
                         wsDocument.Cells["Y" + (2 + i)].Value = (report[i].NegoHarga != null) ? report[i].NegoHarga.ToString() : ""; 
-                        wsDocument.Cells["Z1" + (2 + i)].Value = (report[i].NegoType != null) ? report[i].NegoType.ToString() : ""; 
+                        wsDocument.Cells["Z" + (2 + i)].Value = (report[i].NegoType != null) ? report[i].NegoType.ToString() : ""; 
                         wsDocument.Cells["AA" + (2 + i)].Value = (report[i].TransactionCreated.Date != null) ? report[i].TransactionCreated.Date.ToString() : "";
                         wsDocument.Cells["AB" + (2 + i)].Value = (report[i].TransactionCreatedBy!= null) ? report[i].TransactionCreatedBy.ToString() : ""; 
                         wsDocument.Cells["AC" + (2 + i)].Value = (report[i].TransactionModified != null)? report[i].TransactionModified.Value.Date.ToString(): "";

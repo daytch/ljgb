@@ -16,6 +16,7 @@ namespace ljgb.API.Controllers
     {
         private BarangFacade facade = new BarangFacade();
         private string url = "";
+        private Security sec = new Security();
         public BarangController(IConfiguration config)
         {
             url = config.GetSection("API_url").Value;

@@ -1,0 +1,162 @@
+﻿@{
+    ViewData["Title"] = "User Profile";
+    ViewData["PageName"] = "User_USerProfile";
+    ViewData["Category1"] = "User";
+}
+
+
+@section Header {
+}
+
+@section PageHeading {
+    <div class="subheader">
+        <h1 class="subheader-title">
+            <i class="fal fa-th-list text-primary"></i> Transaksi
+            @*<small>
+                    Documentation and examples for opt-in styling of tables (given their prevalent use in JavaScript plugins) with Bootstrap.
+                </small>*@
+        </h1>
+    </div>
+}
+
+<div class="row">
+    <div class="col-xl-12">
+        <div id="panel-1" class="panel">
+            <div class="panel-hdr">
+                <h2>
+                    User Profile
+                </h2>
+                <div class="panel-toolbar">
+                    <button class="btn btn-panel" data-action="panel-collapse" data-toggle="tooltip" data-offset="0,10" data-original-title="Collapse"></button>
+                    <button class="btn btn-panel" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>
+                    <button class="btn btn-panel" data-action="panel-close" data-toggle="tooltip" data-offset="0,10" data-original-title="Close"></button>
+                </div>
+            </div>
+            <div class="panel-container show">
+                <div class="panel-content">
+                    <div class="container">
+
+                        <p class="h2 text-center">Your Photo</p>
+                        <form class="needs-validation" novalidate>
+                            <div class="preview text-center">
+                                <img class="preview-img" src="http://simpleicon.com/wp-content/uploads/account.png" alt="Preview Image" width="200" height="200" />
+                                <div class="browse-button">
+
+                                    <input class="browse-input" type="file" required name="UploadedFile" id="UploadedFile" />
+                                </div>
+                                <span class="Error"></span>
+                            </div>
+                            <div class="form-group">
+                                <label>Full Name:</label>
+                                <input class="form-control" type="text" name="fullname" required placeholder="Enter Your Full Name" />
+                                <span class="Error"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label" for="simpleinput">Kota</label>
+
+                                <select id="dropdownKota" class="form-control col-md-12" type="text" name="dropdownKota" required></select>
+                                <div class="invalid-feedback">
+                                    Please Select Kota
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Telepon:</label>
+                                <input class="form-control" type="text" name="telepon" required placeholder="Nomor Telepon" />
+                                <span class="Error"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Facebook:</label>
+                                <input class="form-control" type="text" name="Faceook" required placeholder="Facebook" />
+                                <span class="Error"></span>
+                            </div>
+
+
+                            <div class="form-group">
+                                <label>Instagram:</label>
+                                <input class="form-control" type="text" name="Instagram" required placeholder="Instagram" />
+                                <span class="Error"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Gender:</label><br />
+                                <label><input type="radio" name="gender" required value="Pria" /> Pria</label>
+                                <label><input type="radio" name="gender" required value="Wanita" /> Wanita</label>
+
+                            </div>
+                            <div class="form-group">
+                                <button type="button" id="btn-save" class="btn  btn-block btn-primary waves-effect waves-themed">Save</button>
+                            </div>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    <script type="text/javascript">
+          url = "@ViewBag.url_api";
+        function isNumberKey(evt) {
+            var charCode = (evt.which) ? evt.which : event.keyCode
+            if (charCode > 31 && (charCode < 48 || charCode > 57))
+                return false;
+
+            return true;
+        }
+        var values =
+        {
+            Token: Cookies.get("access_token")
+        }
+        $.ajax({
+            url: url + "User/GetPost",
+            contentType: 'application/json',
+            dataType: 'json',
+            type: "POST",
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader('Authorization', 'Bearer ' + Cookies.get("access_token"));
+            },
+            data: JSON.stringify(values),
+            success: function (response) {
+                if (response.isSuccess) {
+
+
+                } else {
+                    toastr["error"](response.message);
+                }
+            },
+            error: function (jqXHR, text, errorThrown) {
+                console.log(jqXHR + " " + text + " " + errorThrown);
+            }
+        });
+        $.ajax({
+            url: url + "Kota/GetAllKotaWithoutFilter",
+            contentType: 'application/json',
+            dataType: 'json',
+            type: "GET",
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader('Authorization', 'Bearer ' + Cookies.get("access_token"));
+            },
+            success: function (response) {
+                if (response.isSuccess) {
+                    $.each(response.listKota, function (key, entry) {
+                        $("#dropdownKota").append($('<option></option>').attr('value', entry.id).text(entry.name));
+                    })
+                } else {
+                    toastr["error"](response.message);
+                }
+            },
+            error: function (jqXHR, text, errorThrown) {
+                console.log(jqXHR + " " + text + " " + errorThrown);
+            }
+        });
+
+    </script>
+}
+
+

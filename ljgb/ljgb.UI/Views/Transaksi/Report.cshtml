@@ -48,7 +48,7 @@
                             </div>
                             <div class="form-group">
                                 <label class="form-label" for="example-date">Date</label>
-                                <input class="form-control col-auto col-3" id="example-date" type="date" name="date" value="" data-date-format="DD/MM/yyyy">
+                                <input class="form-control col-auto col-3" id="MaxDate" type="date" name="date" value="" data-date-format="DD/MM/yyyy">
                             </div>
 
                         </div>
@@ -90,14 +90,14 @@
 
         $('#save').on('click', function (e) {
             e.preventDefault();
-
+            date = new Date($("#MaxDate").val());
             debugger;
             var values = {
-                TransactionStatusID: 1,//$("#dropdownStatus").val(),
-                ID: 10// $("#dropdownStatus").val(),
+                TransactionStatusID: $("#dropdownStatus").val(),
+                endDate: date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()
             }
-
-            post_to_url(url + "Transaction/DownloadTransactionByStatus?TransactionStatusID=" + 1 + "&ID=" + 10, null,"get");
+        
+            post_to_url(url + "Transaction/DownloadTransactionByStatus?TransactionStatusID=" + 1 + "&ID=" + 10, values,"get");
       
         });
     </script>

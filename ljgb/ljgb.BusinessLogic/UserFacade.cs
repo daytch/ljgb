@@ -256,7 +256,7 @@ namespace ljgb.BusinessLogic
             return posts;
         }
 
-        public async Task<UserProfileViewModel> GetPost(long postId)
+        public async Task<UserProfileViewModel> GetPost(string postId)
         {
             var post = await dep.GetPost(postId);
 

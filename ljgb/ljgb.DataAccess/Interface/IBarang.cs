@@ -42,6 +42,7 @@ namespace ljgb.DataAccess.Interface
         Task<List<SP_GetBarangByHomeParameter>> GetBarangByHomeParameter(BarangRequest request);
         Task<SP_GetBarangByHomeParameterCount> GetBarangByHomeParameterCount(BarangRequest request);
         Task<List<SP_GetPhotoAndWarnaByBarangID>> GetPhotoAndWarnaByID(BarangRequest request);
+        Task<List<SP_GetTypeBarangByBarangID>> GetTypeBarangByBarangID(BarangRequest request);
 
 
     }

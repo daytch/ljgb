@@ -618,11 +618,11 @@ namespace ljgb.DataAccess.Repository
             return result;
         }
 
-        public async Task<List<SP_ReportByStatusID>> GetReportByStatusID(long id)
+        public async Task<List<SP_ReportByStatusID>> GetReportByStatusID(long id, string endDate)
         {
             try
             {
-                return await db.Set<SP_ReportByStatusID>().FromSql("EXEC sp_ReportByStatusID {0}", id).AsNoTracking().ToListAsync();
+                return await db.Set<SP_ReportByStatusID>().FromSql("EXEC sp_ReportByStatusID {0},{1}", id, endDate).AsNoTracking().ToListAsync();
             }
             catch (Exception ex)
             {

@@ -26,7 +26,7 @@ namespace ljgb.DataAccess.Interface
 
         Task<List<TransactionStatus>> GetAllStatus();
 
-        Task<List<SP_ReportByStatusID>> GetReportByStatusID(long id);
+        Task<List<SP_ReportByStatusID>> GetReportByStatusID(long id, string endDate);
         Task<List<SP_GetAllBidByUserProfileID>> GetAllBidByUserProfileID(long UserProfileID);
         Task<List<SP_GetAllAskByUserProfileID>> GetAllAskByUserProfileID(long UserProfileID);
     }

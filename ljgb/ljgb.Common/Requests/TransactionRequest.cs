@@ -28,6 +28,7 @@ namespace ljgb.Common.Requests
 
         public long TransactionStatusID { get; set; }
         public long UserProfileID { get; set; }
+        public string EndDate { get; set; }
 
         public TransactionRequest()
         {

@@ -318,7 +318,7 @@ namespace ljgb.API.Controllers
 
         [HttpGet]
         [Route("DownloadTransactionByStatus")]
-        public HttpResponseMessage DownloadTransactionByStatus(string TransactionStatusID, string ID)
+        public IActionResult DownloadTransactionByStatus(string TransactionStatusID, string EndDate)
         {
             //if (ModelState.IsValid)
             //{
@@ -326,6 +326,7 @@ namespace ljgb.API.Controllers
             //    {
                     TransactionRequest req = new TransactionRequest();
                     req.TransactionStatusID = long.Parse(TransactionStatusID);
+                    req.EndDate = EndDate;
                     var postId = facade.downloadExcel(req);
 
                     //HttpContext.Current.Response.ClearContent();
@@ -337,17 +338,17 @@ namespace ljgb.API.Controllers
 
                     //var file = File(postId, "application/octet-stream");
                     //return Ok("adsadsadasd");
-                    HttpResponseMessage result = new HttpResponseMessage(HttpStatusCode.OK);
+                    //HttpResponseMessage result = new HttpResponseMessage(HttpStatusCode.OK);
                    
-                        result.Content = new ByteArrayContent(postId);
-                        result.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment");
-                    result.Content.Headers.ContentDisposition.FileName = "Report.xslx";
-                        result.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"); // Text file
-                        result.Content.Headers.ContentLength = postId.Length;
+                    //    result.Content = new ByteArrayContent(postId);
+                    //    result.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment");
+                    //result.Content.Headers.ContentDisposition.FileName = "Report.xslx";
+                    //    result.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"); // Text file
+                    //    result.Content.Headers.ContentLength = postId.Length;
 
-                    //return File(postId, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Report Document.xlsx");
+                    return File(postId, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Report Document.xlsx");
                     //return File(postId, "application/octet-stream");
-                    return result;
+                    //return result;
 
                     //return Ok(Path.Combine(url,postId));
                 //}

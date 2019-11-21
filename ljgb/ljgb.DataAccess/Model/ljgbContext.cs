@@ -58,6 +58,7 @@ namespace ljgb.DataAccess.Model
         public virtual DbSet<SP_GetAllBidByUserProfileID> SP_GetAllBitByUserProfileID { get; set; }
         public virtual DbSet<SP_GetBarangByHomeParameterCount> SP_GetBarangByHomeParameterCount { get; set; }
         public virtual DbSet<SP_GetPhotoAndWarnaByBarangID> SP_GetPhotoAndWarnaByBarangID { get; set; }
+        public virtual DbSet<SP_GetTypeBarangByBarangID> SP_GetTypeBarangByBarangID { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
