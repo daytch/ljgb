@@ -294,7 +294,7 @@ namespace ljgb.BusinessLogic
             return response;
         }
 
-        public async Task<BarangResponse> SubmitUpload(string fileName)
+        public async Task<BarangResponse> SubmitUpload(string fileName, string username)
         {
             BarangResponse response = new BarangResponse();
             try
@@ -349,7 +349,7 @@ namespace ljgb.BusinessLogic
 
                                 k.RowStatus = true;
                                 k.Created = DateTime.Now;
-                                k.CreatedBy = "Admin";
+                                k.CreatedBy = username;
                                 KotaID = da_kota.AddPost(k).Result;
                                 ListKota.Add(k);
                             }
@@ -369,7 +369,7 @@ namespace ljgb.BusinessLogic
                                 m.Description = Merk;
                                 m.RowStatus = true;
                                 m.Created = DateTime.Now;
-                                m.CreatedBy = "Admin";
+                                m.CreatedBy = username;
                                 MerkID = da_merk.Add(m).Result;
                                 ListMerk.Add(m);
                             }
@@ -389,7 +389,7 @@ namespace ljgb.BusinessLogic
                                 mb.Description = Model;
                                 mb.RowStatus = true;
                                 mb.Created = DateTime.Now;
-                                mb.Createdby = "Admin";
+                                mb.Createdby = username;
                                 ModelID = da_model.Add(mb).Result;
                                 ListModel.Add(mb);
                             }
@@ -409,7 +409,7 @@ namespace ljgb.BusinessLogic
                                 tb.Description = Type;
                                 tb.RowStatus = true;
                                 tb.Created = DateTime.Now;
-                                tb.CreatedBy = "Admin";
+                                tb.CreatedBy = username;
                                 TypeID = da_type.Add(tb).Result;
                                 ListType.Add(tb);
                             }
@@ -429,7 +429,7 @@ namespace ljgb.BusinessLogic
                                 w.Sapcode = dt.Rows[i].ItemArray.GetValue(5).ToString();
                                 w.RowStatus = true;
                                 w.Created = DateTime.Now;
-                                w.CreatedBy = "Admin";
+                                w.CreatedBy = username;
                                 WarnaID = da_warna.Add(w).Result;
                                 ListWarna.Add(w);
                             }
@@ -461,7 +461,7 @@ namespace ljgb.BusinessLogic
                             {
                                 RowStatus = true,
                                 Created = DateTime.Now,
-                                CreatedBy = "Admin",
+                                CreatedBy = username,
                                 HargaOtr = OTR,
                                 Name = Type,
                                 WarnaId = WarnaID,
@@ -483,7 +483,7 @@ namespace ljgb.BusinessLogic
                                 TypePenawaran = "ask",
                                 Harga = HargaFinal,
                                 Created = DateTime.Now,
-                                CreatedBy = "Admin"
+                                CreatedBy = username
                             };
                             NegoBarangID = da_nego.AddPost(nb).Result;
                             #endregion
@@ -507,7 +507,7 @@ namespace ljgb.BusinessLogic
         private DataTable WorksheetToDataTable(ExcelWorksheet oSheet)
         {
             int totalRows = oSheet.Dimension.End.Row;
-            int totalCols = 9;
+            int totalCols = 11;
             DataTable dt = new DataTable(oSheet.Name);
             DataRow dr = dt.NewRow();
             try

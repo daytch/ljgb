@@ -80,7 +80,7 @@ namespace ljgb.API.Controllers
 
             try
             {
-                BarangResponse post = await facade.GetBarangDetail( Id);
+                BarangResponse post = await facade.GetBarangDetail(Id);
                 post.IsSuccess = true;
                 post.Message = "Success";
 
@@ -180,38 +180,6 @@ namespace ljgb.API.Controllers
                 return BadRequest(ex);
             }
         }
-
-        //[HttpGet]
-        //[Route("GetAllBidsById")]
-        //public IActionResult GetAllBidsById([FromQuery]BarangRequest request)
-        //{
-        //    long Id = request.ID;//Convert.ToInt32(HttpContext.Request.Query["id"]);
-        //    int start = Convert.ToInt32(HttpContext.Request.Query["start"]);
-        //    int limit = Convert.ToInt32(HttpContext.Request.Query["limit"]);
-        //    int max = Convert.ToInt32(HttpContext.Request.Query["max"]);
-
-        //    if (Id < 1)
-        //    {
-        //        return BadRequest();
-        //    }
-
-        //    try
-        //    {
-        //        BarangResponse post = facade.GetAllBidsById(request);
-        //        post.IsSuccess = true;
-        //        post.Message = "Success";
-        //        if (post == null)
-        //        {
-        //            return NotFound();
-        //        }
-
-        //        return Ok(post);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return BadRequest(ex);
-        //    }
-        //}
 
         [HttpPost]
         [Route("GetModelWithID")]
@@ -378,7 +346,28 @@ namespace ljgb.API.Controllers
             BarangResponse resp = new BarangResponse();
             try
             {
-                resp = await facade.SubmitUpload(fileName);
+                string bearer = Request.HttpContext.Request.Headers["Authorization"];
+                string token = bearer.Substring("Bearer ".Length).Trim();
+                string username = string.Empty;
+                if (string.IsNullOrEmpty(token))
+                {
+                    resp.IsSuccess = false;
+                    resp.Message = "You don't have access.";
+                    return resp;
+                }
+
+                username = sec.ValidateToken(token);
+                if (username == null)
+                {
+                    Response.HttpContext.Response.Cookies.Append("access_token", "", new CookieOptions()
+                    {
+                        Expires = DateTime.Now.AddDays(-1)
+                    });
+                    resp.IsSuccess = false;
+                    resp.Message = "Your session was expired, please re-login.";
+                    return resp;
+                }
+                resp = await facade.SubmitUpload(fileName, username);
 
                 return resp;
             }
@@ -395,7 +384,7 @@ namespace ljgb.API.Controllers
         {
             if (file == null || file.Length == 0)
                 return "Please select profile picture";
-         
+
             string folderName = Path.Combine("Resources", "UploadImageBarang");
             string filePath = Path.Combine(Directory.GetCurrentDirectory(), folderName);
 
@@ -403,7 +392,7 @@ namespace ljgb.API.Controllers
             {
                 Directory.CreateDirectory(filePath);
             }
-          
+
             string uniqueFileName = DateTime.Now.ToString("yyyyMMddHHmmssfff") + "_" + file.FileName;
             string dbPath = Path.Combine(folderName, uniqueFileName);
 
@@ -411,7 +400,7 @@ namespace ljgb.API.Controllers
             {
                 await file.CopyToAsync(fileStream);
             }
-            
+
             return url + dbPath;
         }
 

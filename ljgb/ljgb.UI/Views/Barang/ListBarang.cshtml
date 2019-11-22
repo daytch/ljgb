@@ -390,7 +390,7 @@
                         event.preventDefault();
                         event.stopPropagation();
                     } else {
-                        debugger;
+                        
                         LoadingMask.show();
                         var values = {
                             ID: ($("#BarangID").val()) ? $("#BarangID").val() : 0,
@@ -561,7 +561,7 @@
                 $('#ImagePath').val("");
                 return;
             }
-            debugger;
+            
             var inputFile = $('#imgInp')[0].files[0];
             var pathFile = inputFile.name;
             var ekstensiOk = /(\.jpg|\.png)$/i;
