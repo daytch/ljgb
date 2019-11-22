@@ -94,15 +94,8 @@
             
             var values = {
                 TransactionStatusID: $("#dropdownStatus").val(),
-<<<<<<< HEAD
                 endDate: date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()
             }
-        
-=======
-                ID: $("#dropdownStatus").val(),
-            }
-
->>>>>>> 85ba346c4910d45f015d63a4915ff5ceeb46dfa9
             post_to_url(url + "Transaction/DownloadTransactionByStatus?TransactionStatusID=" + 1 + "&ID=" + 10, values,"get");
       
         });
