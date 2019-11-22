@@ -181,7 +181,6 @@ namespace ljgb.API.Controllers
             }
         }
 
-<<<<<<< HEAD
         [HttpGet]
         [Route("GetAllBidsById")]
         public IActionResult GetAllBidsById([FromQuery]BarangRequest request)
@@ -246,8 +245,6 @@ namespace ljgb.API.Controllers
         //    }
         //}
 
-=======
->>>>>>> dac33ba07c083478788b684d8a56b546fddd8cd6
         [HttpPost]
         [Route("GetModelWithID")]
         public async Task<IActionResult> GetPost(long postId)
