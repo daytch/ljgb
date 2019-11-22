@@ -123,11 +123,23 @@
                             toastr["success"](response.message);
                             $('.custom-file-label').html(filename);
                         } else {
-                            toastr["error"](response.message);
+                            //toastr["error"](response.message);
+                            Swal.fire(
+                                {
+                                    type: "error",
+                                    title: "Oops...",
+                                    text: response.message
+                                });
                             window.location.href = "/Identity/Account/Login";
                         }
                     },
                     error: function (response) {
+                        Swal.fire(
+                            {
+                                type: "error",
+                                title: "Oops...",
+                                text: response
+                            });
                         toastr["error"](response);
                         console.log(response);
                     }

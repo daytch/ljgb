@@ -23,4 +23,9 @@
     <ProjectReference Include="..\ljgb.DataAccess\ljgb.DataAccess.csproj" />
   </ItemGroup>
 
+
+  <ItemGroup>
+    <Folder Include="wwwroot\js\notifications\" />
+  </ItemGroup>
+
 </Project>
