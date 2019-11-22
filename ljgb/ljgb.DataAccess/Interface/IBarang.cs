@@ -25,7 +25,7 @@ namespace ljgb.DataAccess.Interface
 
         List<CarAsks> GetAllAsksById(BarangRequest req);
 
-        //List<>
+        List<CarBids> GetAllBidsById(BarangRequest req);
 
         Task<CarDetail> GetBarangDetail(int id);        
 

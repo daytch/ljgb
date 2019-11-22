@@ -128,13 +128,13 @@ namespace ljgb.BusinessLogic
 
             return resp;
         }
-        //public BarangResponse GetAllBidsById(BarangRequest req)
-        //{
-        //    BarangResponse resp = new BarangResponse();
-        //    resp.ListAsks = dep.GetAllBidsById(req);
+        public BarangResponse GetAllBidsById(BarangRequest req)
+        {
+            BarangResponse resp = new BarangResponse();
+            resp.ListAsks = dep.GetAllBidsById(req);
 
-        //    return resp;
-        //}
+            return resp;
+        }
         public async Task<BarangViewModel> GetPost(long ID)
         {
             var model = await dep.GetPost(ID);

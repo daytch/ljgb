@@ -16,5 +16,7 @@ namespace ljgb.Common.ViewModel
         public DateTime? Modified { get; set; }
         public string ModifiedBy { get; set; }
         public bool RowStatus { get; set; }
+        public string Alamat { get; set; }
+        public string Photopath { get; set; }
     }
 }

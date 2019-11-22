@@ -181,6 +181,70 @@ namespace ljgb.API.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("GetAllBidsById")]
+        public IActionResult GetAllBidsById([FromQuery]BarangRequest request)
+        {
+            long Id = request.ID;//Convert.ToInt32(HttpContext.Request.Query["id"]);
+            int start = Convert.ToInt32(HttpContext.Request.Query["start"]);
+            int limit = Convert.ToInt32(HttpContext.Request.Query["limit"]);
+            int max = Convert.ToInt32(HttpContext.Request.Query["max"]);
+
+            if (Id < 1)
+            {
+                return BadRequest();
+            }
+
+            try
+            {
+                BarangResponse post = facade.GetAllBidsById(request);
+                post.IsSuccess = true;
+                post.Message = "Success";
+                if (post == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(post);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+
+        //[HttpGet]
+        //[Route("GetAllBidsById")]
+        //public IActionResult GetAllBidsById([FromQuery]BarangRequest request)
+        //{
+        //    long Id = request.ID;//Convert.ToInt32(HttpContext.Request.Query["id"]);
+        //    int start = Convert.ToInt32(HttpContext.Request.Query["start"]);
+        //    int limit = Convert.ToInt32(HttpContext.Request.Query["limit"]);
+        //    int max = Convert.ToInt32(HttpContext.Request.Query["max"]);
+
+        //    if (Id < 1)
+        //    {
+        //        return BadRequest();
+        //    }
+
+        //    try
+        //    {
+        //        BarangResponse post = facade.GetAllBidsById(request);
+        //        post.IsSuccess = true;
+        //        post.Message = "Success";
+        //        if (post == null)
+        //        {
+        //            return NotFound();
+        //        }
+
+        //        return Ok(post);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return BadRequest(ex);
+        //    }
+        //}
+
         [HttpPost]
         [Route("GetModelWithID")]
         public async Task<IActionResult> GetPost(long postId)

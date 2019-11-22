@@ -12,5 +12,11 @@ namespace ljgb.Common.Responses
         public int recordsFiltered { get; set; }
         public List<SalesmanViewModel> datasalesman { get; set; }
         public List<BuyerViewModel> databuyer { get; set; }
+        public UserProfileViewModel userProfileModel { get; set; }
+
+        public UserResponse()
+        {
+            userProfileModel = new UserProfileViewModel();
+        }
     }
 }
