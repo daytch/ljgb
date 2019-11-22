@@ -128,11 +128,10 @@ namespace ljgb.API
                 RequestPath = new PathString("/Resources")
             });
 
-            //app.UseAuthentication();
             loggerFactory.AddLog4Net();
-            app.UseMvc();
-
-            
+            app.UseCookiePolicy();
+            app.UseAuthentication();
+            app.UseMvc();           
 
         }
     }
