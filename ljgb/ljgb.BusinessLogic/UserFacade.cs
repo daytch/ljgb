@@ -256,15 +256,41 @@ namespace ljgb.BusinessLogic
             return posts;
         }
 
-        public async Task<UserProfileViewModel> GetPost(string postId)
+        public async Task<UserResponse> GetPost(string email)
         {
-            var post = await dep.GetPost(1);
-
-            if (post == null)
+            UserResponse result = new UserResponse();
+            try
             {
-                return null;
+                var get = await dep.GetPost(email);
+
+                if (get == null)
+                {
+                    return null;
+                }
+               
+                result.userProfileModel.ID = 0;
+                result.userProfileModel.Email = get.Email;
+                result.userProfileModel.Name = get.Nama;
+                result.userProfileModel.Telp = get.Telp;
+                result.userProfileModel.Facebook = (get.Facebook==null)? "" : get.Facebook;
+                result.userProfileModel.IG = (get.Ig == null )?"" : get.Ig;
+                result.userProfileModel.JenisKelamin = get.JenisKelamin;
+                result.userProfileModel.Alamat = get.Alamat;
+                result.userProfileModel.Photopath = (get.PhotoPath==null)?"" : get.PhotoPath;
+                result.Message = "Success";
+                result.IsSuccess = true;
             }
-            return post;
+            catch (Exception ex)
+            {
+                result.Message = ex.ToString();
+                result.IsSuccess = false;
+
+            }
+            
+          
+            
+
+            return result;
         }
 
         public async Task<long> AddPost(UserProfile model)

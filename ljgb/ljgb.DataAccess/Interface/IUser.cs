@@ -22,7 +22,7 @@ namespace ljgb.DataAccess.Interface
 
         Task<List<UserProfileViewModel>> GetPosts();
 
-        Task<UserProfileViewModel> GetPost(long postId);
+        Task<UserProfile> GetPost(string Email);
                 
         Task<long> AddPost(UserProfile userProfile);
 

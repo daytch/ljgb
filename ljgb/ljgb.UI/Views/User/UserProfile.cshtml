@@ -69,14 +69,14 @@
 
                             <div class="form-group">
                                 <label>Facebook:</label>
-                                <input class="form-control" type="text" name="Faceook" required placeholder="Facebook" />
+                                <input class="form-control" type="text" name="facebook" required placeholder="Facebook" />
                                 <span class="Error"></span>
                             </div>
 
 
                             <div class="form-group">
                                 <label>Instagram:</label>
-                                <input class="form-control" type="text" name="Instagram" required placeholder="Instagram" />
+                                <input class="form-control" type="text" name="instagram" required placeholder="Instagram" />
                                 <span class="Error"></span>
                             </div>
 
@@ -124,7 +124,10 @@
             data: JSON.stringify(values),
             success: function (response) {
                 if (response.isSuccess) {
-
+                    debugger;
+                    $("#fullname").val(response.userProfileModel.name);
+                    $("#telepon").val(response.userProfileModel.telepon);
+                    $("#facebook").val(response.userProfileModel.telp);
 
                 } else {
                     toastr["error"](response.message);

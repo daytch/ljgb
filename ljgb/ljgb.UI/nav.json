@@ -118,7 +118,6 @@
           "title": "List BID",
           "href": "Nego_ListBID.cshtml"
         }
-<<<<<<< HEAD
 
       ]
     },
@@ -688,8 +687,7 @@
             }
           ]
         }
-=======
->>>>>>> 85ba346c4910d45f015d63a4915ff5ceeb46dfa9
+
       ]
     }
   ]

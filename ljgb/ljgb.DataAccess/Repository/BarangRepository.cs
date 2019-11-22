@@ -434,5 +434,25 @@ namespace ljgb.DataAccess.Repository
                 throw ex;
             }
         }
+
+        public List<CarBids> GetAllBidsById(BarangRequest req)
+        {
+            if (db != null)
+            {
+                try
+                {
+                    int result = 0;
+                    return db.Set<CarBids>().FromSql("EXEC sp_GetAllBidsByID_With_Paging {0},{1},{2},{3},{4},{5},{6}",
+                        req.ID, req.start, req.limit, null, null, req.max, result).AsNoTracking().ToList();
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+
+            }
+
+            return null;
+        }
     }
 }

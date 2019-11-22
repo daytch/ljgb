@@ -93,27 +93,11 @@ namespace ljgb.DataAccess.Repository
             return null;
         }
 
-        public async Task<UserProfileViewModel> GetPost(long postId)
+        public async Task<UserProfile> GetPost(string Email)
         {
             if (db != null)
             {
-                return await (from user in db.UserProfile
-                              where user.Id == postId && user.RowStatus == true
-                              select new UserProfileViewModel
-                              {
-                                  ID = user.Id,
-                                  Name = user.Nama,
-                                  Facebook = user.Facebook,
-                                  IG = user.Ig,
-                                  JenisKelamin = user.JenisKelamin,
-                                  Telp = user.Telp,
-                                  Email = user.Email,
-                                  Created = user.Created,
-                                  CreatedBy = user.CreatedBy,
-                                  Modified = user.Modified,
-                                  ModifiedBy = user.ModifiedBy,
-                                  RowStatus = user.RowStatus
-                              }).FirstOrDefaultAsync();
+                return await db.UserProfile.Where(x => x.RowStatus == true && x.Email == Email).FirstOrDefaultAsync();
             }
 
             return null;
