@@ -134,6 +134,7 @@
                         }
                     },
                     error: function (response) {
+                        LoadingMask.hide();
                         Swal.fire(
                             {
                                 type: "error",

@@ -21,12 +21,13 @@ namespace ljgb.UI.Areas.Identity.Pages.Account
             _logger = logger;
         }
 
-        public async Task OnGet()
+        public async Task<IActionResult> OnGet()
         {
             Response.Cookies.Append("access_token", "", new CookieOptions()
             {
                 Expires = DateTime.Now.AddDays(-1)
             });
+            return LocalRedirect("/");
         }
 
         public async Task<IActionResult> OnPost(string returnUrl = null)

@@ -92,6 +92,8 @@ namespace ljgb.UI.Areas.Identity.Pages.Account
                 if (response.IsSuccess)
                 {
                     Response.Cookies.Append("access_token", response.Token);
+                    ApplicationSettings applicationSettings = new ApplicationSettings();
+                    applicationSettings.Name = response.Name;
                     //_logger.LogInformation("User logged in.");
                     return LocalRedirect(returnUrl);
                 }

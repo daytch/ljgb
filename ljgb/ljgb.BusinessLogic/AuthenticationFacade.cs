@@ -54,6 +54,7 @@ namespace ljgb.BusinessLogic
             userProfile = await dataAccess.GetUserProfile(up);
             if (userProfile != null)
             {
+                response.Name = userProfile.Nama;
                 response.Token = security.GenerateToken(user.Email);
                 response.Message = "Success";
                 response.IsSuccess = true;
