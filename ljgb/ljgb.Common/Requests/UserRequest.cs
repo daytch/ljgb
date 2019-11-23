@@ -29,6 +29,8 @@ namespace ljgb.Common.Requests
         public string JenisKelamin { get; set; }
         public int KotaId { get; set; }
         public string KodeDealer { get; set; }
+        public string Facebook { get; set; }
+        public string Instagram { get; set; }
     }
 
     public class sp_GetUserDetail

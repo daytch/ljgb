@@ -29,5 +29,7 @@ namespace ljgb.DataAccess.Interface
         Task<List<SP_ReportByStatusID>> GetReportByStatusID(long id, string endDate);
         Task<List<SP_GetAllBidByUserProfileID>> GetAllBidByUserProfileID(long UserProfileID);
         Task<List<SP_GetAllAskByUserProfileID>> GetAllAskByUserProfileID(long UserProfileID);
+        Task<List<sp_GetAllBidAndBuyByUserProfileID>> GetAllBidAndBuyByUserProfileID(long UserProfileID);
+        Task<UserProfile> GetUserProfile(string UserName);
     }
 }
