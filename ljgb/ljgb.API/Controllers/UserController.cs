@@ -384,6 +384,25 @@ namespace ljgb.API.Controllers
             return result;
         }
 
+        [HttpPost]
+        [Route("UpdateProfileSalesman")]
+        public async Task<IActionResult> UpdateProfileSalesman()
+        {
+            try
+            {
+                var posts = await facade.GetPosts();
+                if (posts == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(posts);
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+        }
         //[HttpPost]
         //[Route("PasswordSignIn")]
         //public async Task<SignInResponse> PasswordSignIn([FromBody]UserRequest user)

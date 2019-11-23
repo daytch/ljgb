@@ -20,6 +20,8 @@ namespace ljgb.Common.Responses
 
         public List<SP_ReportByStatusID> listSP_ReportByStatusID { get; set; }
 
+        public List<sp_GetAllBidAndBuyByUserProfileID> ListBidAndBuy { get; set; }
+
         public TransactionResponse()
         {
             ListTransaction = new List<TransactionViewModel>();
@@ -91,5 +93,18 @@ namespace ljgb.Common.Responses
         public string colour { get; set; }
         public string typePenawaran { get; set; }
         public long price { get; set; }
+    }
+
+    public class sp_GetAllBidAndBuyByUserProfileID
+    {
+        public long ID { get; set; }
+        public long NegoBarangID { get; set; }
+        public string MerkName { get; set; }
+        public string ModelName { get; set; }
+        public string TypeName { get; set; }
+        public long BarangID { get; set; }
+        public string BarangName { get; set; }
+        public long Price { get; set; }
+        public string Status { get; set; }
     }
 }

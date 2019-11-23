@@ -657,6 +657,31 @@ namespace ljgb.DataAccess.Repository
             }
         }
 
+        public async Task<List<sp_GetAllBidAndBuyByUserProfileID>> GetAllBidAndBuyByUserProfileID(long UserProfileID)
+        {
+            try
+            {
+                return await db.Set<sp_GetAllBidAndBuyByUserProfileID>().FromSql("EXEC sp_GetAllBidAndBuyByUserProfileID {0}", UserProfileID).AsNoTracking().ToListAsync();
+            }
+            catch (Exception ex)
+            {
 
+                throw ex;
+            }
+        }
+
+        public async Task<UserProfile> GetUserProfile(string UserName)
+        {
+            
+            try
+            {
+                return await db.UserProfile.Where(x => x.RowStatus == true && x.Email == UserName).FirstOrDefaultAsync();
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
     }
 }

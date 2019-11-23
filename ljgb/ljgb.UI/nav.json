@@ -119,6 +119,17 @@
           "href": "Nego_ListBID.cshtml"
         }
       ]
+    },
+    {
+      "title": "User Profile",
+      "icon": "fal fa-th-list",
+      "items": [
+        {
+          "title": "User Profile",
+          "href": "User_USerProfile.cshtml"
+        }
+
+      ]
     }
   ]
 }

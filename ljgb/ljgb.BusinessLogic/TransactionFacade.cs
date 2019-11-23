@@ -25,6 +25,7 @@ namespace ljgb.BusinessLogic
         private ITransaction dep;
         private INegoBarang INego;
         private ITransactionJournal IJournal;
+       
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         public TransactionFacade()
@@ -273,6 +274,26 @@ namespace ljgb.BusinessLogic
         public async Task<TransactionResponse> GetHistory(TransactionRequest req)
         {
             return await IJournal.GetHistory(req.ID);
+        }
+
+        public async Task<TransactionResponse> GetListBidAndBuy(TransactionRequest request)
+        {
+            TransactionResponse response = new TransactionResponse();
+            try
+            {
+                UserProfile userProfile =  await dep.GetUserProfile(request.UserName);
+                response.ListBidAndBuy = await dep.GetAllBidAndBuyByUserProfileID(userProfile.Id);
+                response.IsSuccess = true;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+
+                response.IsSuccess = false;
+                response.Message = ex.ToString();
+            }
+
+            return response;
         }
 
         public async Task<TransactionResponse> GetAllStatus()

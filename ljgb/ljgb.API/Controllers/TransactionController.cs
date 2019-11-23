@@ -1,5 +1,6 @@
 ﻿using ljgb.BusinessLogic;
 using ljgb.Common.Requests;
+using ljgb.Common.Responses;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -19,6 +20,7 @@ namespace ljgb.API.Controllers
     {
         private readonly IConfiguration _config;
         private string url = "";
+        private Security sec = new Security();
         public TransactionController(IConfiguration config)
         {
             url = config.GetSection("API_url").Value;
@@ -268,6 +270,40 @@ namespace ljgb.API.Controllers
             return BadRequest();
         }
 
+        [HttpPost]
+        [Route("GetListBidAndBuy")]
+        public async Task<TransactionResponse> ListBidAndBuy([FromBody]TransactionRequest req)
+        {
+            TransactionResponse resp = new TransactionResponse();
+            try
+            {
+                string bearer = Request.HttpContext.Request.Headers["Authorization"];
+                string token = bearer.Substring("Bearer ".Length).Trim();
+                //string token = req.Token;
+                string username = string.Empty;
+                if (string.IsNullOrEmpty(token))
+                {
+                    resp.IsSuccess = false;
+                    resp.Message = "You don't have access.";
+                    return resp;
+                }
+               
+                
+
+                username = sec.ValidateToken(token);
+                req.UserName = username;
+                resp = await facade.GetListBidAndBuy(req);
+
+                return resp;
+
+            }
+            catch (Exception ex)
+            {
+                return resp;
+            }
+
+
+        }
 
         [HttpPost]
         [Route("GetHistory")]

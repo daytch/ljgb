@@ -274,7 +274,7 @@ namespace ljgb.BusinessLogic
                 result.userProfileModel.Telp = get.Telp;
                 result.userProfileModel.Facebook = (get.Facebook==null)? "" : get.Facebook;
                 result.userProfileModel.IG = (get.Ig == null )?"" : get.Ig;
-                result.userProfileModel.JenisKelamin = get.JenisKelamin;
+                result.userProfileModel.JenisKelamin = (get.JenisKelamin == null) ? "" :get.JenisKelamin;
                 result.userProfileModel.Alamat = get.Alamat;
                 result.userProfileModel.Photopath = (get.PhotoPath==null)?"" : get.PhotoPath;
                 result.Message = "Success";
@@ -534,5 +534,29 @@ namespace ljgb.BusinessLogic
 
             return result;
         }
+
+        public async Task<UserResponse> UpdateProfileSalesman(UserRequest req)
+        {
+            UserResponse response = new UserResponse();
+            try
+            {
+                UserProfile model = new UserProfile();
+                model.Alamat = req.Alamat;
+                model.Facebook = req.Facebook;
+                model.Ig = req.Instagram;
+                model.Nama = req.Nama;
+                model.Telp = req.Telp;
+                model.KotaId = req.KotaId;
+                //model.
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+
+            return response;
+        }
+
     }
 }

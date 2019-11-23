@@ -63,6 +63,7 @@ namespace ljgb.DataAccess.Model
         public virtual DbSet<SP_GetPhotoAndWarnaByBarangID> SP_GetPhotoAndWarnaByBarangID { get; set; }
         public virtual DbSet<SP_GetTypeBarangByBarangID> SP_GetTypeBarangByBarangID { get; set; }
         public virtual DbSet<CarBids> CarBids { get; set; }
+        public virtual DbSet<sp_GetAllBidAndBuyByUserProfileID> sp_GetAllBidAndBuyByUserProfileID { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
