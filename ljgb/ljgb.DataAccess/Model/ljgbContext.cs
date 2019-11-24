@@ -24,6 +24,7 @@ namespace ljgb.DataAccess.Model
         public virtual DbSet<AspNetUserTokens> AspNetUserTokens { get; set; }
         public virtual DbSet<AspNetUsers> AspNetUsers { get; set; }
         public virtual DbSet<Barang> Barang { get; set; }
+        public virtual DbSet<Config> Config { get; set; }
         public virtual DbSet<Dealer> Dealer { get; set; }
         public virtual DbSet<Kota> Kota { get; set; }
         public virtual DbSet<Merk> Merk { get; set; }
@@ -234,6 +235,33 @@ namespace ljgb.DataAccess.Model
                     .HasForeignKey(d => d.WarnaId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Barang_Warna");
+            });
+
+            modelBuilder.Entity<Config>(entity =>
+            {
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.Created).HasColumnType("datetime");
+
+                entity.Property(e => e.CreatedBy)
+                    .IsRequired()
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Modified).HasColumnType("datetime");
+
+                entity.Property(e => e.ModifiedBy)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasMaxLength(150)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Value)
+                    .IsRequired()
+                    .HasColumnType("text");
             });
 
             modelBuilder.Entity<Dealer>(entity =>

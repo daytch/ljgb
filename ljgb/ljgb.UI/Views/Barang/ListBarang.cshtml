@@ -86,11 +86,10 @@
     </div>
 </div>
 <!-- Modal Add-->
-<div class="modal fade" id="ModalEdit" role="dialog">
+<div class="modal fade  bd-example-modal-lg" tabindex="-1" id="ModalEdit" role="dialog">
     <form class="needs-validation" novalidate>
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-lg" role="document">
 
-            <!-- Modal content-->
             <div class="modal-content">
                 <div class="modal-header">
 
@@ -99,70 +98,76 @@
 
                 </div>
                 <div class="modal-body">
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label class="form-label" for="simpleinput">Merk</label>
 
-                    <div class="form-group">
-                        <label class="form-label" for="simpleinput">Merk</label>
+                                <select id="dropdownMerk" class="form-control col-md-12" type="text" name="dropdownMerk" required></select>
+                                <div class="invalid-feedback">
+                                    Please Select Merk
+                                </div>
+                            </div>
 
-                        <select id="dropdownMerk" class="form-control col-md-12" type="text" name="dropdownMerk" required></select>
-                        <div class="invalid-feedback">
-                            Please Select Merk
+                            <div class="form-group">
+                                <label class="form-label" for="simpleinput">Model</label>
+
+                                <select id="dropdownModelBarang" class="form-control col-md-12" type="text" name="dropdownModelBarang" required></select>
+                                <div class="invalid-feedback">
+                                    Please Select Model
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label" for="simpleinput">Type</label>
+
+                                <select id="dropdownType" class="form-control col-md-12" type="text" name="dropdownType" required></select>
+                                <div class="invalid-feedback">
+                                    Please Select Type
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label" for="simpleinput">Warna</label>
+
+                                <select id="dropdownWarna" class="form-control col-md-12" type="text" name="dropdownWarna" required></select>
+                                <div class="invalid-feedback">
+                                    Please Select Warna
+                                </div>
+                            </div>
                         </div>
-                    </div>
+                        <div class="col-6">
 
-                    <div class="form-group">
-                        <label class="form-label" for="simpleinput">Model</label>
+                            <div class="form-group">
+                                <label class="form-label" for="simpleinput">Kota</label>
 
-                        <select id="dropdownModelBarang" class="form-control col-md-12" type="text" name="dropdownModelBarang" required></select>
-                        <div class="invalid-feedback">
-                            Please Select Model
+                                <select id="dropdownKota" class="form-control col-md-12" type="text" name="dropdownKota" required></select>
+                                <div class="invalid-feedback">
+                                    Please Select Kota
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label" for="example-textarea">Harga OTR</label>
+                                <input type="text" id="hargaOTR" name="Nama" onkeypress="return isNumberKey(event)" class="form-control" required>
+                                <div class="invalid-feedback">
+                                    Please Input Harga OTR
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label" for="example-textarea">Tahun</label>
+                                <input type="text" id="tahun" name="Tahun" onkeypress="return isNumberKey(event)" class="form-control" required>
+                                <div class="invalid-feedback">
+                                    Please Input Tahun
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <input type='file' id="imgInp" />
+                                <img id="uploadImage" src="#" width="200" height="200" alt="your image" />
+                            </div>
                         </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label" for="simpleinput">Type</label>
-
-                        <select id="dropdownType" class="form-control col-md-12" type="text" name="dropdownType" required></select>
-                        <div class="invalid-feedback">
-                            Please Select Type
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label" for="simpleinput">Warna</label>
-
-                        <select id="dropdownWarna" class="form-control col-md-12" type="text" name="dropdownWarna" required></select>
-                        <div class="invalid-feedback">
-                            Please Select Warna
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label" for="simpleinput">Kota</label>
-
-                        <select id="dropdownKota" class="form-control col-md-12" type="text" name="dropdownKota" required></select>
-                        <div class="invalid-feedback">
-                            Please Select Kota
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label" for="example-textarea">Harga OTR</label>
-                        <input type="text" id="hargaOTR" name="Nama" onkeypress="return isNumberKey(event)"  class="form-control" required>
-                        <div class="invalid-feedback">
-                            Please Input Harga OTR
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label" for="example-textarea">Tahun</label>
-                        <input type="text" id="tahun" name="Tahun" onkeypress="return isNumberKey(event)"  class="form-control" required>
-                        <div class="invalid-feedback">
-                            Please Input Tahun
-                        </div>
-                    </div>
-                    <div>
-                        <input type='file' id="imgInp" />
-                        <img id="uploadImage" src="#" width="200" height="200" alt="your image" />
                     </div>
 
                 </div>
@@ -187,13 +192,14 @@
 
             return true;
         }
-        var url = ""
-        var imageUrl = ""
+        var url = "";
+        var imageUrl = "";
         $(document).ready(function () {
             moment.locale('ID');
             url = "@ViewBag.url_api";
             imageUrl = url;
             imageUrl = imageUrl.replace("api", "");
+
             $.ajax({
                 url: url + "Merk/GetAllWithoutFilter",
                 contentType: 'application/json',
@@ -215,6 +221,7 @@
                     console.log(jqXHR + " " + text + " " + errorThrown);
                 }
             });
+
             $.ajax({
                 url: url + "Kota/GetAllKotaWithoutFilter",
                 contentType: 'application/json',
@@ -236,6 +243,7 @@
                     console.log(jqXHR + " " + text + " " + errorThrown);
                 }
             });
+
             $.ajax({
                 url: url + "Warna/GetAllWithoutFilter",
                 contentType: 'application/json',
@@ -266,6 +274,13 @@
                 serverSide: true,
                 initComplete: function () {
                     $(this.api().table().container()).find("input").parent().wrap("<form>").parent().attr("autocomplete", "off");
+                },
+                bStateSave: true,
+                fnStateSave: function (oSettings, oData) {
+                    localStorage.setItem('offersDataTables', JSON.stringify(oData));
+                },
+                fnStateLoad: function (oSettings) {
+                    return JSON.parse(localStorage.getItem('offersDataTables'));
                 },
                 ajax: {
                     url: url + "Barang/GetAll",
@@ -305,7 +320,7 @@
                         data: "namaWarna",
                         width: "15%"
                     },
-                   
+
                     {
                         data: "hargaOtr",
                         width: "15%"
@@ -320,7 +335,7 @@
                                 return '<img src="' + t.photoPath + '" width="50" height="50" alt="your image" />';
                             }
                             else {
-                               
+
                                 return '<img src="#" width="20px" height="20px" alt="No Image" />';
                             }
 
@@ -338,6 +353,8 @@
 
 
             function resetModal() {
+                
+                $('#uploadImage').attr('src', "");
                 var $t = $('[data-dismiss=modal]'),
                     target = $t[0].href || $t.data("target") || $t.parents('.modal') || [];
                 $(target)
@@ -350,15 +367,16 @@
             }
 
             $("#ModalDelete").on("show.bs.modal", function (e) {
-
                 $('#BarangID').val(e.relatedTarget.getAttribute('data-id'));
             });
 
             $('#ModalEdit').on('show.bs.modal', function (e) {
+                resetModal();
                 $('#HiddenModelID').val(e.relatedTarget.getAttribute('data-modelID'));
                 $('#HiddenTypeID').val(e.relatedTarget.getAttribute('data-typeBarangID'));
-                $('#uploadImage').attr('src', e.relatedTarget.getAttribute('data-Photo'));
-                resetModal();
+                if (e.relatedTarget.getAttribute('data-Photo') !== "null") {
+                    $('#uploadImage').attr('src', e.relatedTarget.getAttribute('data-Photo'));
+                }
                 $('#dropdownModelBarang option').remove();
                 $('#dropdownType option').remove();
                 $('#BarangID').val(e.relatedTarget.getAttribute('data-id'));
@@ -372,7 +390,7 @@
                     merkID: $('#dropdownMerk').val()
                 }
                 SetModelDropdown(valuesMerk);
-               
+
                 var valuesModelBarang = {
 
                     ModelBarangID: e.relatedTarget.getAttribute('data-modelID')
@@ -390,7 +408,7 @@
                         event.preventDefault();
                         event.stopPropagation();
                     } else {
-                        
+
                         LoadingMask.show();
                         var values = {
                             ID: ($("#BarangID").val()) ? $("#BarangID").val() : 0,
@@ -414,15 +432,15 @@
                             data: JSON.stringify(values),
                             success: function (response) {
                                 if (response.isSuccess) {
+                                    LoadingMask.hide();
                                     $("#ModalEdit").modal('hide');
-                                    $(document.body).removeClass('modal-open');
+                                    //$(document.body).removeClass('modal-open');
                                     $('.modal-backdrop').remove();
                                     toastr["success"](response.message);
                                     $('#tableBarang').DataTable().ajax.reload();
-                                    LoadingMask.hide();
                                 } else {
-                                    toastr["error"](response.message);
                                     LoadingMask.hide();
+                                    toastr["error"](response.message);
                                 }
                             },
                             error: function (jqXHR, text, errorThrown) {
@@ -465,6 +483,7 @@
             });
         });
         $("#dropdownMerk").change(function () {
+            
             $("#dropdownModelBarang option").remove();
             $("#dropdownType option").remove();
             var values = {
@@ -475,6 +494,7 @@
             SetModelDropdown(values);
         });
         $("#dropdownModelBarang").change(function () {
+            
             $("#dropdownType option").remove();
             var values = {
 
@@ -483,6 +503,7 @@
 
             SetTypeDropdown(values);
         });
+
         function SetTypeDropdown(values) {
             $.ajax({
                 url: url + "TypeBarang/GetAllWithModelBarangID",
@@ -498,7 +519,7 @@
 
                         $.each(response.listModel, function (key, entry) {
                             $("#dropdownType").append($('<option></option>').attr('value', entry.id).text(entry.name));
-                            
+
                         })
                     } else {
                         toastr["error"](response.message);
@@ -557,11 +578,12 @@
         }
 
         $("#imgInp").change(function () {
+            
             if ($("#imgInp").val() == "") {
                 $('#ImagePath').val("");
                 return;
             }
-            
+
             var inputFile = $('#imgInp')[0].files[0];
             var pathFile = inputFile.name;
             var ekstensiOk = /(\.jpg|\.png)$/i;
@@ -583,7 +605,7 @@
                     xhr.setRequestHeader('Authorization', 'Bearer ' + Cookies.get("access_token"));
                 },
                 success: function (filename) {
-                    debugger
+
                     fileName = filename;
                     $('.custom-file-label').html(filename);
                     $('#ImagePath').val(filename);

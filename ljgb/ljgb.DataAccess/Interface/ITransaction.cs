@@ -8,6 +8,8 @@ namespace ljgb.DataAccess.Interface
 {
     public interface ITransaction
     {
+        Task<Transaction> Select(Transaction transaction);
+        Task<bool> Update(Transaction transaction);
         Task<TransactionResponse> GetAll(string search, string order, string orderDir, int startRec, int pageSize, int draw);
 
         Task<TransactionResponse> GetPost(TransactionRequest model);

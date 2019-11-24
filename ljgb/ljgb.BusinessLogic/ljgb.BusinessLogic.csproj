@@ -2,11 +2,16 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
+    <ApplicationIcon />
+    <OutputType>Exe</OutputType>
+    <StartupObject />
   </PropertyGroup>
 
   <ItemGroup>
 
     <PackageReference Include="EPPlus" Version="4.5.3.2" />
+
+    <PackageReference Include="MailKit" Version="2.4.1" />
 
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.2.0" />
 

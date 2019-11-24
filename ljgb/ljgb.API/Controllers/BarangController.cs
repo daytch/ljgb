@@ -213,38 +213,6 @@ namespace ljgb.API.Controllers
             }
         }
 
-        //[HttpGet]
-        //[Route("GetAllBidsById")]
-        //public IActionResult GetAllBidsById([FromQuery]BarangRequest request)
-        //{
-        //    long Id = request.ID;//Convert.ToInt32(HttpContext.Request.Query["id"]);
-        //    int start = Convert.ToInt32(HttpContext.Request.Query["start"]);
-        //    int limit = Convert.ToInt32(HttpContext.Request.Query["limit"]);
-        //    int max = Convert.ToInt32(HttpContext.Request.Query["max"]);
-
-        //    if (Id < 1)
-        //    {
-        //        return BadRequest();
-        //    }
-
-        //    try
-        //    {
-        //        BarangResponse post = facade.GetAllBidsById(request);
-        //        post.IsSuccess = true;
-        //        post.Message = "Success";
-        //        if (post == null)
-        //        {
-        //            return NotFound();
-        //        }
-
-        //        return Ok(post);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return BadRequest(ex);
-        //    }
-        //}
-
         [HttpPost]
         [Route("GetModelWithID")]
         public async Task<IActionResult> GetPost(long postId)
@@ -283,6 +251,7 @@ namespace ljgb.API.Controllers
                 string username = string.Empty;
                 if (string.IsNullOrEmpty(token))
                 {
+<<<<<<< HEAD
                     resp.IsSuccess = false;
                     resp.Message = "You don't have access.";
                     return resp;
@@ -292,6 +261,34 @@ namespace ljgb.API.Controllers
                 if (username == null)
                 {
                     Response.HttpContext.Response.Cookies.Append("access_token", "", new CookieOptions()
+=======
+                    string bearer = Request.HttpContext.Request.Headers["Authorization"];
+                    string token = bearer.Substring("Bearer ".Length).Trim();
+                    string username = string.Empty;
+                    if (string.IsNullOrEmpty(token))
+                    {
+                        result.IsSuccess = false;
+                        result.Message = "You don't have access.";
+                        return BadRequest(result);
+                    }
+
+                    username = sec.ValidateToken(token);
+                    if (username == null)
+                    {
+                        Response.HttpContext.Response.Cookies.Append("access_token", "", new CookieOptions()
+                        {
+                            Expires = DateTime.Now.AddDays(-1)
+                        });
+                        result.IsSuccess = false;
+                        result.Message = "Your session was expired, please re-login.";
+                        return BadRequest(result);
+                    }
+                    if (model.ID > 0)
+                    {
+                        result = await facade.UpdatePost(model);
+                    }
+                    else
+>>>>>>> 2950fc3cbded93d7b2910d60578be62593369a4d
                     {
                         Expires = DateTime.Now.AddDays(-1)
                     });
@@ -342,7 +339,12 @@ namespace ljgb.API.Controllers
         [Route("DeletePost")]
         public async Task<BarangResponse> DeletePost(BarangRequest request)
         {
+<<<<<<< HEAD
             BarangResponse resp = new BarangResponse();
+=======
+            BarangResponse response = new BarangResponse();
+
+>>>>>>> 2950fc3cbded93d7b2910d60578be62593369a4d
             try
             {
                 string bearer = Request.HttpContext.Request.Headers["Authorization"];
@@ -367,6 +369,31 @@ namespace ljgb.API.Controllers
                     return resp;
                 }
 
+<<<<<<< HEAD
+=======
+                string bearer = Request.HttpContext.Request.Headers["Authorization"];
+                string token = bearer.Substring("Bearer ".Length).Trim();
+                string username = string.Empty;
+                if (string.IsNullOrEmpty(token))
+                {
+                    response.IsSuccess = false;
+                    response.Message = "You don't have access.";
+                    return BadRequest(response);
+                }
+
+                username = sec.ValidateToken(token);
+                if (username == null)
+                {
+                    Response.HttpContext.Response.Cookies.Append("access_token", "", new CookieOptions()
+                    {
+                        Expires = DateTime.Now.AddDays(-1)
+                    });
+                    response.IsSuccess = false;
+                    response.Message = "Your session was expired, please re-login.";
+                    return BadRequest(response);
+                }
+                response = await facade.DeletePost(request.ID);
+>>>>>>> 2950fc3cbded93d7b2910d60578be62593369a4d
 
 
                 return resp = await facade.DeletePost(request.ID, username); ;
@@ -402,6 +429,28 @@ namespace ljgb.API.Controllers
             {
                 try
                 {
+                    BarangResponse response = new BarangResponse();
+                    string bearer = Request.HttpContext.Request.Headers["Authorization"];
+                    string token = bearer.Substring("Bearer ".Length).Trim();
+                    string username = string.Empty;
+                    if (string.IsNullOrEmpty(token))
+                    {
+                        response.IsSuccess = false;
+                        response.Message = "You don't have access.";
+                        return BadRequest(response);
+                    }
+
+                    username = sec.ValidateToken(token);
+                    if (username == null)
+                    {
+                        Response.HttpContext.Response.Cookies.Append("access_token", "", new CookieOptions()
+                        {
+                            Expires = DateTime.Now.AddDays(-1)
+                        });
+                        response.IsSuccess = false;
+                        response.Message = "Your session was expired, please re-login.";
+                        return BadRequest(response);
+                    }
                     var result = await facade.UpdatePost(request);
 
                     return Ok(result);

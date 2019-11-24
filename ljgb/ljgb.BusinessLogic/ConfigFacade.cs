@@ -6,20 +6,22 @@ using ljgb.DataAccess.Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
+using System.Net.Mail;
 using System.Threading.Tasks;
 
 namespace ljgb.BusinessLogic
 {
-    public class TransactionLevelFacade
+    public class ConfigFacade
     {
         #region Important
         private ljgbContext db;
-        private ITransactionLevel dep;
+        private IConfig dataAccess;
+        private Security security;
 
-        public TransactionLevelFacade()
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
+        public ConfigFacade()
         {
             var builder = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
@@ -31,38 +33,28 @@ namespace ljgb.BusinessLogic
             var optionsBuilder = new DbContextOptionsBuilder<ljgbContext>();
             optionsBuilder.UseSqlServer(connectionString);
 
+            security = new Security();
+
             db = new ljgbContext(optionsBuilder.Options);
-            this.dep = new TransactionLevelRepository(db);
+            dataAccess = new ConfigRepository(db);
         }
         #endregion
 
-        public async Task<TransactionLevelResponse> GetAll()
+        public async Task<string> GetRedaksionalEmail(string type)
         {
-            var models = await dep.GetAll();
-            if (models == null)
+            string result = string.Empty;
+
+            try
             {
-                return null;
+                Config config = new Config() { Name = type };
+                result = await dataAccess.GetValue(config);
             }
-            return models;
-        }
-
-        public async Task<TransactionLevelResponse> GetCurrentLevel(TransactionLevelRequest request)
-        {
-
-            var models = await dep.GetCurrentLevel(request);
-            if (models == null)
+            catch (Exception ex)
             {
-                return null;
+                log.Error(ex);
             }
-            return models;
-        }
 
-        public async Task<TransactionLevelResponse> GetNextLevel(TransactionLevelRequest request)
-        {
-            return await dep.GetNextLevel(request);
+            return result;
         }
-        
     }
-        
-    
 }
