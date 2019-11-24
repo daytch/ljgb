@@ -84,7 +84,7 @@ namespace ljgb.BusinessLogic
                     req.Name = request.Name;
                     req.Description = request.Description;
                     req.Created = DateTime.Now;
-                    req.CreatedBy = "xsivicto1905";
+                    req.CreatedBy = request.UserName;
                     req.RowStatus = true;
                     response =  await dep.AddPost(req);
                 }
@@ -130,7 +130,7 @@ namespace ljgb.BusinessLogic
                         req.Name = request.Name;
                         req.Description = request.Description;
                         req.Created = DateTime.Now;
-                        req.CreatedBy = "xsivicto1905";
+                        req.CreatedBy = request.UserName;
                         req.RowStatus = true;
                         response = await dep.UpdatePost(request);
                     }
@@ -142,7 +142,7 @@ namespace ljgb.BusinessLogic
                     req.Name = request.Name;
                     req.Description = request.Description;
                     req.Created = DateTime.Now;
-                    req.CreatedBy = "xsivicto1905";
+                    req.CreatedBy = request.UserName;
                     req.RowStatus = true;
                     response = await dep.UpdatePost(request);
                 }

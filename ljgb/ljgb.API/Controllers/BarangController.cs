@@ -273,55 +273,126 @@ namespace ljgb.API.Controllers
 
         [HttpPost]
         [Route("AddPost")]
-        public async Task<IActionResult> AddPost([FromBody]BarangRequest model)
+        public async Task<BarangResponse> AddPost([FromBody]BarangRequest model)
         {
-            BarangResponse result = new BarangResponse();
-            if (ModelState.IsValid)
+            BarangResponse resp = new BarangResponse();
+            try
             {
-                try
+                string bearer = Request.HttpContext.Request.Headers["Authorization"];
+                string token = bearer.Substring("Bearer ".Length).Trim();
+                string username = string.Empty;
+                if (string.IsNullOrEmpty(token))
                 {
-                    if (model.ID > 0)
-                    {
-                        result = await facade.UpdatePost(model);
-                    }
-                    else
-                    {
-                        result = await facade.AddPost(model);
-                    }
-                    return Ok(result);
+                    resp.IsSuccess = false;
+                    resp.Message = "You don't have access.";
+                    return resp;
                 }
-                catch (Exception)
+
+                username = sec.ValidateToken(token);
+                if (username == null)
                 {
-                    return BadRequest();
+                    Response.HttpContext.Response.Cookies.Append("access_token", "", new CookieOptions()
+                    {
+                        Expires = DateTime.Now.AddDays(-1)
+                    });
+                    resp.IsSuccess = false;
+                    resp.Message = "Your session was expired, please re-login.";
+                    return resp;
                 }
+                model.UserName = username;
+                if (model.ID > 0)
+                {
+                    resp = await facade.UpdatePost(model);
+                }
+                else
+                {
+                    resp = await facade.AddPost(model);
+                }
+
+                return resp;
             }
-            return BadRequest();
+            catch (Exception)
+            {
+                return resp;
+            }
+            //BarangResponse result = new BarangResponse();
+            //if (ModelState.IsValid)
+            //{
+            //    try
+            //    {
+            //        if (model.ID > 0)
+            //        {
+            //            result = await facade.UpdatePost(model);
+            //        }
+            //        else
+            //        {
+            //            result = await facade.AddPost(model);
+            //        }
+            //        return Ok(result);
+            //    }
+            //    catch (Exception)
+            //    {
+            //        return BadRequest();
+            //    }
+            //}
+            //return BadRequest();
         }
 
         [HttpPost]
         [Route("DeletePost")]
-        public async Task<IActionResult> DeletePost(BarangRequest request)
+        public async Task<BarangResponse> DeletePost(BarangRequest request)
         {
-            BarangResponse response = new BarangResponse();
-
-
+            BarangResponse resp = new BarangResponse();
             try
             {
-                if (request.ID < 1)
+                string bearer = Request.HttpContext.Request.Headers["Authorization"];
+                string token = bearer.Substring("Bearer ".Length).Trim();
+                string username = string.Empty;
+                if (string.IsNullOrEmpty(token))
                 {
-                    return BadRequest();
+                    resp.IsSuccess = false;
+                    resp.Message = "You don't have access.";
+                    return resp;
                 }
 
-                response = await facade.DeletePost(request.ID);
+                username = sec.ValidateToken(token);
+                if (username == null)
+                {
+                    Response.HttpContext.Response.Cookies.Append("access_token", "", new CookieOptions()
+                    {
+                        Expires = DateTime.Now.AddDays(-1)
+                    });
+                    resp.IsSuccess = false;
+                    resp.Message = "Your session was expired, please re-login.";
+                    return resp;
+                }
 
-                return Ok(response);
+
+
+                return resp = await facade.DeletePost(request.ID, username); ;
             }
             catch (Exception)
             {
-
-                return BadRequest();
+                return resp;
             }
         }
+        //    try
+        //    {
+        //        if (request.ID < 1)
+        //        {
+        //            return BadRequest();
+        //        }
+
+        //        response = await facade.DeletePost(request.ID);
+
+        //        return Ok(response);
+        //    }
+        //    catch (Exception)
+        //    {
+
+        //        return BadRequest();
+        //    }
+        //}
 
         [HttpPost]
         [Route("UpdatePost")]

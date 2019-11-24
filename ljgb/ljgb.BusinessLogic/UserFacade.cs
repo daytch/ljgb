@@ -451,6 +451,7 @@ namespace ljgb.BusinessLogic
             try
             {
                 result = await dep.Register(model);
+                
             }
             catch (Exception ex)
             {
@@ -540,23 +541,58 @@ namespace ljgb.BusinessLogic
             UserResponse response = new UserResponse();
             try
             {
-                UserProfile model = new UserProfile();
+                UserProfile model = await dep.GetUserByEmail(req.Email);
                 model.Alamat = req.Alamat;
                 model.Facebook = req.Facebook;
                 model.Ig = req.Instagram;
                 model.Nama = req.Nama;
                 model.Telp = req.Telp;
                 model.KotaId = req.KotaId;
+                model.PhotoPath = req.Photopath;
+                if (await dep.Update(model))
+                {
+                    response.IsSuccess = true;
+                    response.Message ="Success to Update Profile";
+                }
+                else
+                {
+                    response.IsSuccess = false;
+                    response.Message = "Failed to Update Profile";
+                }
+
                 //model.
             }
             catch (Exception ex)
             {
 
-                throw ex;
+                response.IsSuccess = false;
+                response.Message = ex.Message.ToString();
             }
 
             return response;
         }
+
+        public async Task<bool> UpdatePassword(UserRequest request)
+        {
+            bool result = true;
+            try
+            {
+                Security sec = new Security();
+                UserProfile user = await dep.GetUserByEmail(request.Email);
+
+                user.Email = request.Email;
+                user.Password = sec.GetSHA1(request.Email, request.RePassword);
+
+                result=  await dep.Update(user);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return result;
+        }
+
 
     }
 }

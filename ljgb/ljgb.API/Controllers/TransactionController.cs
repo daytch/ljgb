@@ -1,6 +1,7 @@
 ﻿using ljgb.BusinessLogic;
 using ljgb.Common.Requests;
 using ljgb.Common.Responses;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -167,29 +168,63 @@ namespace ljgb.API.Controllers
 
         [HttpPost]
         [Route("ApproveTransaction")]
-        public async Task<IActionResult> ApproveTransaction([FromBody]TransactionRequest req)
+        public async Task<TransactionResponse> ApproveTransaction([FromBody]TransactionRequest req)
         {
-            if (ModelState.IsValid)
+            TransactionResponse resp = new TransactionResponse();
+            try
             {
-                try
+                string bearer = Request.HttpContext.Request.Headers["Authorization"];
+                string token = bearer.Substring("Bearer ".Length).Trim();
+                string username = string.Empty;
+                if (string.IsNullOrEmpty(token))
                 {
-                    var result = await facade.ApproveTransaction(req);
-
-                    return Ok(result);
+                    resp.IsSuccess = false;
+                    resp.Message = "You don't have access.";
+                    return resp;
                 }
-                catch (Exception ex)
+
+                username = sec.ValidateToken(token);
+                if (username == null)
                 {
-                    if (ex.GetType().FullName ==
-                             "Microsoft.EntityFrameworkCore.DbUpdateConcurrencyException")
+                    Response.HttpContext.Response.Cookies.Append("access_token", "", new CookieOptions()
                     {
-                        return NotFound();
-                    }
-
-                    return BadRequest();
+                        Expires = DateTime.Now.AddDays(-1)
+                    });
+                    resp.IsSuccess = false;
+                    resp.Message = "Your session was expired, please re-login.";
+                    return resp;
                 }
-            }
+                req.UserName = username;
+                resp = await facade.ApproveTransaction(req); 
 
-            return BadRequest();
+
+                return resp;
+            }
+            catch (Exception)
+            {
+                return resp;
+            }
+            //if (ModelState.IsValid)
+            //{
+            //    try
+            //    {
+            //        var result = await facade.ApproveTransaction(req);
+
+            //        return Ok(result);
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        if (ex.GetType().FullName ==
+            //                 "Microsoft.EntityFrameworkCore.DbUpdateConcurrencyException")
+            //        {
+            //            return NotFound();
+            //        }
+
+            //        return BadRequest();
+            //    }
+            //}
+
+            //return BadRequest();
         }
 
 
@@ -287,8 +322,18 @@ namespace ljgb.API.Controllers
                     resp.Message = "You don't have access.";
                     return resp;
                 }
-               
-                
+
+                if (username == null)
+                {
+                    Response.HttpContext.Response.Cookies.Append("access_token", "", new CookieOptions()
+                    {
+                        Expires = DateTime.Now.AddDays(-1)
+                    });
+                    resp.IsSuccess = false;
+                    resp.Message = "Your session was expired, please re-login.";
+                    return resp;
+                }
+
 
                 username = sec.ValidateToken(token);
                 req.UserName = username;

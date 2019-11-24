@@ -32,5 +32,7 @@ namespace ljgb.Common.Requests
         public long? ModelBarangID { get; set; }
         public int? TypeID { get; set; }
         public int? Year { get; set; }
+
+        public string UserName { get; set; }
     }
 }

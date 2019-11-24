@@ -274,6 +274,9 @@
                             contentType: 'application/json',
                             dataType: 'json',
                             type: "POST",
+                            beforeSend: function (xhr) {
+                                xhr.setRequestHeader('Authorization', 'Bearer ' + Cookies.get("access_token"));
+                            },
                             data: JSON.stringify(values),
                             success: function (response) {
                                 if (response.isSuccess) {

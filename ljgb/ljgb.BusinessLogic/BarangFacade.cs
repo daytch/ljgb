@@ -131,7 +131,7 @@ namespace ljgb.BusinessLogic
         public BarangResponse GetAllBidsById(BarangRequest req)
         {
             BarangResponse resp = new BarangResponse();
-            resp.ListAsks = dep.GetAllBidsById(req);
+            resp.ListBids = dep.GetAllBidsById(req);
 
             return resp;
         }
@@ -162,7 +162,7 @@ namespace ljgb.BusinessLogic
                 model.PhotoPath = request.PhotoPath;
                 model.TypeBarangId = request.TypeBarangId;
                 model.Created = DateTime.Now;
-                model.CreatedBy = "xsivicto1905";
+                model.CreatedBy = request.UserName;
                 model.RowStatus = true;
                 model.KotaId = request.KotaID.Value;
 
@@ -188,13 +188,13 @@ namespace ljgb.BusinessLogic
 
         }
 
-        public async Task<BarangResponse> DeletePost(long ID)
+        public async Task<BarangResponse> DeletePost(long ID, string username)
         {
             BarangResponse response = new BarangResponse();
             try
             {
                 long result = 0;
-                result = await dep.DeletePost(ID);
+                result = await dep.DeletePost(ID, username);
                 if (result == 0)
                 {
                     response.IsSuccess = false;
@@ -236,7 +236,7 @@ namespace ljgb.BusinessLogic
                 model.Year = request.Year.Value;
 
                 model.Modified = DateTime.Now;
-                model.ModifiedBy = "xsivicto1905";
+                model.ModifiedBy = request.UserName;
                 bool result = await dep.UpdatePost(model);
 
                 if (result)

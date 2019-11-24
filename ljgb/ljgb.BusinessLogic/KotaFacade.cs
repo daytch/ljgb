@@ -90,7 +90,7 @@ namespace ljgb.BusinessLogic
                 model.Name = req.Name;
                 model.Description = req.Description;
                 model.Created = DateTime.Now;
-                model.CreatedBy = "xsivicto1905";
+                model.CreatedBy = req.UserName;
                 model.RowStatus = true;
                 await dep.AddPost(model);
                 response.Message = "Success";
@@ -126,7 +126,7 @@ namespace ljgb.BusinessLogic
 
                 model.Description = req.Description;
                 model.Modified = DateTime.Now;
-                model.ModifiedBy = "xsivicto1905";
+                model.ModifiedBy = req.UserName;
                 model.RowStatus = true;
                 await dep.UpdatePost(model);
 

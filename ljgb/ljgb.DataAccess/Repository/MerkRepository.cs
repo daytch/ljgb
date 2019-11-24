@@ -55,7 +55,7 @@ namespace ljgb.DataAccess.Repository
                     model.Name = request.Name;
                     model.Description = request.Description;
                     model.Created = DateTime.Now;
-                    model.CreatedBy = "xsivicto1905";
+                    model.CreatedBy = request.UserName;
                     model.RowStatus = true;
                     await db.Merk.AddAsync(model);
 
@@ -75,7 +75,7 @@ namespace ljgb.DataAccess.Repository
             return respose;
         }
 
-        public async Task<MerkResponse> DeletePost(long ID)
+        public async Task<MerkResponse> DeletePost(long ID, string username)
         {
             MerkResponse response = new MerkResponse();
 
@@ -88,6 +88,8 @@ namespace ljgb.DataAccess.Repository
 
                     if (model != null)
                     {
+                        model.Modified = DateTime.Now;
+                        model.ModifiedBy = username;
                         model.RowStatus = false;
                         //Delete that warna
                         db.Merk.Update(model);
@@ -270,7 +272,7 @@ namespace ljgb.DataAccess.Repository
 
                     Merk model = await db.Merk.Where(x => x.Id == request.ID).FirstAsync();
                     model.Modified = DateTime.Now;
-                    model.ModifiedBy = "xsivicto1905";
+                    model.ModifiedBy = request.UserName;
                     model.Name = request.Name;
                     model.Description = request.Description;
                     //Delete that warna

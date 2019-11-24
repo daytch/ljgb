@@ -9,7 +9,7 @@ namespace ljgb.DataAccess.Interface
     {
         Task<long> AddPost(Dealer Request);
 
-        Task<long> DeletePost(long ID);
+        Task<long> DeletePost(long ID, string username);
 
         Task<List<Dealer>> GetDealerByKotaID(int KotaID);
 

@@ -20,7 +20,7 @@ namespace ljgb.DataAccess.Interface
 
         Task<ModelBarangResponse> AddPost(ModelBarangRequest model);
 
-        Task<long> DeletePost(long ID);
+        Task<long> DeletePost(long ID, string username);
 
         Task<ModelBarangResponse> UpdatePost(ModelBarangRequest model);
 

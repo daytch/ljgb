@@ -106,7 +106,7 @@ namespace ljgb.DataAccess.Repository
                     
                         model.TransactionLevelId = req.TrasanctionLevel.ID;
                         model.Modified = DateTime.Now;
-                        model.ModifiedBy = req.ModifiedBy;
+                        model.ModifiedBy = req.UserName;
 
 
                         TransactionJournal journal = new TransactionJournal();
@@ -115,8 +115,8 @@ namespace ljgb.DataAccess.Repository
                         journal.SellerId = model.SellerId;
                         journal.NegoBarangId = model.NegoBarangId;
                         journal.TransactionLevelId = model.TransactionLevelId;
-                        journal.Created = model.Created;
-                        journal.CreatedBy = model.CreatedBy;
+                        journal.Created = DateTime.Now;
+                        journal.CreatedBy = req.UserName;
                         journal.RowStatus = true;
 
                         await db.TransactionJournal.AddAsync(journal);
@@ -676,6 +676,19 @@ namespace ljgb.DataAccess.Repository
             try
             {
                 return await db.UserProfile.Where(x => x.RowStatus == true && x.Email == UserName).FirstOrDefaultAsync();
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+        public async Task<UserDetail> GetUserDetail(long id)
+        {
+            try
+            {
+                return await db.UserDetail.Where(x => x.RowStatus == true && x.UserProfileId == id).FirstOrDefaultAsync();
             }
             catch (Exception ex)
             {

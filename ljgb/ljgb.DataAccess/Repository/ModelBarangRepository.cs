@@ -55,7 +55,7 @@ namespace ljgb.DataAccess.Repository
                     model.Description = request.Description;
                     model.MerkId = request.MerkID;
                     model.Created = DateTime.Now;
-                    model.Createdby = "xsivicto1905";
+                    model.Createdby = request.UserName;
                     model.RowStatus = true;
 
                     await db.ModelBarang.AddAsync(model);
@@ -81,7 +81,7 @@ namespace ljgb.DataAccess.Repository
             return response;
         }
 
-        public async Task<long> DeletePost(long modelID)
+        public async Task<long> DeletePost(long modelID, string username)
         {
             int result = 0;
             if (db != null)
@@ -91,6 +91,8 @@ namespace ljgb.DataAccess.Repository
 
                 if (model != null)
                 {
+                    model.Modified = DateTime.Now;
+                    model.ModifiedBy = username;
                     model.RowStatus = false;
                     //Delete that warna
                     db.ModelBarang.Update(model);
@@ -302,7 +304,7 @@ namespace ljgb.DataAccess.Repository
                 {
                     ModelBarang model = await db.ModelBarang.Where(x => x.Id == request.ID).FirstAsync();
                     model.Modified = DateTime.Now;
-                    model.ModifiedBy = "xsivicto1905";
+                    model.ModifiedBy = request.UserName;
                     model.MerkId = request.MerkID;
                     model.Name = request.Name;
                     model.Description = request.Description;
@@ -311,7 +313,8 @@ namespace ljgb.DataAccess.Repository
 
                     //Commit the transaction
                     await db.SaveChangesAsync();
-
+                    response.Message = "Update success";
+                    response.IsSuccess = true;
 
                 }
                 else

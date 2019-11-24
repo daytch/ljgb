@@ -209,6 +209,9 @@
                 initComplete: function () {
                     $(this.api().table().container()).find("input").parent().wrap("<form>").parent().attr("autocomplete", "off");
                 },
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader('Authorization', 'Bearer ' + Cookies.get("access_token"));
+                },
                 ajax: {
                     url: url + "NegoBarang/GetAllASK",
                     contentType: "application/json",

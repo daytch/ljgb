@@ -45,7 +45,7 @@ namespace ljgb.DataAccess.Repository
             return 0;
         }
 
-        public async Task<long> DeletePost(long ID)
+        public async Task<long> DeletePost(long ID, string username)
         {
 
             int result = 0;
@@ -57,6 +57,8 @@ namespace ljgb.DataAccess.Repository
 
                 if (barang != null)
                 {
+                    barang.Modified = DateTime.Now;
+                    barang.ModifiedBy = username;
                     barang.RowStatus = false;
                     //Commit the transaction
                     result = await db.SaveChangesAsync();
@@ -367,9 +369,12 @@ namespace ljgb.DataAccess.Repository
             Barang response = new Barang();
             try
             {
+                //response = await db.Barang.Where(x => x.RowStatus == true
+                //                                 && x.TypeBarangId == request.TypeBarangId
+                //                                 && x.WarnaId == request.WarnaId).FirstOrDefaultAsync();
                 response = await db.Barang.Where(x => x.RowStatus == true
                                                  && x.TypeBarangId == request.TypeBarangId
-                                                 && x.WarnaId == request.WarnaId).FirstOrDefaultAsync();
+                                                 ).FirstOrDefaultAsync();
             }
             catch (Exception ex)
             {
@@ -453,6 +458,19 @@ namespace ljgb.DataAccess.Repository
             }
 
             return null;
+        }
+
+        public async Task<Barang> GetIDBarangByTypeAndCOlour(Barang request)
+        {
+            try
+            {
+                return await db.Barang.Where(x => x.RowStatus == true && x.TypeBarangId == request.TypeBarangId && x.WarnaId == request.WarnaId).FirstOrDefaultAsync();
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
         }
     }
 }

@@ -18,7 +18,7 @@ namespace ljgb.BusinessLogic
         #region Important
         private ljgbContext db;
         private INegoBarang dep;
-
+        private ITransaction iTrans;
         public NegoBarangFacade()
         {
             var builder = new ConfigurationBuilder()
@@ -33,6 +33,7 @@ namespace ljgb.BusinessLogic
 
             db = new ljgbContext(optionsBuilder.Options);
             this.dep = new NegoBarangRepository(db);
+            this.iTrans = new TransactionRepository(db);
         }
         #endregion
 
@@ -82,7 +83,7 @@ namespace ljgb.BusinessLogic
                     model.Harga = req.Harga;
                     model.TypePenawaran = req.TypePenawaran = "ASK";
                     model.Created = DateTime.Now;
-                    model.CreatedBy = req.CreatedBy;
+                    model.CreatedBy = req.UserName;
                     model.RowStatus = true;
                     if (await dep.UpdatePost(model) > 0 )
                     {
@@ -102,7 +103,7 @@ namespace ljgb.BusinessLogic
                     model.BarangId = req.BarangID;
                     model.TypePenawaran = req.TypePenawaran = "ASK";
                     model.Created = DateTime.Now;
-                    model.CreatedBy = req.CreatedBy;
+                    model.CreatedBy = req.UserName;
                     model.RowStatus = true;
                     model.Harga = req.Harga;
                     if (await dep.AddPost(model) > 0)
@@ -160,27 +161,83 @@ namespace ljgb.BusinessLogic
             return await dep.UpdatePost(req);
         }
 
-        public async Task<NegoBarangResponse> GetAllASK(string search, string order, string orderDir, int startRec, int pageSize, int draw)
+        public async Task<NegoBarangResponse> GetAllASK(string search, string order, string orderDir, int startRec, int pageSize, int draw, string userName)
         {
-            NegoBarangResponse response = new NegoBarangResponse();
-            var models = await dep.GetAllASK(search, order, orderDir, startRec, pageSize, draw);
-            if (models == null)
+            NegoBarangResponse resp = new NegoBarangResponse();
+            UserProfile usrProfile = iTrans.GetUserProfile(userName).Result;
+            UserDetail usrDetail = iTrans.GetUserDetail(usrProfile.Id).Result;
+            if (usrDetail != null)
             {
-                return null;
+                if (usrDetail.Description.ToLower() == "admin")
+                {
+                    resp = await dep.GetAllASK(search, order, orderDir, startRec, pageSize, draw);
+                }
+                else
+                {
+                    resp = await dep.GetAllASK(search, order, orderDir, startRec, pageSize, draw, usrProfile.Id);
+                }
+                resp.IsSuccess = true;
+                resp.Message = "Success";
             }
-            return models;
-            
+            else if (usrProfile != null)
+            {
+
+                resp = await dep.GetAllASK(search, order, orderDir, startRec, pageSize, draw, usrProfile.Id);
+                resp.IsSuccess = true;
+                resp.Message = "Success";
+
+            }
+            else
+            {
+                resp.IsSuccess = false;
+                resp.Message = "Expired Token !";
+            }
+           
+
+            return resp;
         }
 
-        public async Task<NegoBarangResponse> GetAllBID(string search, string order, string orderDir, int startRec, int pageSize, int draw)
+        public async Task<NegoBarangResponse> GetAllBID(string search, string order, string orderDir, int startRec, int pageSize, int draw, string userName)
         {
-            NegoBarangResponse response = new NegoBarangResponse();
-            var models = await dep.GetAllBID(search, order, orderDir, startRec, pageSize, draw);
-            if (models == null)
+            NegoBarangResponse resp = new NegoBarangResponse();
+            UserProfile usrProfile = iTrans.GetUserProfile(userName).Result;
+            UserDetail usrDetail = iTrans.GetUserDetail(usrProfile.Id).Result;
+            if (usrDetail != null)
             {
-                return null;
+                if (usrDetail.Description.ToLower() == "admin")
+                {
+                    resp = await dep.GetAllBID(search, order, orderDir, startRec, pageSize, draw);
+                }
+                else
+                {
+                    resp = await dep.GetAllBID(search, order, orderDir, startRec, pageSize, draw, usrProfile.KotaId);
+                }
+                resp.IsSuccess = true;
+                resp.Message = "Success";
             }
-            return models;
+            else if (usrProfile != null)
+            {
+
+                resp = await dep.GetAllBID(search, order, orderDir, startRec, pageSize, draw, usrProfile.KotaId);
+                resp.IsSuccess = true;
+                resp.Message = "Success";
+
+            }
+            else
+            {
+                resp.IsSuccess = false;
+                resp.Message = "Expired Token !";
+            }
+
+
+            return resp;
+            //NegoBarangResponse response = new NegoBarangResponse();
+            //var models = await dep.GetAllBID(search, order, orderDir, startRec, pageSize, draw);
+            //if (models == null)
+            //{
+            //    return null;
+            //}
+            //return models;
 
         }
     }

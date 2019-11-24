@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 using ljgb.BusinessLogic;
 using ljgb.Common.Requests;
@@ -10,6 +11,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 
 namespace ljgb.API.Controllers
 {
@@ -23,12 +25,15 @@ namespace ljgb.API.Controllers
         private readonly SignInManager<IdentityUser> signInManager;
         private Security sec = new Security();
         private string access_token = "";
-        public UserController(UserManager<IdentityUser> _userManager, IEmailSender _emailSender, SignInManager<IdentityUser> _signInManager)
+        private string url = "";
+
+        public UserController(UserManager<IdentityUser> _userManager, IEmailSender _emailSender, SignInManager<IdentityUser> _signInManager, IConfiguration config)
         {
             userManager = _userManager;
             emailSender = _emailSender;
             signInManager = _signInManager;
             facade = new UserFacade(userManager, emailSender, signInManager);
+            url = config.GetSection("API_url").Value;
         }
 
         [HttpPost]
@@ -198,31 +203,43 @@ namespace ljgb.API.Controllers
 
         [HttpPost]
         [Route("GetPost")]
-        public async Task<IActionResult> GetPost([FromBody]UserRequest request)
+        public async Task<UserResponse> GetPost([FromBody]UserRequest request)
         {
-            
+            UserResponse resp = new UserResponse();
             string username = sec.ValidateToken(request.Token);
-            if (username != "")
+            if (!string.IsNullOrEmpty(username))
             {
                 try
                 {
-                    var post = await facade.GetPost(username);
+                    resp = await facade.GetPost(username);
 
-                    if (post == null)
+                    if (resp == null)
                     {
-                        return NotFound();
+                        resp.IsSuccess = false;
+                        resp.Message = "Not Found";
                     }
 
-                    return Ok(post);
+                    return resp;
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-                    return BadRequest();
+                    resp.IsSuccess = false;
+                    resp.Message = ex.Message.ToString();
+                    return resp;
                 }
             }
+            else
+            {
 
-           
-            return BadRequest();
+                    Response.HttpContext.Response.Cookies.Append("access_token", "", new CookieOptions()
+                    {
+                        Expires = DateTime.Now.AddDays(-1)
+                    });
+                    resp.IsSuccess = false;
+                    resp.Message = "Your session was expired, please re-login.";
+                    return resp;
+            }
+
         }
 
         [HttpPost]
@@ -386,45 +403,117 @@ namespace ljgb.API.Controllers
 
         [HttpPost]
         [Route("UpdateProfileSalesman")]
-        public async Task<IActionResult> UpdateProfileSalesman()
+        public async Task<UserResponse> UpdateProfileSalesman([FromBody]UserRequest req)
         {
+            UserResponse resp = new UserResponse();
             try
             {
-                var posts = await facade.GetPosts();
-                if (posts == null)
+
+                string bearer = Request.HttpContext.Request.Headers["Authorization"];
+                string token = bearer.Substring("Bearer ".Length).Trim();
+                //string token = req.Token;
+                string username = string.Empty;
+                if (string.IsNullOrEmpty(token))
                 {
-                    return NotFound();
+                    resp.IsSuccess = false;
+                    resp.Message = "You don't have access.";
+                    return resp;
                 }
 
-                return Ok(posts);
+                req.Email = sec.ValidateToken(token);
+                if (string.IsNullOrEmpty(req.Email))
+                {
+                    resp.IsSuccess = false;
+                    resp.Message = "Your Token Is Expired Please Relogin.!";
+                    return resp;
+                }
+                resp = await facade.UpdateProfileSalesman(req);
+
+
+                return resp;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return BadRequest();
+                resp.IsSuccess = false;
+                resp.Message = ex.ToString();
+                return resp;
             }
         }
-        //[HttpPost]
-        //[Route("PasswordSignIn")]
-        //public async Task<SignInResponse> PasswordSignIn([FromBody]UserRequest user)
-        //{
-        //    SignInResponse result = new SignInResponse();
-        //    try
-        //    {
-        //        //Microsoft.AspNetCore.Identity.SignInResult res = await facade.PasswordSignIn(model);
-        //        var res = await signInManager.PasswordSignInAsync(user.user.Email, user.password, user.RememberMe, user.lockoutOnFailure);
-        //        result = new SignInResponse()
-        //        {
-        //            Succeeded = res.Succeeded,
-        //            IsLockedOut = res.IsLockedOut,
-        //            IsNotAllowed = res.RequiresTwoFactor
-        //        };
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        throw ex;
-        //    }
-        //    return result;
-        //}
 
+
+        [HttpPost]
+        [Route("UploadImageProfile")]
+        public async Task<string> UploadImageProfile(IFormFile file)
+        {
+            if (file == null || file.Length == 0)
+                return "Please select profile picture";
+
+            string folderName = Path.Combine("Resources", "UploadImageProfile");
+            string filePath = Path.Combine(Directory.GetCurrentDirectory(), folderName);
+
+            if (!Directory.Exists(filePath))
+            {
+                Directory.CreateDirectory(filePath);
+            }
+
+            string uniqueFileName = DateTime.Now.ToString("yyyyMMddHHmmssfff") + "_" + file.FileName;
+            string dbPath = Path.Combine(folderName, uniqueFileName);
+
+            using (var fileStream = new FileStream(Path.Combine(filePath, uniqueFileName), FileMode.Create))
+            {
+                await file.CopyToAsync(fileStream);
+            }
+
+            return url + dbPath;
+        }
+
+        [HttpPost]
+        [Route("ChangePassword")] 
+        public async Task<UserResponse> ChangePassword([FromBody]UserRequest req)
+        {
+            UserResponse resp = new UserResponse();
+            try
+            {
+
+                string bearer = Request.HttpContext.Request.Headers["Authorization"];
+                string token = bearer.Substring("Bearer ".Length).Trim();
+                //string token = req.Token;
+                string username = string.Empty;
+                if (string.IsNullOrEmpty(token))
+                {
+                    resp.IsSuccess = false;
+                    resp.Message = "You don't have access.";
+                    return resp;
+                }
+
+                req.Email = sec.ValidateToken(token);
+                if (string.IsNullOrEmpty(req.Email))
+                {
+                    resp.IsSuccess = false;
+                    resp.Message = "Your Token Is Expired Please Relogin.!";
+                    return resp;
+                }
+                if (await facade.UpdatePassword(req))
+                {
+                    resp.IsSuccess = true;
+                    resp.Message = "Password Updated.!";
+                }
+                else
+                {
+
+                    resp.IsSuccess = false;
+                    resp.Message = "Failed to update password";
+                    return resp;
+                }
+
+                return resp;
+            }
+            catch (Exception ex)
+            {
+                resp.IsSuccess = false;
+                resp.Message = ex.ToString();
+                return resp;
+            }
+        }
     }
 }

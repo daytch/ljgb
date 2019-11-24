@@ -1,7 +1,12 @@
-﻿@{
+﻿
+
+
+@{
+
+
     ViewData["Title"] = "User Profile";
     ViewData["PageName"] = "User_USerProfile";
-    ViewData["Category1"] = "User";
+    ViewData["Category1"] = "User Profile";
 }
 
 
@@ -11,7 +16,7 @@
 @section PageHeading {
     <div class="subheader">
         <h1 class="subheader-title">
-            <i class="fal fa-th-list text-primary"></i> Transaksi
+            <i class="fal fa-th-list text-primary"></i> User Profile
             @*<small>
                     Documentation and examples for opt-in styling of tables (given their prevalent use in JavaScript plugins) with Bootstrap.
                 </small>*@
@@ -36,20 +41,21 @@
                 <div class="panel-content">
                     <div class="container">
 
-                        <p class="h2 text-center">Your Photo</p>
+
                         <form class="needs-validation" novalidate>
                             <div class="preview text-center">
-                                <img class="preview-img" src="http://simpleicon.com/wp-content/uploads/account.png" alt="Preview Image" width="200" height="200" />
+                                @*<img id="ImageProfile" class="preview-img" src="http://simpleicon.com/wp-content/uploads/account.png" alt="Preview Image" width="200" height="200" />*@
+                                <img id="uploadImage" src="http://simpleicon.com/wp-content/uploads/account.png" width="200" height="200" alt="your image" />
                                 <div class="browse-button">
+                                    <input type="hidden" class="form-control" id="ImagePath" />
+                                    <input type='file' id="imgInp" />
 
-                                    <input class="browse-input" type="file" required name="UploadedFile" id="UploadedFile" />
                                 </div>
-                                <span class="Error"></span>
                             </div>
                             <div class="form-group">
                                 <label>Email:</label>
-                                <input id="email" class="form-control" type="text" name="email"  placeholder="Enter Your Full Name" />
-                             
+                                <input id="email" class="form-control" type="text" name="email" placeholder="Enter Your Full Name" disabled="disabled" />
+
                             </div>
                             <div class="form-group">
                                 <label>Full Name:</label>
@@ -70,7 +76,7 @@
 
                             <div class="form-group">
                                 <label>Telepon:</label>
-                                <input class="form-control" id="telp" type="text" name="telepon" required placeholder="Nomor Telepon" required />
+                                <input class="form-control" id="telp" type="text" name="telepon" required placeholder="Nomor Telepon" />
                                 <div class="invalid-feedback">
                                     Please insert yourname
                                 </div>
@@ -78,16 +84,14 @@
 
                             <div class="form-group">
                                 <label>Facebook:</label>
-                                <input class="form-control" id="facebook" type="text" name="facebook" required placeholder="Facebook" />
-                                <span class="Error"></span>
+                                <input class="form-control" id="facebook" type="text" name="facebook" placeholder="Facebook" />
                             </div>
 
 
                             <div class="form-group">
                                 <label>Instagram:</label>
-                                <input class="form-control" id="instagram" type="text" name="instagram" required placeholder="Instagram" />
+                                <input class="form-control" id="instagram" type="text" name="instagram" placeholder="Instagram" />
 
-                                <span class="Error"></span>
                             </div>
 
                             <div class="form-group">
@@ -137,8 +141,9 @@
                     $("#email").val(response.userProfileModel.email)
                     $("#name").val(response.userProfileModel.name);
                     $("#telp").val(response.userProfileModel.telp);
-                    $("#facebook").val(response.userProfileModel.fb);
+                    $("#facebook").val(response.userProfileModel.facebook);
                     $("#instagram").val(response.userProfileModel.ig);
+                    $('#uploadImage').attr('src',response.userProfileModel.photopath)
                     if (response.userProfileModel.jenisKelamin == "Pria") {
                         $("#radio_pria").attr('checked', true);
                     }
@@ -181,19 +186,20 @@
 
         var validation = Array.prototype.filter.call(forms, function (form) {
             button.addEventListener('click', function (event) {
+                debugger;
                 if (form.checkValidity() === false) {
                     event.preventDefault();
                     event.stopPropagation();
                 } else {
-                    
+
                     LoadingMask.show();
                     var jenisKelamin = "";
-                    if ($("#radio_pria").attr('checked') == true) {
+                    if ($("#radio_pria").attr('checked') == 'checked') {
                         jenisKelamin = "Pria";
                     }
-                      else if (response.userProfileModel.jenisKelamin == "Wanita"){
+                    else if ($("#radio_wanita").attr('checked') == 'checked'){
 
-                        $("#radio_wanita").attr('checked', true);
+                        jenisKelamin = "Wanita";
                     }
 
                     var values = {
@@ -205,11 +211,12 @@
                         Facebook: $('#facebook').val(),
                         Instagram: $('#instagram').val(),
                         Token: Cookies.get("access_token"),
-                        JenisKelamin: jenisKelamin
+                        JenisKelamin: jenisKelamin,
+                        Photopath: $('#uploadImage').attr('src')
                     };
-
+                    debugger;
                     $.ajax({
-                        url: url + "Barang/AddPost",
+                        url: url + "User/UpdateProfileSalesman",
                         contentType: 'application/json',
                         dataType: 'json',
                         type: "POST",
@@ -239,7 +246,49 @@
                 form.classList.add('was-validated');
             });
         });
+        $("#imgInp").change(function () {
+            if ($("#imgInp").val() == "") {
+                $('#ImagePath').val("");
+                return;
+            }
 
+            var inputFile = $('#imgInp')[0].files[0];
+            var pathFile = inputFile.name;
+            var ekstensiOk = /(\.jpg|\.png)$/i;
+            if (!ekstensiOk.exec(pathFile)) {
+                alert('Silakan upload file yang memiliki ekstensi .jpg/.png/');
+                inputFile.name = '';
+                return false;
+            }
+            // your ajax submit
+            var formData = new FormData();
+            formData.append('file', $('#imgInp')[0].files[0]);
+            //formData.append('FileToBeDelete', FileLogoTobeDelete);
+            LoadingMask.show();
+            $.ajax({
+                type: 'post',
+                url: url + 'User/UploadImageProfile',
+                data: formData,
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader('Authorization', 'Bearer ' + Cookies.get("access_token"));
+                },
+                success: function (filename) {
+                    debugger
+                    fileName = filename;
+                    $('.custom-file-label').html(filename);
+                    $('#ImagePath').val(filename);
+                    $('#uploadImage').attr('src', filename);
+                    LoadingMask.hide();
+                },
+                processData: false,
+                contentType: false,
+                error: function (response) {
+                    LoadingMask.hide();
+                    console.log(response);
+                }
+            });
+            LoadingMask.hide();
+        });
     </script>
 }
 

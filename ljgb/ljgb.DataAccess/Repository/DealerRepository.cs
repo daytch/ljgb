@@ -35,7 +35,7 @@ namespace ljgb.DataAccess.Repository
             return result;
         }
 
-        public async Task<long> DeletePost(long ID)
+        public async Task<long> DeletePost(long ID, string username)
         {
             long result = 0;
             if (db != null)
@@ -47,6 +47,8 @@ namespace ljgb.DataAccess.Repository
 
                     if (dealer != null)
                     {
+                        dealer.Modified = DateTime.Now;
+                        dealer.ModifiedBy = username;
                         dealer.RowStatus = false;
                         db.Dealer.Update(dealer);
 
