@@ -5,6 +5,8 @@ namespace ljgb.DataAccess.Interface
 {
     public interface IAuthentication
     {
+        Task<UserProfile> GetUserProfileByEmail(string email);
+
         Task<UserProfile> GetUserProfile(UserProfile user);
 
         Task<bool> IsUserActive(string email);

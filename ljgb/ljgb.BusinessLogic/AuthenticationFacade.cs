@@ -43,26 +43,32 @@ namespace ljgb.BusinessLogic
         {
             AuthenticationResponse response = new AuthenticationResponse();
             UserProfile userProfile = new UserProfile();
-
-            byte[] pass = security.GetSHA1(user.Email, user.Password);
-            UserProfile up = new UserProfile()
+            try
             {
-                Email = user.Email,
-                Password = pass
-            };
+                byte[] pass = security.GetSHA1(user.Email, user.Password);
+                UserProfile up = new UserProfile()
+                {
+                    Email = user.Email,
+                    Password = pass
+                };
 
-            userProfile = await dataAccess.GetUserProfile(up);
-            if (userProfile != null)
-            {
-                response.Name = userProfile.Nama;
-                response.Token = security.GenerateToken(user.Email);
-                response.Message = "Success";
-                response.IsSuccess = true;
+                userProfile = await dataAccess.GetUserProfile(up);
+                if (userProfile != null)
+                {
+                    response.Name = userProfile.Nama;
+                    response.Token = security.GenerateToken(user.Email);
+                    response.Message = "Success";
+                    response.IsSuccess = true;
+                }
+                else
+                {
+                    response.IsSuccess = false;
+                    response.Message = "Please check your email and password.";
+                }
             }
-            else
+            catch (Exception ex)
             {
-                response.IsSuccess = false;
-                response.Message = "Please check your email and password.";
+                log.Error(ex);
             }
             return response;
         }
@@ -80,34 +86,42 @@ namespace ljgb.BusinessLogic
         {
             AuthenticationResponse response = new AuthenticationResponse();
             UserProfile userProfile = new UserProfile();
-
-            byte[] pass = security.GetSHA1(user.Email, user.Password);
-            UserProfile up = new UserProfile()
+            try
             {
-                Email = user.Email,
-                Password = pass,
-                Nama = user.FirstName + " " + user.LastName,
-                Telp = user.Telp,
+                byte[] pass = security.GetSHA1(user.Email, user.Password);
+                UserProfile up = new UserProfile()
+                {
+                    Email = user.Email,
+                    Password = pass,
+                    Nama = user.FirstName + " " + user.LastName,
+                    Telp = user.Telp,
 
-                Created = DateTime.Now,
-                CreatedBy = user.Email,
-                RowStatus = true
-            };
+                    Created = DateTime.Now,
+                    CreatedBy = user.Email,
+                    RowStatus = true
+                };
 
-            long id = await dataAccess.Save(up);
-            if (id > 0)
-            {
-                //response.Token = security.GenerateToken(user.Email);
-                response.Message = "Success created user profile.";
-                response.IsSuccess = true;
+                long id = await dataAccess.Save(up);
+                if (id > 0)
+                {
+                    //response.Token = security.GenerateToken(user.Email);
+                    response.Message = "Success created user profile.";
+                    response.IsSuccess = true;
 
-                #region Sent
-                #endregion
+                    #region Sent
+                    EmailSender emailSender = new EmailSender();
+
+                    #endregion
+                }
+                else
+                {
+                    response.IsSuccess = false;
+                    response.Message = "Failed when save userprofile.";
+                }
             }
-            else
+            catch (Exception ex)
             {
-                response.IsSuccess = false;
-                response.Message = "Failed when save userprofile.";
+                log.Error(ex);
             }
             return response;
         }

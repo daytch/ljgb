@@ -4,7 +4,6 @@ using ljgb.Common.ViewModel;
 using ljgb.DataAccess.Interface;
 using ljgb.DataAccess.Model;
 using ljgb.DataAccess.Repository;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using OfficeOpenXml;
@@ -24,8 +23,9 @@ namespace ljgb.BusinessLogic
         private ljgbContext db;
         private ITransaction dep;
         private INegoBarang INego;
+        private IAuthentication IAuth;
         private ITransactionJournal IJournal;
-       
+
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         public TransactionFacade()
@@ -44,6 +44,7 @@ namespace ljgb.BusinessLogic
             this.IJournal = new TransactionJournalRepository(db);
             this.INego = new NegoBarangRepository(db);
             this.dep = new TransactionRepository(db);
+            IAuth = new AuthenticationRepository(db);
         }
         #endregion
 
@@ -69,7 +70,7 @@ namespace ljgb.BusinessLogic
 
         }
 
-        public async Task<TransactionResponse> SubmitBuy(int id, int nominal)
+        public async Task<TransactionResponse> SubmitBuy(int id, int nominal, string username)
         {
             TransactionResponse response = new TransactionResponse();
             NegoBarang nego = new NegoBarang() { BarangId = id, TypePenawaran = "ask", Harga = nominal };
@@ -81,7 +82,7 @@ namespace ljgb.BusinessLogic
                 NegoBarangId = ResultNego.Id,
                 TransactionLevelId = 1,
 
-                CreatedBy = "Admin",
+                CreatedBy = username,
                 Created = DateTime.Now,
                 RowStatus = true
             };
@@ -118,7 +119,22 @@ namespace ljgb.BusinessLogic
             return response;
         }
 
-        public async Task<TransactionResponse> SubmitSell(int id, int nominal)
+        public async Task<AuthenticationResponse> GetUserProfile(string email)
+        {
+            AuthenticationResponse resp = new AuthenticationResponse();
+            try
+            {
+                UserProfile userProfile = await IAuth.GetUserProfileByEmail(email);
+                resp.Name = userProfile.Nama;
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex);
+            }
+            return resp;
+        }
+
+        public async Task<TransactionResponse> SubmitSell(int id, int nominal, string username)
         {
             TransactionResponse response = new TransactionResponse();
             NegoBarang nego = new NegoBarang() { BarangId = id, TypePenawaran = "bid", Harga = nominal };
@@ -130,7 +146,7 @@ namespace ljgb.BusinessLogic
                 NegoBarangId = ResultNego.Id,
                 TransactionLevelId = 1,
 
-                CreatedBy = "Admin",
+                CreatedBy = username,
                 Created = DateTime.Now,
                 RowStatus = true
             };
@@ -169,9 +185,7 @@ namespace ljgb.BusinessLogic
 
         public async Task<TransactionResponse> DeletePost(TransactionRequest req)
         {
-
             return await dep.DeletePost(req);
-
         }
 
         public async Task<TransactionResponse> UpdatePost(TransactionRequest req)
@@ -190,7 +204,11 @@ namespace ljgb.BusinessLogic
         public async Task<TransactionResponse> GetJournalByTransaction(TransactionRequest req)
         {
             return await dep.GetJournalByTransaction(req);
+        }
 
+        public async Task<TransactionResponse> GetCurrentTransaction(TransactionRequest req)
+        {
+            return await dep.GetPost(req);
         }
 
         public async Task<TransactionResponse> ApproveTransaction(TransactionRequest req)
@@ -206,13 +224,13 @@ namespace ljgb.BusinessLogic
                 transactionLevelResponse = await transactionLevelFacade.GetNextLevel(transactionLevelRequest);
                 if (transactionLevelResponse.model == null)
                 {
-
                     response.IsSuccess = false;
                     response.Message = transactionLevelResponse.Message;
                     return response;
                 }
 
                 req.TrasanctionLevel.ID = transactionLevelResponse.model.ID;
+
                 response = await dep.ApproveTransaction(req);
             }
             catch (Exception ex)
@@ -281,7 +299,7 @@ namespace ljgb.BusinessLogic
             TransactionResponse response = new TransactionResponse();
             try
             {
-                UserProfile userProfile =  await dep.GetUserProfile(request.UserName);
+                UserProfile userProfile = await dep.GetUserProfile(request.UserName);
                 response.ListBidAndBuy = await dep.GetAllBidAndBuyByUserProfileID(userProfile.Id);
                 response.IsSuccess = true;
                 response.Message = "Success";
@@ -327,7 +345,7 @@ namespace ljgb.BusinessLogic
 
         public byte[] downloadExcel(TransactionRequest request)
         {
-           
+
             //List<Model.SPDocument> listSPDocumentModel = new List<Model.SPDocument>();
             try
             {
@@ -399,34 +417,34 @@ namespace ljgb.BusinessLogic
                     {
 
                         wsDocument.Cells["A" + (2 + i)].Value = report[i].BuyerNama.ToString();
-                        wsDocument.Cells["B" + (2 + i)].Value = (report[i].BuyerAlamat != null) ? report[i].BuyerAlamat.ToString() : ""; 
-                        wsDocument.Cells["C" + (2 + i)].Value = (report[i].BuyerKota!= null) ? report[i].BuyerKota.ToString() : "";  
+                        wsDocument.Cells["B" + (2 + i)].Value = (report[i].BuyerAlamat != null) ? report[i].BuyerAlamat.ToString() : "";
+                        wsDocument.Cells["C" + (2 + i)].Value = (report[i].BuyerKota != null) ? report[i].BuyerKota.ToString() : "";
                         wsDocument.Cells["D" + (2 + i)].Value = (report[i].BuyerTelp != null) ? report[i].BuyerTelp.ToString() : "";
-                        wsDocument.Cells["E" + (2 + i)].Value = (report[i].BuyerEmail != null) ? report[i].BuyerEmail.ToString() : ""; 
-                        wsDocument.Cells["F" + (2 + i)].Value = (report[i].BuyerFacebook != null) ? report[i].BuyerFacebook.ToString() : ""; 
-                        wsDocument.Cells["G" + (2 + i)].Value = (report[i].BuyerIG!= null) ? report[i].BuyerIG.ToString() : ""; 
-                        wsDocument.Cells["H" + (2 + i)].Value = (report[i].SellerNama != null) ? report[i].SellerNama.ToString() : "";  
-                        wsDocument.Cells["I" + (2 + i)].Value = (report[i].SellerAlamat != null) ? report[i].SellerAlamat.ToString() : ""; 
-                        wsDocument.Cells["J" + (2 + i)].Value = (report[i].SellerKota != null) ? report[i].SellerKota.ToString() : ""; 
-                        wsDocument.Cells["K" + (2 + i)].Value = (report[i].SellerTelp != null) ? report[i].SellerTelp.ToString() : ""; 
-                        wsDocument.Cells["L" + (2 + i)].Value = (report[i].SellerEmail != null) ? report[i].SellerEmail.ToString() : "";  
-                        wsDocument.Cells["M" + (2 + i)].Value = (report[i].SellerFacebook != null) ? report[i].SellerFacebook.ToString() : ""; 
-                        wsDocument.Cells["N" + (2 + i)].Value = (report[i].SellerIG != null) ? report[i].SellerIG.ToString() : "";  
-                        wsDocument.Cells["O" + (2 + i)].Value = (report[i].SellerDealerKode != null) ? report[i].SellerDealerKode.ToString() : ""; 
-                        wsDocument.Cells["P" + (2 + i)].Value = (report[i].DealerAlamat != null) ? report[i].DealerAlamat.ToString() : ""; 
-                        wsDocument.Cells["Q" + (2 + i)].Value = (report[i].DealerKota != null) ? report[i].DealerKota.ToString() : ""; 
-                        wsDocument.Cells["R" + (2 + i)].Value = (report[i].DealerTelp != null) ? report[i].DealerTelp.ToString() : ""; 
-                        wsDocument.Cells["S" + (2 + i)].Value = (report[i].DealerPejabat != null) ? report[i].DealerPejabat.ToString() : ""; 
-                        wsDocument.Cells["T" + (2 + i)].Value = (report[i].BarangMerk != null) ? report[i].BarangMerk.ToString() : ""; 
+                        wsDocument.Cells["E" + (2 + i)].Value = (report[i].BuyerEmail != null) ? report[i].BuyerEmail.ToString() : "";
+                        wsDocument.Cells["F" + (2 + i)].Value = (report[i].BuyerFacebook != null) ? report[i].BuyerFacebook.ToString() : "";
+                        wsDocument.Cells["G" + (2 + i)].Value = (report[i].BuyerIG != null) ? report[i].BuyerIG.ToString() : "";
+                        wsDocument.Cells["H" + (2 + i)].Value = (report[i].SellerNama != null) ? report[i].SellerNama.ToString() : "";
+                        wsDocument.Cells["I" + (2 + i)].Value = (report[i].SellerAlamat != null) ? report[i].SellerAlamat.ToString() : "";
+                        wsDocument.Cells["J" + (2 + i)].Value = (report[i].SellerKota != null) ? report[i].SellerKota.ToString() : "";
+                        wsDocument.Cells["K" + (2 + i)].Value = (report[i].SellerTelp != null) ? report[i].SellerTelp.ToString() : "";
+                        wsDocument.Cells["L" + (2 + i)].Value = (report[i].SellerEmail != null) ? report[i].SellerEmail.ToString() : "";
+                        wsDocument.Cells["M" + (2 + i)].Value = (report[i].SellerFacebook != null) ? report[i].SellerFacebook.ToString() : "";
+                        wsDocument.Cells["N" + (2 + i)].Value = (report[i].SellerIG != null) ? report[i].SellerIG.ToString() : "";
+                        wsDocument.Cells["O" + (2 + i)].Value = (report[i].SellerDealerKode != null) ? report[i].SellerDealerKode.ToString() : "";
+                        wsDocument.Cells["P" + (2 + i)].Value = (report[i].DealerAlamat != null) ? report[i].DealerAlamat.ToString() : "";
+                        wsDocument.Cells["Q" + (2 + i)].Value = (report[i].DealerKota != null) ? report[i].DealerKota.ToString() : "";
+                        wsDocument.Cells["R" + (2 + i)].Value = (report[i].DealerTelp != null) ? report[i].DealerTelp.ToString() : "";
+                        wsDocument.Cells["S" + (2 + i)].Value = (report[i].DealerPejabat != null) ? report[i].DealerPejabat.ToString() : "";
+                        wsDocument.Cells["T" + (2 + i)].Value = (report[i].BarangMerk != null) ? report[i].BarangMerk.ToString() : "";
                         wsDocument.Cells["U" + (2 + i)].Value = (report[i].BarangModel != null) ? report[i].BarangModel.ToString() : "";
-                        wsDocument.Cells["V" + (2 + i)].Value = (report[i].BarangType != null) ? report[i].BarangType.ToString() : ""; 
+                        wsDocument.Cells["V" + (2 + i)].Value = (report[i].BarangType != null) ? report[i].BarangType.ToString() : "";
                         wsDocument.Cells["W" + (2 + i)].Value = (report[i].BarangWarna != null) ? report[i].BarangWarna.ToString() : "";
                         wsDocument.Cells["X" + (2 + i)].Value = (report[i].BarangOTR != null) ? report[i].BarangOTR.ToString() : "";
-                        wsDocument.Cells["Y" + (2 + i)].Value = (report[i].NegoHarga != null) ? report[i].NegoHarga.ToString() : ""; 
-                        wsDocument.Cells["Z" + (2 + i)].Value = (report[i].NegoType != null) ? report[i].NegoType.ToString() : ""; 
+                        wsDocument.Cells["Y" + (2 + i)].Value = (report[i].NegoHarga != null) ? report[i].NegoHarga.ToString() : "";
+                        wsDocument.Cells["Z" + (2 + i)].Value = (report[i].NegoType != null) ? report[i].NegoType.ToString() : "";
                         wsDocument.Cells["AA" + (2 + i)].Value = (report[i].TransactionCreated.Date != null) ? report[i].TransactionCreated.Date.ToString() : "";
-                        wsDocument.Cells["AB" + (2 + i)].Value = (report[i].TransactionCreatedBy!= null) ? report[i].TransactionCreatedBy.ToString() : ""; 
-                        wsDocument.Cells["AC" + (2 + i)].Value = (report[i].TransactionModified != null)? report[i].TransactionModified.Value.Date.ToString(): "";
+                        wsDocument.Cells["AB" + (2 + i)].Value = (report[i].TransactionCreatedBy != null) ? report[i].TransactionCreatedBy.ToString() : "";
+                        wsDocument.Cells["AC" + (2 + i)].Value = (report[i].TransactionModified != null) ? report[i].TransactionModified.Value.Date.ToString() : "";
                         wsDocument.Cells["AD" + (2 + i)].Value = (report[i].TransactionModifiedBy != null) ? report[i].TransactionModifiedBy.ToString() : "";
                         wsDocument.Cells["AE" + (2 + i)].Value = report[i].TransactionStatus.ToString();
                     }
@@ -461,7 +479,7 @@ namespace ljgb.BusinessLogic
                     wsDocument.Column(29).AutoFit();
                     wsDocument.Column(30).AutoFit();
                     wsDocument.Column(31).AutoFit();
-                    
+
                     wsDocument.Cells["A1:AE1"].Style.Fill.PatternType = ExcelFillStyle.Solid;
                     wsDocument.Cells["A1:AE1"].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Aqua);
                     wsDocument.Cells["A1:AE1"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
@@ -483,7 +501,7 @@ namespace ljgb.BusinessLogic
                     FileInfo excelIFIle = new FileInfo(phyPath);
                     pck.SaveAs(excelIFIle);
 
-                    
+
 
                     return pck.GetAsByteArray();
 
@@ -497,7 +515,7 @@ namespace ljgb.BusinessLogic
 
                 throw ex;
             }
-           
+
         }
 
         public async Task<TransactionResponse> GetAllBidByUserProfileID(TransactionRequest request)
@@ -505,7 +523,7 @@ namespace ljgb.BusinessLogic
             TransactionResponse response = new TransactionResponse();
             try
             {
-                response.ListSP_GetAllBidByUserProfileID =  dep.GetAllBidByUserProfileID(request.UserProfileID).Result;
+                response.ListSP_GetAllBidByUserProfileID = dep.GetAllBidByUserProfileID(request.UserProfileID).Result;
                 response.IsSuccess = true;
                 response.Message = "Success";
             }
@@ -522,7 +540,7 @@ namespace ljgb.BusinessLogic
             TransactionResponse response = new TransactionResponse();
             try
             {
-                response.ListSP_GetAllAskByUserProfileID =  dep.GetAllAskByUserProfileID(request.UserProfileID).Result;
+                response.ListSP_GetAllAskByUserProfileID = dep.GetAllAskByUserProfileID(request.UserProfileID).Result;
                 response.IsSuccess = true;
                 response.Message = "Success";
             }

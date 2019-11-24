@@ -15,6 +15,16 @@ namespace ljgb.DataAccess.Repository
             db = _db;
         }
 
+        public async Task<UserProfile> GetUserProfileByEmail(string email)
+        {
+            UserProfile u = new UserProfile();
+            if (db != null)
+            {
+                u = await db.UserProfile.FirstOrDefaultAsync(x => x.RowStatus == true && x.Email == email);
+            }
+            return u;
+        }
+
         public async Task<UserProfile> GetUserProfile(UserProfile user)
         {
             UserProfile u = new UserProfile();

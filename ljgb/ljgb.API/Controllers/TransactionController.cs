@@ -1,6 +1,8 @@
-﻿using ljgb.BusinessLogic;
+﻿using ljgb.API.Helper;
+using ljgb.BusinessLogic;
 using ljgb.Common.Requests;
 using ljgb.Common.Responses;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -18,11 +20,13 @@ namespace ljgb.API.Controllers
     [ApiController]
     public class TransactionController : ControllerBase
     {
-        private readonly IConfiguration _config;
         private string url = "";
         private Security sec = new Security();
-        public TransactionController(IConfiguration config)
+        private ConfigFacade configFacade = new ConfigFacade();
+        private IEmailConfiguration _emailConfiguration;
+        public TransactionController(IConfiguration config, IEmailConfiguration EmailConfiguration)
         {
+            _emailConfiguration = EmailConfiguration;
             url = config.GetSection("API_url").Value;
         }
         private TransactionFacade facade = new TransactionFacade();
@@ -84,9 +88,33 @@ namespace ljgb.API.Controllers
         {
             try
             {
-                var postId = await facade.SubmitBuy(BarangID, Nominal);
+                TransactionResponse response = new TransactionResponse();
 
-                return Ok(postId);
+                string bearer = Request.HttpContext.Request.Headers["Authorization"];
+                string token = bearer.Substring("Bearer ".Length).Trim();
+                string username = string.Empty;
+                if (string.IsNullOrEmpty(token))
+                {
+                    response.IsSuccess = false;
+                    response.Message = "You don't have access.";
+                    return BadRequest(response);
+                }
+
+                username = sec.ValidateToken(token);
+                if (username == null)
+                {
+                    Response.HttpContext.Response.Cookies.Append("access_token", "", new CookieOptions()
+                    {
+                        Expires = DateTime.Now.AddDays(-1)
+                    });
+                    response.IsSuccess = false;
+                    response.Message = "Your session was expired, please re-login.";
+                    return BadRequest(response);
+                }
+
+                response = await facade.SubmitBuy(BarangID, Nominal, username);
+
+                return Ok(response);
 
             }
             catch (Exception)
@@ -103,18 +131,72 @@ namespace ljgb.API.Controllers
             {
                 try
                 {
-                    var postId = await facade.SubmitSell(BarangID, Nominal);
+                    TransactionResponse response = new TransactionResponse();
 
-                    return Ok(postId);
+                    string bearer = Request.HttpContext.Request.Headers["Authorization"];
+                    string token = bearer.Substring("Bearer ".Length).Trim();
+                    string username = string.Empty;
+                    if (string.IsNullOrEmpty(token))
+                    {
+                        response.IsSuccess = false;
+                        response.Message = "You don't have access.";
+                        return BadRequest(response);
+                    }
 
+                    username = sec.ValidateToken(token);
+                    if (username == null)
+                    {
+                        Response.HttpContext.Response.Cookies.Append("access_token", "", new CookieOptions()
+                        {
+                            Expires = DateTime.Now.AddDays(-1)
+                        });
+                        response.IsSuccess = false;
+                        response.Message = "Your session was expired, please re-login.";
+                        return BadRequest(response);
+                    }
+
+                    response = await facade.SubmitSell(BarangID, Nominal, username);
+
+                    if (response.IsSuccess)
+                    {
+                        #region Sent Email to User
+                        SendEmail sendEmail = new SendEmail(_emailConfiguration);
+                        string contentEmail = configFacade.GetRedaksionalEmail("ContentEmailBuy").Result;
+                        string subjectEmail = configFacade.GetRedaksionalEmail("SubjectEmailBuy").Result;
+
+                        AuthenticationResponse authResp = await facade.GetUserProfile(username);
+
+                        EmailAddress emailAddress = new EmailAddress();
+                        emailAddress.Address = username;
+                        emailAddress.Name = authResp.Name;
+                        List<EmailAddress> listEmailAddress = new List<EmailAddress>();
+                        listEmailAddress.Add(emailAddress);
+
+                        contentEmail = contentEmail.Replace("[user]", emailAddress.Name);
+
+                        EmailAddress emailAddressFrom = new EmailAddress();
+                        emailAddressFrom.Address = "admin@lojualguebeli.com";
+                        emailAddressFrom.Name = "Lojualguebeli.com";
+                        List<EmailAddress> listEmailAddressFrom = new List<EmailAddress>();
+                        listEmailAddressFrom.Add(emailAddressFrom);
+
+                        EmailMessage emailMessage = new EmailMessage();
+                        emailMessage.ToAddresses = listEmailAddress;
+                        emailMessage.Subject = subjectEmail;
+                        emailMessage.FromAddresses = listEmailAddressFrom;
+                        emailMessage.Content = contentEmail;
+
+                        sendEmail.Send(emailMessage);
+                        #endregion
+                    }
+
+                    return Ok(response);
                 }
                 catch (Exception)
                 {
                     return BadRequest();
                 }
-
             }
-
             return BadRequest();
         }
 
@@ -122,8 +204,6 @@ namespace ljgb.API.Controllers
         [Route("DeletePost")]
         public async Task<IActionResult> DeletePost(TransactionRequest req)
         {
-
-
             try
             {
                 var result = await facade.DeletePost(req);
@@ -132,11 +212,9 @@ namespace ljgb.API.Controllers
             }
             catch (Exception)
             {
-
                 return BadRequest();
             }
         }
-
 
         [HttpPost]
         [Route("UpdatePost")]
@@ -171,11 +249,104 @@ namespace ljgb.API.Controllers
         {
             if (ModelState.IsValid)
             {
+                TransactionResponse response = new TransactionResponse();
                 try
                 {
-                    var result = await facade.ApproveTransaction(req);
+                    string bearer = Request.HttpContext.Request.Headers["Authorization"];
+                    string token = bearer.Substring("Bearer ".Length).Trim();
+                    string username = string.Empty;
+                    if (string.IsNullOrEmpty(token))
+                    {
+                        response.IsSuccess = false;
+                        response.Message = "You don't have access.";
+                        return BadRequest(response);
+                    }
 
-                    return Ok(result);
+                    username = sec.ValidateToken(token);
+                    if (username == null)
+                    {
+                        Response.HttpContext.Response.Cookies.Append("access_token", "", new CookieOptions()
+                        {
+                            Expires = DateTime.Now.AddDays(-1)
+                        });
+                        response.IsSuccess = false;
+                        response.Message = "Your session was expired, please re-login.";
+                        return BadRequest(response);
+                    }
+
+                    response = await facade.ApproveTransaction(req);
+
+                    if (response.IsSuccess)
+                    {
+                        #region Sent Email to User
+                        TransactionResponse transResp = await facade.GetCurrentTransaction(req);
+                        int levelID = transResp.ListTransaction.FirstOrDefault().TrasanctionLevel.ID;
+                        SendEmail sendEmail = new SendEmail(_emailConfiguration);
+                        string contentEmail = string.Empty;
+                        string subjectEmail = string.Empty;
+
+                        AuthenticationResponse authResp = await facade.GetUserProfile(username);
+
+                        EmailAddress emailAddress = new EmailAddress();
+                        switch (levelID)
+                        {
+                            case 1:
+                                contentEmail = configFacade.GetRedaksionalEmail("ContentEmailBuy").Result;
+                                subjectEmail = configFacade.GetRedaksionalEmail("SubjectEmailBuy").Result;
+                                break;
+                            case 2:
+                                contentEmail = configFacade.GetRedaksionalEmail("ContentEmailVerifikasi").Result;
+                                subjectEmail = configFacade.GetRedaksionalEmail("SubjectEmailVerifikasi").Result;
+                                break;
+                            case 3:
+                                contentEmail = configFacade.GetRedaksionalEmail("ContentEmailVisit").Result;
+                                subjectEmail = configFacade.GetRedaksionalEmail("SubjectEmailVisit").Result;
+                                break;
+                            case 4:
+                                contentEmail = configFacade.GetRedaksionalEmail("ContentEmailDP").Result;
+                                subjectEmail = configFacade.GetRedaksionalEmail("SubjectEmailDP").Result;
+                                break;
+                            case 5:
+                                contentEmail = configFacade.GetRedaksionalEmail("ContentEmailBBN").Result;
+                                subjectEmail = configFacade.GetRedaksionalEmail("SubjectEmailBBN").Result;
+                                break;
+                            case 6:
+                                contentEmail = configFacade.GetRedaksionalEmail("ContentEmailSTNK").Result;
+                                subjectEmail = configFacade.GetRedaksionalEmail("SubjectEmailSTNK").Result;
+                                break;
+                            case 7:
+                                contentEmail = configFacade.GetRedaksionalEmail("ContentEmailPelunasan").Result;
+                                subjectEmail = configFacade.GetRedaksionalEmail("SubjectEmailPelunasan").Result;
+                                break;
+                            case 8:
+                                contentEmail = configFacade.GetRedaksionalEmail("ContentEmailDelivery").Result;
+                                subjectEmail = configFacade.GetRedaksionalEmail("SubjectEmailDelivery").Result;
+                                break;
+                        }
+                        emailAddress.Address = username;
+                        emailAddress.Name = authResp.Name;
+                        List<EmailAddress> listEmailAddress = new List<EmailAddress>();
+                        listEmailAddress.Add(emailAddress);
+
+                        contentEmail = contentEmail.Replace("[user]", emailAddress.Name);
+
+                        EmailAddress emailAddressFrom = new EmailAddress();
+                        emailAddressFrom.Address = "admin@lojualguebeli.com";
+                        emailAddressFrom.Name = "Lojualguebeli.com";
+                        List<EmailAddress> listEmailAddressFrom = new List<EmailAddress>();
+                        listEmailAddressFrom.Add(emailAddressFrom);
+
+                        EmailMessage emailMessage = new EmailMessage();
+                        emailMessage.ToAddresses = listEmailAddress;
+                        emailMessage.Subject = subjectEmail;
+                        emailMessage.FromAddresses = listEmailAddressFrom;
+                        emailMessage.Content = contentEmail;
+
+                        sendEmail.Send(emailMessage);
+                        #endregion
+                    }
+
+                    return Ok(response);
                 }
                 catch (Exception ex)
                 {
@@ -247,28 +418,28 @@ namespace ljgb.API.Controllers
             return BadRequest();
         }
 
-        [HttpPost]
-        [Route("SubmitDeal")]
-        public async Task<IActionResult> SubmitDeal([FromBody]TransactionRequest req)
-        {
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    var postId = await facade.SubmitSell(req);
+        //[HttpPost]
+        //[Route("SubmitDeal")]
+        //public async Task<IActionResult> SubmitDeal([FromBody]TransactionRequest req)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        try
+        //        {
+        //            var postId = await facade.SubmitSell(req);
 
-                    return Ok(postId);
+        //            return Ok(postId);
 
-                }
-                catch (Exception)
-                {
-                    return BadRequest();
-                }
+        //        }
+        //        catch (Exception)
+        //        {
+        //            return BadRequest();
+        //        }
 
-            }
+        //    }
 
-            return BadRequest();
-        }
+        //    return BadRequest();
+        //}
 
         [HttpPost]
         [Route("GetListBidAndBuy")]
@@ -287,8 +458,8 @@ namespace ljgb.API.Controllers
                     resp.Message = "You don't have access.";
                     return resp;
                 }
-               
-                
+
+
 
                 username = sec.ValidateToken(token);
                 req.UserName = username;
@@ -360,38 +531,38 @@ namespace ljgb.API.Controllers
             //{
             //    try
             //    {
-                    TransactionRequest req = new TransactionRequest();
-                    req.TransactionStatusID = long.Parse(TransactionStatusID);
-                    req.EndDate = EndDate;
-                    var postId = facade.downloadExcel(req);
+            TransactionRequest req = new TransactionRequest();
+            req.TransactionStatusID = long.Parse(TransactionStatusID);
+            req.EndDate = EndDate;
+            var postId = facade.downloadExcel(req);
 
-                    //HttpContext.Current.Response.ClearContent();
-                    //HttpContext.Current.Response.ClearHeaders();
-                    //HttpContext.Current.Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-                    //HttpContext.Current.Response.AddHeader("content-disposition", "attachment; filename=" + "SP3 Document.xlsx");
-                    //HttpContext.Current.Response.BinaryWrite(pck.GetAsByteArray());
-                    //HttpContext.Current.Response.End();
+            //HttpContext.Current.Response.ClearContent();
+            //HttpContext.Current.Response.ClearHeaders();
+            //HttpContext.Current.Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+            //HttpContext.Current.Response.AddHeader("content-disposition", "attachment; filename=" + "SP3 Document.xlsx");
+            //HttpContext.Current.Response.BinaryWrite(pck.GetAsByteArray());
+            //HttpContext.Current.Response.End();
 
-                    //var file = File(postId, "application/octet-stream");
-                    //return Ok("adsadsadasd");
-                    //HttpResponseMessage result = new HttpResponseMessage(HttpStatusCode.OK);
-                   
-                    //    result.Content = new ByteArrayContent(postId);
-                    //    result.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment");
-                    //result.Content.Headers.ContentDisposition.FileName = "Report.xslx";
-                    //    result.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"); // Text file
-                    //    result.Content.Headers.ContentLength = postId.Length;
+            //var file = File(postId, "application/octet-stream");
+            //return Ok("adsadsadasd");
+            //HttpResponseMessage result = new HttpResponseMessage(HttpStatusCode.OK);
 
-                    return File(postId, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Report Document.xlsx");
-                    //return File(postId, "application/octet-stream");
-                    //return result;
+            //    result.Content = new ByteArrayContent(postId);
+            //    result.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment");
+            //result.Content.Headers.ContentDisposition.FileName = "Report.xslx";
+            //    result.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"); // Text file
+            //    result.Content.Headers.ContentLength = postId.Length;
 
-                    //return Ok(Path.Combine(url,postId));
-                //}
-                //catch (Exception ex)
-                //{
-                //    return BadRequest();
-                //}
+            return File(postId, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Report Document.xlsx");
+            //return File(postId, "application/octet-stream");
+            //return result;
+
+            //return Ok(Path.Combine(url,postId));
+            //}
+            //catch (Exception ex)
+            //{
+            //    return BadRequest();
+            //}
 
             //}
 
