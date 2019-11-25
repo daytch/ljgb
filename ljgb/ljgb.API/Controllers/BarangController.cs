@@ -271,7 +271,7 @@ namespace ljgb.API.Controllers
                     }
                     if (model.ID > 0)
                     {
-                        result = await facade.UpdatePost(model);
+                        result = await facade.UpdatePost(model, username);
                     }
                     else
                     {
@@ -327,7 +327,6 @@ namespace ljgb.API.Controllers
             }
             catch (Exception)
             {
-
                 return BadRequest();
             }
         }
@@ -362,7 +361,7 @@ namespace ljgb.API.Controllers
                         response.Message = "Your session was expired, please re-login.";
                         return BadRequest(response);
                     }
-                    var result = await facade.UpdatePost(request);
+                    var result = await facade.UpdatePost(request, username);
 
                     return Ok(result);
                 }

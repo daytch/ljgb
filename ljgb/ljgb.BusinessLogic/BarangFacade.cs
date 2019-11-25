@@ -216,28 +216,46 @@ namespace ljgb.BusinessLogic
             return response;
         }
 
-        public async Task<BarangResponse> UpdatePost(BarangRequest request)
+        public async Task<BarangResponse> UpdatePost(BarangRequest request, string username)
         {
             BarangResponse response = new BarangResponse();
 
             try
             {
-                TypeBarangRequest typeRequest = new TypeBarangRequest();
-                typeRequest.ID = request.TypeBarangId;
-                var getTYpe = da_type.GetPost(typeRequest).Result;
-                Barang model = new Barang();
-                model.Id = request.ID;
-                model.HargaOtr = request.HargaOtr;
-                model.Name = getTYpe.Model.Name;
-                model.WarnaId = request.WarnaId;
-                model.TypeBarangId = request.TypeBarangId;
-                model.KotaId = request.KotaID.Value;
-                model.PhotoPath = request.PhotoPath;
-                model.Year = request.Year.Value;
+                #region Old
+                //TypeBarangRequest typeRequest = new TypeBarangRequest();
+                //typeRequest.ID = request.TypeBarangId;
+                //var getTYpe = da_type.GetPost(typeRequest).Result;
+                //Barang model = new Barang();
+                //model.Id = request.ID;
+                //model.HargaOtr = request.HargaOtr;
+                //model.Name = getTYpe.Model.Name;
+                //model.WarnaId = request.WarnaId;
+                //model.TypeBarangId = request.TypeBarangId;
+                //model.KotaId = request.KotaID.Value;
+                //model.PhotoPath = request.PhotoPath;
+                //model.Year = request.Year.Value;
 
-                model.Modified = DateTime.Now;
-                model.ModifiedBy = "xsivicto1905";
-                bool result = await dep.UpdatePost(model);
+                //model.Modified = DateTime.Now;
+                //model.ModifiedBy = username;
+                #endregion
+
+                Barang model = new Barang()
+                {
+                    Id = request.ID
+                };
+                List<Barang> ListBarang = await dep.GetAllBarangSameTypeAndKota(model);
+
+                foreach (Barang brg in ListBarang)
+                {
+                    brg.PhotoPath = request.PhotoPath;
+                    brg.Modified = DateTime.Now;
+                    brg.ModifiedBy = username;
+                }
+
+                bool result = await dep.UpdateMany(ListBarang);
+
+                //bool result = await dep.UpdatePost(model);
 
                 if (result)
                 {

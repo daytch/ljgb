@@ -10,6 +10,8 @@ namespace ljgb.DataAccess.Interface
     public interface IBarang
     {
         Task<List<Barang>> GetAllBarang();
+        Task<bool> UpdateMany(List<Barang> ListBarang);
+        Task<List<Barang>> GetAllBarangSameTypeAndKota(Barang barang);
 
         Task<BarangResponse> GetAll(string search, string order, string orderDir, int startRec, int pageSize, int draw);
 
