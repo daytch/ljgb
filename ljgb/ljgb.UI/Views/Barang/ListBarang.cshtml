@@ -192,6 +192,7 @@
 
             return true;
         }
+
         var url = "";
         var imageUrl = "";
         $(document).ready(function () {
@@ -275,7 +276,8 @@
                 initComplete: function () {
                     $(this.api().table().container()).find("input").parent().wrap("<form>").parent().attr("autocomplete", "off");
                 },
-                bStateSave: true,
+                stateSave: true,
+                //bStateSave: true,
                 fnStateSave: function (oSettings, oData) {
                     localStorage.setItem('offersDataTables', JSON.stringify(oData));
                 },
@@ -437,7 +439,8 @@
                                     //$(document.body).removeClass('modal-open');
                                     $('.modal-backdrop').remove();
                                     toastr["success"](response.message);
-                                    $('#tableBarang').DataTable().ajax.reload();
+                                    var table = $('#tableBarang').DataTable();
+                                    table.draw(false);
                                 } else {
                                     LoadingMask.hide();
                                     toastr["error"](response.message);

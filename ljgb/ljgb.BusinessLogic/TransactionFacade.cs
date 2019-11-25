@@ -127,6 +127,7 @@ namespace ljgb.BusinessLogic
             {
                 UserProfile userProfile = await IAuth.GetUserProfileByEmail(email);
                 resp.Name = userProfile.Nama;
+                resp.ID = userProfile.Id;
             }
             catch (Exception ex)
             {

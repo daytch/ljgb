@@ -131,7 +131,7 @@ namespace ljgb.BusinessLogic
         public BarangResponse GetAllBidsById(BarangRequest req)
         {
             BarangResponse resp = new BarangResponse();
-            resp.ListBids = dep.GetAllBidsById(req);
+            resp.ListAsks = dep.GetAllBidsById(req);
 
             return resp;
         }
@@ -162,7 +162,7 @@ namespace ljgb.BusinessLogic
                 model.PhotoPath = request.PhotoPath;
                 model.TypeBarangId = request.TypeBarangId;
                 model.Created = DateTime.Now;
-                model.CreatedBy = request.UserName;
+                model.CreatedBy = "xsivicto1905";
                 model.RowStatus = true;
                 model.KotaId = request.KotaID.Value;
 
@@ -188,13 +188,13 @@ namespace ljgb.BusinessLogic
 
         }
 
-        public async Task<BarangResponse> DeletePost(long ID, string username)
+        public async Task<BarangResponse> DeletePost(long ID)
         {
             BarangResponse response = new BarangResponse();
             try
             {
                 long result = 0;
-                result = await dep.DeletePost(ID, username);
+                result = await dep.DeletePost(ID);
                 if (result == 0)
                 {
                     response.IsSuccess = false;
@@ -216,28 +216,46 @@ namespace ljgb.BusinessLogic
             return response;
         }
 
-        public async Task<BarangResponse> UpdatePost(BarangRequest request)
+        public async Task<BarangResponse> UpdatePost(BarangRequest request, string username)
         {
             BarangResponse response = new BarangResponse();
 
             try
             {
-                TypeBarangRequest typeRequest = new TypeBarangRequest();
-                typeRequest.ID = request.TypeBarangId;
-                var getTYpe = da_type.GetPost(typeRequest).Result;
-                Barang model = new Barang();
-                model.Id = request.ID;
-                model.HargaOtr = request.HargaOtr;
-                model.Name = getTYpe.Model.Name;
-                model.WarnaId = request.WarnaId;
-                model.TypeBarangId = request.TypeBarangId;
-                model.KotaId = request.KotaID.Value;
-                model.PhotoPath = request.PhotoPath;
-                model.Year = request.Year.Value;
+                #region Old
+                //TypeBarangRequest typeRequest = new TypeBarangRequest();
+                //typeRequest.ID = request.TypeBarangId;
+                //var getTYpe = da_type.GetPost(typeRequest).Result;
+                //Barang model = new Barang();
+                //model.Id = request.ID;
+                //model.HargaOtr = request.HargaOtr;
+                //model.Name = getTYpe.Model.Name;
+                //model.WarnaId = request.WarnaId;
+                //model.TypeBarangId = request.TypeBarangId;
+                //model.KotaId = request.KotaID.Value;
+                //model.PhotoPath = request.PhotoPath;
+                //model.Year = request.Year.Value;
 
-                model.Modified = DateTime.Now;
-                model.ModifiedBy = request.UserName;
-                bool result = await dep.UpdatePost(model);
+                //model.Modified = DateTime.Now;
+                //model.ModifiedBy = username;
+                #endregion
+
+                Barang model = new Barang()
+                {
+                    Id = request.ID
+                };
+                List<Barang> ListBarang = await dep.GetAllBarangSameTypeAndKota(model);
+
+                foreach (Barang brg in ListBarang)
+                {
+                    brg.PhotoPath = request.PhotoPath;
+                    brg.Modified = DateTime.Now;
+                    brg.ModifiedBy = username;
+                }
+
+                bool result = await dep.UpdateMany(ListBarang);
+
+                //bool result = await dep.UpdatePost(model);
 
                 if (result)
                 {
@@ -583,32 +601,6 @@ namespace ljgb.BusinessLogic
 
             return response;
 
-        }
-
-        public async Task<BarangResponse> GetHargaOTRTypeBarangID(BarangRequest request)
-        {
-            BarangResponse response = new BarangResponse();
-            try
-            {
-                Barang brg= await dep.GetHargaOTRTypeBarangID(request.TypeBarangId);
-                response.Model = new BarangViewModel()
-                {
-                    Id = brg.Id,
-                    Name = brg.Name,
-                    TypeBarangId = brg.TypeBarangId,
-                    HargaOtr = brg.HargaOtr
-                };
-                response.IsSuccess = true;
-                response.Message = "Success";
-            }
-            catch (Exception ex)
-            {
-
-                response.IsSuccess = false;
-                response.Message = ex.ToString();
-            }
-
-            return response;
         }
     }
 }

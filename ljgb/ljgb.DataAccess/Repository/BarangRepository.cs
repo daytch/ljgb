@@ -153,7 +153,7 @@ namespace ljgb.DataAccess.Repository
             }
             return null;
         }
-        
+
         public List<Car> GetHighestBid(string kota, int total)
         {
 
@@ -264,7 +264,7 @@ namespace ljgb.DataAccess.Repository
                                             p.namaType.ToString().ToLower().Contains(search.ToLower()) ||
                                             p.namaModelBarang.ToString().ToLower().Contains(search.ToLower()) ||
                                             p.namaWarna.ToString().ToLower().Contains(search.ToLower()) ||
-                                            p.NamaMerk.ToLower().Contains(search.ToLower())||
+                                            p.NamaMerk.ToLower().Contains(search.ToLower()) ||
                                             p.HargaOtr.ToString().ToLower().Contains(search.ToLower()) ||
                                             p.Year.ToString().ToLower().Contains(search.ToLower())
                                             );
@@ -304,7 +304,7 @@ namespace ljgb.DataAccess.Repository
                 {
                     response.Message = "Opps, Something Error with System Righ Now !";
                     response.IsSuccess = false;
-                }             
+                }
 
             }
             catch (Exception ex)
@@ -364,6 +364,24 @@ namespace ljgb.DataAccess.Repository
             return true;
         }
 
+        public async Task<bool> UpdateMany(List<Barang> ListBarang)
+        {
+            try
+            {
+                if (db != null)
+                {
+                    db.Barang.UpdateRange(ListBarang);
+                    await db.SaveChangesAsync();
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return false;
+        }
+
         public async Task<Barang> GetHargaOTR(Barang request)
         {
             Barang response = new Barang();
@@ -386,7 +404,7 @@ namespace ljgb.DataAccess.Repository
 
         public async Task<List<SP_GetBarangByHomeParameter>> GetBarangByHomeParameter(BarangRequest request)
         {
-         
+
             try
             {
                 return await db.Set<SP_GetBarangByHomeParameter>().FromSql("EXEC sp_GetBarangByHomeParameter {0},{1},{2},{3},{4},{5},{6}", request.KotaID, request.MerkID, request.ModelBarangID, request.TypeID, request.Year, request.start, request.limit).AsNoTracking().ToListAsync();
@@ -412,7 +430,25 @@ namespace ljgb.DataAccess.Repository
             }
         }
 
-       
+        public async Task<List<Barang>> GetAllBarangSameTypeAndKota(Barang barang)
+        {
+            List<Barang> ListBarang = new List<Barang>();
+            try
+            {
+                Barang b = await db.Barang.FirstOrDefaultAsync(x => x.RowStatus == true && x.Id == barang.Id);
+                ListBarang = await (from brg in db.Barang
+                                    where brg.RowStatus == true && brg.TypeBarangId == b.TypeBarangId
+                                    && brg.WarnaId == b.WarnaId
+                                    select brg
+                                ).ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return ListBarang;
+        }
+
 
         public async Task<List<SP_GetPhotoAndWarnaByBarangID>> GetPhotoAndWarnaByID(BarangRequest request)
         {
