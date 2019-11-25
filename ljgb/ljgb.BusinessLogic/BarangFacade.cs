@@ -162,7 +162,7 @@ namespace ljgb.BusinessLogic
                 model.PhotoPath = request.PhotoPath;
                 model.TypeBarangId = request.TypeBarangId;
                 model.Created = DateTime.Now;
-                model.CreatedBy = "xsivicto1905";
+                model.CreatedBy = request.UserName;
                 model.RowStatus = true;
                 model.KotaId = request.KotaID.Value;
 
@@ -188,13 +188,13 @@ namespace ljgb.BusinessLogic
 
         }
 
-        public async Task<BarangResponse> DeletePost(long ID)
+        public async Task<BarangResponse> DeletePost(long ID, string username)
         {
             BarangResponse response = new BarangResponse();
             try
             {
                 long result = 0;
-                result = await dep.DeletePost(ID);
+                result = await dep.DeletePost(ID, username);
                 if (result == 0)
                 {
                     response.IsSuccess = false;

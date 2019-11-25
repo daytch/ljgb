@@ -386,7 +386,7 @@ namespace ljgb.DataAccess.Repository
                     model.Name = request.Name;
                     model.Description = request.Description;
                     model.Modified = DateTime.Now;
-                    model.ModifiedBy = "xsivicto1905";
+                    model.ModifiedBy = request.CreatedBy;
 
                     db.TypeBarang.Update(model);
 

@@ -321,7 +321,8 @@ namespace ljgb.API.Controllers
                     response.Message = "Your session was expired, please re-login.";
                     return BadRequest(response);
                 }
-                response = await facade.DeletePost(request.ID);
+
+                response = await facade.DeletePost(request.ID, username);
 
                 return Ok(response);
             }
