@@ -584,6 +584,32 @@ namespace ljgb.BusinessLogic
             return response;
 
         }
+
+        public async Task<BarangResponse> GetHargaOTRTypeBarangID(BarangRequest request)
+        {
+            BarangResponse response = new BarangResponse();
+            try
+            {
+                Barang brg= await dep.GetHargaOTRTypeBarangID(request.TypeBarangId);
+                response.Model = new BarangViewModel()
+                {
+                    Id = brg.Id,
+                    Name = brg.Name,
+                    TypeBarangId = brg.TypeBarangId,
+                    HargaOtr = brg.HargaOtr
+                };
+                response.IsSuccess = true;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+
+                response.IsSuccess = false;
+                response.Message = ex.ToString();
+            }
+
+            return response;
+        }
     }
 }
 

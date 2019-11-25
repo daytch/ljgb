@@ -23,6 +23,7 @@ namespace ljgb.Common.Responses
         public List<SP_GetPhotoAndWarnaByBarangID> SP_GetPhotoAndWarnaByBarangIBIDS { get; set; }
         public List<SP_GetPhotoAndWarnaByBarangID> SP_GetPhotoAndWarnaByBarangASKS { get; set; }
         public List<SP_GetTypeBarangByBarangID> ListModelForDetail { get; set; }
+        
         public long Total { get; set; }
 
         public BarangResponse()

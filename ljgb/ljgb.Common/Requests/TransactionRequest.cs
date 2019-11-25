@@ -30,7 +30,9 @@ namespace ljgb.Common.Requests
         public long UserProfileID { get; set; }
         public string EndDate { get; set; }
         public string UserName { get; set; }
-
+        public long BarangID { get; set; }
+        public long Nominal { get; set; }
+        public long Harga { get; set; }
         public TransactionRequest()
         {
             TrasanctionLevel = new TransactionLevelViewModel();

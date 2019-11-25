@@ -68,14 +68,14 @@ namespace ljgb.DataAccess.Repository
 
                     //NegoBarang negoBarang = new NegoBarang();
 
-                    //negoBarang.UserProfileId = model.UserProfileID;
-                    //negoBarang.BarangId = model.BarangID;
+                    //negoBarang.UserProfileId = model.UserProfileId;
+                    //negoBarang.BarangId = model.BarangId;
                     //negoBarang.TypePenawaran = model.TypePenawaran;
                     //negoBarang.Harga = model.Harga;
                     //negoBarang.Created = DateTime.Now;
                     //negoBarang.CreatedBy = model.CreatedBy;
                     //negoBarang.RowStatus = true;
-
+                   
                     await db.NegoBarang.AddAsync(model);
                     response = await db.SaveChangesAsync();
 

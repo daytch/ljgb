@@ -72,6 +72,7 @@ namespace ljgb.API.Controllers
             {
                 string bearer = Request.HttpContext.Request.Headers["Authorization"];
                 string token = bearer.Substring("Bearer ".Length).Trim();
+                //string token = request.Token;
                 string username = string.Empty;
                 if (string.IsNullOrEmpty(token))
                 {
@@ -92,6 +93,7 @@ namespace ljgb.API.Controllers
                     return resp;
                 }
                 request.UserName = username;
+                //AuthenticationResponse autResp = 
                 resp = await facade.SubmitBid(request);
                 return resp;
             }

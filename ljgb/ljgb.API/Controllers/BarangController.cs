@@ -251,7 +251,6 @@ namespace ljgb.API.Controllers
                 string username = string.Empty;
                 if (string.IsNullOrEmpty(token))
                 {
-<<<<<<< HEAD
                     resp.IsSuccess = false;
                     resp.Message = "You don't have access.";
                     return resp;
@@ -260,35 +259,8 @@ namespace ljgb.API.Controllers
                 username = sec.ValidateToken(token);
                 if (username == null)
                 {
+                
                     Response.HttpContext.Response.Cookies.Append("access_token", "", new CookieOptions()
-=======
-                    string bearer = Request.HttpContext.Request.Headers["Authorization"];
-                    string token = bearer.Substring("Bearer ".Length).Trim();
-                    string username = string.Empty;
-                    if (string.IsNullOrEmpty(token))
-                    {
-                        result.IsSuccess = false;
-                        result.Message = "You don't have access.";
-                        return BadRequest(result);
-                    }
-
-                    username = sec.ValidateToken(token);
-                    if (username == null)
-                    {
-                        Response.HttpContext.Response.Cookies.Append("access_token", "", new CookieOptions()
-                        {
-                            Expires = DateTime.Now.AddDays(-1)
-                        });
-                        result.IsSuccess = false;
-                        result.Message = "Your session was expired, please re-login.";
-                        return BadRequest(result);
-                    }
-                    if (model.ID > 0)
-                    {
-                        result = await facade.UpdatePost(model);
-                    }
-                    else
->>>>>>> 2950fc3cbded93d7b2910d60578be62593369a4d
                     {
                         Expires = DateTime.Now.AddDays(-1)
                     });
@@ -296,6 +268,7 @@ namespace ljgb.API.Controllers
                     resp.Message = "Your session was expired, please re-login.";
                     return resp;
                 }
+
                 model.UserName = username;
                 if (model.ID > 0)
                 {
@@ -339,12 +312,9 @@ namespace ljgb.API.Controllers
         [Route("DeletePost")]
         public async Task<BarangResponse> DeletePost(BarangRequest request)
         {
-<<<<<<< HEAD
             BarangResponse resp = new BarangResponse();
-=======
             BarangResponse response = new BarangResponse();
 
->>>>>>> 2950fc3cbded93d7b2910d60578be62593369a4d
             try
             {
                 string bearer = Request.HttpContext.Request.Headers["Authorization"];
@@ -368,33 +338,6 @@ namespace ljgb.API.Controllers
                     resp.Message = "Your session was expired, please re-login.";
                     return resp;
                 }
-
-<<<<<<< HEAD
-=======
-                string bearer = Request.HttpContext.Request.Headers["Authorization"];
-                string token = bearer.Substring("Bearer ".Length).Trim();
-                string username = string.Empty;
-                if (string.IsNullOrEmpty(token))
-                {
-                    response.IsSuccess = false;
-                    response.Message = "You don't have access.";
-                    return BadRequest(response);
-                }
-
-                username = sec.ValidateToken(token);
-                if (username == null)
-                {
-                    Response.HttpContext.Response.Cookies.Append("access_token", "", new CookieOptions()
-                    {
-                        Expires = DateTime.Now.AddDays(-1)
-                    });
-                    response.IsSuccess = false;
-                    response.Message = "Your session was expired, please re-login.";
-                    return BadRequest(response);
-                }
-                response = await facade.DeletePost(request.ID);
->>>>>>> 2950fc3cbded93d7b2910d60578be62593369a4d
-
 
                 return resp = await facade.DeletePost(request.ID, username); ;
             }
@@ -619,6 +562,27 @@ namespace ljgb.API.Controllers
                 try
                 {
                     result = await facade.GetPhotoAndWarnaByID(request);
+                    return Ok(result);
+                }
+                catch (Exception)
+                {
+                    return BadRequest();
+                }
+            }
+            return BadRequest();
+        }
+
+        [HttpPost]
+        [Route("GetHargaOTRTypeBarangID")]
+        public async Task<IActionResult> GetHargaOTRTypeBarangID([FromBody]BarangRequest request)
+        {
+
+            BarangResponse result = new BarangResponse();
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    result = await facade.GetHargaOTRTypeBarangID(request);
                     return Ok(result);
                 }
                 catch (Exception)

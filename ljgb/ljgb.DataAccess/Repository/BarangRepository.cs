@@ -472,5 +472,18 @@ namespace ljgb.DataAccess.Repository
                 throw ex;
             }
         }
+
+        public async Task<Barang> GetHargaOTRTypeBarangID(long TypeBarangID)
+        {
+            try
+            {
+                return await db.Barang.Where(x => x.RowStatus == true && x.TypeBarangId == TypeBarangID).FirstOrDefaultAsync();
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
     }
 }
