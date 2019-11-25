@@ -323,7 +323,7 @@ namespace ljgb.API.Controllers
                     response.Message = "Your session was expired, please re-login.";
                     return BadRequest(response);
                 }
-
+                req.UserName = username;
                 response = await facade.ApproveTransaction(req);
 
                 if (response.IsSuccess)
