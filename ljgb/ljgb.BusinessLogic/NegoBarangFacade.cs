@@ -20,6 +20,7 @@ namespace ljgb.BusinessLogic
         private INegoBarang dep;
         private ITransaction iTrans;
         private IAuthentication IAuth;
+        private IBarang iBarang;
         public NegoBarangFacade()
         {
             var builder = new ConfigurationBuilder()
@@ -36,6 +37,7 @@ namespace ljgb.BusinessLogic
             this.dep = new NegoBarangRepository(db);
             this.iTrans = new TransactionRepository(db);
             IAuth = new AuthenticationRepository(db);
+            iBarang = new BarangRepository(db);
         }
         #endregion
 
@@ -297,6 +299,92 @@ namespace ljgb.BusinessLogic
             //    return null;
             //}
             //return models;
+
+        }
+
+
+        public async Task<NegoBarangResponse> SubmitListASK(NegoBarangRequest req)
+        {
+            NegoBarangResponse response = new NegoBarangResponse();
+           
+            UserProfile userProfile = await IAuth.GetUserProfileByEmail(req.UserName);
+            try
+            {
+                List<Barang> barangs = iBarang.GetIDBarangByTypeAndColourIDS(req.TypeBarangID, req.ListWarna).Result;
+                foreach (var item in barangs)
+                {
+                    NegoBarang model = new NegoBarang();
+                    model.Id = req.ID;
+                    model.UserProfileId = userProfile.Id;
+                    model.BarangId = item.Id;
+                    model.Harga = req.Harga;
+                    model.TypePenawaran = req.TypePenawaran = "ASK";
+                    model.Created = DateTime.Now;
+                    model.CreatedBy = req.UserName;
+                    model.RowStatus = true;
+                    if (await dep.AddPost(model) > 0)
+                    {
+                        response.IsSuccess = true;
+                        response.Message = "Data Already Success";
+                    }
+                    else
+                    {
+                        response.IsSuccess = false;
+                        response.Message = "Save Failed";
+                    }
+                }
+                //if (req.ID > 0)
+                //{
+                //    model.Id = req.ID;
+                //    model.UserProfileId = userProfile.Id;
+                //    model.BarangId = req.BarangID;
+                //    model.Harga = req.Harga;
+                //    model.TypePenawaran = req.TypePenawaran = "ASK";
+                //    model.Created = DateTime.Now;
+                //    model.CreatedBy = req.UserName;
+                //    model.RowStatus = true;
+                //    if (await dep.UpdatePost(model) > 0)
+                //    {
+                //        response.IsSuccess = true;
+                //        response.Message = "Update Success";
+                //    }
+                //    else
+                //    {
+                //        response.IsSuccess = false;
+                //        response.Message = "Update Failed";
+                //    }
+
+                //}
+                //else
+                //{
+                //    model.UserProfileId = userProfile.Id;
+                //    model.BarangId = req.BarangID;
+                //    model.TypePenawaran = req.TypePenawaran = "ASK";
+                //    model.Created = DateTime.Now;
+                //    model.CreatedBy = req.UserName;
+                //    model.RowStatus = true;
+                //    model.Harga = req.Harga;
+                //    if (await dep.AddPost(model) > 0)
+                //    {
+                //        response.IsSuccess = true;
+                //        response.Message = "Data Already Saved";
+                //    }
+                //    else
+                //    {
+                //        response.IsSuccess = false;
+                //        response.Message = "Save Failed";
+                //    }
+                //}
+            }
+            catch (Exception ex)
+            {
+
+                response.IsSuccess = false;
+                response.Message = ex.Message.ToString();
+            }
+
+            //return await dep.AddPost(req);
+            return response;
 
         }
     }

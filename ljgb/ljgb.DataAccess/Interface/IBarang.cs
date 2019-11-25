@@ -49,6 +49,6 @@ namespace ljgb.DataAccess.Interface
 
         Task<Barang> GetHargaOTRTypeBarangID(long TypeBarangID);
 
-
+        Task<List<Barang>> GetIDBarangByTypeAndColourIDS(long typeBarangID, List<long> listWarnaID);
     }
 }

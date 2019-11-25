@@ -35,7 +35,7 @@
             <div class="panel-container show">
                 <div class="panel-content">
                     <h5 class="frame-heading">
-                        <button type="button" class="btn btn-primary waves-effect waves-themed" data-id="0" data-nama="" data-merk="" data-toggle="modal" data-target="#ModalEdit" id="0" tittle="Add Provinsi"><i class="fal fa-plus-circle"></i>Add</button>
+                        <button type="button" class="btn btn-primary waves-effect waves-themed" data-id="0" data-nama="" data-merk="" data-toggle="modal" data-target="#ModalAdd" id="0" tittle="Add Provinsi"><i class="fal fa-plus-circle"></i>Add</button>
                     </h5>
                     <input type="hidden" class="form-control" id="NegoBarangID">
                     <input type="hidden" class="form-control" id="BarangID" />
@@ -81,7 +81,7 @@
     </div>
 </div>
 <!-- Modal Add-->
-<div class="modal fade" id="ModalEdit" role="dialog">
+<div class="modal fade" id="ModalAdd" role="dialog">
     <form class="needs-validation" novalidate>
         <div class="modal-dialog">
 
@@ -151,6 +151,76 @@
     </form>
 </div>
 
+<div class="modal fade" id="ModalEdit" role="dialog">
+    <form class="needs-validation" novalidate>
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+
+                    <h4 class="modal-title">Maintain ASK</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+
+                </div>
+                <div class="modal-body">
+
+                    <div class="form-group">
+                        <label class="form-label" for="simpleinput">Merk</label>
+
+                        <select id="dropdownMerkEdit" class="form-control col-md-12" name="dropdownProvinsi" required></select>
+                        <div class="invalid-feedback">
+                            Please Select Merk
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="simpleinput">Model</label>
+
+                        <select id="dropdownModelBarangEdit" class="form-control col-md-12" name="dropdownModelBarang" required></select>
+                        <div class="invalid-feedback">
+                            Please Select Models
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="simpleinput">Type</label>
+
+                        <select id="dropdownTypeEdit" class="form-control col-md-12" name="dropdownType" required></select>
+                        <div class="invalid-feedback">
+                            Please Select Type
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="simpleinput">Warna</label>
+
+                        <select id="dropdownWarnaEdit" class="form-control col-md-12" name="dropdownWarna" required></select>
+                        <div class="invalid-feedback">
+                            Please Select Warna
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="example-textarea">Harga OTR</label>
+                        <input class="form-control" id="HargaOTREdit" name="Description" disabled="disabled"></input>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="example-textarea">Harga Nego</label>
+                        <input class="form-control" id="HargaNegoEdit" name="Description" required></input>
+                        <div class="invalid-feedback">
+                            Please Input Harga Nego
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-warning waves-effect waves-themed" data-dismiss="modal">Cancel</button>
+                    <button type="button" id="btn-Edit" class="btn btn-success waves-effect waves-themed"> <span class="fal fa-check mr-1"></span>Submit</button>
+
+                </div>
+            </div>
+
+        </div>
+    </form>
+</div>
+
 @section Scripts {
     <script type="text/javascript">
         $(document).ready(function () {
@@ -168,8 +238,10 @@
                 success: function (response) {
                     if (response.isSuccess) {
                         $("#dropdownMerk").append($('<option></option>').attr('value', -1).text("Pilih Model"));
+                        $("#dropdownMerkEdit").append($('<option></option>').attr('value', -1).text("Pilih Model"));
                         $.each(response.listModel, function (key, entry) {
                             $("#dropdownMerk").append($('<option></option>').attr('value', entry.id).text(entry.name));
+                            $("#dropdownMerkEdit").append($('<option></option>').attr('value', entry.id).text(entry.name));
                         })
                     } else {
                         toastr["error"](response.message);
@@ -191,6 +263,7 @@
                     if (response.isSuccess) {
                         $.each(response.data, function (key, entry) {
                             $("#dropdownWarna").append($('<option></option>').attr('value', entry.id).text(entry.name));
+                            $("#dropdownWarnaEdit").append($('<option></option>').attr('value', entry.id).text(entry.name));
                         })
                     } else {
                         toastr["error"](response.message);
@@ -275,14 +348,15 @@
             });
 
             $('#ModalEdit').on('show.bs.modal', function (e) {
+                debugger;
                 $("#dropdownModelBarang option").remove();
                 $("#dropdownType option").remove();
                 resetModal();
                 $('#HiddenModelID').val(e.relatedTarget.getAttribute('data-modelID'));
                 $('#HiddenTypeID').val(e.relatedTarget.getAttribute('data-typeID'));
-                $('#dropdownWarna').val(e.relatedTarget.getAttribute('data-warnaID'));
+                $('#dropdownWarnaEdit').val(e.relatedTarget.getAttribute('data-warnaID'));
                 $('#NegoBarangID').val(e.relatedTarget.getAttribute('data-id'));
-                $('#dropdownMerk').val(e.relatedTarget.getAttribute('data-merkID'));
+                $('#dropdownMerkEdit').val(e.relatedTarget.getAttribute('data-merkID'));
                 $('#BarangID').val(e.relatedTarget.getAttribute('data-barangID'));
 
 
@@ -290,7 +364,7 @@
 
                     merkID: e.relatedTarget.getAttribute('data-merkID')
                 }
-                SetModelDropdown(valuesMerkID);
+                SetModelDropdownEdit(valuesMerkID);
 
 
 
@@ -299,15 +373,15 @@
 
                     ModelBarangID: e.relatedTarget.getAttribute('data-modelID')
                 }
-                SetTypeDropdown(valuesModelBarang);
+                SetTypeDropdownEdit(valuesModelBarang);
 
 
                 //$.when(SetTypeDropdown(valuesModelBarang)).then(function () {
                 //    $("#dropdownType").val(e.relatedTarget.getAttribute('data-typeID'));
                 //});
 
-                $('#HargaOTR').val(e.relatedTarget.getAttribute('data-hargaOTR'));
-                $('#HargaNego').val(e.relatedTarget.getAttribute('data-harga'));
+                $('#HargaOTREdit').val(e.relatedTarget.getAttribute('data-hargaOTR'));
+                $('#HargaNegoEdit').val(e.relatedTarget.getAttribute('data-harga'));
             });
 
             var forms = document.getElementsByClassName('needs-validation');
@@ -324,8 +398,53 @@
                             ID: ($("#NegoBarangID").val()) ? $("#NegoBarangID").val() : 0,
                             BarangID: ($("#BarangID").val()) ? $("#BarangID").val() : 0,
                             Harga: $("#HargaNego").val(),
-                            UserProfileID: 3,
-                            CreatedBy: "xsivicto1905",
+                            ListWarna: $("#dropdownWarna").val(),
+                            TypeBarangID: $("#dropdownType").val()
+                        };
+
+                        $.ajax({
+                            url: url + "NegoBarang/SubmitListASK",
+                            contentType: 'application/json',
+                            dataType: 'json',
+                            type: "POST",
+                            beforeSend: function (xhr) {
+                                xhr.setRequestHeader('Authorization', 'Bearer ' + Cookies.get("access_token"));
+                            },
+                            data: JSON.stringify(values),
+                            success: function (response) {
+                                if (response.isSuccess) {
+                                    $("#ModalAdd").modal('hide');
+                                    $(document.body).removeClass('modal-open');
+                                    $('.modal-backdrop').remove();
+                                    toastr["success"](response.message);
+                                    $('#tableAsk').DataTable().ajax.reload();
+                                } else {
+                                    toastr["error"](response.message);
+                                }
+                            },
+                            error: function (jqXHR, text, errorThrown) {
+                                console.log(jqXHR + " " + text + " " + errorThrown);
+                            }
+                        });
+                    }
+                    form.classList.add('was-validated');
+                });
+            });
+
+
+            var buttonEdit = document.getElementById("btn-Edit");
+
+            var validationEdit = Array.prototype.filter.call(forms, function (form) {
+                buttonEdit.addEventListener('click', function (event) {
+                    if (form.checkValidity() === false) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    } else {
+
+                        var values = {
+                            ID: ($("#NegoBarangID").val()) ? $("#NegoBarangID").val() : 0,
+                            BarangID: ($("#BarangID").val()) ? $("#BarangID").val() : 0,
+                            Harga: $("#HargaNegoEdit").val(),
                         };
 
                         $.ajax({
@@ -396,6 +515,18 @@
 
                 SetModelDropdown(values);
             });
+
+            $("#dropdownMerkEdit").change(function () {
+                $("#dropdownModelBarangEdit option").remove();
+                $("#dropdownTypeEdit option").remove();
+                var values = {
+
+                    merkID: $('#dropdownMerkEdit').val()
+                }
+
+                SetModelDropdownEdit(values);
+            });
+
             $("#dropdownModelBarang").change(function () {
                 $("#dropdownType option").remove();
                 var values = {
@@ -405,6 +536,17 @@
 
                 SetTypeDropdown(values);
             });
+
+            $("#dropdownModelBarangEdit").change(function () {
+                $("#dropdownTypeEdit option").remove();
+                var values = {
+
+                    ModelBarangID: $('#dropdownModelBarangEdit').val()
+                }
+
+                SetTypeDropdownEdit(values);
+            });
+
             function SetTypeDropdown(values) {
                 $.ajax({
                     url: url + "TypeBarang/GetAllWithModelBarangID",
@@ -426,6 +568,35 @@
                         }
                         if (($("#HiddenTypeID").val()) ? $("#HiddenTypeID").val() : 0 > 0) {
                             $("#dropdownType").val($("#HiddenTypeID").val());
+                        }
+                    },
+                    error: function (jqXHR, text, errorThrown) {
+                        console.log(jqXHR + " " + text + " " + errorThrown);
+                    }
+                });
+            }
+
+            function SetTypeDropdownEdit(values) {
+                $.ajax({
+                    url: url + "TypeBarang/GetAllWithModelBarangID",
+                    contentType: 'application/json',
+                    dataType: 'json',
+                    type: "POST",
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader('Authorization', 'Bearer ' + Cookies.get("access_token"));
+                    },
+                    data: JSON.stringify(values),
+                    success: function (response) {
+                        if (response.isSuccess) {
+                            $("#dropdownTypeEdit").append($('<option></option>').attr('value', -1).text("Pilih Model"));
+                            $.each(response.listModel, function (key, entry) {
+                                $("#dropdownTypeEdit").append($('<option></option>').attr('value', entry.id).text(entry.name));
+                            })
+                        } else {
+                            toastr["error"](response.message);
+                        }
+                        if (($("#HiddenTypeID").val()) ? $("#HiddenTypeID").val() : 0 > 0) {
+                            $("#dropdownTypeEdit").val($("#HiddenTypeID").val());
                         }
                     },
                     error: function (jqXHR, text, errorThrown) {
@@ -464,11 +635,74 @@
                 });
             }
 
+            function SetModelDropdownEdit(values) {
+                $.ajax({
+                    url: url + "ModelBarang/GetModelWithMerkID",
+                    contentType: 'application/json',
+                    dataType: 'json',
+                    type: "POST",
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader('Authorization', 'Bearer ' + Cookies.get("access_token"));
+                    },
+                    data: JSON.stringify(values),
+                    success: function (response) {
+                        if (response.isSuccess) {
+                            $("#dropdownModelBarangEdit").append($('<option></option>').attr('value', -1).text("Pilih Model"));
+                            $.each(response.listModel, function (key, entry) {
+                                $("#dropdownModelBarangEdit").append($('<option></option>').attr('value', entry.id).text(entry.name));
+                            })
+                        } else {
+                            toastr["error"](response.message);
+                        }
+
+                        if (($("#HiddenModelID").val()) ? $("#HiddenModelID").val() : 0 > 0) {
+                            $("#dropdownModelBarangEdit").val($("#HiddenModelID").val());
+                        }
+                    },
+                    error: function (jqXHR, text, errorThrown) {
+                        console.log(jqXHR + " " + text + " " + errorThrown);
+                    }
+                });
+            }
+
             $("#dropdownType").change(function () {
                 $("#HargaOTR").val("");
                 $("#BarandID").val("");
 
                 typeID = $("#dropdownType").val();
+
+                if (typeID > 0) {
+                    var values = {
+                        TypeBarangId: typeID
+                    }
+                    $.ajax({
+                        url: url + "Barang/GetHargaOTRTypeBarangID",
+                        contentType: 'application/json',
+                        dataType: 'json',
+                        type: "POST",
+                        beforeSend: function (xhr) {
+                            xhr.setRequestHeader('Authorization', 'Bearer ' + Cookies.get("access_token"));
+                        },
+                        data: JSON.stringify(values),
+                        success: function (response) {
+                            if (response.isSuccess) {
+                                $("#HargaOTR").val(response.model.hargaOtr);
+                            } else {
+                                toastr["error"](response.message);
+                            }
+                        },
+                        error: function (jqXHR, text, errorThrown) {
+                            console.log(jqXHR + " " + text + " " + errorThrown);
+                        }
+                    });
+                }
+            });
+
+            $("#dropdownTypeEdit").change(function () {
+                $("#HargaOTR").val("");
+                $("#BarandID").val("");
+
+                typeID = $("#dropdownTypeEdit").val();
 
                 if (typeID > 0) {
                     var values = {

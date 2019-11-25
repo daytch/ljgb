@@ -314,5 +314,43 @@ namespace ljgb.API.Controllers
             //    return BadRequest(ex);
             //}
         }
+
+        [HttpPost]
+        [Route("SubmitListASK")]
+        public async Task<NegoBarangResponse> SubmitListASK([FromBody]NegoBarangRequest req)
+        {
+            NegoBarangResponse resp = new NegoBarangResponse();
+            try
+            {
+                string bearer = Request.HttpContext.Request.Headers["Authorization"];
+                string token = bearer.Substring("Bearer ".Length).Trim();
+                string username = string.Empty;
+                if (string.IsNullOrEmpty(token))
+                {
+                    resp.IsSuccess = false;
+                    resp.Message = "You don't have access.";
+                    return resp;
+                }
+
+                username = sec.ValidateToken(token);
+                if (username == null)
+                {
+                    Response.HttpContext.Response.Cookies.Append("access_token", "", new CookieOptions()
+                    {
+                        Expires = DateTime.Now.AddDays(-1)
+                    });
+                    resp.IsSuccess = false;
+                    resp.Message = "Your session was expired, please re-login.";
+                    return resp;
+                }
+                req.UserName = username;
+                resp = await facade.SubmitListASK(req);
+                return resp;
+            }
+            catch (Exception)
+            {
+                return resp;
+            }
+        }
     }
 }

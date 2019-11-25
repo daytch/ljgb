@@ -143,6 +143,7 @@ namespace ljgb.BusinessLogic
                     req.Description = request.Description;
                     req.Created = DateTime.Now;
                     req.CreatedBy = request.UserName;
+                    req.ModifiedBy = request.UserName;
                     req.RowStatus = true;
                     response = await dep.UpdatePost(request);
                 }
