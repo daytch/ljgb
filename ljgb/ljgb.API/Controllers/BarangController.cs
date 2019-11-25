@@ -275,8 +275,50 @@ namespace ljgb.API.Controllers
                     }
                     else
                     {
-                        result = await facade.AddPost(model);
+                        result = await facade.AddPost(model,username);
                     }
+                    return Ok(result);
+                }
+                catch (Exception)
+                {
+                    return BadRequest();
+                }
+            }
+            return BadRequest();
+        }
+
+        [HttpPost]
+        [Route("AddImage")]
+        public async Task<IActionResult> AddImage([FromBody]BarangRequest model)
+        {
+            BarangResponse result = new BarangResponse();
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    string bearer = Request.HttpContext.Request.Headers["Authorization"];
+                    string token = bearer.Substring("Bearer ".Length).Trim();
+                    string username = string.Empty;
+                    if (string.IsNullOrEmpty(token))
+                    {
+                        result.IsSuccess = false;
+                        result.Message = "You don't have access.";
+                        return BadRequest(result);
+                    }
+
+                    username = sec.ValidateToken(token);
+                    if (username == null)
+                    {
+                        Response.HttpContext.Response.Cookies.Append("access_token", "", new CookieOptions()
+                        {
+                            Expires = DateTime.Now.AddDays(-1)
+                        });
+                        result.IsSuccess = false;
+                        result.Message = "Your session was expired, please re-login.";
+                        return BadRequest(result);
+                    }
+
+                    result = await facade.UpdateImageBarang(model, username);
                     return Ok(result);
                 }
                 catch (Exception)
@@ -321,7 +363,7 @@ namespace ljgb.API.Controllers
                     response.Message = "Your session was expired, please re-login.";
                     return BadRequest(response);
                 }
-                response = await facade.DeletePost(request.ID);
+                response = await facade.DeletePost(request.ID, username);
 
                 return Ok(response);
             }
