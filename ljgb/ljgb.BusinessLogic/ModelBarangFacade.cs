@@ -111,7 +111,7 @@ namespace ljgb.BusinessLogic
         {
             ModelBarangResponse resp = new ModelBarangResponse();
             long result = 0;
-            result = await dep.DeletePost(model.ID);
+            result = await dep.DeletePost(model.ID, model.UserName);
             if (result == 0)
             {
                 resp.IsSuccess = false;
@@ -143,11 +143,15 @@ namespace ljgb.BusinessLogic
                     }
                     else
                     {
+                        response.IsSuccess = true;
+                        response.Message = "Update Success";
                         response = await dep.UpdatePost(model);
                     }
                 }
                 else
                 {
+                    response.IsSuccess = true;
+                    response.Message = "Update Success";
                     response = await dep.UpdatePost(model);
                 }
             }

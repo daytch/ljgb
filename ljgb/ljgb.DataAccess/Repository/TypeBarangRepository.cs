@@ -86,6 +86,8 @@ namespace ljgb.DataAccess.Repository
 
                     if (model != null)
                     {
+                        model.Modified = DateTime.Now;
+                        model.ModifiedBy = request.UserName;
                         model.RowStatus = false;
 
                         //Commit the transaction
@@ -173,7 +175,10 @@ namespace ljgb.DataAccess.Repository
                                       Modified = model.Modified,
                                       ModifiedBy = model.ModifiedBy,
                                       RowStatus = model.RowStatus
-                                  }).ToListAsync();
+                                  }).Skip(startRec).Take(pageSize).ToListAsync();
+                    response.draw = Convert.ToInt32(draw);
+                    response.recordsTotal = totalRecords;
+                    response.recordsFiltered = recFilter;
                     response.Message = "Load Success";
                     response.IsSuccess = true;
                 }

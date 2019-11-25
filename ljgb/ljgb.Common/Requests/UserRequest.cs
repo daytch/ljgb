@@ -24,6 +24,7 @@ namespace ljgb.Common.Requests
         public string Nama { get; set; }
         public string Email { get; set; }
         public string Password { get; set; }
+        public string RePassword { get; set; }
         public string Telp { get; set; }
         public string Alamat { get; set; }
         public string JenisKelamin { get; set; }
@@ -31,6 +32,7 @@ namespace ljgb.Common.Requests
         public string KodeDealer { get; set; }
         public string Facebook { get; set; }
         public string Instagram { get; set; }
+        public string Photopath { get; set; }
     }
 
     public class sp_GetUserDetail

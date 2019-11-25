@@ -44,6 +44,7 @@
                     <input type="hidden" class="form-control" id="BarangID" />
                     <input type="hidden" class="form-control" id="SellerID" />
                     <input type="hidden" class="form-control" id="BuyerID" />
+                    <input type="hidden" class="form-control" id="nominalBarang"/>
                     <!-- datatable start -->
                     <table id="tableAsk" class="table table-bordered table-hover table-striped w-100">
                         <thead>
@@ -95,14 +96,13 @@
             $('#btn-save').on('click', function () {
                 var values = {
                     BuyerID: $('#BuyerID').val(),
-                    SellerID: 4,
                     BarangID: $('#BarangID').val(),
                     NegoBarangID: $('#NegoBarangID').val(),
-                    CreatedBy: "xsivicto1905",
+                    Harga: $('#nominalBarang').val()
                 };
 
                 $.ajax({
-                    url: url + "Transaction/SubmitDeal",
+                    url: url + "Transaction/SubmitSell",
                     contentType: 'application/json',
                     dataType: 'json',
                     type: "POST",
@@ -178,7 +178,7 @@
                         mRender: function (a, e, t) {
                             //return '<a class="btn btn-xs btn-success waves-effect waves-themed"  data-id="' + t.id + '" data-barangID="'+t.barangID+'" data-merkID="' + t.merkID + '" data-modelID="' + t.modelBarangID + '"  data-typeID="' + t.typeBarangID + '"  data-harga="' + t.harga + '" data-hargaOTR="' + t.hargaOTR + '" data-warnaID="' + t.warnaID + '" data-toggle="modal" data-target="#ModalEdit"><i class="fas fa-edit"></i></a> '
                             //    + '<a class="btn btn-xs btn-danger waves-effect waves-themed"   data-id="' + t.id + '" data-toggle="modal" data-target="#ModalDelete"><i class="fas fa-trash-alt"></i></a>';
-                            return '<a  class="btn btn-xs btn-success waves-effect waves-themed" data-id="' + t.id + '" data-buyerID="'+t.userProfileID+'" data-barangID="'+t.barangID+'" data-toggle="modal" data-target="#ModalDelete" ><i class="fas fa-edit">Deal</i></a> '
+                            return '<a  class="btn btn-xs btn-success waves-effect waves-themed" data-id="' + t.id + '" data-buyerID="' + t.userProfileID + '" data-barangID="' + t.barangID + '" data-nominal="' + t.harga+'" data-toggle="modal" data-target="#ModalDelete" ><i class="fas fa-edit">Deal</i></a> '
                         },
                         width: "12%"
                     }
@@ -189,6 +189,7 @@
                 $('#NegoBarangID').val(e.relatedTarget.getAttribute('data-id'));
                 $('#BuyerID').val(e.relatedTarget.getAttribute('data-buyerID'));
                 $('#BarangID').val(e.relatedTarget.getAttribute('data-barangID'));
+                $('#nominalBarang').val(e.relatedTarget.getAttribute('data-nominal'))
             });
             function resetModal() {
                 var $t = $('[data-dismiss=modal]'),

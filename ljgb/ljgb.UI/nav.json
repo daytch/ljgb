@@ -115,6 +115,10 @@
           "href": "Nego_ListASK.cshtml"
         },
         {
+          "title": "List ASK",
+          "href": "Nego_ListASKS.cshtml"
+        },
+        {
           "title": "List BID",
           "href": "Nego_ListBID.cshtml"
         }
@@ -124,9 +128,15 @@
       "title": "User Profile",
       "icon": "fal fa-th-list",
       "items": [
+
+
         {
           "title": "User Profile",
           "href": "User_USerProfile.cshtml"
+        },
+        {
+          "title": "Change Password",
+          "href": "User_ChangePassword.cshtml"
         }
 
       ]

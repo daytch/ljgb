@@ -70,14 +70,15 @@ namespace ljgb.BusinessLogic
 
         }
 
-        public async Task<TransactionResponse> SubmitBuy(int id, int nominal, string username)
+        public async Task<TransactionResponse> SubmitBuy(long id, long nominal, string username)
         {
             TransactionResponse response = new TransactionResponse();
             NegoBarang nego = new NegoBarang() { BarangId = id, TypePenawaran = "ask", Harga = nominal };
             NegoBarang ResultNego = await INego.GetNegoBarang(nego);
+            UserProfile usrBuyer = await IAuth.GetUserProfileByEmail(username);
             Transaction tran = new Transaction()
             {
-                BuyerId = 4,
+                BuyerId = usrBuyer.Id,
                 SellerId = ResultNego.UserProfileId,
                 NegoBarangId = ResultNego.Id,
                 TransactionLevelId = 1,
@@ -135,15 +136,16 @@ namespace ljgb.BusinessLogic
             return resp;
         }
 
-        public async Task<TransactionResponse> SubmitSell(int id, int nominal, string username)
+        public async Task<TransactionResponse> SubmitSell(long id, long nominal, string username)
         {
             TransactionResponse response = new TransactionResponse();
             NegoBarang nego = new NegoBarang() { BarangId = id, TypePenawaran = "bid", Harga = nominal };
             NegoBarang ResultNego = await INego.GetNegoBarang(nego);
+            UserProfile usrSell = await IAuth.GetUserProfileByEmail(username);
             Transaction tran = new Transaction()
             {
                 BuyerId = ResultNego.UserProfileId,
-                SellerId = 4,
+                SellerId = usrSell.Id,
                 NegoBarangId = ResultNego.Id,
                 TransactionLevelId = 1,
 
@@ -244,51 +246,57 @@ namespace ljgb.BusinessLogic
 
         }
 
-        public async Task<TransactionResponse> SubmitSell(TransactionRequest req)
-        {
-            TransactionResponse response = new TransactionResponse();
-            Transaction tran = new Transaction()
-            {
-                BuyerId = req.BuyerID,
-                SellerId = req.SellerID,
-                NegoBarangId = req.NegoBarangID,
-                TransactionLevelId = 1,
+        //public async Task<TransactionResponse> SubmitSell(TransactionRequest req)
+        //{
+        //    TransactionResponse response = new TransactionResponse();
+        //    NegoBarang reqNegoBarang = new NegoBarang() {
+        //        Id = req.NegoBarangID,
+        //        TypePenawaran = "bid"
+        //    };
+        //    NegoBarang currentNego = INego.GetNegoBarang(reqNegoBarang).Result;
+        //    UserProfile userProfile = await IAuth.GetUserProfileByEmail(req.UserName);
+        //    Transaction tran = new Transaction()
+        //    {
+        //        BuyerId = reqNegoBarang.UserProfileId,
+        //        SellerId = userProfile.Id,
+        //        NegoBarangId = req.NegoBarangID,
+        //        TransactionLevelId = 1,
 
-                CreatedBy = req.CreatedBy,
-                Created = DateTime.Now,
-                RowStatus = true
-            };
-            long TransID = await dep.SaveTransaction(tran);
-            if (TransID < 1)
-            {
-                response.Message = "Failed When Save Transaction";
-                response.IsSuccess = false;
-            }
-            else
-            {
-                TransactionJournal journal = new TransactionJournal()
-                {
-                    TransactionId = tran.Id,
-                    BuyerId = tran.BuyerId,
-                    SellerId = tran.SellerId,
-                    NegoBarangId = tran.NegoBarangId,
-                    TransactionLevelId = tran.TransactionLevelId,
+        //        CreatedBy = req.CreatedBy,
+        //        Created = DateTime.Now,
+        //        RowStatus = true
+        //    };
+        //    long TransID = await dep.SaveTransaction(tran);
+        //    if (TransID < 1)
+        //    {
+        //        response.Message = "Failed When Save Transaction";
+        //        response.IsSuccess = false;
+        //    }
+        //    else
+        //    {
+        //        TransactionJournal journal = new TransactionJournal()
+        //        {
+        //            TransactionId = tran.Id,
+        //            BuyerId = tran.BuyerId,
+        //            SellerId = tran.SellerId,
+        //            NegoBarangId = tran.NegoBarangId,
+        //            TransactionLevelId = tran.TransactionLevelId,
 
-                    Created = tran.Created,
-                    CreatedBy = tran.CreatedBy,
-                    RowStatus = tran.RowStatus,
-                };
-                long JournalID = await IJournal.SaveTransactionJournal(journal);
+        //            Created = tran.Created,
+        //            CreatedBy = tran.CreatedBy,
+        //            RowStatus = tran.RowStatus,
+        //        };
+        //        long JournalID = await IJournal.SaveTransactionJournal(journal);
 
-                if (JournalID < 1)
-                {
-                    log.Error("Failed when insert TransactionJournal, TransactionID = " + tran.Id);
-                }
-                response.Message = "Transaction Success.";
-                response.IsSuccess = true;
-            }
-            return response;
-        }
+        //        if (JournalID < 1)
+        //        {
+        //            log.Error("Failed when insert TransactionJournal, TransactionID = " + tran.Id);
+        //        }
+        //        response.Message = "Transaction Success.";
+        //        response.IsSuccess = true;
+        //    }
+        //    return response;
+        //}
 
         public async Task<TransactionResponse> GetHistory(TransactionRequest req)
         {

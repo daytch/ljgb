@@ -276,12 +276,13 @@
             }
 
             $("#ModalDelete").on("show.bs.modal", function (e) {
+                debugger;
                 $('#DealerID').val(e.relatedTarget.getAttribute('data-id'));
             });
 
             $('#ModalEdit').on('show.bs.modal', function (e) {
                 resetModal();
-
+                debugger;
                 $('#DealerID').val(e.relatedTarget.getAttribute('data-id'));
                 $('#NamaDealer').val(e.relatedTarget.getAttribute('data-nama'));
                 $('#KodeDealer').val(e.relatedTarget.getAttribute('data-kode'));
@@ -341,13 +342,13 @@
             });
 
             $('#btn-delete').on('click', function (e) {
-
+                debugger;
                 var userData = {
                     ID: $("#DealerID").val()
                 }
-
+                
                 $.ajax({
-                    url: url + "ModelBarang/DeletePost",
+                    url: url + "Dealer/DeletePost?ID=" +$("#DealerID").val(),
                     type: "POST",
                     dataType: 'json',
                     contentType: "application/json",

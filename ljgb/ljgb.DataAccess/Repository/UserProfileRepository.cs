@@ -266,5 +266,33 @@ namespace ljgb.DataAccess.Repository
             }
             return result;
         }
+
+        public async Task<UserProfile> GetUserByEmail(string Email)
+        {
+            try
+            {
+                return await db.UserProfile.Where(x => x.RowStatus == true && x.Email == Email).FirstOrDefaultAsync();
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+        //public Task<bool> UpdatePassword(UserProfile userProfile)
+        //{
+        //    bool result = true;
+        //    try
+        //    {
+        //        var usrProfile = db.UserProfile.Where(x=>x.RowStatus == true && x.Email == userProfile.email)
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        result = false;
+        //        throw ex;
+        //    }
+        //    return result;
+        //}
     }
 }

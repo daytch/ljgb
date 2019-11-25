@@ -50,9 +50,11 @@ namespace ljgb.DataAccess.Repository
                     Provinsi model = await db.Provinsi.Where(x => x.RowStatus == true && x.Id == request.ID).FirstOrDefaultAsync();
                     if (model != null)
                     {
+                        model.Modified = DateTime.Now;
+                        model.ModifiedBy = request.UserName;
                         model.RowStatus = false;
                         await db.SaveChangesAsync();
-
+                        response.IsSuccess = true;
                         response.Message = "Data has been Saved";
                     }
                     else

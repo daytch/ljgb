@@ -1,6 +1,7 @@
 ﻿using ljgb.BusinessLogic;
 using ljgb.Common.Requests;
 using ljgb.Common.Responses;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
@@ -12,30 +13,75 @@ namespace ljgb.API.Controllers
     public class ProvinsiController : ControllerBase
     {
         private ProvinsiFacade facade = new ProvinsiFacade();
+        private Security sec = new Security();
         [HttpGet]
         [Route("GetAll")]
-        public async Task<IActionResult> GetAll()
+        public async Task<ProvinsiResponse> GetAll()
         {
+
+            ProvinsiResponse resp = new ProvinsiResponse();
             try
             {
+                string bearer = Request.HttpContext.Request.Headers["Authorization"];
+                string token = bearer.Substring("Bearer ".Length).Trim();
+                string username = string.Empty;
+                if (string.IsNullOrEmpty(token))
+                {
+                    resp.IsSuccess = false;
+                    resp.Message = "You don't have access.";
+                    return resp;
+                }
+
+                username = sec.ValidateToken(token);
+                if (username == null)
+                {
+                    Response.HttpContext.Response.Cookies.Append("access_token", "", new CookieOptions()
+                    {
+                        Expires = DateTime.Now.AddDays(-1)
+                    });
+                    resp.IsSuccess = false;
+                    resp.Message = "Your session was expired, please re-login.";
+                    return resp;
+                }
+              
+
                 string search = HttpContext.Request.Query["search[value]"].ToString();
                 int draw = Convert.ToInt32(HttpContext.Request.Query["draw"]);
                 string order = HttpContext.Request.Query["order[0][column]"];
                 string orderDir = HttpContext.Request.Query["order[0][dir]"];
                 int startRec = Convert.ToInt32(HttpContext.Request.Query["start"]);
                 int pageSize = Convert.ToInt32(HttpContext.Request.Query["length"]);
-                var models = await facade.GetAll(search, order, orderDir, startRec, pageSize, draw);
-                if (models == null)
-                {
-                    return NotFound();
-                }
+                 resp = await facade.GetAll(search, order, orderDir, startRec, pageSize, draw);
+               
 
-                return Ok(models);
+                return resp;
             }
             catch (Exception ex)
             {
-                return BadRequest(ex);
+                resp.IsSuccess = false;
+                resp.Message = ex.Message.ToString();
+                return resp;
             }
+            //try
+            //{
+            //    string search = HttpContext.Request.Query["search[value]"].ToString();
+            //    int draw = Convert.ToInt32(HttpContext.Request.Query["draw"]);
+            //    string order = HttpContext.Request.Query["order[0][column]"];
+            //    string orderDir = HttpContext.Request.Query["order[0][dir]"];
+            //    int startRec = Convert.ToInt32(HttpContext.Request.Query["start"]);
+            //    int pageSize = Convert.ToInt32(HttpContext.Request.Query["length"]);
+            //    var models = await facade.GetAll(search, order, orderDir, startRec, pageSize, draw);
+            //    if (models == null)
+            //    {
+            //        return NotFound();
+            //    }
+
+            //    return Ok(models);
+            //}
+            //catch (Exception ex)
+            //{
+            //    return BadRequest(ex);
+            //}
         }
 
         [HttpGet]
@@ -87,6 +133,7 @@ namespace ljgb.API.Controllers
         [Route("GetModelWithID")]
         public async Task<IActionResult> GetPost(ProvinsiRequest req)
         {
+
             if (req == null)
             {
                 return BadRequest();
@@ -111,49 +158,129 @@ namespace ljgb.API.Controllers
 
         [HttpPost]
         [Route("AddPost")]
-        public async Task<IActionResult> AddPost([FromBody]ProvinsiRequest req)
+        public async Task<ProvinsiResponse> AddPost([FromBody]ProvinsiRequest req)
         {
-            ProvinsiResponse response = new ProvinsiResponse();
-            if (ModelState.IsValid)
+            ProvinsiResponse resp = new ProvinsiResponse();
+            try
             {
-                try
+                string bearer = Request.HttpContext.Request.Headers["Authorization"];
+                string token = bearer.Substring("Bearer ".Length).Trim();
+                string username = string.Empty;
+                if (string.IsNullOrEmpty(token))
                 {
-                    if (req.ID >0)
-                    {
-                        response = await facade.UpdatePost(req);
-                    }
-                    else
-                    {
-                        response = await facade.AddPost(req);
-                    }
-
-                    return Ok(response);
-
-                }
-                catch (Exception)
-                {
-                    return BadRequest();
+                    resp.IsSuccess = false;
+                    resp.Message = "You don't have access.";
+                    return resp;
                 }
 
+                username = sec.ValidateToken(token);
+                if (username == null)
+                {
+                    Response.HttpContext.Response.Cookies.Append("access_token", "", new CookieOptions()
+                    {
+                        Expires = DateTime.Now.AddDays(-1)
+                    });
+                    resp.IsSuccess = false;
+                    resp.Message = "Your session was expired, please re-login.";
+                    return resp;
+                }
+                req.UserName = username;
+                if (req.ID > 0)
+                {
+                    resp = await facade.UpdatePost(req);
+                }
+                else
+                {
+                    resp = await facade.AddPost(req);
+                }
+
+
+
+                return resp;
             }
+            catch (Exception ex)
+            {
+                resp.IsSuccess = false;
+                resp.Message = ex.Message.ToString();
+                return resp;
+            }
+            //ProvinsiResponse response = new ProvinsiResponse();
+            //if (ModelState.IsValid)
+            //{
+            //    try
+            //    {
+            //        if (req.ID >0)
+            //        {
+            //            response = await facade.UpdatePost(req);
+            //        }
+            //        else
+            //        {
+            //            response = await facade.AddPost(req);
+            //        }
 
-            return BadRequest();
+            //        return Ok(response);
+
+            //    }
+            //    catch (Exception)
+            //    {
+            //        return BadRequest();
+            //    }
+
+            //}
+
+            //return BadRequest();
         }
 
         [HttpPost]
         [Route("DeletePost")]
-        public async Task<IActionResult> DeletePost(ProvinsiRequest req)
+        public async Task<ProvinsiResponse> DeletePost(ProvinsiRequest req)
         {
+            ProvinsiResponse resp = new ProvinsiResponse();
             try
-            {                
-                var result = await facade.DeletePost(req);
-
-                return Ok(result);
-            }
-            catch (Exception)
             {
-                return BadRequest();
+                string bearer = Request.HttpContext.Request.Headers["Authorization"];
+                string token = bearer.Substring("Bearer ".Length).Trim();
+                string username = string.Empty;
+                if (string.IsNullOrEmpty(token))
+                {
+                    resp.IsSuccess = false;
+                    resp.Message = "You don't have access.";
+                    return resp;
+                }
+
+                username = sec.ValidateToken(token);
+                if (username == null)
+                {
+                    Response.HttpContext.Response.Cookies.Append("access_token", "", new CookieOptions()
+                    {
+                        Expires = DateTime.Now.AddDays(-1)
+                    });
+                    resp.IsSuccess = false;
+                    resp.Message = "Your session was expired, please re-login.";
+                    return resp;
+                }
+                req.UserName = username;
+            
+
+
+                return resp = await facade.DeletePost(req);
             }
+            catch (Exception ex)
+            {
+                resp.IsSuccess = false;
+                resp.Message = ex.Message.ToString();
+                return resp;
+            }
+            //try
+            //{                
+            //    var result = await facade.DeletePost(req);
+
+            //    return Ok(result);
+            //}
+            //catch (Exception)
+            //{
+            //    return BadRequest();
+            //}
         }
 
         [HttpPost]

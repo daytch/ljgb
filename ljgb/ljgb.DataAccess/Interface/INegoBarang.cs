@@ -28,5 +28,8 @@ namespace ljgb.DataAccess.Interface
         Task<bool> DeletePost(long ID);
 
         Task<NegoBarangResponse> GetAllBID(string search, string order, string orderDir, int startRec, int pageSize, int draw);
+        Task<NegoBarangResponse> GetAllASK(string search, string order, string orderDir, int startRec, int pageSize, int draw, long ID);
+
+        Task<NegoBarangResponse> GetAllBID(string search, string order, string orderDir, int startRec, int pageSize, int draw, long KotaID);
     }
 }

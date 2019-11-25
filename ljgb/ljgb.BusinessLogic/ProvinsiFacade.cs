@@ -95,7 +95,7 @@ namespace ljgb.BusinessLogic
                     provinsi.Name = req.Name;
                     provinsi.Description = req.Description;
                     provinsi.Created = DateTime.Now;
-                    provinsi.CreatedBy = "xsivicto1905";
+                    provinsi.CreatedBy = req.UserName;
                     provinsi.RowStatus = true;
                     result = await dep.AddPost(provinsi);
 
@@ -156,7 +156,7 @@ namespace ljgb.BusinessLogic
                     provinsi.Name = req.Name;
                     provinsi.Description = req.Description;
                     provinsi.Modified = DateTime.Now;
-                    provinsi.ModifiedBy = "xsivicto1905";
+                    provinsi.ModifiedBy = req.UserName;
 
                     result = await dep.UpdatePost(provinsi);
 
@@ -179,7 +179,7 @@ namespace ljgb.BusinessLogic
                         provinsi.Name = req.Name;
                         provinsi.Description = req.Description;
                         provinsi.Modified = DateTime.Now;
-                        provinsi.ModifiedBy = "xsivicto1905";
+                        provinsi.ModifiedBy = req.UserName;
 
                         result = await dep.UpdatePost(provinsi);
 

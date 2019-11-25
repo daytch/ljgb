@@ -37,14 +37,17 @@ namespace ljgb.DataAccess.Interface
 
         Task<long> AddPost(Barang model);
 
-        Task<long> DeletePost(long ID);
+        Task<long> DeletePost(long ID, string username);
 
         Task<bool> UpdatePost(Barang model);
         Task<Barang> GetHargaOTR(Barang request);
+        Task<Barang> GetIDBarangByTypeAndCOlour(Barang request);
         Task<List<SP_GetBarangByHomeParameter>> GetBarangByHomeParameter(BarangRequest request);
         Task<SP_GetBarangByHomeParameterCount> GetBarangByHomeParameterCount(BarangRequest request);
         Task<List<SP_GetPhotoAndWarnaByBarangID>> GetPhotoAndWarnaByID(BarangRequest request);
         Task<List<SP_GetTypeBarangByBarangID>> GetTypeBarangByBarangID(BarangRequest request);
+
+        Task<Barang> GetHargaOTRTypeBarangID(long TypeBarangID);
 
 
     }

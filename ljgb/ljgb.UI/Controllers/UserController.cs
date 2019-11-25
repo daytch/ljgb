@@ -22,6 +22,11 @@ namespace ljgb.UI.Controllers
             return View(_settings);
         }
 
+        public IActionResult ChangePassword()
+        {
+            ViewBag.url_api = _config.base_api_url;
+            return View(_settings);
+        }
       
     }
 }

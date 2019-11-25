@@ -37,9 +37,11 @@ namespace ljgb.DataAccess.Interface
         Task<bool> SendConfirmationEmail(UserRequest userProfile);
 
         Task<bool> SignIn(UserRequest userProfile);
+        
 
         Task<IEnumerable<AuthenticationScheme>> GetExternalAuthenticationSchemes();
 
         Task<SignInResult> PasswordSignIn(UserRequest userProfile);
+        Task<UserProfile> GetUserByEmail(string Email);
     }
 }

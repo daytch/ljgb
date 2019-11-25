@@ -16,5 +16,7 @@ namespace ljgb.Common.Requests
         public DateTime? Modified { get; set; }
         public string ModifiedBy { get; set; }
         public bool RowStatus { get; set; }
+        public List<int> ListWarna { get; set; }
+        public string UserName { get; set; }
     }
 }

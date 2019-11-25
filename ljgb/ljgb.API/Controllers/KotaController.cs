@@ -1,6 +1,7 @@
 ﻿using ljgb.BusinessLogic;
 using ljgb.Common.Requests;
 using ljgb.Common.Responses;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -14,6 +15,7 @@ namespace ljgb.API.Controllers
     public class KotaController : ControllerBase
     {
         private KotaFacade facade = new KotaFacade();
+        private Security sec = new Security();
         //[HttpPost]
         //[Route("GetAll")]
         //public async Task<IActionResult> GetAll()
@@ -56,29 +58,71 @@ namespace ljgb.API.Controllers
         }
         [HttpGet]
         [Route("GetAll")]
-        public async Task<IActionResult> GetAll()
+        public async Task<KotaResponse> GetAll()
         {
+            KotaResponse resp = new KotaResponse();
             try
             {
+                string bearer = Request.HttpContext.Request.Headers["Authorization"];
+                string token = bearer.Substring("Bearer ".Length).Trim();
+                string username = string.Empty;
+                if (string.IsNullOrEmpty(token))
+                {
+                    resp.IsSuccess = false;
+                    resp.Message = "You don't have access.";
+                    return resp;
+                }
+
+                username = sec.ValidateToken(token);
+                if (username == null)
+                {
+                    Response.HttpContext.Response.Cookies.Append("access_token", "", new CookieOptions()
+                    {
+                        Expires = DateTime.Now.AddDays(-1)
+                    });
+                    resp.IsSuccess = false;
+                    resp.Message = "Your session was expired, please re-login.";
+                    return resp;
+                }
+        
+
+
                 string search = HttpContext.Request.Query["search[value]"].ToString();
                 int draw = Convert.ToInt32(HttpContext.Request.Query["draw"]);
                 string order = HttpContext.Request.Query["order[0][column]"];
                 string orderDir = HttpContext.Request.Query["order[0][dir]"];
                 int startRec = Convert.ToInt32(HttpContext.Request.Query["start"]);
                 int pageSize = Convert.ToInt32(HttpContext.Request.Query["length"]);
-                var models = await facade.GetAll(search, order, orderDir, startRec, pageSize, draw);
-
-                if (models == null)
-                {
-                    return NotFound();
-                }
-
-                return Ok(models);
+                resp = await facade.GetAll(search, order, orderDir, startRec, pageSize, draw);
+                return resp;
             }
             catch (Exception ex)
             {
-                return BadRequest(ex);
+                resp.IsSuccess = false;
+                resp.Message = ex.Message.ToString();
+                return resp;
             }
+            //try
+            //{
+            //    string search = HttpContext.Request.Query["search[value]"].ToString();
+            //    int draw = Convert.ToInt32(HttpContext.Request.Query["draw"]);
+            //    string order = HttpContext.Request.Query["order[0][column]"];
+            //    string orderDir = HttpContext.Request.Query["order[0][dir]"];
+            //    int startRec = Convert.ToInt32(HttpContext.Request.Query["start"]);
+            //    int pageSize = Convert.ToInt32(HttpContext.Request.Query["length"]);
+            //    var models = await facade.GetAll(search, order, orderDir, startRec, pageSize, draw);
+
+            //    if (models == null)
+            //    {
+            //        return NotFound();
+            //    }
+
+            //    return Ok(models);
+            //}
+            //catch (Exception ex)
+            //{
+            //    return BadRequest(ex);
+            //}
         }
 
 
@@ -111,52 +155,132 @@ namespace ljgb.API.Controllers
 
         [HttpPost]
         [Route("AddPost")]
-        public async Task<IActionResult> AddPost([FromBody]KotaRequest req)
+        public async Task<KotaResponse> AddPost([FromBody]KotaRequest req)
         {
-            KotaResponse response = new KotaResponse();
-            if (ModelState.IsValid)
+            KotaResponse resp = new KotaResponse();
+            try
             {
-                try
+                string bearer = Request.HttpContext.Request.Headers["Authorization"];
+                string token = bearer.Substring("Bearer ".Length).Trim();
+                string username = string.Empty;
+                if (string.IsNullOrEmpty(token))
                 {
-                    if (req.ID> 0)
-                    {
-                        response = await facade.UpdatePost(req);
-                    }
-                    else
-                    {
-                        response = await facade.AddPost(req);
-                    }
-
-                    return Ok(response);
-
-                }
-                catch (Exception)
-                {
-                    return BadRequest();
+                    resp.IsSuccess = false;
+                    resp.Message = "You don't have access.";
+                    return resp;
                 }
 
+                username = sec.ValidateToken(token);
+                if (username == null)
+                {
+                    Response.HttpContext.Response.Cookies.Append("access_token", "", new CookieOptions()
+                    {
+                        Expires = DateTime.Now.AddDays(-1)
+                    });
+                    resp.IsSuccess = false;
+                    resp.Message = "Your session was expired, please re-login.";
+                    return resp;
+                }
+                req.UserName = username;
+                if (req.ID > 0)
+                {
+                    resp = await facade.UpdatePost(req);
+                }
+                else
+                {
+                    resp = await facade.AddPost(req);
+                }
+               
+
+
+                return resp;
             }
+            catch (Exception ex)
+            {
+                resp.IsSuccess = false;
+                resp.Message = ex.Message.ToString();
+                return resp;
+            }
+            //KotaResponse response = new KotaResponse();
+            //if (ModelState.IsValid)
+            //{
+            //    try
+            //    {
+            //        if (req.ID> 0)
+            //        {
+            //            response = await facade.UpdatePost(req);
+            //        }
+            //        else
+            //        {
+            //            response = await facade.AddPost(req);
+            //        }
 
-            return BadRequest();
+            //        return Ok(response);
+
+            //    }
+            //    catch (Exception)
+            //    {
+            //        return BadRequest();
+            //    }
+
+            //}
+
+            //return BadRequest();
         }
 
         [HttpPost]
         [Route("DeletePost")]
-        public async Task<IActionResult> DeletePost(KotaRequest req)
+        public async Task<KotaResponse> DeletePost(KotaRequest req)
         {
-
-
+            KotaResponse resp = new KotaResponse();
             try
             {
-                var result = await facade.DeletePost(req);
+                string bearer = Request.HttpContext.Request.Headers["Authorization"];
+                string token = bearer.Substring("Bearer ".Length).Trim();
+                string username = string.Empty;
+                if (string.IsNullOrEmpty(token))
+                {
+                    resp.IsSuccess = false;
+                    resp.Message = "You don't have access.";
+                    return resp;
+                }
 
-                return Ok(result);
+                username = sec.ValidateToken(token);
+                if (username == null)
+                {
+                    Response.HttpContext.Response.Cookies.Append("access_token", "", new CookieOptions()
+                    {
+                        Expires = DateTime.Now.AddDays(-1)
+                    });
+                    resp.IsSuccess = false;
+                    resp.Message = "Your session was expired, please re-login.";
+                    return resp;
+                }
+                req.UserName = username;
+               
+
+
+
+                return resp = await facade.DeletePost(req);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                return BadRequest();
+                resp.IsSuccess = false;
+                resp.Message = ex.Message.ToString();
+                return resp;
             }
+
+            //try
+            //{
+            //    var result = await facade.DeletePost(req);
+
+            //    return Ok(result);
+            //}
+            //catch (Exception)
+            //{
+
+            //    return BadRequest();
+            //}
         }
 
 

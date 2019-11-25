@@ -67,7 +67,7 @@ namespace ljgb.BusinessLogic
                 model.Telepon = request.Telepon;
                 model.PejabatDealer = request.PejabatDealer;
                 model.Created = DateTime.Now;
-                model.CreatedBy = "xsivicto1905";
+                model.CreatedBy = request.UserName;
                 model.RowStatus = true;
 
                 long result = 0;
@@ -113,7 +113,7 @@ namespace ljgb.BusinessLogic
                 dealer.Telepon = request.Telepon;
                 dealer.PejabatDealer = request.PejabatDealer;
                 dealer.Modified = DateTime.Now;
-                dealer.ModifiedBy = "xsivicto1905";
+                dealer.ModifiedBy = request.UserName;
 
                 if (await dep.UpdatePost(dealer))
                 {
@@ -135,14 +135,14 @@ namespace ljgb.BusinessLogic
             return response;
         }
 
-        public async Task<DealerResponse> DeletePost(long ID)
+        public async Task<DealerResponse> DeletePost(long ID, string username)
         {
             DealerResponse response = new DealerResponse();
             try
             {
-                if (await dep.DeletePost(ID) > 0)
+                if (await dep.DeletePost(ID, username) > 0)
                 {
-                    response.IsSuccess = false;
+                    response.IsSuccess = true;
                     response.Message = "Delete Success";
                 }
                 else

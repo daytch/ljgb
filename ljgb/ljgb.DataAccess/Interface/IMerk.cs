@@ -21,7 +21,7 @@ namespace ljgb.DataAccess.Interface
 
         Task<MerkResponse> AddPost(MerkRequest model);
 
-        Task<MerkResponse> DeletePost(long ID);
+        Task<MerkResponse> DeletePost(long ID, string username);
 
         Task<MerkResponse> UpdatePost(MerkRequest model);
 

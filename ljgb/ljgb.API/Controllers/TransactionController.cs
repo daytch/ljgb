@@ -84,7 +84,7 @@ namespace ljgb.API.Controllers
 
         [HttpPost]
         [Route("SubmitBuy")]
-        public async Task<IActionResult> SubmitBuy([FromBody]int BarangID, int Nominal)
+        public async Task<IActionResult> SubmitBuy([FromBody]TransactionRequest request)
         {
             try
             {
@@ -112,7 +112,7 @@ namespace ljgb.API.Controllers
                     return BadRequest(response);
                 }
 
-                response = await facade.SubmitBuy(BarangID, Nominal, username);
+                response = await facade.SubmitBuy(request.BarangID, request.Harga, username);
 
                 return Ok(response);
 
@@ -125,8 +125,9 @@ namespace ljgb.API.Controllers
 
         [HttpPost]
         [Route("SubmitSell")]
-        public async Task<IActionResult> SubmitSell([FromBody]int BarangID, int Nominal)
+        public async Task<IActionResult> SubmitSell([FromBody]TransactionRequest request)
         {
+
             if (ModelState.IsValid)
             {
                 try
@@ -154,8 +155,8 @@ namespace ljgb.API.Controllers
                         response.Message = "Your session was expired, please re-login.";
                         return BadRequest(response);
                     }
-
-                    response = await facade.SubmitSell(BarangID, Nominal, username);
+   
+                    response = await facade.SubmitSell(request.BarangID, request.Harga, username);
 
                     if (response.IsSuccess)
                     {
@@ -199,6 +200,48 @@ namespace ljgb.API.Controllers
             }
             return BadRequest();
         }
+
+        //[HttpPost]
+        //[Route("DealBuy")]
+        //public async Task<IActionResult> DealBuy([FromBody]TransactionRequest request )
+        //{
+        //    try
+        //    {
+        //        TransactionResponse response = new TransactionResponse();
+
+        //        string bearer = Request.HttpContext.Request.Headers["Authorization"];
+        //        string token = bearer.Substring("Bearer ".Length).Trim();
+        //        string username = string.Empty;
+        //        if (string.IsNullOrEmpty(token))
+        //        {
+        //            response.IsSuccess = false;
+        //            response.Message = "You don't have access.";
+        //            return BadRequest(response);
+        //        }
+
+        //        username = sec.ValidateToken(token);
+        //        if (username == null)
+        //        {
+        //            Response.HttpContext.Response.Cookies.Append("access_token", "", new CookieOptions()
+        //            {
+        //                Expires = DateTime.Now.AddDays(-1)
+        //            });
+        //            response.IsSuccess = false;
+        //            response.Message = "Your session was expired, please re-login.";
+        //            return BadRequest(response);
+        //        }
+
+        //        response = await facade.SubmitBuy(BarangID, Nominal, username);
+
+        //        return Ok(response);
+
+        //    }
+        //    catch (Exception)
+        //    {
+        //        return BadRequest();
+        //    }
+
+        //}
 
         [HttpPost]
         [Route("DeletePost")]
@@ -247,120 +290,167 @@ namespace ljgb.API.Controllers
         [Route("ApproveTransaction")]
         public async Task<IActionResult> ApproveTransaction([FromBody]TransactionRequest req)
         {
-            if (ModelState.IsValid)
+
+            //string bearer = Request.HttpContext.Request.Headers["Authorization"];
+            //string token = bearer.Substring("Bearer ".Length).Trim();
+            //string username = string.Empty;
+            //if (string.IsNullOrEmpty(token))
+            //{
+            //    resp.IsSuccess = false;
+            //    resp.Message = "You don't have access.";
+            //    return resp;
+            TransactionResponse response = new TransactionResponse();
+            try
             {
-                TransactionResponse response = new TransactionResponse();
-                try
+                string bearer = Request.HttpContext.Request.Headers["Authorization"];
+                string token = bearer.Substring("Bearer ".Length).Trim();
+                string username = string.Empty;
+                if (string.IsNullOrEmpty(token))
                 {
-                    string bearer = Request.HttpContext.Request.Headers["Authorization"];
-                    string token = bearer.Substring("Bearer ".Length).Trim();
-                    string username = string.Empty;
-                    if (string.IsNullOrEmpty(token))
-                    {
-                        response.IsSuccess = false;
-                        response.Message = "You don't have access.";
-                        return BadRequest(response);
-                    }
-
-                    username = sec.ValidateToken(token);
-                    if (username == null)
-                    {
-                        Response.HttpContext.Response.Cookies.Append("access_token", "", new CookieOptions()
-                        {
-                            Expires = DateTime.Now.AddDays(-1)
-                        });
-                        response.IsSuccess = false;
-                        response.Message = "Your session was expired, please re-login.";
-                        return BadRequest(response);
-                    }
-
-                    response = await facade.ApproveTransaction(req);
-
-                    if (response.IsSuccess)
-                    {
-                        #region Sent Email to User
-                        TransactionResponse transResp = await facade.GetCurrentTransaction(req);
-                        int levelID = transResp.ListTransaction.FirstOrDefault().TrasanctionLevel.ID;
-                        SendEmail sendEmail = new SendEmail(_emailConfiguration);
-                        string contentEmail = string.Empty;
-                        string subjectEmail = string.Empty;
-
-                        AuthenticationResponse authResp = await facade.GetUserProfile(username);
-
-                        EmailAddress emailAddress = new EmailAddress();
-                        switch (levelID)
-                        {
-                            case 1:
-                                contentEmail = configFacade.GetRedaksionalEmail("ContentEmailBuy").Result;
-                                subjectEmail = configFacade.GetRedaksionalEmail("SubjectEmailBuy").Result;
-                                break;
-                            case 2:
-                                contentEmail = configFacade.GetRedaksionalEmail("ContentEmailVerifikasi").Result;
-                                subjectEmail = configFacade.GetRedaksionalEmail("SubjectEmailVerifikasi").Result;
-                                break;
-                            case 3:
-                                contentEmail = configFacade.GetRedaksionalEmail("ContentEmailVisit").Result;
-                                subjectEmail = configFacade.GetRedaksionalEmail("SubjectEmailVisit").Result;
-                                break;
-                            case 4:
-                                contentEmail = configFacade.GetRedaksionalEmail("ContentEmailDP").Result;
-                                subjectEmail = configFacade.GetRedaksionalEmail("SubjectEmailDP").Result;
-                                break;
-                            case 5:
-                                contentEmail = configFacade.GetRedaksionalEmail("ContentEmailBBN").Result;
-                                subjectEmail = configFacade.GetRedaksionalEmail("SubjectEmailBBN").Result;
-                                break;
-                            case 6:
-                                contentEmail = configFacade.GetRedaksionalEmail("ContentEmailSTNK").Result;
-                                subjectEmail = configFacade.GetRedaksionalEmail("SubjectEmailSTNK").Result;
-                                break;
-                            case 7:
-                                contentEmail = configFacade.GetRedaksionalEmail("ContentEmailPelunasan").Result;
-                                subjectEmail = configFacade.GetRedaksionalEmail("SubjectEmailPelunasan").Result;
-                                break;
-                            case 8:
-                                contentEmail = configFacade.GetRedaksionalEmail("ContentEmailDelivery").Result;
-                                subjectEmail = configFacade.GetRedaksionalEmail("SubjectEmailDelivery").Result;
-                                break;
-                        }
-                        emailAddress.Address = username;
-                        emailAddress.Name = authResp.Name;
-                        List<EmailAddress> listEmailAddress = new List<EmailAddress>();
-                        listEmailAddress.Add(emailAddress);
-
-                        contentEmail = contentEmail.Replace("[user]", emailAddress.Name);
-
-                        EmailAddress emailAddressFrom = new EmailAddress();
-                        emailAddressFrom.Address = "admin@lojualguebeli.com";
-                        emailAddressFrom.Name = "Lojualguebeli.com";
-                        List<EmailAddress> listEmailAddressFrom = new List<EmailAddress>();
-                        listEmailAddressFrom.Add(emailAddressFrom);
-
-                        EmailMessage emailMessage = new EmailMessage();
-                        emailMessage.ToAddresses = listEmailAddress;
-                        emailMessage.Subject = subjectEmail;
-                        emailMessage.FromAddresses = listEmailAddressFrom;
-                        emailMessage.Content = contentEmail;
-
-                        sendEmail.Send(emailMessage);
-                        #endregion
-                    }
-
-                    return Ok(response);
+                    response.IsSuccess = false;
+                    response.Message = "You don't have access.";
+                    return BadRequest(response);
                 }
-                catch (Exception ex)
+
+                username = sec.ValidateToken(token);
+                if (username == null)
                 {
-                    if (ex.GetType().FullName ==
-                             "Microsoft.EntityFrameworkCore.DbUpdateConcurrencyException")
+                    Response.HttpContext.Response.Cookies.Append("access_token", "", new CookieOptions()
                     {
-                        return NotFound();
-                    }
-
-                    return BadRequest();
+                        Expires = DateTime.Now.AddDays(-1)
+                    });
+                    response.IsSuccess = false;
+                    response.Message = "Your session was expired, please re-login.";
+                    return BadRequest(response);
                 }
+
+                response = await facade.ApproveTransaction(req);
+
+                if (response.IsSuccess)
+                {
+                    #region Sent Email to User
+                    TransactionResponse transResp = await facade.GetCurrentTransaction(req);
+                    int levelID = transResp.ListTransaction.FirstOrDefault().TrasanctionLevel.ID;
+                    SendEmail sendEmail = new SendEmail(_emailConfiguration);
+                    string contentEmail = string.Empty;
+                    string subjectEmail = string.Empty;
+
+                    AuthenticationResponse authResp = await facade.GetUserProfile(username);
+
+                    EmailAddress emailAddress = new EmailAddress();
+                    switch (levelID)
+                    {
+                        case 1:
+                            contentEmail = configFacade.GetRedaksionalEmail("ContentEmailBuy").Result;
+                            subjectEmail = configFacade.GetRedaksionalEmail("SubjectEmailBuy").Result;
+                            break;
+                        case 2:
+                            contentEmail = configFacade.GetRedaksionalEmail("ContentEmailVerifikasi").Result;
+                            subjectEmail = configFacade.GetRedaksionalEmail("SubjectEmailVerifikasi").Result;
+                            break;
+                        case 3:
+                            contentEmail = configFacade.GetRedaksionalEmail("ContentEmailVisit").Result;
+                            subjectEmail = configFacade.GetRedaksionalEmail("SubjectEmailVisit").Result;
+                            break;
+                        case 4:
+                            contentEmail = configFacade.GetRedaksionalEmail("ContentEmailDP").Result;
+                            subjectEmail = configFacade.GetRedaksionalEmail("SubjectEmailDP").Result;
+                            break;
+                        case 5:
+                            contentEmail = configFacade.GetRedaksionalEmail("ContentEmailBBN").Result;
+                            subjectEmail = configFacade.GetRedaksionalEmail("SubjectEmailBBN").Result;
+                            break;
+                        case 6:
+                            contentEmail = configFacade.GetRedaksionalEmail("ContentEmailSTNK").Result;
+                            subjectEmail = configFacade.GetRedaksionalEmail("SubjectEmailSTNK").Result;
+                            break;
+                        case 7:
+                            contentEmail = configFacade.GetRedaksionalEmail("ContentEmailPelunasan").Result;
+                            subjectEmail = configFacade.GetRedaksionalEmail("SubjectEmailPelunasan").Result;
+                            break;
+                        case 8:
+                            contentEmail = configFacade.GetRedaksionalEmail("ContentEmailDelivery").Result;
+                            subjectEmail = configFacade.GetRedaksionalEmail("SubjectEmailDelivery").Result;
+                            break;
+                    }
+                    emailAddress.Address = username;
+                    emailAddress.Name = authResp.Name;
+                    List<EmailAddress> listEmailAddress = new List<EmailAddress>();
+                    listEmailAddress.Add(emailAddress);
+
+                    contentEmail = contentEmail.Replace("[user]", emailAddress.Name);
+
+                    EmailAddress emailAddressFrom = new EmailAddress();
+                    emailAddressFrom.Address = "admin@lojualguebeli.com";
+                    emailAddressFrom.Name = "Lojualguebeli.com";
+                    List<EmailAddress> listEmailAddressFrom = new List<EmailAddress>();
+                    listEmailAddressFrom.Add(emailAddressFrom);
+
+                    EmailMessage emailMessage = new EmailMessage();
+                    emailMessage.ToAddresses = listEmailAddress;
+                    emailMessage.Subject = subjectEmail;
+                    emailMessage.FromAddresses = listEmailAddressFrom;
+                    emailMessage.Content = contentEmail;
+
+                    sendEmail.Send(emailMessage);
+                    #endregion
+                }
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                if (ex.GetType().FullName ==
+                         "Microsoft.EntityFrameworkCore.DbUpdateConcurrencyException")
+                {
+                    return NotFound();
+                }
+
+                return BadRequest();
             }
 
-            return BadRequest();
+            //    username = sec.ValidateToken(token);
+            //    if (username == null)
+            //    {
+            //        Response.HttpContext.Response.Cookies.Append("access_token", "", new CookieOptions()
+            //        {
+            //            Expires = DateTime.Now.AddDays(-1)
+            //        });
+            //        resp.IsSuccess = false;
+            //        resp.Message = "Your session was expired, please re-login.";
+            //        return resp;
+            //    }
+            //    req.UserName = username;
+            //    resp = await facade.ApproveTransaction(req); 
+
+
+            //    return resp;
+            //}
+            //catch (Exception)
+            //{
+            //    return resp;
+            //}
+            //if (ModelState.IsValid)
+            //{
+            //    try
+            //    {
+            //        var result = await facade.ApproveTransaction(req);
+
+            //        return Ok(result);
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        if (ex.GetType().FullName ==
+            //                 "Microsoft.EntityFrameworkCore.DbUpdateConcurrencyException")
+            //        {
+            //            return NotFound();
+            //        }
+
+            //        return BadRequest();
+            //    }
+            //}
+
+            //return BadRequest();
         }
 
 
@@ -459,6 +549,16 @@ namespace ljgb.API.Controllers
                     return resp;
                 }
 
+                if (username == null)
+                {
+                    Response.HttpContext.Response.Cookies.Append("access_token", "", new CookieOptions()
+                    {
+                        Expires = DateTime.Now.AddDays(-1)
+                    });
+                    resp.IsSuccess = false;
+                    resp.Message = "Your session was expired, please re-login.";
+                    return resp;
+                }
 
 
                 username = sec.ValidateToken(token);
@@ -614,5 +714,7 @@ namespace ljgb.API.Controllers
 
             return BadRequest();
         }
+
+
     }
 }

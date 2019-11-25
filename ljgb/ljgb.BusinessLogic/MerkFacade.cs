@@ -91,10 +91,10 @@ namespace ljgb.BusinessLogic
             
         }
 
-        public async Task<MerkResponse> DeletePost(long ID)
+        public async Task<MerkResponse> DeletePost(long ID, string username)
         {
 
-            return await dep.DeletePost(ID);
+            return await dep.DeletePost(ID, username);
            
         }
 

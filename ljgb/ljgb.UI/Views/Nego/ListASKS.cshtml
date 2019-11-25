@@ -1,7 +1,7 @@
 ﻿
 @{
-    ViewData["Title"] = "List Ask";
-    ViewData["PageName"] = "Nego_ListAsk";
+    ViewData["Title"] = "List ASKS";
+    ViewData["PageName"] = "Nego_ListASKS";
     ViewData["Category1"] = "Nego";
 }
 
@@ -122,7 +122,7 @@
                     <div class="form-group">
                         <label class="form-label" for="simpleinput">Warna</label>
 
-                        <select id="dropdownWarna" class="form-control col-md-12" name="dropdownWarna" required></select>
+                        <select multiple id="dropdownWarna" class="form-control col-md-12" name="dropdownWarna" required></select>
                         <div class="invalid-feedback">
                             Please Select Warna
                         </div>
@@ -285,27 +285,27 @@
                 $('#dropdownMerk').val(e.relatedTarget.getAttribute('data-merkID'));
                 $('#BarangID').val(e.relatedTarget.getAttribute('data-barangID'));
 
-                
+
                 var valuesMerkID = {
 
                     merkID: e.relatedTarget.getAttribute('data-merkID')
                 }
                 SetModelDropdown(valuesMerkID);
 
-        
 
-             
+
+
                 var valuesModelBarang = {
 
                     ModelBarangID: e.relatedTarget.getAttribute('data-modelID')
                 }
                 SetTypeDropdown(valuesModelBarang);
 
-               
+
                 //$.when(SetTypeDropdown(valuesModelBarang)).then(function () {
                 //    $("#dropdownType").val(e.relatedTarget.getAttribute('data-typeID'));
                 //});
-               
+
                 $('#HargaOTR').val(e.relatedTarget.getAttribute('data-hargaOTR'));
                 $('#HargaNego').val(e.relatedTarget.getAttribute('data-harga'));
             });
@@ -319,7 +319,7 @@
                         event.preventDefault();
                         event.stopPropagation();
                     } else {
-                        
+
                         var values = {
                             ID: ($("#NegoBarangID").val()) ? $("#NegoBarangID").val() : 0,
                             BarangID: ($("#BarangID").val()) ? $("#BarangID").val() : 0,
@@ -467,17 +467,15 @@
             $("#dropdownType").change(function () {
                 $("#HargaOTR").val("");
                 $("#BarandID").val("");
-                warnaID = $("#dropdownWarna").val();
-                typeID = $("#dropdownType").val();
-                
-                if (warnaID > 0 && typeID > 0) {
-                    var values = {
 
-                        warnaID: warnaID,
+                typeID = $("#dropdownType").val();
+
+                if (typeID > 0) {
+                    var values = {
                         TypeBarangId: typeID
                     }
                     $.ajax({
-                        url: url + "Barang/GetHargaOTR",
+                        url: url + "Barang/GetHargaOTRTypeBarangID",
                         contentType: 'application/json',
                         dataType: 'json',
                         type: "POST",
@@ -487,10 +485,7 @@
                         data: JSON.stringify(values),
                         success: function (response) {
                             if (response.isSuccess) {
-
                                 $("#HargaOTR").val(response.model.hargaOtr);
-                                $("#BarangID").val(response.model.id);
-                                
                             } else {
                                 toastr["error"](response.message);
                             }
@@ -502,40 +497,40 @@
                 }
             });
 
-            $("#dropdownWarna").change(function () {
-                $("#HargaOTR").val("");
-                $("#BarandID").val("");
-                typeID = $("#dropdownType").val();
-                warnaID = $("#dropdownWarna").val();
-                if (warnaID > 0 && typeID > 0) {
-                    var values = {
+            //$("#dropdownWarna").change(function () {
+            //    $("#HargaOTR").val("");
+            //    $("#BarandID").val("");
+            //    typeID = $("#dropdownType").val();
+            //    warnaID = $("#dropdownWarna").val();
+            //    if (warnaID > 0 && typeID > 0) {
+            //        var values = {
 
-                        warnaID: warnaID,
-                        TypeBarangId: typeID
-                    }
-                    $.ajax({
-                        url: url + "Barang/GetHargaOTR",
-                        contentType: 'application/json',
-                        dataType: 'json',
-                        type: "POST",
-                        beforeSend: function (xhr) {
-                            xhr.setRequestHeader('Authorization', 'Bearer ' + Cookies.get("access_token"));
-                        },
-                        data: JSON.stringify(values),
-                        success: function (response) {
-                            if (response.isSuccess) {
-                                $("#HargaOTR").val(response.model.hargaOtr);
-                                $("#BarangID").val(response.model.id);
-                            } else {
-                                toastr["error"](response.message);
-                            }
-                        },
-                        error: function (jqXHR, text, errorThrown) {
-                            console.log(jqXHR + " " + text + " " + errorThrown);
-                        }
-                    });
-                }
-            });
+            //            warnaID: warnaID,
+            //            TypeBarangId: typeID
+            //        }
+            //        $.ajax({
+            //            url: url + "Barang/GetHargaOTR",
+            //            contentType: 'application/json',
+            //            dataType: 'json',
+            //            type: "POST",
+            //            beforeSend: function (xhr) {
+            //                xhr.setRequestHeader('Authorization', 'Bearer ' + Cookies.get("access_token"));
+            //            },
+            //            data: JSON.stringify(values),
+            //            success: function (response) {
+            //                if (response.isSuccess) {
+            //                    $("#HargaOTR").val(response.model.hargaOtr);
+            //                    $("#BarangID").val(response.model.id);
+            //                } else {
+            //                    toastr["error"](response.message);
+            //                }
+            //            },
+            //            error: function (jqXHR, text, errorThrown) {
+            //                console.log(jqXHR + " " + text + " " + errorThrown);
+            //            }
+            //        });
+            //    }
+            //});
 
             //GetHargaOTR
         });

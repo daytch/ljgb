@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using ljgb.BusinessLogic;
 using ljgb.Common.Requests;
 using ljgb.Common.Responses;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ljgb.API.Controllers
@@ -12,7 +13,7 @@ namespace ljgb.API.Controllers
     public class DealerController : ControllerBase
     {
         private DealerFacade facade = new DealerFacade();
-        
+        private Security sec = new Security();
         [HttpGet]
         [Route("GetAllForDropdown")]
         public async Task<IActionResult> GetAllForDropdown(int KotaID)
@@ -38,28 +39,61 @@ namespace ljgb.API.Controllers
         }
         [HttpGet]
         [Route("GetAll")]
-        public async Task<IActionResult> GetAll()
+        public async Task<DealerResponse> GetAll()
         {
+            DealerResponse resp = new DealerResponse();
             try
             {
+                string bearer = Request.HttpContext.Request.Headers["Authorization"];
+                string token = bearer.Substring("Bearer ".Length).Trim();
+                string username = string.Empty;
+                if (string.IsNullOrEmpty(token))
+                {
+                    resp.IsSuccess = false;
+                    resp.Message = "You don't have access.";
+                    return resp;
+                }
+
+                username = sec.ValidateToken(token);
+                if (username == null)
+                {
+                    Response.HttpContext.Response.Cookies.Append("access_token", "", new CookieOptions()
+                    {
+                        Expires = DateTime.Now.AddDays(-1)
+                    });
+                    resp.IsSuccess = false;
+                    resp.Message = "Your session was expired, please re-login.";
+                    return resp;
+                }
                 string search = HttpContext.Request.Query["search[value]"].ToString();
                 int draw = Convert.ToInt32(HttpContext.Request.Query["draw"]);
                 string order = HttpContext.Request.Query["order[0][column]"];
                 string orderDir = HttpContext.Request.Query["order[0][dir]"];
                 int startRec = Convert.ToInt32(HttpContext.Request.Query["start"]);
                 int pageSize = Convert.ToInt32(HttpContext.Request.Query["length"]);
-                var models = await facade.GetAll(search, order, orderDir, startRec, pageSize, draw);
-                if (models == null)
-                {
-                    return NotFound();
-                }
+                resp = await facade.GetAll(search, order, orderDir, startRec, pageSize, draw);
 
-                return Ok(models);
+
+                return resp;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return BadRequest(ex);
+                return resp;
             }
+            //try
+            //{
+               
+            //    if (models == null)
+            //    {
+            //        return NotFound();
+            //    }
+
+            //    return Ok(models);
+            //}
+            //catch (Exception ex)
+            //{
+            //    return BadRequest(ex);
+            //}
         }
 
         //[HttpPost]
@@ -90,55 +124,131 @@ namespace ljgb.API.Controllers
 
         [HttpPost]
         [Route("AddPost")]
-        public async Task<IActionResult> AddPost([FromBody]DealerRequest model)
+        public async Task<DealerResponse> AddPost([FromBody]DealerRequest model)
         {
-            DealerResponse result = new DealerResponse();
-            if (ModelState.IsValid)
+            DealerResponse resp = new DealerResponse();
+            try
             {
-                try
+                string bearer = Request.HttpContext.Request.Headers["Authorization"];
+                string token = bearer.Substring("Bearer ".Length).Trim();
+                string username = string.Empty;
+                if (string.IsNullOrEmpty(token))
                 {
-                    if (model.ID > 0)
-                    {
-                        result = await facade.UpdatePost(model);
-                    }
-                    else
-                    {
-                        result = await facade.AddPost(model);
-                    }
-                    return Ok(result);
+                    resp.IsSuccess = false;
+                    resp.Message = "You don't have access.";
+                    return resp;
                 }
-                catch (Exception)
+
+                username = sec.ValidateToken(token);
+                if (username == null)
                 {
-                    return BadRequest();
+                    Response.HttpContext.Response.Cookies.Append("access_token", "", new CookieOptions()
+                    {
+                        Expires = DateTime.Now.AddDays(-1)
+                    });
+                    resp.IsSuccess = false;
+                    resp.Message = "Your session was expired, please re-login.";
+                    return resp;
                 }
+                model.UserName = username;
+                if (model.ID > 0)
+                {
+                    resp = await facade.UpdatePost(model);
+                }
+                else
+                {
+                    resp = await facade.AddPost(model);
+                }
+
+
+                return resp;
             }
-            return BadRequest();
+            catch (Exception)
+            {
+                return resp;
+            }
+
+            //DealerResponse result = new DealerResponse();
+            //if (ModelState.IsValid)
+            //{
+            //    try
+            //    {
+            //        if (model.ID > 0)
+            //        {
+            //            result = await facade.UpdatePost(model);
+            //        }
+            //        else
+            //        {
+            //            result = await facade.AddPost(model);
+            //        }
+            //        return Ok(result);
+            //    }
+            //    catch (Exception)
+            //    {
+            //        return BadRequest();
+            //    }
+            //}
+            //return BadRequest();
         }
 
 
         [HttpPost]
         [Route("DeletePost")]
-        public async Task<IActionResult> DeletePost(long ID)
+        public async Task<DealerResponse> DeletePost(long ID)
         {
-            DealerResponse response = new DealerResponse();
-
-
+            DealerResponse resp = new DealerResponse();
             try
             {
-                if (ID < 1)
+                string bearer = Request.HttpContext.Request.Headers["Authorization"];
+                string token = bearer.Substring("Bearer ".Length).Trim();
+                string username = string.Empty;
+                if (string.IsNullOrEmpty(token))
                 {
-                    return BadRequest();
+                    resp.IsSuccess = false;
+                    resp.Message = "You don't have access.";
+                    return resp;
                 }
 
-                response = await facade.DeletePost(ID);
+                username = sec.ValidateToken(token);
+                if (username == null)
+                {
+                    Response.HttpContext.Response.Cookies.Append("access_token", "", new CookieOptions()
+                    {
+                        Expires = DateTime.Now.AddDays(-1)
+                    });
+                    resp.IsSuccess = false;
+                    resp.Message = "Your session was expired, please re-login.";
+                    return resp;
+                }
 
-                return Ok(response);
+                resp = await facade.DeletePost(ID, username);
+
+
+                return resp;
             }
             catch (Exception)
             {
-
-                return BadRequest();
+                return resp;
             }
+            //DealerResponse response = new DealerResponse();
+
+
+            //try
+            //{
+            //    if (ID < 1)
+            //    {
+            //        return BadRequest();
+            //    }
+
+            //    response = await facade.DeletePost(ID);
+
+            //    return Ok(response);
+            //}
+            //catch (Exception)
+            //{
+
+            //    return BadRequest();
+            //}
         }
 
 
