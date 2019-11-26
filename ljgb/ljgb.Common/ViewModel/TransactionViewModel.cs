@@ -35,6 +35,12 @@ namespace ljgb.Common.ViewModel
         public string EmailPenjual { get; set; }
         public string TelpPembeli { get; set; }
         public string TelpPenjual { get; set; }
+        public string AlamatPembeli { get; set; }
+        public string AlamatPenjual { get; set; }
+        public string FacebookPembeli { get; set; }
+        public string FacebookPenjual { get; set; }
+        public string IGPembeli { get; set; }
+        public string IGPenjual { get; set; } 
 
 
         public string NamaDealerKota { get; set; }

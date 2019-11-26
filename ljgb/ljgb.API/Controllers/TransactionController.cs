@@ -538,9 +538,9 @@ namespace ljgb.API.Controllers
             TransactionResponse resp = new TransactionResponse();
             try
             {
-                string bearer = Request.HttpContext.Request.Headers["Authorization"];
-                string token = bearer.Substring("Bearer ".Length).Trim();
-                //string token = req.Token;
+                //string bearer = Request.HttpContext.Request.Headers["Authorization"];
+                //string token = bearer.Substring("Bearer ".Length).Trim();
+                string token = req.Token;
                 string username = string.Empty;
                 if (string.IsNullOrEmpty(token))
                 {
@@ -548,7 +548,7 @@ namespace ljgb.API.Controllers
                     resp.Message = "You don't have access.";
                     return resp;
                 }
-
+                username = sec.ValidateToken(token);
                 if (username == null)
                 {
                     Response.HttpContext.Response.Cookies.Append("access_token", "", new CookieOptions()
@@ -561,7 +561,7 @@ namespace ljgb.API.Controllers
                 }
 
 
-                username = sec.ValidateToken(token);
+               
                 req.UserName = username;
                 resp = await facade.GetListBidAndBuy(req);
 

@@ -267,100 +267,151 @@ namespace ljgb.DataAccess.Repository
             {
                 try
                 {
+                    var listTransaction = (from transaction in db.Transaction
+                                           join buyer in db.UserProfile
+                                           on transaction.BuyerId equals buyer.Id
+                                           join seller in db.UserProfile
+                                           on transaction.SellerId equals seller.Id
+                                           join negoBarang in db.NegoBarang
+                                           on transaction.NegoBarangId equals negoBarang.Id
+                                           join level in db.TransactionLevel
+                                           on transaction.TransactionLevelId equals level.Id
+                                           join step in db.TransactionStep
+                                           on level.TransactionStepId equals step.Id
+                                           join status in db.TransactionStatus
+                                           on level.TransactionStatusId equals status.Id
+                                           join barang in db.Barang
+                                           on negoBarang.BarangId equals barang.Id
+                                           join warna in db.Warna
+                                           on barang.WarnaId equals warna.Id
+                                           join userNegoBarang in db.UserProfile
+                                           on negoBarang.UserProfileId equals userNegoBarang.Id
+                                           join userDetail in db.UserDetail
+                                           on seller.Id equals userDetail.UserProfileId
+                                           join dealer in db.Dealer
+                                           on userDetail.KodeDealer equals dealer.Kode
+                                           join tBarang in db.TypeBarang
+                                           on barang.TypeBarangId equals tBarang.Id
+                                           join mdlBarang in db.ModelBarang
+                                           on tBarang.ModelBarangId equals mdlBarang.Id
+                                           join merkBarang in db.Merk
+                                           on mdlBarang.MerkId equals merkBarang.Id
+                                           join kota in db.Kota
+                                           on dealer.KotaId equals kota.Id
+                                           where transaction.RowStatus == true
+                                           && barang.RowStatus == true
+                                           && buyer.RowStatus == true
+                                           && seller.RowStatus == true
+                                           && negoBarang.RowStatus == true
+                                           && level.RowStatus == true
+                                           && step.RowStatus == true
+                                           && status.RowStatus == true
+                                           && level.RowStatus == true
+                                           && warna.RowStatus == true
+                                           && userNegoBarang.RowStatus == true
 
-                    response.ListTransaction = await (from transaction in db.Transaction
-                                                      join buyer in db.UserProfile
-                                                      on transaction.BuyerId equals buyer.Id
-                                                      join seller in db.UserProfile
-                                                      on transaction.SellerId equals seller.Id
-                                                      join negoBarang in db.NegoBarang
-                                                      on transaction.NegoBarangId equals negoBarang.Id
-                                                      join level in db.TransactionLevel
-                                                      on transaction.TransactionLevelId equals level.Id
-                                                      join step in db.TransactionStep
-                                                      on level.TransactionStepId equals step.Id
-                                                      join status in db.TransactionStatus
-                                                      on level.TransactionStatusId equals status.Id
-                                                      join barang in db.Barang
-                                                      on negoBarang.BarangId equals barang.Id
-                                                      join warna in db.Warna
-                                                      on barang.WarnaId equals warna.Id
-                                                      join userNegoBarang in db.UserProfile
-                                                      on negoBarang.UserProfileId equals userNegoBarang.Id
-                                                      join userDetail in db.UserDetail
-                                                      on seller.Id equals userDetail.UserProfileId
-                                                      join dealer in db.Dealer
-                                                      on userDetail.KodeDealer equals dealer.Kode
-                                                      join tBarang in db.TypeBarang
-                                                      on barang.TypeBarangId equals tBarang.Id
-                                                      join mdlBarang in db.ModelBarang
-                                                      on tBarang.ModelBarangId equals mdlBarang.Id
-                                                      join merkBarang in db.Merk
-                                                      on mdlBarang.MerkId equals merkBarang.Id
-                                                      join kota in db.Kota
-                                                      on dealer.KotaId equals kota.Id
-                                                      where transaction.RowStatus == true
-                                                      && barang.RowStatus == true
-                                                      && buyer.RowStatus == true
-                                                      && seller.RowStatus == true
-                                                      && negoBarang.RowStatus == true
-                                                      && level.RowStatus == true
-                                                      && step.RowStatus == true
-                                                      && status.RowStatus == true
-                                                      && level.RowStatus == true
-                                                      && warna.RowStatus == true
-                                                      && userNegoBarang.RowStatus == true
+                                           && dealer.RowStatus == true
+                                           select new
+                                           {
+                                               ID = transaction.Id,
+                                               IDPembeli = buyer.Id,
+                                               NamaPembeli = buyer.Nama,
+                                               IDPenjual = seller.Id,
+                                               NamaPenjual = seller.Nama,
+                                               NamaStatus = status.Name,
+                                               NamaLangkah = step.Name,
+                                               HargaOTR = barang.HargaOtr,
+                                               HargaNego = negoBarang.Harga,
+                                               TipePenawaran = negoBarang.TypePenawaran,
+                                               TelpPembeli = buyer.Telp,
+                                               TelpPenjual = seller.Telp,
+                                               EmailPembeli = buyer.Email,
+                                               EmailPenjual = seller.Email,
+                                               AlamatPembeli = buyer.Alamat,
+                                               AlamatPenjual = seller.Alamat,
+                                               FacebookPembeli = buyer.Facebook,
+                                               FacebookPenjual = seller.Facebook,
+                                               IGPembeli = buyer.Ig,
+                                               IGPenjual = seller.Ig,
 
-                                                      && dealer.RowStatus == true
-                                                      select new TransactionViewModel
-                                                      {
-                                                          ID = transaction.Id,
-                                                          IDPembeli = buyer.Id,
-                                                          NamaPembeli = buyer.Nama,
-                                                          IDPenjual = seller.Id,
-                                                          NamaPenjual = seller.Nama,
-                                                          NamaStatus = status.Name,
-                                                          NamaLangkah = step.Name,
-                                                          HargaOTR = barang.HargaOtr,
-                                                          HargaNego = negoBarang.Harga,
-                                                          TipePenawaran = negoBarang.TypePenawaran,
-                                                          TelpPembeli = buyer.Telp,
-                                                          TelpPenjual = seller.Telp,
-                                                          EmailPembeli = buyer.Email,
-                                                          EmailPenjual = seller.Email,
 
-                                                          NamaBarang = (merkBarang.Name + " " + mdlBarang.Name + " " + tBarang.Name + " " + warna.Name),
-                                                          NamaDealerKota = dealer.Name + "-" + kota.Name,
-                                                          NamaDealer = dealer.Name,
-                                                          AlamatDealer = dealer.Alamat,
-                                                          TelpDealer = dealer.Telepon,
-                                                          KotaDealer = kota.Name,
-                                                          KodeDealer = dealer.Kode,
-                                                          Created = transaction.Created,
-                                                          CreatedBy = transaction.CreatedBy,
-                                                          Modified = transaction.Modified,
-                                                          ModifiedBy = transaction.ModifiedBy
+                                               NamaBarang = (merkBarang.Name + " " + mdlBarang.Name + " " + tBarang.Name + " " + warna.Name),
+                                               NamaDealerKota = dealer.Name + "-" + kota.Name,
+                                               NamaDealer = dealer.Name,
+                                               AlamatDealer = dealer.Alamat,
+                                               TelpDealer = dealer.Telepon,
+                                               KotaDealer = kota.Name,
+                                               KodeDealer = dealer.Kode,
+                                               Created = transaction.Created,
+                                               CreatedBy = transaction.CreatedBy,
+                                               Modified = transaction.Modified,
+                                               ModifiedBy = transaction.ModifiedBy,
 
-                                                      }).ToListAsync();
+
+                                           });
+
+                                        
+
+              
                     int totalRecords = response.ListTransaction.Count;
                     if (!string.IsNullOrEmpty(search) && !string.IsNullOrWhiteSpace(search))
                     {
-                        response.ListTransaction = response.ListTransaction.Where(p => p.NamaStatus.ToString().ToLower().Contains(search.ToLower()) ||
+                        listTransaction = listTransaction.Where(p => p.NamaStatus.ToString().ToLower().Contains(search.ToLower()) ||
                                     p.NamaBarang.ToLower().Contains(search.ToLower()) ||
                                     p.NamaPembeli.ToLower().Contains(search.ToLower()) ||
                                     p.NamaPenjual.ToLower().Contains(search.ToLower()) ||
                                     p.NamaDealer.ToLower().Contains(search.ToLower()) ||
 
-                                    p.NamaStatus.ToLower().Contains(search.ToLower())).ToList();
+                                    p.NamaStatus.ToLower().Contains(search.ToLower()));
 
 
                     }
 
-                    //response = SortByColumnWithOrder(order, orderDir, response);
-
                     int recFilter = response.ListTransaction.Count;
 
-                    response.ListTransaction = response.ListTransaction.Skip(startRec).Take(pageSize).ToList();
+                    response.ListTransaction = await (from item in listTransaction
+                                                      select new TransactionViewModel
+                                                      {
+                                                          ID = item.ID,
+                                                          IDPembeli = item.IDPembeli,
+                                                          NamaPembeli = item.NamaPembeli,
+                                                          IDPenjual = item.IDPenjual,
+                                                          NamaPenjual = item.NamaPenjual,
+                                                          NamaStatus = item.NamaStatus,
+                                                          NamaLangkah = item.NamaLangkah,
+                                                          HargaOTR = item.HargaOTR,
+                                                          HargaNego = item.HargaNego,
+                                                          TipePenawaran = item.TipePenawaran,
+                                                          TelpPembeli = item.TelpPembeli,
+                                                          TelpPenjual = item.TelpPenjual,
+                                                          EmailPembeli = item.EmailPembeli,
+                                                          EmailPenjual = item.EmailPenjual,
+                                                          AlamatPembeli = item.AlamatPembeli,
+                                                          AlamatPenjual = item.AlamatPenjual,
+                                                          FacebookPembeli = item.FacebookPembeli,
+                                                          FacebookPenjual = item.FacebookPenjual,
+                                                          IGPembeli = item.IGPembeli,
+                                                          IGPenjual = item.IGPenjual,
+
+
+                                                          NamaBarang = item.NamaBarang,
+                                                          NamaDealerKota = item.NamaDealerKota,
+                                                          NamaDealer = item.NamaDealer,
+                                                          AlamatDealer = item.AlamatDealer,
+                                                          TelpDealer = item.TelpDealer,
+                                                          KotaDealer = item.KotaDealer,
+                                                          KodeDealer = item.KodeDealer,
+                                                          Created =  item.Created,
+                                                          CreatedBy = item.CreatedBy,
+                                                          Modified = item.Modified,
+                                                          ModifiedBy =item.ModifiedBy
+
+                                                      }).Skip(startRec).Take(pageSize).ToListAsync();
+
+                    //response = SortByColumnWithOrder(order, orderDir, response);
+
+           
+
 
                     response.draw = Convert.ToInt32(draw);
                     response.recordsTotal = totalRecords;

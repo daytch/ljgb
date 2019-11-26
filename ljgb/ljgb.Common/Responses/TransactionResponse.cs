@@ -106,5 +106,6 @@ namespace ljgb.Common.Responses
         public string BarangName { get; set; }
         public long Price { get; set; }
         public string Status { get; set; }
+        public DateTime Date { get; set; }
     }
 }
