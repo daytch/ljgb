@@ -147,7 +147,7 @@ namespace ljgb.BusinessLogic
 
         }
 
-        public async Task<BarangResponse> AddPost(BarangRequest request)
+        public async Task<BarangResponse> AddPost(BarangRequest request,string email)
         {
             BarangResponse response = new BarangResponse();
             try
@@ -162,7 +162,7 @@ namespace ljgb.BusinessLogic
                 model.PhotoPath = request.PhotoPath;
                 model.TypeBarangId = request.TypeBarangId;
                 model.Created = DateTime.Now;
-                model.CreatedBy = request.UserName;
+                model.CreatedBy = email;
                 model.RowStatus = true;
                 model.KotaId = request.KotaID.Value;
 
@@ -215,31 +215,12 @@ namespace ljgb.BusinessLogic
 
             return response;
         }
-
-        public async Task<BarangResponse> UpdatePost(BarangRequest request, string username)
+        public async Task<BarangResponse> UpdateImageBarang(BarangRequest request, string username)
         {
             BarangResponse response = new BarangResponse();
 
             try
             {
-                #region Old
-                //TypeBarangRequest typeRequest = new TypeBarangRequest();
-                //typeRequest.ID = request.TypeBarangId;
-                //var getTYpe = da_type.GetPost(typeRequest).Result;
-                //Barang model = new Barang();
-                //model.Id = request.ID;
-                //model.HargaOtr = request.HargaOtr;
-                //model.Name = getTYpe.Model.Name;
-                //model.WarnaId = request.WarnaId;
-                //model.TypeBarangId = request.TypeBarangId;
-                //model.KotaId = request.KotaID.Value;
-                //model.PhotoPath = request.PhotoPath;
-                //model.Year = request.Year.Value;
-
-                //model.Modified = DateTime.Now;
-                //model.ModifiedBy = username;
-                #endregion
-
                 Barang model = new Barang()
                 {
                     Id = request.ID
@@ -255,7 +236,64 @@ namespace ljgb.BusinessLogic
 
                 bool result = await dep.UpdateMany(ListBarang);
 
-                //bool result = await dep.UpdatePost(model);
+                if (result)
+                {
+                    response.Message = "Data Already Saved";
+                    response.IsSuccess = true;
+                }
+                else
+                {
+                    response.Message = "Update Failed";
+                    response.IsSuccess = false;
+                }
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex);
+                response.Message = ex.ToString();
+                response.IsSuccess = false;
+            }
+            return response;
+        }
+
+        public async Task<BarangResponse> UpdatePost(BarangRequest request, string username)
+        {
+            BarangResponse response = new BarangResponse();
+
+            try
+            {
+                #region Old
+                //Barang model = new Barang()
+                //{
+                //    Id = request.ID
+                //};
+                //List<Barang> ListBarang = await dep.GetAllBarangSameTypeAndKota(model);
+
+                //foreach (Barang brg in ListBarang)
+                //{
+                //    brg.PhotoPath = request.PhotoPath;
+                //    brg.Modified = DateTime.Now;
+                //    brg.ModifiedBy = username;
+                //}
+                #endregion
+
+                TypeBarangRequest typeRequest = new TypeBarangRequest();
+                typeRequest.ID = request.TypeBarangId;
+                var getTYpe = da_type.GetPost(typeRequest).Result;
+                Barang model = new Barang();
+                model.Id = request.ID;
+                model.HargaOtr = request.HargaOtr;
+                model.Name = getTYpe.Model.Name;
+                model.WarnaId = request.WarnaId;
+                model.TypeBarangId = request.TypeBarangId;
+                model.KotaId = request.KotaID.Value;
+                //model.PhotoPath = request.PhotoPath;
+                model.Year = request.Year.Value;
+
+                model.Modified = DateTime.Now;
+                model.ModifiedBy = username;
+
+                bool result = await dep.UpdatePost(model);
 
                 if (result)
                 {
@@ -270,7 +308,7 @@ namespace ljgb.BusinessLogic
             }
             catch (Exception ex)
             {
-
+                log.Error(ex);
                 response.Message = ex.ToString();
                 response.IsSuccess = false;
             }

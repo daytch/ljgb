@@ -193,6 +193,7 @@
             return true;
         }
 
+        var OldImage = "";
         var url = "";
         var imageUrl = "";
         $(document).ready(function () {
@@ -353,9 +354,7 @@
                 ]
             });
 
-
             function resetModal() {
-                
                 $('#uploadImage').attr('src', "");
                 var $t = $('[data-dismiss=modal]'),
                     target = $t[0].href || $t.data("target") || $t.parents('.modal') || [];
@@ -376,9 +375,12 @@
                 resetModal();
                 $('#HiddenModelID').val(e.relatedTarget.getAttribute('data-modelID'));
                 $('#HiddenTypeID').val(e.relatedTarget.getAttribute('data-typeBarangID'));
+
                 if (e.relatedTarget.getAttribute('data-Photo') !== "null") {
+                    OldImage = e.relatedTarget.getAttribute('data-Photo');
                     $('#uploadImage').attr('src', e.relatedTarget.getAttribute('data-Photo'));
                 }
+
                 $('#dropdownModelBarang option').remove();
                 $('#dropdownType option').remove();
                 $('#BarangID').val(e.relatedTarget.getAttribute('data-id'));
@@ -388,7 +390,6 @@
                 $('#hargaOTR').val(e.relatedTarget.getAttribute('data-hargaOTR'));
                 $('#tahun').val(e.relatedTarget.getAttribute('data-Year'));
                 var valuesMerk = {
-
                     merkID: $('#dropdownMerk').val()
                 }
                 SetModelDropdown(valuesMerk);
@@ -418,11 +419,11 @@
                             HargaOtr: $('#hargaOTR').val(),
                             WarnaID: $('#dropdownWarna').val(),
                             TypeBarangID: $('#dropdownType').val(),
-                            PhotoPath: $('#ImagePath').val(),
+                            //PhotoPath: $('#ImagePath').val(),
                             KotaID: $('#dropdownKota').val(),
                             Year: $('#tahun').val()
                         };
-
+                        
                         $.ajax({
                             url: url + "Barang/AddPost",
                             contentType: 'application/json',
@@ -436,7 +437,6 @@
                                 if (response.isSuccess) {
                                     LoadingMask.hide();
                                     $("#ModalEdit").modal('hide');
-                                    //$(document.body).removeClass('modal-open');
                                     $('.modal-backdrop').remove();
                                     toastr["success"](response.message);
                                     var table = $('#tableBarang').DataTable();
@@ -448,6 +448,41 @@
                             },
                             error: function (jqXHR, text, errorThrown) {
                                 console.log(jqXHR + " " + text + " " + errorThrown);
+                            }
+                        }).done(function () {
+
+                            if ($('#ImagePath').val() !== "" && OldImage != $('#ImagePath').val()) {
+                                var data = {
+                                    ID: ($("#BarangID").val()) ? $("#BarangID").val() : 0,
+                                    PhotoPath: $('#ImagePath').val()
+                                };
+
+                                $.ajax({
+                                    url: url + "Barang/AddImage",
+                                    contentType: 'application/json',
+                                    dataType: 'json',
+                                    type: "POST",
+                                    beforeSend: function (xhr) {
+                                        xhr.setRequestHeader('Authorization', 'Bearer ' + Cookies.get("access_token"));
+                                    },
+                                    data: JSON.stringify(data),
+                                    success: function (response) {
+                                        if (response.isSuccess) {
+                                            LoadingMask.hide();
+                                            $("#ModalEdit").modal('hide');
+                                            $('.modal-backdrop').remove();
+                                            toastr["success"](response.message);
+                                            var table = $('#tableBarang').DataTable();
+                                            table.draw(false);
+                                        } else {
+                                            LoadingMask.hide();
+                                            toastr["error"](response.message);
+                                        }
+                                    },
+                                    error: function (jqXHR, text, errorThrown) {
+                                        console.log(jqXHR + " " + text + " " + errorThrown);
+                                    }
+                                });
                             }
                         });
 
@@ -485,8 +520,9 @@
                 });
             });
         });
+
         $("#dropdownMerk").change(function () {
-            
+
             $("#dropdownModelBarang option").remove();
             $("#dropdownType option").remove();
             var values = {
@@ -496,8 +532,9 @@
 
             SetModelDropdown(values);
         });
+
         $("#dropdownModelBarang").change(function () {
-            
+
             $("#dropdownType option").remove();
             var values = {
 
@@ -566,8 +603,6 @@
             });
         }
 
-
-
         function readURL(input) {
             if (input.files && input.files[0]) {
                 var reader = new FileReader();
@@ -581,7 +616,7 @@
         }
 
         $("#imgInp").change(function () {
-            
+
             if ($("#imgInp").val() == "") {
                 $('#ImagePath').val("");
                 return;
@@ -624,5 +659,6 @@
             });
             LoadingMask.hide();
         });
+
     </script>
 }
