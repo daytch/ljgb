@@ -328,7 +328,29 @@ namespace ljgb.API.Controllers
             UserResponse response = new UserResponse();
             try
             {
-                response = await facade.SaveSalesman(model);                
+                string bearer = Request.HttpContext.Request.Headers["Authorization"];
+                string token = bearer.Substring("Bearer ".Length).Trim();
+                string username = string.Empty;
+                if (string.IsNullOrEmpty(token))
+                {
+                    response.IsSuccess = false;
+                    response.Message = "You don't have access.";
+                    return response;
+                }
+
+                username = sec.ValidateToken(token);
+                if (username == null)
+                {
+                    Response.HttpContext.Response.Cookies.Append("access_token", "", new CookieOptions()
+                    {
+                        Expires = DateTime.Now.AddDays(-1)
+                    });
+                    response.IsSuccess = false;
+                    response.Message = "Your session was expired, please re-login.";
+                    return response;
+                }
+
+                response = await facade.SaveSalesman(model,username);                
             }
             catch (Exception ex)
             {
