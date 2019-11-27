@@ -448,8 +448,7 @@ namespace ljgb.DataAccess.Repository
             }
             return ListBarang;
         }
-
-
+        
         public async Task<List<SP_GetPhotoAndWarnaByBarangID>> GetPhotoAndWarnaByID(BarangRequest request)
         {
             try
@@ -508,9 +507,7 @@ namespace ljgb.DataAccess.Repository
                 throw ex;
             }
         }
-
-
-
+               
         public async Task<Barang> GetHargaOTRTypeBarangID(long TypeBarangID)
         {
             try
