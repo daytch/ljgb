@@ -126,6 +126,24 @@ namespace ljgb.BusinessLogic
             return response;
         }
 
+        public async Task<WarnaResponse> GetAllWithTypeBarang(long typeBarangID)
+        {
+            WarnaResponse response = new WarnaResponse();
+            try
+            {
+                
+                response.dataWithTypeBarang = await dep.GetAllWithTypeBarang(typeBarangID);
+                response.IsSuccess = true;
+                
+            }
+            catch (Exception ex)
+            {
+                response.Message = ex.Message.ToString();
+                response.IsSuccess = true;
+            }
+            return response;
+        }
+
         public async Task<WarnaViewModel> GetPost(long postId)
         {
             var post = await dep.GetPost(postId);
@@ -168,5 +186,7 @@ namespace ljgb.BusinessLogic
             return result;
         }
 
+
+     
     }
 }

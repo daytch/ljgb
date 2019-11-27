@@ -14,11 +14,11 @@ namespace ljgb.UI.Controllers
             _settings = settings.Value;
             _config = config.Value;
         }
-        public IActionResult ListASK()
-        {
-            ViewBag.url_api = _config.base_api_url;
-            return View(_settings);
-        }
+        //public IActionResult ListASK()
+        //{
+        //    ViewBag.url_api = _config.base_api_url;
+        //    return View(_settings);
+        //}
         public IActionResult ListBID()
         {
             ViewBag.url_api = _config.base_api_url;

@@ -9,5 +9,12 @@ namespace ljgb.Common.Responses
         public int recordsTotal { get; set; }
         public int recordsFiltered { get; set; }
         public List<WarnaViewModel> data { get; set; }
+        public List<sp_GetWarnaWithTypeBarang> dataWithTypeBarang { get; set; }
+    }
+
+    public class sp_GetWarnaWithTypeBarang
+    {
+        public long ID { get; set; }
+        public string Name { get; set; }
     }
 }

@@ -100,7 +100,10 @@
                     NegoBarangID: $('#NegoBarangID').val(),
                     Harga: $('#nominalBarang').val()
                 };
-
+                $("#ModalDelete").modal('hide');
+                $(document.body).removeClass('modal-open');
+                $('.modal-backdrop').remove();
+                LoadingMask.show();
                 $.ajax({
                     url: url + "Transaction/SubmitSell",
                     contentType: 'application/json',
@@ -112,12 +115,11 @@
                     data: JSON.stringify(values),
                     success: function (response) {
                         if (response.isSuccess) {
-                            $("#ModalDelete").modal('hide');
-                            $(document.body).removeClass('modal-open');
-                            $('.modal-backdrop').remove();
+                            LoadingMask.hide();
                             toastr["success"](response.message);
                             $('#tableAsk').DataTable().ajax.reload();
                         } else {
+                            LoadingMask.hide();
                             toastr["error"](response.message);
                         }
                     },

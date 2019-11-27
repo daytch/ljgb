@@ -347,65 +347,118 @@
 </div>
 
 <div class="modal fade" id="ModalWaitingVerification" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">
-                    Detail
-                    <small class="m-0 text-muted">
+    <form class="needs-validation" novalidate>
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">
                         Detail
-                    </small>
-                </h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true"><i class="fal fa-times"></i></span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <div class="row">
-                        <div class="col-md-3">
-                            <label for="Nama">Nama</label>
-                        </div>
-                        <div class="col-md-8">
-                            <input type="text" class="form-control col-md-10" id="NamaUser" placeholder="Nama" readonly="readonly" required>
-                        </div>
-                        <input type="hidden" class="form-control" id="SalesmanID">
-                        <input type="hidden" class="form-control" id="TransactionID">
-                    </div>
+                        <small class="m-0 text-muted">
+                            Detail
+                        </small>
+                    </h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true"><i class="fal fa-times"></i></span>
+                    </button>
                 </div>
-                <div class="form-group">
-                    <div class="row">
-                        <div class="col-md-3">
-                            <label for="Email">Email</label>
-                        </div>
-                        <div class="col-md-8">
-                            <input type="text" class="form-control col-md-10" id="Email" placeholder="Email" readonly="readonly" required>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <label for="Nama">Nama</label>
+                            </div>
+                            <div class="col-md-8">
+                                <input type="text" class="form-control col-md-10" id="modalVerificationName" placeholder="Nama" required>
+                                <div class="invalid-feedback">
+                                    Please Input Nama
+                                </div>
+                            </div>
+                            
                         </div>
                     </div>
-                </div>
-                <div class="form-group">
-                    <div class="row">
-                        <div class="col-md-3">
-                            <label for="Telp">Telp</label>
-                        </div>
-                        <div class="col-md-8">
-                            <input type="text" class="form-control col-md-10" id="Telp" placeholder="Telp" readonly="readonly" required>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <label for="Email">Email</label>
+                            </div>
+                            <div class="col-md-8">
+                                <input type="text" class="form-control col-md-10" id="modalVerificationEmail" placeholder="Email" readonly="readonly" required>
+                                <div class="invalid-feedback">
+                                    Please Input Email
+                                </div>
+                            </div>
+                            
                         </div>
                     </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <label for="Telp">Telepon</label>
+                            </div>
+                            <div class="col-md-8">
+                                <input type="text" class="form-control col-md-10" id="modalVerificationTelp" placeholder="Telp" required>
+                                <div class="invalid-feedback">
+                                    Please Input Telepon
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <label for="Alamat">Alamat</label>
+                            </div>
+                            <div class="col-md-8">
+                                <input type="text" class="form-control col-md-10" id="modalVerificationAlamat" placeholder="Alamat" required>
+                                <div class="invalid-feedback">
+                                    Please Input Alamat
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <label for="Facebook">Facebook</label>
+                            </div>
+                            <div class="col-md-8">
+                                <input type="text" class="form-control col-md-10" id="modalVerificationFacebook" placeholder="Facebook">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <label for="IG">Instagram</label>
+                            </div>
+                            <div class="col-md-8">
+                                <input type="text" class="form-control col-md-10" id="modalVerificationInstagram" placeholder="Instagram">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" id="btn-saveWaitingVerification" class="btn btn-primary">Save changes</button>
+                    </div>
                 </div>
-
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
             </div>
         </div>
-    </div>
+    </form>
 </div>
-
 
 
 @section Scripts {
     <script type="text/javascript">
+
+        function isNumberKey(evt) {
+            var charCode = (evt.which) ? evt.which : event.keyCode
+            if (charCode > 31 && (charCode < 48 || charCode > 57))
+                return false;
+
+            return true;
+        }
         $(document).ready(function () {
             moment.locale('ID');
             var url = "@ViewBag.url_api";
@@ -498,7 +551,8 @@
                             }
                             else {
                                 if (t.namaStatus == 'Waiting Verification') {
-
+                                    return '<a class="btn btn-xs btn-success waves-effect waves-themed" data-TransactionID="' + t.id + '"  data-nama="' + t.namaPembeli + '" data-instagram="' + t.igPembeli + '" data-facebook="' + t.facebookPembeli + '" data-alamat="' + t.alamatPembeli + '" data-email="' + t.emailPembeli + '" data-telp="' + t.telpPembeli + '" data-toggle="modal" data-target="#ModalWaitingVerification" ><i class="fas fa-edit">' + t.namaLangkah + ' </i></a> '
+                                        + '<a class="btn btn-xs btn-danger waves-effect waves-themed"  data-TransactionID="' + t.id + '" data-toggle="modal" data-target="#ModalCancel"><i class="fas fa-trash-alt">Cancel </i></a>';
                                 }
                              return '<a class="btn btn-xs btn-success waves-effect waves-themed"  data-TransactionID="' + t.id + '" data-toggle="modal" data-target="#ModalSave" ><i class="fas fa-edit">' + t.namaLangkah + ' </i></a> '
                                  + '<a class="btn btn-xs btn-danger waves-effect waves-themed"  data-TransactionID="' + t.id + '" data-toggle="modal" data-target="#ModalCancel"><i class="fas fa-trash-alt">Cancel </i></a>';
@@ -605,6 +659,33 @@
                 $('#Instagram').val(e.relatedTarget.getAttribute('data-instagram'));
                 $('#Facebook').val(e.relatedTarget.getAttribute('data-facebook'));
             });
+            $('#ModalWaitingVerification').on('show.bs.modal', function (e) {
+                resetModal();
+                debugger;
+                $('#TransactionID').val(e.relatedTarget.getAttribute('data-TransactionID'));
+                $('#modalVerificationName').val(e.relatedTarget.getAttribute('data-nama'));
+                $('#modalVerificationEmail').val(e.relatedTarget.getAttribute('data-email'));
+                if (e.relatedTarget.getAttribute('data-telp') == 'null') {
+                    $('#modalVerificationTelp').val('');
+                } else {
+                    $('#modalVerificationTelp').val(e.relatedTarget.getAttribute('data-telp'));
+                }
+                if (e.relatedTarget.getAttribute('data-alamat') == 'null') {
+                    $('#modalVerificationAlamat').val('');
+                } else {
+                    $('#modalVerificationAlamat').val(e.relatedTarget.getAttribute('data-alamat'));
+                }
+                if (e.relatedTarget.getAttribute('data-instagram') == 'null') {
+                    $('#modalVerificationInstagram').val('');
+                } else {
+                    $('#modalVerificationInstagram').val(e.relatedTarget.getAttribute('data-instagram'));
+                }
+                if (e.relatedTarget.getAttribute('data-facebook') == 'null') {
+                    $('#modalVerificationFacebook').val('');
+                } else {
+                    $('#modalVerificationFacebook').val(e.relatedTarget.getAttribute('data-facebook'));
+                }
+            });
 
             $('#ModalDealer').on('show.bs.modal', function (e) {
                 resetModal();
@@ -642,6 +723,59 @@
 
             //});
 
+            var forms = document.getElementsByClassName('needs-validation');
+            var buttonWaitingVerification = document.getElementById("btn-saveWaitingVerification");
+
+            var validation = Array.prototype.filter.call(forms, function (form) {
+                buttonWaitingVerification.addEventListener('click', function (event) {
+                    if (form.checkValidity() === false) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    } else {
+                        $("#ModalWaitingVerification").modal('hide');
+                        $(document.body).removeClass('modal-open');
+                        $('.modal-backdrop').remove();
+                        LoadingMask.show();
+                        var values = {
+                            ID: $('#TransactionID').val(),
+                            Email: $("#modalVerificationEmail").val(),
+                            Name: $("#modalVerificationName").val(),
+                            Telp: $("#modalVerificationTelp").val(),
+                            Alamat: $("#modalVerificationAlamat").val(),
+                            Facebook: $("#modalVerificationFacebook").val(),
+                            IG: $("#modalVerificationFacebook").val(),
+                          
+                        };
+
+                        $.ajax({
+                            url: url + "Transaction/ConfirmWaitingVerification",
+                            contentType: 'application/json',
+                            dataType: 'json',
+                            type: "POST",
+                            beforeSend: function (xhr) {
+                                xhr.setRequestHeader('Authorization', 'Bearer ' + Cookies.get("access_token"));
+                            },
+                            data: JSON.stringify(values),
+                            success: function (response) {
+                                if (response.isSuccess) {
+                                    LoadingMask.hide();
+                                    toastr["success"](response.message);
+                                    var table = $('#tableTransaksi').DataTable();
+                                    table.draw(false);
+                                } else {
+                                    LoadingMask.hide();
+                                    toastr["error"](response.message);
+                                }
+                            },
+                            error: function (jqXHR, text, errorThrown) {
+                                console.log(jqXHR + " " + text + " " + errorThrown);
+                            }
+                        });
+                    }
+                    form.classList.add('was-validated');
+                });
+            });
+
             $('#save').on('click', function (e) {
 
                 if ($("#VerifiedDate").val() !== "" && $("#VerifiedBy").val() !== "") {
@@ -678,7 +812,11 @@
             });
 
             $('#btn-NextLevel').on('click', function (e) {
-
+                $("#ModalSave").modal('hide');
+                $(document.body).removeClass('modal-open');
+                $('.modal-backdrop').remove();
+                debugger;
+                LoadingMask.show();
                 var values = {
                     id: $("#TransactionID").val()
                 };
@@ -692,20 +830,25 @@
                     },
                     data: JSON.stringify(values),
                     success: function (data) {
+                        LoadingMask.hide();
                         console.log(data);
                         toastr["success"](data.message);
                         $('#tableTransaksi').DataTable().ajax.reload();
-                        $("#ModalSave").modal('hide');
-                        $(document.body).removeClass('modal-open');
-                        $('.modal-backdrop').remove();
+                     
+                       
                     },
                     error: function (jqXHR, text, errorThrown) {
+                        LoadingMask.hide();
                         console.log(jqXHR + " " + text + " " + errorThrown);
+                       
                     }
                 });
             });
             $('#btn-Cancel').on('click', function (e) {
-
+                $("#ModalCancel").modal('hide');
+                $(document.body).removeClass('modal-open');
+                $('.modal-backdrop').remove();
+                LoadingMask.show();
                 var values = {
                     id: $("#TransactionID").val()
                 };
@@ -719,14 +862,14 @@
                     },
                     data: JSON.stringify(values),
                     success: function (data) {
+                        LoadingMask.hide();
                         console.log(data);
                         toastr["success"](data.message);
                         $('#tableTransaksi').DataTable().ajax.reload();
-                        $("#ModalCancel").modal('hide');
-                        $(document.body).removeClass('modal-open');
-                        $('.modal-backdrop').remove();
+                      
                     },
                     error: function (jqXHR, text, errorThrown) {
+                        LoadingMask.hide();
                         console.log(jqXHR + " " + text + " " + errorThrown);
                     }
                 });

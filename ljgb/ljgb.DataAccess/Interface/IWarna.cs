@@ -2,6 +2,7 @@
 using ljgb.Common.ViewModel;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using ljgb.Common.Responses;
 
 namespace ljgb.DataAccess.Interface
 {
@@ -22,5 +23,7 @@ namespace ljgb.DataAccess.Interface
         Task<long> DeletePost(long warnaId);
 
         Task<bool> UpdatePost(Warna warna);
+
+        Task<List<sp_GetWarnaWithTypeBarang>> GetAllWithTypeBarang(long typeBarangID);
     }
 }

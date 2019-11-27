@@ -33,6 +33,14 @@ namespace ljgb.Common.Requests
         public long BarangID { get; set; }
         public long Nominal { get; set; }
         public long Harga { get; set; }
+
+        public string Name { get; set; }
+        public string Email { get; set; }
+        public string Telp { get; set; }
+        public string Alamat { get; set; }
+        public string Facebook { get; set; }
+        public string Instagram { get; set; }
+
         public TransactionRequest()
         {
             TrasanctionLevel = new TransactionLevelViewModel();

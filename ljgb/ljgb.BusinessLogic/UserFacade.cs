@@ -593,6 +593,41 @@ namespace ljgb.BusinessLogic
             return result;
         }
 
+        public async Task<UserResponse> UpdateFromWaitingVerification(string email, string nama, string telp, string alamat, string instagram, string facebook, string username)
+        {
+            UserResponse response = new UserResponse();
+            try
+            {
+                UserProfile model = await dep.GetUserByEmail(email);
+                model.Alamat = alamat;
+                model.Facebook = facebook;
+                model.Ig = instagram;
+                model.Nama = nama;
+                model.Telp = telp;
+                model.Modified = DateTime.Now;
+                model.ModifiedBy = username;
+                if (await dep.Update(model))
+                {
+                    response.IsSuccess = true;
+                    response.Message = "Success to Update Profile";
+                }
+                else
+                {
+                    response.IsSuccess = false;
+                    response.Message = "Failed to Update Profile";
+                }
+
+                //model.
+            }
+            catch (Exception ex)
+            {
+
+                response.IsSuccess = false;
+                response.Message = ex.Message.ToString();
+            }
+
+            return response;
+        }
 
     }
 }

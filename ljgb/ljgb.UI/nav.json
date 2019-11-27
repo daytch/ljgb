@@ -110,10 +110,7 @@
       "title": "Nego",
       "icon": "fal fa-shopping-cart",
       "items": [
-        {
-          "title": "List ASK",
-          "href": "Nego_ListASK.cshtml"
-        },
+
         {
           "title": "List ASK",
           "href": "Nego_ListASKS.cshtml"

@@ -3,6 +3,8 @@ using ljgb.BusinessLogic;
 using ljgb.Common.Requests;
 using ljgb.Common.Responses;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -20,13 +22,22 @@ namespace ljgb.API.Controllers
     [ApiController]
     public class TransactionController : ControllerBase
     {
+        private readonly UserManager<IdentityUser> userManager;
+        private readonly UserFacade usrFacade;
+        private readonly IEmailSender emailSender;
+
+        private readonly SignInManager<IdentityUser> signInManager;
         private string url = "";
         private Security sec = new Security();
         private ConfigFacade configFacade = new ConfigFacade();
         private IEmailConfiguration _emailConfiguration;
-        public TransactionController(IConfiguration config, IEmailConfiguration EmailConfiguration)
+        public TransactionController(IConfiguration config, IEmailConfiguration EmailConfiguration, UserManager<IdentityUser> _userManager, IEmailSender _emailSender, SignInManager<IdentityUser> _signInManager)
         {
+            userManager = _userManager;
+            emailSender = _emailSender;
+            signInManager = _signInManager;
             _emailConfiguration = EmailConfiguration;
+            usrFacade = new UserFacade(userManager, emailSender, signInManager);
             url = config.GetSection("API_url").Value;
         }
         private TransactionFacade facade = new TransactionFacade();
@@ -713,6 +724,128 @@ namespace ljgb.API.Controllers
             }
 
             return BadRequest();
+        }
+
+        [HttpPost]
+        [Route("ConfirmWaitingVerification")]
+        public async Task<IActionResult> ConfirmWaitingVerification([FromBody]TransactionRequest req)
+        {
+            TransactionResponse response = new TransactionResponse();
+            try
+            {
+                string bearer = Request.HttpContext.Request.Headers["Authorization"];
+                string token = bearer.Substring("Bearer ".Length).Trim();
+                string username = string.Empty;
+                if (string.IsNullOrEmpty(token))
+                {
+                    response.IsSuccess = false;
+                    response.Message = "You don't have access.";
+                    return BadRequest(response);
+                }
+
+                username = sec.ValidateToken(token);
+                if (username == null)
+                {
+                    Response.HttpContext.Response.Cookies.Append("access_token", "", new CookieOptions()
+                    {
+                        Expires = DateTime.Now.AddDays(-1)
+                    });
+                    response.IsSuccess = false;
+                    response.Message = "Your session was expired, please re-login.";
+                    return BadRequest(response);
+                }
+                req.UserName = username;
+                var responseUserUpdate = usrFacade.UpdateFromWaitingVerification(req.Email, req.Name, req.Telp, req.Alamat, req.Instagram, req.Facebook, req.UserName).Result;
+                if (!responseUserUpdate.IsSuccess)
+                {
+                    response.IsSuccess = false;
+                    responseUserUpdate.Message = "Your session was expired, please re-login.";
+                    return BadRequest(response);
+                }
+                response = await facade.ApproveTransaction(req);
+
+                if (response.IsSuccess)
+                {
+                    #region Sent Email to User
+                    TransactionResponse transResp = await facade.GetCurrentTransaction(req);
+                    int levelID = transResp.ListTransaction.FirstOrDefault().TrasanctionLevel.ID;
+                    SendEmail sendEmail = new SendEmail(_emailConfiguration);
+                    string contentEmail = string.Empty;
+                    string subjectEmail = string.Empty;
+
+                    AuthenticationResponse authResp = await facade.GetUserProfile(username);
+
+                    EmailAddress emailAddress = new EmailAddress();
+                    switch (levelID)
+                    {
+                        case 1:
+                            contentEmail = configFacade.GetRedaksionalEmail("ContentEmailBuy").Result;
+                            subjectEmail = configFacade.GetRedaksionalEmail("SubjectEmailBuy").Result;
+                            break;
+                        case 2:
+                            contentEmail = configFacade.GetRedaksionalEmail("ContentEmailVerifikasi").Result;
+                            subjectEmail = configFacade.GetRedaksionalEmail("SubjectEmailVerifikasi").Result;
+                            break;
+                        case 3:
+                            contentEmail = configFacade.GetRedaksionalEmail("ContentEmailVisit").Result;
+                            subjectEmail = configFacade.GetRedaksionalEmail("SubjectEmailVisit").Result;
+                            break;
+                        case 4:
+                            contentEmail = configFacade.GetRedaksionalEmail("ContentEmailDP").Result;
+                            subjectEmail = configFacade.GetRedaksionalEmail("SubjectEmailDP").Result;
+                            break;
+                        case 5:
+                            contentEmail = configFacade.GetRedaksionalEmail("ContentEmailBBN").Result;
+                            subjectEmail = configFacade.GetRedaksionalEmail("SubjectEmailBBN").Result;
+                            break;
+                        case 6:
+                            contentEmail = configFacade.GetRedaksionalEmail("ContentEmailSTNK").Result;
+                            subjectEmail = configFacade.GetRedaksionalEmail("SubjectEmailSTNK").Result;
+                            break;
+                        case 7:
+                            contentEmail = configFacade.GetRedaksionalEmail("ContentEmailPelunasan").Result;
+                            subjectEmail = configFacade.GetRedaksionalEmail("SubjectEmailPelunasan").Result;
+                            break;
+                        case 8:
+                            contentEmail = configFacade.GetRedaksionalEmail("ContentEmailDelivery").Result;
+                            subjectEmail = configFacade.GetRedaksionalEmail("SubjectEmailDelivery").Result;
+                            break;
+                    }
+                    emailAddress.Address = username;
+                    emailAddress.Name = authResp.Name;
+                    List<EmailAddress> listEmailAddress = new List<EmailAddress>();
+                    listEmailAddress.Add(emailAddress);
+
+                    contentEmail = contentEmail.Replace("[user]", emailAddress.Name);
+
+                    EmailAddress emailAddressFrom = new EmailAddress();
+                    emailAddressFrom.Address = "admin@lojualguebeli.com";
+                    emailAddressFrom.Name = "Lojualguebeli.com";
+                    List<EmailAddress> listEmailAddressFrom = new List<EmailAddress>();
+                    listEmailAddressFrom.Add(emailAddressFrom);
+
+                    EmailMessage emailMessage = new EmailMessage();
+                    emailMessage.ToAddresses = listEmailAddress;
+                    emailMessage.Subject = subjectEmail;
+                    emailMessage.FromAddresses = listEmailAddressFrom;
+                    emailMessage.Content = contentEmail;
+
+                    sendEmail.Send(emailMessage);
+                    #endregion
+                }
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                if (ex.GetType().FullName ==
+                         "Microsoft.EntityFrameworkCore.DbUpdateConcurrencyException")
+                {
+                    return NotFound();
+                }
+
+                return BadRequest();
+            }
         }
 
 

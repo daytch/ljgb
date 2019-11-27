@@ -5,6 +5,8 @@ using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
+using System;
+using ljgb.Common.Responses;
 
 namespace ljgb.DataAccess.Repository
 {
@@ -148,6 +150,24 @@ namespace ljgb.DataAccess.Repository
                 result = true;
             }
             return result;
+        }
+
+        public async Task<List<sp_GetWarnaWithTypeBarang>> GetAllWithTypeBarang(long typeBarangID)
+        {
+            if (db != null)
+            {
+                try
+                {
+                    return await db.Set<sp_GetWarnaWithTypeBarang > ().FromSql("EXEC sp_GetWarnaWithType {0}", typeBarangID).AsNoTracking().ToListAsync();
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+
+            }
+
+            return null;
         }
     }
 }

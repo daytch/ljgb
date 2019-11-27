@@ -581,5 +581,25 @@ namespace ljgb.API.Controllers
             return BadRequest();
         }
 
+        [HttpPost]
+        [Route("GetHargaOTRTypeBarangID")]
+        public async Task<IActionResult> GetHargaOTRTypeBarangID([FromBody]BarangRequest request)
+        {
+
+            BarangResponse result = new BarangResponse();
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    result = await facade.GetHargaOTRTypeBarangID(request);
+                    return Ok(result);
+                }
+                catch (Exception)
+                {
+                    return BadRequest();
+                }
+            }
+            return BadRequest();
+        }
     }
 }

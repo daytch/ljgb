@@ -209,5 +209,25 @@ namespace ljgb.API.Controllers
             return BadRequest();
         }
 
+        [HttpGet]
+        [Route("GetAllWithTypeBarang")]
+        public async Task<IActionResult> GetAllWithTypeBarang(long typeBarangID)
+        {
+            try
+            {
+                var posts = await facade.GetAllWithTypeBarang(typeBarangID);
+                if (posts == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(posts);
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+        }
+
     }
 }

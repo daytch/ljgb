@@ -353,7 +353,6 @@ namespace ljgb.DataAccess.Repository
                                         
 
               
-                    int totalRecords = response.ListTransaction.Count;
                     if (!string.IsNullOrEmpty(search) && !string.IsNullOrWhiteSpace(search))
                     {
                         listTransaction = listTransaction.Where(p => p.NamaStatus.ToString().ToLower().Contains(search.ToLower()) ||
@@ -367,8 +366,9 @@ namespace ljgb.DataAccess.Repository
 
                     }
 
-                    int recFilter = response.ListTransaction.Count;
+                    int recFilter = listTransaction.Count();
 
+                    int totalRecords = listTransaction.Count();
                     response.ListTransaction = await (from item in listTransaction
                                                       select new TransactionViewModel
                                                       {
@@ -771,5 +771,6 @@ namespace ljgb.DataAccess.Repository
                 throw ex;
             }
         }
+
     }
 }
