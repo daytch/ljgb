@@ -98,6 +98,19 @@
                     <div class="form-group">
                         <div class="row">
                             <div class="col-md-3">
+                                <label for="Password">Password</label>
+                            </div>
+                            <div class="col-md-8">
+                                <input type="password" class="form-control col-md-12" id="Password" placeholder="Password" required>
+                                <div class="invalid-feedback">
+                                    Please input Password.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-3">
                                 <label for="Telp">Telp</label>
                             </div>
                             <div class="col-md-8">
@@ -308,6 +321,7 @@
                             Id: ($("#UserID").val()) ? $("#UserID").val() : 0,
                             Nama: $("#Nama").val(),
                             Email: $("#Email").val(),
+                            Password: $("#Password").val(),
                             Telp: $("#Telp").val(),
                             Alamat: $("#Alamat").val(),
                             JenisKelamin: $("#JenisKelamin").val(),

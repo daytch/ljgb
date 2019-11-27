@@ -27,7 +27,7 @@ namespace ljgb.BusinessLogic
         private readonly IEmailSender emailSender;
         private readonly SignInManager<IdentityUser> signInManager;
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-
+        private Security security = new Security();
 
         public UserFacade(UserManager<IdentityUser> _userManager, IEmailSender _emailSender, SignInManager<IdentityUser> _signInManager)
         {
@@ -267,16 +267,16 @@ namespace ljgb.BusinessLogic
                 {
                     return null;
                 }
-               
+
                 result.userProfileModel.ID = 0;
                 result.userProfileModel.Email = get.Email;
                 result.userProfileModel.Name = get.Nama;
                 result.userProfileModel.Telp = get.Telp;
-                result.userProfileModel.Facebook = (get.Facebook==null)? "" : get.Facebook;
-                result.userProfileModel.IG = (get.Ig == null )?"" : get.Ig;
-                result.userProfileModel.JenisKelamin = (get.JenisKelamin == null) ? "" :get.JenisKelamin;
+                result.userProfileModel.Facebook = (get.Facebook == null) ? "" : get.Facebook;
+                result.userProfileModel.IG = (get.Ig == null) ? "" : get.Ig;
+                result.userProfileModel.JenisKelamin = (get.JenisKelamin == null) ? "" : get.JenisKelamin;
                 result.userProfileModel.Alamat = get.Alamat;
-                result.userProfileModel.Photopath = (get.PhotoPath==null)?"" : get.PhotoPath;
+                result.userProfileModel.Photopath = (get.PhotoPath == null) ? "" : get.PhotoPath;
                 result.Message = "Success";
                 result.IsSuccess = true;
             }
@@ -286,9 +286,9 @@ namespace ljgb.BusinessLogic
                 result.IsSuccess = false;
 
             }
-            
-          
-            
+
+
+
 
             return result;
         }
@@ -328,7 +328,7 @@ namespace ljgb.BusinessLogic
         //    return postId;
         //}
 
-        public async Task<UserResponse> SaveSalesman(UserRequest model)
+        public async Task<UserResponse> SaveSalesman(UserRequest model, string username)
         {
             UserResponse response = new UserResponse();
             try
@@ -347,6 +347,7 @@ namespace ljgb.BusinessLogic
                         Alamat = model.Alamat,
                         KotaId = model.KotaId,
                         JenisKelamin = model.JenisKelamin,
+                        Password = security.GetSHA1(model.Email, model.Password),
 
                         Created = DateTime.Now,
                         CreatedBy = "Admin",
@@ -451,7 +452,7 @@ namespace ljgb.BusinessLogic
             try
             {
                 result = await dep.Register(model);
-                
+
             }
             catch (Exception ex)
             {
@@ -552,7 +553,7 @@ namespace ljgb.BusinessLogic
                 if (await dep.Update(model))
                 {
                     response.IsSuccess = true;
-                    response.Message ="Success to Update Profile";
+                    response.Message = "Success to Update Profile";
                 }
                 else
                 {
@@ -583,7 +584,7 @@ namespace ljgb.BusinessLogic
                 user.Email = request.Email;
                 user.Password = sec.GetSHA1(request.Email, request.RePassword);
 
-                result=  await dep.Update(user);
+                result = await dep.Update(user);
             }
             catch (Exception ex)
             {
