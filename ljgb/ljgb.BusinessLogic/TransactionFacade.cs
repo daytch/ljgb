@@ -153,7 +153,10 @@ namespace ljgb.BusinessLogic
                 Created = DateTime.Now,
                 RowStatus = true
             };
-
+            ResultNego.Modified = DateTime.Now;
+            ResultNego.ModifiedBy = username;
+            ResultNego.HasTransaction = true;
+            
             long TransID = await dep.SaveTransaction(tran);
             if (TransID < 1)
             {
@@ -183,6 +186,7 @@ namespace ljgb.BusinessLogic
                 response.Message = "Transaction Success.";
                 response.IsSuccess = true;
             }
+            INego.UpdatePost(ResultNego);
             return response;
         }
 

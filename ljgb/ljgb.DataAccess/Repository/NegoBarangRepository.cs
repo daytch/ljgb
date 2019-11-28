@@ -426,7 +426,9 @@ namespace ljgb.DataAccess.Repository
                                  tBarang.RowStatus == true &&
                                  mdlBarang.RowStatus == true &&
                                  merkBarang.RowStatus == true &&
-                                 negoBarang.TypePenawaran.ToLower() == "BID"
+                                 negoBarang.TypePenawaran.ToLower() == "BID"&&
+                                 negoBarang.HasTransaction != true
+
                                  select new
                                  {
                                      negoBarang.Id,
@@ -611,7 +613,8 @@ namespace ljgb.DataAccess.Repository
                                  mdlBarang.RowStatus == true &&
                                  merkBarang.RowStatus == true &&
                                  negoBarang.TypePenawaran.ToLower() == "BID" &&
-                                 barang.KotaId == KotaID
+                                 barang.KotaId == KotaID &&
+                                 negoBarang.HasTransaction != true
                                  select new
                                  {
                                      negoBarang.Id,
