@@ -411,13 +411,13 @@ namespace ljgb.BusinessLogic
                             }
                             else
                             {
-                                KotaID = ListKota.Where(x => x.Name == Kota && x.RowStatus == true).First().Id;
+                                KotaID = ListKota.Where(x => x.Name.ToLower() == Kota.ToLower() && x.RowStatus == true).First().Id;
                             }
                             #endregion
 
                             #region Insert To Merk 
                             string Merk = dt.Rows[i].ItemArray.GetValue(1).ToString();
-                            if (!ListMerk.Where(x => x.Name == Merk).Any())
+                            if (!ListMerk.Where(x => x.Name.ToLower() == Merk.ToLower()).Any())
                             {
 
                                 Merk m = new Merk();
@@ -431,13 +431,13 @@ namespace ljgb.BusinessLogic
                             }
                             else
                             {
-                                MerkID = ListMerk.Where(x => x.Name == Merk && x.RowStatus == true).First().Id;
+                                MerkID = ListMerk.Where(x => x.Name.ToLower() == Merk.ToLower() && x.RowStatus == true).First().Id;
                             }
                             #endregion
 
                             #region Insert to ModelBarang
                             string Model = dt.Rows[i].ItemArray.GetValue(2).ToString();
-                            if (!ListModel.Where(x => x.Name.ToUpper() == Model.ToUpper()).Any())
+                            if (!ListModel.Where(x => x.Name.ToLower() == Model.ToLower()).Any())
                             {
                                 ModelBarang mb = new ModelBarang();
                                 mb.MerkId = MerkID;
@@ -451,13 +451,13 @@ namespace ljgb.BusinessLogic
                             }
                             else
                             {
-                                ModelID = ListModel.Where(x => x.Name == Model && x.RowStatus == true).First().Id;
+                                ModelID = ListModel.Where(x => x.Name.ToLower() == Model.ToLower() && x.RowStatus == true).First().Id;
                             }
                             #endregion
 
                             #region Insert to TypeBarang
                             string Type = dt.Rows[i].ItemArray.GetValue(4).ToString();
-                            if (!ListType.Where(x => x.Name == Type).Any())
+                            if (!ListType.Where(x => x.Name.ToLower() == Type.ToLower()).Any())
                             {
                                 TypeBarang tb = new TypeBarang();
                                 tb.Name = Type;
@@ -471,13 +471,13 @@ namespace ljgb.BusinessLogic
                             }
                             else
                             {
-                                TypeID = ListType.Where(x => x.RowStatus == true && x.Name == Type).First().Id;
+                                TypeID = ListType.Where(x => x.RowStatus == true && x.Name.ToLower() == Type.ToLower()).First().Id;
                             }
                             #endregion
 
                             #region Insert to Warna
                             string Warna = dt.Rows[i].ItemArray.GetValue(6).ToString();
-                            if (!ListWarna.Where(x => x.Name == Warna).Any())
+                            if (!ListWarna.Where(x => x.Name.ToLower() == Warna.ToLower()).Any())
                             {
                                 Warna w = new Warna();
                                 w.Name = Warna;
@@ -491,7 +491,7 @@ namespace ljgb.BusinessLogic
                             }
                             else
                             {
-                                WarnaID = ListWarna.Where(x => x.RowStatus == true && x.Name == Warna).First().Id;
+                                WarnaID = ListWarna.Where(x => x.RowStatus == true && x.Name.ToLower() == Warna.ToLower()).First().Id;
                             }
                             #endregion
 
