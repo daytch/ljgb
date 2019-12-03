@@ -36,7 +36,7 @@ namespace ljgb.BusinessLogic
         }
         #endregion
 
-
+         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         public async Task<TypeBarangResponse> GetAll(string search, string order, string orderDir, int startRec, int pageSize, int draw)
         {
             return await dep.GetAll(search, order, orderDir, startRec, pageSize, draw);
@@ -91,7 +91,7 @@ namespace ljgb.BusinessLogic
             }
             catch (Exception ex)
             {
-
+                log.Error(ex);
                 response.Message = ex.Message.ToString();
                 response.IsSuccess = false;
             }
@@ -150,7 +150,7 @@ namespace ljgb.BusinessLogic
             }
             catch (Exception ex)
             {
-
+                log.Error(ex);
                 response.Message = ex.Message.ToString();
                 response.IsSuccess = false;
             }
@@ -167,8 +167,9 @@ namespace ljgb.BusinessLogic
                 response.Message = "Success";
                 response.IsSuccess = true;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                log.Error(ex);
                 response.IsSuccess = false;
                 response.Message = "Failed";
             }

@@ -282,6 +282,7 @@ namespace ljgb.BusinessLogic
             }
             catch (Exception ex)
             {
+                log.Error(ex);
                 result.Message = ex.ToString();
                 result.IsSuccess = false;
 
@@ -440,6 +441,7 @@ namespace ljgb.BusinessLogic
             }
             catch (Exception ex)
             {
+                log.Error(ex);
                 throw ex;
             }
 
@@ -456,6 +458,7 @@ namespace ljgb.BusinessLogic
             }
             catch (Exception ex)
             {
+                log.Error(ex);
                 throw ex;
             }
 
@@ -471,6 +474,7 @@ namespace ljgb.BusinessLogic
             }
             catch (Exception ex)
             {
+                log.Error(ex);
                 throw ex;
             }
 
@@ -486,6 +490,7 @@ namespace ljgb.BusinessLogic
             }
             catch (Exception ex)
             {
+                log.Error(ex);
                 throw ex;
             }
 
@@ -501,6 +506,7 @@ namespace ljgb.BusinessLogic
             }
             catch (Exception ex)
             {
+                log.Error(ex);
                 throw ex;
             }
 
@@ -516,6 +522,7 @@ namespace ljgb.BusinessLogic
             }
             catch (Exception ex)
             {
+                log.Error(ex);
                 throw ex;
             }
 
@@ -531,6 +538,7 @@ namespace ljgb.BusinessLogic
             }
             catch (Exception ex)
             {
+                log.Error(ex);
                 throw ex;
             }
 
@@ -565,7 +573,7 @@ namespace ljgb.BusinessLogic
             }
             catch (Exception ex)
             {
-
+                log.Error(ex);
                 response.IsSuccess = false;
                 response.Message = ex.Message.ToString();
             }
@@ -588,6 +596,7 @@ namespace ljgb.BusinessLogic
             }
             catch (Exception ex)
             {
+                log.Error(ex);
                 throw ex;
             }
 
@@ -622,7 +631,7 @@ namespace ljgb.BusinessLogic
             }
             catch (Exception ex)
             {
-
+                log.Error(ex);
                 response.IsSuccess = false;
                 response.Message = ex.Message.ToString();
             }

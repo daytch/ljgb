@@ -205,8 +205,10 @@ namespace ljgb.API.Controllers
         [Route("GetPost")]
         public async Task<UserResponse> GetPost([FromBody]UserRequest request)
         {
+            string bearer = Request.HttpContext.Request.Headers["Authorization"];
+            string token = bearer.Substring("Bearer ".Length).Trim();
             UserResponse resp = new UserResponse();
-            string username = sec.ValidateToken(request.Token);
+            string username = sec.ValidateToken(token);
             if (!string.IsNullOrEmpty(username))
             {
                 try

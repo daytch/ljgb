@@ -122,7 +122,8 @@ namespace ljgb.API.Controllers
                     response.Message = "Your session was expired, please re-login.";
                     return BadRequest(response);
                 }
-
+                
+               
                 response = await facade.SubmitBuy(request.BarangID, request.Harga, username);
 
                 return Ok(response);
@@ -139,8 +140,6 @@ namespace ljgb.API.Controllers
         public async Task<IActionResult> SubmitSell([FromBody]TransactionRequest request)
         {
 
-            if (ModelState.IsValid)
-            {
                 try
                 {
                     TransactionResponse response = new TransactionResponse();
@@ -166,7 +165,8 @@ namespace ljgb.API.Controllers
                         response.Message = "Your session was expired, please re-login.";
                         return BadRequest(response);
                     }
-   
+                 
+                   
                     response = await facade.SubmitSell(request.BarangID, request.Harga, username);
 
                     if (response.IsSuccess)
@@ -208,8 +208,84 @@ namespace ljgb.API.Controllers
                 {
                     return BadRequest();
                 }
+
+        }
+
+
+        [HttpPost]
+        [Route("SubmitSellFrontEnd")]
+        public async Task<IActionResult> SubmitSellFrontEnd(long barangID, long harga)
+        {
+
+            try
+            {
+                TransactionResponse response = new TransactionResponse();
+
+                //string bearer = Request.HttpContext.Request.Headers["Authorization"];
+                //string token = bearer.Substring("Bearer ".Length).Trim();
+                //string username = string.Empty;
+                //if (string.IsNullOrEmpty(token))
+                //{
+                //    response.IsSuccess = false;
+                //    response.Message = "You don't have access.";
+                //    return BadRequest(response);
+                //}
+
+                //username = sec.ValidateToken(token);
+                //if (username == null)
+                //{
+                //    Response.HttpContext.Response.Cookies.Append("access_token", "", new CookieOptions()
+                //    {
+                //        Expires = DateTime.Now.AddDays(-1)
+                //    });
+                //    response.IsSuccess = false;
+                //    response.Message = "Your session was expired, please re-login.";
+                //    return BadRequest(response);
+                //}
+                string username = "testingdong@yopmail.com";
+
+                response = await facade.SubmitSell(barangID,harga, username);
+
+                if (response.IsSuccess)
+                {
+                    #region Sent Email to User
+                    SendEmail sendEmail = new SendEmail(_emailConfiguration);
+                    string contentEmail = configFacade.GetRedaksionalEmail("ContentEmailBuy").Result;
+                    string subjectEmail = configFacade.GetRedaksionalEmail("SubjectEmailBuy").Result;
+
+                    AuthenticationResponse authResp = await facade.GetUserProfile(username);
+
+                    EmailAddress emailAddress = new EmailAddress();
+                    emailAddress.Address = username;
+                    emailAddress.Name = authResp.Name;
+                    List<EmailAddress> listEmailAddress = new List<EmailAddress>();
+                    listEmailAddress.Add(emailAddress);
+
+                    contentEmail = contentEmail.Replace("[user]", emailAddress.Name);
+
+                    EmailAddress emailAddressFrom = new EmailAddress();
+                    emailAddressFrom.Address = "admin@lojualguebeli.com";
+                    emailAddressFrom.Name = "Lojualguebeli.com";
+                    List<EmailAddress> listEmailAddressFrom = new List<EmailAddress>();
+                    listEmailAddressFrom.Add(emailAddressFrom);
+
+                    EmailMessage emailMessage = new EmailMessage();
+                    emailMessage.ToAddresses = listEmailAddress;
+                    emailMessage.Subject = subjectEmail;
+                    emailMessage.FromAddresses = listEmailAddressFrom;
+                    emailMessage.Content = contentEmail;
+
+                    sendEmail.Send(emailMessage);
+                    #endregion
+                }
+
+                return Ok(response);
             }
-            return BadRequest();
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+
         }
 
         //[HttpPost]
@@ -549,9 +625,9 @@ namespace ljgb.API.Controllers
             TransactionResponse resp = new TransactionResponse();
             try
             {
-                //string bearer = Request.HttpContext.Request.Headers["Authorization"];
-                //string token = bearer.Substring("Bearer ".Length).Trim();
-                string token = req.Token;
+                string bearer = Request.HttpContext.Request.Headers["Authorization"];
+                string token = bearer.Substring("Bearer ".Length).Trim();
+                //string token = req.Token;
                 string username = string.Empty;
                 if (string.IsNullOrEmpty(token))
                 {

@@ -70,5 +70,15 @@ namespace ljgb.DataAccess.Repository
 
             return result;
         }
+
+        public async Task<UserDetail> GetUserDetailByID(long UserID)
+        {
+            UserDetail u = new UserDetail();
+            if (db != null)
+            {
+                u = await db.UserDetail.FirstOrDefaultAsync(x => x.RowStatus == true && x.UserProfileId == UserID); 
+            }
+            return u;
+        }
     }
 }

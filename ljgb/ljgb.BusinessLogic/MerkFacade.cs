@@ -19,7 +19,7 @@ namespace ljgb.BusinessLogic
         #region Important
         private ljgbContext db;
         private IMerk dep;
-
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         public MerkFacade()
         {
             var builder = new ConfigurationBuilder()
@@ -83,6 +83,7 @@ namespace ljgb.BusinessLogic
             }
             catch (Exception ex)
             {
+                log.Error(ex);
                 response.Message = ex.ToString();
                 response.IsSuccess = false;
             }
@@ -140,8 +141,9 @@ namespace ljgb.BusinessLogic
                 response.IsSuccess = true;
                 response.Message = "Success Get Merk";
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                log.Error(ex);
                 response.IsSuccess = false;
                 response.Message = "Something Error with System";
             }

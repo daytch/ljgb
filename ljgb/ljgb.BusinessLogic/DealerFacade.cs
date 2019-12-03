@@ -85,7 +85,7 @@ namespace ljgb.BusinessLogic
             }
             catch (Exception ex)
             {
-
+                log.Error(ex);
                 response.Message = ex.ToString();
                 response.IsSuccess = false;
             }
@@ -127,7 +127,7 @@ namespace ljgb.BusinessLogic
             }
             catch (Exception ex)
             {
-
+                log.Error(ex);
                 response.IsSuccess = false;
                 response.Message = ex.ToString();
             }
@@ -153,7 +153,7 @@ namespace ljgb.BusinessLogic
             }
             catch (Exception ex)
             {
-
+                log.Error(ex);
                 response.IsSuccess = false;
                 response.Message = ex.ToString();
             }
