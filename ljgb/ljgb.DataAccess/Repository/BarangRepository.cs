@@ -438,7 +438,7 @@ namespace ljgb.DataAccess.Repository
                 Barang b = await db.Barang.FirstOrDefaultAsync(x => x.RowStatus == true && x.Id == barang.Id);
                 ListBarang = await (from brg in db.Barang
                                     where brg.RowStatus == true && brg.TypeBarangId == b.TypeBarangId
-                                    && brg.WarnaId == b.WarnaId
+                                    && brg.WarnaId == b.WarnaId && brg.Name.ToLower() == b.Name.ToLower()
                                     select brg
                                 ).ToListAsync();
             }

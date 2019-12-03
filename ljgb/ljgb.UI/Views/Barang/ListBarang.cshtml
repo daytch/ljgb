@@ -39,6 +39,7 @@
                     <input type="hidden" class="form-control" id="BarangID">
                     <input type="hidden" class="form-control" id="ImagePath" />
                     <input type="hidden" class="form-control" id="HiddenModelID" />
+                    <input type="hidden" class="form-control" id="HiddenTypeID" />
 
                     <!-- datatable start -->
                     <table id="tableBarang" class="table table-bordered table-hover table-striped w-100">
@@ -372,6 +373,7 @@
             });
 
             $('#ModalEdit').on('show.bs.modal', function (e) {
+                debugger;
                 resetModal();
                 $('#HiddenModelID').val(e.relatedTarget.getAttribute('data-modelID'));
                 $('#HiddenTypeID').val(e.relatedTarget.getAttribute('data-typeBarangID'));

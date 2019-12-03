@@ -11,6 +11,7 @@ namespace ljgb.DataAccess.Model
         }
 
         public long Id { get; set; }
+        public string Sapcode { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public DateTime Created { get; set; }
@@ -18,7 +19,6 @@ namespace ljgb.DataAccess.Model
         public DateTime? Modified { get; set; }
         public string ModifiedBy { get; set; }
         public bool RowStatus { get; set; }
-        public string Sapcode { get; set; }
 
         public virtual ICollection<Barang> Barang { get; set; }
     }

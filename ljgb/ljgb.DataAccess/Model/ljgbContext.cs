@@ -44,6 +44,9 @@ namespace ljgb.DataAccess.Model
         public virtual DbSet<UserProfile> UserProfile { get; set; }
         public virtual DbSet<Vincode> Vincode { get; set; }
         public virtual DbSet<Warna> Warna { get; set; }
+
+
+
         public virtual DbSet<Car> Car { get; set; }
         public virtual DbSet<CarAsks> CarAsks { get; set; }
         public virtual DbSet<CarDetail> CarDetail { get; set; }
@@ -63,13 +66,14 @@ namespace ljgb.DataAccess.Model
         public virtual DbSet<SP_GetTypeBarangByBarangID> SP_GetTypeBarangByBarangID { get; set; }
         public virtual DbSet<CarBids> CarBids { get; set; }
         public virtual DbSet<sp_GetAllBidAndBuyByUserProfileID> sp_GetAllBidAndBuyByUserProfileID { get; set; }
-        public virtual DbSet<sp_GetWarnaWithTypeBarang> sp_GetWarnaWithTypeBarang { get; set; }
+
+
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Server=GONNA-BE-GOOD\\SQLEXPRESS;Database=ljgb;Trusted_Connection=True;");
+                optionsBuilder.UseSqlServer("Server=localhost\\SQLEXPRESS;Database=ljgb;Trusted_Connection=True;");
             }
         }
 
@@ -193,7 +197,7 @@ namespace ljgb.DataAccess.Model
                 entity.Property(e => e.HargaOtr).HasColumnName("HargaOTR");
 
                 entity.Property(e => e.KodeType)
-                    .HasMaxLength(50)
+                    .HasMaxLength(500)
                     .IsUnicode(false);
 
                 entity.Property(e => e.KotaId).HasColumnName("KotaID");
@@ -206,12 +210,10 @@ namespace ljgb.DataAccess.Model
 
                 entity.Property(e => e.Name)
                     .IsRequired()
-                    .HasMaxLength(250)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.PhotoPath)
                     .HasMaxLength(500)
                     .IsUnicode(false);
+
+                entity.Property(e => e.PhotoPath).IsUnicode(false);
 
                 entity.Property(e => e.TypeBarangId).HasColumnName("TypeBarangID");
 
@@ -428,6 +430,12 @@ namespace ljgb.DataAccess.Model
                     .IsUnicode(false);
 
                 entity.Property(e => e.UserProfileId).HasColumnName("UserProfileID");
+
+                entity.HasOne(d => d.Barang)
+                    .WithMany(p => p.NegoBarang)
+                    .HasForeignKey(d => d.BarangId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_NegoBarang_Barang");
 
                 entity.HasOne(d => d.UserProfile)
                     .WithMany(p => p.NegoBarang)
@@ -707,9 +715,7 @@ namespace ljgb.DataAccess.Model
                     .HasMaxLength(250)
                     .IsUnicode(false);
 
-                entity.Property(e => e.Description)
-                    .HasMaxLength(250)
-                    .IsUnicode(false);
+                entity.Property(e => e.Description).IsUnicode(false);
 
                 entity.Property(e => e.ModelBarangId).HasColumnName("ModelBarangID");
 
@@ -721,7 +727,6 @@ namespace ljgb.DataAccess.Model
 
                 entity.Property(e => e.Name)
                     .IsRequired()
-                    .HasMaxLength(250)
                     .IsUnicode(false);
 
                 entity.HasOne(d => d.ModelBarang)

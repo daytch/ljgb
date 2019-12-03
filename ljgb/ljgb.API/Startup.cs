@@ -121,6 +121,8 @@ namespace ljgb.API
                 app.UseHsts();
             }
 
+            app.UseHttpsRedirection();
+
             app.UseStaticFiles(new StaticFileOptions()
             {
                 FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"Resources")),
