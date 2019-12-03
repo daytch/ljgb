@@ -142,6 +142,25 @@ namespace ljgb.BusinessLogic
             NegoBarang nego = new NegoBarang() { BarangId = id, TypePenawaran = "bid", Harga = nominal };
             NegoBarang ResultNego = await INego.GetNegoBarang(nego);
             UserProfile usrSell = await IAuth.GetUserProfileByEmail(username);
+            UserDetail userDetail = await IAuth.GetUserDetailByID(usrSell.Id);
+            if (userDetail == null)
+            {
+                response.IsSuccess = false;
+                response.Message = "Pastikan Anda adalah Seller yang terverifikasi";
+                return response;
+            }
+            if (userDetail.Description == null || userDetail.Description.ToLower() != "seller")
+            {
+                response.IsSuccess = false;
+                response.Message = "Pastikan Anda adalah Seller yang terverifikasi";
+                return response;
+            }
+            if (ResultNego == null)
+            {
+                response.Message = "Failed When Save Transaction";
+                response.IsSuccess = false;
+                return response;
+            }
             Transaction tran = new Transaction()
             {
                 BuyerId = ResultNego.UserProfileId,
@@ -242,7 +261,7 @@ namespace ljgb.BusinessLogic
             }
             catch (Exception ex)
             {
-
+                log.Error(ex);
                 response.IsSuccess = false;
                 response.Message = ex.ToString();
             }
@@ -319,7 +338,7 @@ namespace ljgb.BusinessLogic
             }
             catch (Exception ex)
             {
-
+                log.Error(ex);
                 response.IsSuccess = false;
                 response.Message = ex.ToString();
             }
@@ -525,7 +544,7 @@ namespace ljgb.BusinessLogic
             }
             catch (Exception ex)
             {
-
+                log.Error(ex);
                 throw ex;
             }
 
@@ -542,6 +561,7 @@ namespace ljgb.BusinessLogic
             }
             catch (Exception ex)
             {
+                log.Error(ex);
                 response.IsSuccess = false;
                 response.Message = ex.Message.ToString();
             }
@@ -559,6 +579,7 @@ namespace ljgb.BusinessLogic
             }
             catch (Exception ex)
             {
+                log.Error(ex);
                 response.IsSuccess = false;
                 response.Message = ex.Message.ToString();
             }

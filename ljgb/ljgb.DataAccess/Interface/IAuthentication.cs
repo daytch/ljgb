@@ -12,5 +12,7 @@ namespace ljgb.DataAccess.Interface
         Task<bool> IsUserActive(string email);
 
         Task<long> Save(UserProfile user);
+
+        Task<UserDetail> GetUserDetailByID(long UserID);
     }
 }

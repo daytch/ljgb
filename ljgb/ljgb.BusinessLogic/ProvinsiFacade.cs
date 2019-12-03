@@ -37,7 +37,7 @@ namespace ljgb.BusinessLogic
             this.dep = new ProvinsiRepository(db);
         }
         #endregion
-
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         public async Task<ProvinsiResponse> GetAll(string search, string order, string orderDir, int startRec, int pageSize, int draw)
         {
             var models = await dep.GetAll(search, order, orderDir, startRec, pageSize, draw);
@@ -120,7 +120,7 @@ namespace ljgb.BusinessLogic
             }
             catch (Exception ex)
             {
-
+                log.Error(ex);
                 response.Message = ex.ToString();
                 response.IsSuccess = false;
             }
@@ -205,7 +205,7 @@ namespace ljgb.BusinessLogic
             }
             catch (Exception ex)
             {
-
+                log.Error(ex);
                 response.Message = ex.ToString();
                 response.IsSuccess = false;
             }

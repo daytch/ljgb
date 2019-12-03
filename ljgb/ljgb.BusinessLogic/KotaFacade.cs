@@ -21,7 +21,7 @@ namespace ljgb.BusinessLogic
         #region Important
         private ljgbContext db;
         private IKota dep;
-
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         public KotaFacade()
         {
             var builder = new ConfigurationBuilder()
@@ -36,6 +36,7 @@ namespace ljgb.BusinessLogic
 
             db = new ljgbContext(optionsBuilder.Options);
             this.dep = new KotaRepository(db);
+
         }
         #endregion
 
@@ -142,8 +143,9 @@ namespace ljgb.BusinessLogic
                     response.IsSuccess = false;
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                log.Error(ex);
                 response.Message = "Failed";
                 response.IsSuccess = false;
             }

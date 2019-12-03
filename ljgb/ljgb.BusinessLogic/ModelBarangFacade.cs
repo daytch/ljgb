@@ -19,7 +19,7 @@ namespace ljgb.BusinessLogic
         #region Important
         private ljgbContext db;
         private IModelBarang dep;
-
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         public ModelBarangFacade()
         {
             var builder = new ConfigurationBuilder()
@@ -99,7 +99,7 @@ namespace ljgb.BusinessLogic
             }
             catch (Exception ex)
             {
-
+                log.Error(ex);
                 response.Message = ex.ToString();
                 response.IsSuccess = false;
             }
@@ -157,7 +157,7 @@ namespace ljgb.BusinessLogic
             }
             catch (Exception ex)
             {
-
+                log.Error(ex);
                 response.Message = ex.ToString();
                 response.IsSuccess = false;
             }

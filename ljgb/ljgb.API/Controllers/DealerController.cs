@@ -34,6 +34,7 @@ namespace ljgb.API.Controllers
             }
             catch (Exception ex)
             {
+
                 return BadRequest(ex);
             }
         }

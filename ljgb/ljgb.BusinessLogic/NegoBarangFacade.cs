@@ -40,7 +40,7 @@ namespace ljgb.BusinessLogic
             iBarang = new BarangRepository(db);
         }
         #endregion
-
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         public async Task<NegoBarangResponse> GetAll()
         {
             var models = await dep.GetAll();
@@ -118,7 +118,7 @@ namespace ljgb.BusinessLogic
             }
             catch (Exception ex)
             {
-
+                log.Error(ex);
                 response.IsSuccess = false;
                 response.Message = ex.Message.ToString();
             }
@@ -134,6 +134,19 @@ namespace ljgb.BusinessLogic
             NegoBarangResponse response = new NegoBarangResponse();
             NegoBarang model = new NegoBarang();
             UserProfile userProfile = await IAuth.GetUserProfileByEmail(req.UserName);
+            UserDetail userDetail = await IAuth.GetUserDetailByID(userProfile.Id);
+            if (userDetail == null)
+            {
+                response.IsSuccess = false;
+                response.Message = "Pastikan Anda adalah Seller yang terverifikasi";
+                return response;
+            }
+            if (userDetail.Description == null || userDetail.Description.ToLower() != "seller")
+            {
+                response.IsSuccess = false;
+                response.Message = "Pastikan Anda adalah Seller yang terverifikasi";
+                return response;
+            }
             try
             {
                 if (req.ID > 0)
@@ -181,7 +194,7 @@ namespace ljgb.BusinessLogic
             }
             catch (Exception ex)
             {
-
+                log.Error(ex);
                 response.IsSuccess = false;
                 response.Message = ex.Message.ToString();
             }
@@ -378,7 +391,7 @@ namespace ljgb.BusinessLogic
             }
             catch (Exception ex)
             {
-
+                log.Error(ex);
                 response.IsSuccess = false;
                 response.Message = ex.Message.ToString();
             }
