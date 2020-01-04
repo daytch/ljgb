@@ -14,7 +14,7 @@
       "launchBrowser": true,
       "launchUrl": "api/values",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development",
+        "ASPNETCORE_ENVIRONMENT": "Production",
         "Kata_Paling_Rahasia": "GAOf+zeIsyC+JpIPlyM0UxIB31gN0uvZ6LllWoZ1e5A="
       }
     },

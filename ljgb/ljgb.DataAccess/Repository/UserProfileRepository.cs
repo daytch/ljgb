@@ -279,7 +279,6 @@ namespace ljgb.DataAccess.Repository
                 throw ex;
             }
         }
-
         //public Task<bool> UpdatePassword(UserProfile userProfile)
         //{
         //    bool result = true;

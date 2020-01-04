@@ -337,107 +337,115 @@ namespace ljgb.BusinessLogic
                 UserProfile user = new UserProfile();
                 UserDetail detail = new UserDetail();
 
-                #region Insert Profile
-                if (model.Id < 1)
+                if (dep.GetPost(model.Email) != null)
                 {
-                    user = new UserProfile()
+                    #region Insert Profile
+                    if (model.Id < 1)
                     {
-                        Nama = model.Nama,
-                        Email = model.Email,
-                        Telp = model.Telp,
-                        Alamat = model.Alamat,
-                        KotaId = model.KotaId,
-                        JenisKelamin = model.JenisKelamin,
-                        Password = security.GetSHA1(model.Email, model.Password),
+                        user = new UserProfile()
+                        {
+                            Nama = model.Nama,
+                            Email = model.Email,
+                            Telp = model.Telp,
+                            Alamat = model.Alamat,
+                            KotaId = model.KotaId,
+                            JenisKelamin = model.JenisKelamin,
+                            Password = security.GetSHA1(model.Email, model.Password),
 
-                        Created = DateTime.Now,
-                        CreatedBy = "Admin",
-                        RowStatus = true
-                    };
+                            Created = DateTime.Now,
+                            CreatedBy = "Admin",
+                            RowStatus = true
+                        };
 
-                    long userID = await dep.AddPost(user);
-                    if (userID < 1)
-                    {
-                        response.IsSuccess = false;
-                        response.Message = "Failed When save to table UserProfile";
-                        return response;
+                        long userID = await dep.AddPost(user);
+                        if (userID < 1)
+                        {
+                            response.IsSuccess = false;
+                            response.Message = "Failed When save to table UserProfile";
+                            return response;
+                        }
                     }
+                    else
+                    {
+                        user = await dep.Select(Convert.ToInt64(model.Id));
+                        if (user == null)
+                        {
+                            response.IsSuccess = false;
+                            response.Message = "Failed When get UserProfile.";
+                            return response;
+                        }
+
+                        user.Nama = model.Nama;
+                        user.Email = model.Email;
+                        user.Telp = model.Telp;
+                        user.Alamat = model.Alamat;
+                        user.KotaId = model.KotaId;
+                        user.JenisKelamin = model.JenisKelamin;
+
+                        user.Modified = DateTime.Now;
+                        user.ModifiedBy = "Admin";
+                        bool result = await dep.Update(user);
+                        if (!result)
+                        {
+                            response.IsSuccess = false;
+                            response.Message = "Failed When save to table UserProfile";
+                            return response;
+                        }
+                    }
+                    #endregion
+
+                    #region Insert UserDetail
+                    detail = await IDetail.SelectByUserProfileID(user.Id);
+                    if (detail == null)
+                    {
+                        detail = new UserDetail()
+                        {
+                            UserProfileId = Convert.ToInt32(user.Id),
+                            VerifiedBy = "Admin",
+                            VerifiedDate = DateTime.Now,
+                            Description = "seller",
+                            KodeDealer = model.KodeDealer,
+
+                            Created = DateTime.Now,
+                            CreatedBy = "Admin",
+                            RowStatus = true
+                        };
+                        long DetailID = await IDetail.SaveUserDetail(detail);
+                        if (DetailID < 1)
+                        {
+                            response.IsSuccess = false;
+                            response.Message = "Failed When save to table UserDetail";
+                            return response;
+                        }
+                    }
+                    else
+                    {
+                        detail.UserProfileId = Convert.ToInt32(user.Id);
+                        detail.VerifiedBy = "Admin";
+                        detail.VerifiedDate = DateTime.Now;
+                        detail.Description = "seller";
+                        detail.KodeDealer = model.KodeDealer;
+
+                        detail.Modified = DateTime.Now;
+                        detail.ModifiedBy = "Admin";
+                        bool result = await IDetail.Update(detail);
+                        if (!result)
+                        {
+                            response.IsSuccess = false;
+                            response.Message = "Failed When save to table UserDetail";
+                            return response;
+                        }
+                    }
+                    #endregion
+
+                    response.Message = "Save Userprofile & UserDetail Success.";
+                    response.IsSuccess = true;
                 }
                 else
                 {
-                    user = await dep.Select(Convert.ToInt64(model.Id));
-                    if (user == null)
-                    {
-                        response.IsSuccess = false;
-                        response.Message = "Failed When get UserProfile.";
-                        return response;
-                    }
-
-                    user.Nama = model.Nama;
-                    user.Email = model.Email;
-                    user.Telp = model.Telp;
-                    user.Alamat = model.Alamat;
-                    user.KotaId = model.KotaId;
-                    user.JenisKelamin = model.JenisKelamin;
-
-                    user.Modified = DateTime.Now;
-                    user.ModifiedBy = "Admin";
-                    bool result = await dep.Update(user);
-                    if (!result)
-                    {
-                        response.IsSuccess = false;
-                        response.Message = "Failed When save to table UserProfile";
-                        return response;
-                    }
+                    response.Message = "Sorry Email already exist in our database. Please change with another email.";
+                    response.IsSuccess = false;
                 }
-                #endregion
-
-                #region Insert UserDetail
-                detail = await IDetail.SelectByUserProfileID(user.Id);
-                if (detail == null)
-                {
-                    detail = new UserDetail()
-                    {
-                        UserProfileId = Convert.ToInt32(user.Id),
-                        VerifiedBy = "Admin",
-                        VerifiedDate = DateTime.Now,
-                        Description = "seller",
-                        KodeDealer = model.KodeDealer,
-
-                        Created = DateTime.Now,
-                        CreatedBy = "Admin",
-                        RowStatus = true
-                    };
-                    long DetailID = await IDetail.SaveUserDetail(detail);
-                    if (DetailID < 1)
-                    {
-                        response.IsSuccess = false;
-                        response.Message = "Failed When save to table UserDetail";
-                        return response;
-                    }
-                }
-                else
-                {
-                    detail.UserProfileId = Convert.ToInt32(user.Id);
-                    detail.VerifiedBy = "Admin";
-                    detail.VerifiedDate = DateTime.Now;
-                    detail.Description = "seller";
-                    detail.KodeDealer = model.KodeDealer;
-
-                    detail.Modified = DateTime.Now;
-                    detail.ModifiedBy = "Admin";
-                    bool result = await IDetail.Update(detail);
-                    if (!result)
-                    {
-                        response.IsSuccess = false;
-                        response.Message = "Failed When save to table UserDetail";
-                        return response;
-                    }
-                }
-                #endregion
-
-                response.Message = "Save Userprofile & UserDetail Success.";
-                response.IsSuccess = true;
             }
             catch (Exception ex)
             {
