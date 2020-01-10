@@ -150,7 +150,7 @@
 
                             <div class="form-group">
                                 <label class="form-label" for="example-textarea">Harga OTR</label>
-                                <input type="text" id="hargaOTR" name="Nama" onkeypress="return isNumberKey(event)" class="form-control" required>
+                                <input type="text" id="hargaOTR" name="Nama" onkeypress="return isNumberKey(event)" onInput ="formatRupiahWithSelector('#hargaOTR')" class="form-control" required>
                                 <div class="invalid-feedback">
                                     Please Input Harga OTR
                                 </div>
@@ -158,7 +158,7 @@
 
                             <div class="form-group">
                                 <label class="form-label" for="example-textarea">Tahun</label>
-                                <input type="text" id="tahun" name="Tahun" onkeypress="return isNumberKey(event)" class="form-control" required>
+                                <input type="text" id="tahun" name="Tahun" onkeypress="return isNumberKey(event)"  class="form-control" required>
                                 <div class="invalid-feedback">
                                     Please Input Tahun
                                 </div>
@@ -184,8 +184,9 @@
 </div>
 
 @section Scripts {
-    <script type="text/javascript">
 
+    <script type="text/javascript">
+       
         function isNumberKey(evt) {
             var charCode = (evt.which) ? evt.which : event.keyCode
             if (charCode > 31 && (charCode < 48 || charCode > 57))
@@ -194,10 +195,53 @@
             return true;
         }
 
+       
+        function formatRupiahWithSelector(input) {
+
+            var number_without_separator = $(input).val().toString().split('.'),
+                number_string = number_without_separator.join('').toString(),
+                sisa = number_string.length % 3,
+                rupiah = number_string.substr(0, sisa),
+                ribuan = number_string.substr(sisa).match(/\d{3}/g);
+            if (ribuan) {
+                separator = sisa ? '.' : '';
+                rupiah += separator + ribuan.join('.');
+            }
+            $(input).val(rupiah) ;
+        }
+        function formatRupiah(input) {
+
+            var number_string = input.toString(),
+                sisa = number_string.length % 3,
+                rupiah = number_string.substr(0, sisa),
+                ribuan = number_string.substr(sisa).match(/\d{3}/g);
+            if (ribuan) {
+                separator = sisa ? '.' : '';
+                rupiah += separator + ribuan.join('.');
+            }
+            return rupiah;
+        }
+        function formatMoney(amount, decimalCount = 2, decimal = ",", thousands = ".") {
+            try {
+                decimalCount = Math.abs(decimalCount);
+                decimalCount = isNaN(decimalCount) ? 2 : decimalCount;
+
+                const negativeSign = amount < 0 ? "-" : "";
+
+                let i = parseInt(amount = Math.abs(Number(amount) || 0).toFixed(decimalCount)).toString();
+                let j = (i.length > 3) ? i.length % 3 : 0;
+                
+                var result = negativeSign + (j ? i.substr(0, j) + thousands : '') + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + thousands) + (decimalCount ? decimal + Math.abs(amount - i).toFixed(decimalCount).slice(2) : "");
+                return result;
+            } catch (e) {
+                console.log(e)
+            }
+        };
         var OldImage = "";
         var url = "";
         var imageUrl = "";
         $(document).ready(function () {
+  
             moment.locale('ID');
             url = "@ViewBag.url_api";
             imageUrl = url;
@@ -326,7 +370,9 @@
                     },
 
                     {
-                        data: "hargaOtr",
+                        mRender: function (a, e, t) {
+                            return 'Rp.' +formatRupiah(t.hargaOtr);
+                        },
                         width: "15%"
                     },
                     {
@@ -346,7 +392,9 @@
                         }
                     },
                     {
+                        
                         mRender: function (a, e, t) {
+
                             return '<a class="btn btn-xs btn-success waves-effect waves-themed"  data-id="' + t.id + '" data-merkID="' + t.merkBarangID + '" data-modelID="' + t.modelBarangID + '" data-typeBarangID="' + t.typeBarangId + '" data-warnaID="' + t.warnaId + '"   data-hargaOTR="' + t.hargaOtr + '"  data-Photo="' + t.photoPath + '" data-KotaID="' + t.kotaID + '" data-Year="' + t.year +'" data-toggle="modal" data-target="#ModalEdit"><i class="fas fa-edit"></i></a> '
                                 + '<a class="btn btn-xs btn-danger waves-effect waves-themed"   data-id="' + t.id + '" data-toggle="modal" data-target="#ModalDelete"><i class="fas fa-trash-alt"></i></a>';
                         },
@@ -373,7 +421,6 @@
             });
 
             $('#ModalEdit').on('show.bs.modal', function (e) {
-                debugger;
                 resetModal();
                 $('#HiddenModelID').val(e.relatedTarget.getAttribute('data-modelID'));
                 $('#HiddenTypeID').val(e.relatedTarget.getAttribute('data-typeBarangID'));
@@ -389,7 +436,7 @@
                 $('#dropdownMerk').val(e.relatedTarget.getAttribute('data-merkID'))
                 $('#dropdownKota').val(e.relatedTarget.getAttribute('data-KotaID'))
                 $('#dropdownWarna').val(e.relatedTarget.getAttribute('data-warnaID'))
-                $('#hargaOTR').val(e.relatedTarget.getAttribute('data-hargaOTR'));
+                $('#hargaOTR').val(formatRupiah( e.relatedTarget.getAttribute('data-hargaOTR')));
                 $('#tahun').val(e.relatedTarget.getAttribute('data-Year'));
                 var valuesMerk = {
                     merkID: $('#dropdownMerk').val()
@@ -418,7 +465,7 @@
                         var values = {
                             ID: ($("#BarangID").val()) ? $("#BarangID").val() : 0,
                             Name: $('#dropdownMerk option:selected').text() + " " + $('#dropdownModelBarang option:selected').text() + "" + $('#dropdownType option:selected').text(),
-                            HargaOtr: $('#hargaOTR').val(),
+                            HargaOtr: $('#hargaOTR').val().toString().split('.').join('').toString(),
                             WarnaID: $('#dropdownWarna').val(),
                             TypeBarangID: $('#dropdownType').val(),
                             //PhotoPath: $('#ImagePath').val(),

@@ -459,6 +459,19 @@
 
             return true;
         }
+        function formatRupiah(input) {
+
+
+            var number_string = input.toString(),
+                sisa = number_string.length % 3,
+                rupiah = number_string.substr(0, sisa),
+                ribuan = number_string.substr(sisa).match(/\d{3}/g);
+            if (ribuan) {
+                separator = sisa ? '.' : '';
+                rupiah += separator + ribuan.join('.');
+            }
+            return rupiah;
+        }
         $(document).ready(function () {
             moment.locale('ID');
             var url = "@ViewBag.url_api";
@@ -537,11 +550,15 @@
                         width: "10%"
                     },
                     {
-                        data: "hargaNego",
+                        mRender: function (a, e, t) {
+                            return 'Rp.' +formatRupiah(t.hargaNego);
+                        },
                         width: "10%"
                     },
                     {
-                        data: "hargaOTR",
+                        mRender: function (a, e, t) {
+                            return 'Rp.'+ formatRupiah(t.hargaOTR);
+                        },
                         width: "10%"
                     },
                     {
@@ -651,7 +668,7 @@
             });
             $('#ModalEdit').on('show.bs.modal', function (e) {
                 resetModal();
-                debugger;
+               
                 $('#NamaUser').val(e.relatedTarget.getAttribute('data-nama'));
                 $('#Email').val(e.relatedTarget.getAttribute('data-email'));
                 $('#Telp').val(e.relatedTarget.getAttribute('data-telp'));
@@ -661,7 +678,7 @@
             });
             $('#ModalWaitingVerification').on('show.bs.modal', function (e) {
                 resetModal();
-                debugger;
+                
                 $('#TransactionID').val(e.relatedTarget.getAttribute('data-TransactionID'));
                 $('#modalVerificationName').val(e.relatedTarget.getAttribute('data-nama'));
                 $('#modalVerificationEmail').val(e.relatedTarget.getAttribute('data-email'));
@@ -815,7 +832,7 @@
                 $("#ModalSave").modal('hide');
                 $(document.body).removeClass('modal-open');
                 $('.modal-backdrop').remove();
-                debugger;
+             
                 LoadingMask.show();
                 var values = {
                     id: $("#TransactionID").val()

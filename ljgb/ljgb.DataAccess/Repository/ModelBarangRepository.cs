@@ -219,7 +219,7 @@ namespace ljgb.DataAccess.Repository
                                                Modified = model.Modified,
                                                ModifiedBy = model.ModifiedBy,
                                                RowStatus = model.RowStatus
-                                           }).ToListAsync();
+                                           }).OrderBy(x=>x.Name).ToListAsync();
                     response.Message = "Load Success";
                     response.IsSuccess = true;
                 }

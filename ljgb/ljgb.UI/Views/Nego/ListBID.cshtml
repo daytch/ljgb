@@ -93,6 +93,20 @@
         $(document).ready(function () {
             moment.locale('ID');
             var url = "@ViewBag.url_api";
+            function formatRupiah(input) {
+
+
+                var number_string = input.toString(),
+                    sisa = number_string.length % 3,
+                    rupiah = number_string.substr(0, sisa),
+                    ribuan = number_string.substr(sisa).match(/\d{3}/g);
+                debugger;
+                if (ribuan) {
+                    separator = sisa ? '.' : '';
+                    rupiah += separator + ribuan.join('.');
+                }
+                return rupiah;
+            }
             $('#btn-save').on('click', function () {
                 var values = {
                     //BuyerID: $('#BuyerID').val(),
@@ -169,7 +183,9 @@
                         width: "25%"
                     },
                     {
-                        data: "harga",
+                        mRender: function (a, e, t) {
+                            return 'Rp.' + formatRupiah(t.harga);
+                        },
                         width: "15%"
                     },
                     //{
