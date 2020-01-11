@@ -1,6 +1,8 @@
 ﻿using ljgb.BusinessLogic;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.IdentityModel.Tokens.Jwt;
@@ -13,8 +15,9 @@ namespace ljgb.API.Core
     {
         private readonly RequestDelegate next;
         private static bool IsProduction;
+        private readonly AuthenticationFacade facade;
 
-        public AuthenticationMiddleware(RequestDelegate next)
+        public AuthenticationMiddleware(RequestDelegate next,UserManager<IdentityUser> _userManager, IEmailSender _emailSender, SignInManager<IdentityUser> _signInManager)
         {
 
             var builder = new ConfigurationBuilder()
@@ -40,7 +43,6 @@ namespace ljgb.API.Core
                 if (authoriztionHeader != null && authoriztionHeader.StartsWith("Bearer"))
                 {
                     Security sec = new Security();
-                    AuthenticationFacade facade = new AuthenticationFacade();
                     string token = authoriztionHeader.Substring("Bearer ".Length).Trim();
 
                     JwtSecurityTokenHandler jwthandler = new JwtSecurityTokenHandler();
@@ -77,7 +79,6 @@ namespace ljgb.API.Core
                     if (authoriztionHeader != null && authoriztionHeader.StartsWith("Bearer"))
                     {
                         Security sec = new Security();
-                        AuthenticationFacade facade = new AuthenticationFacade();
                         string token = authoriztionHeader.Substring("Bearer ".Length).Trim();
 
                         JwtSecurityTokenHandler jwthandler = new JwtSecurityTokenHandler();

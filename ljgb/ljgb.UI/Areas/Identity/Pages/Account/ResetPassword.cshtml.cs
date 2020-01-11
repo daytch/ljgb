@@ -1,20 +1,33 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.IO;
 using System.Threading.Tasks;
+using ljgb.Common.Responses;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.Configuration;
+using Flurl.Http;
 
 namespace ljgb.UI.Areas.Identity.Pages.Account
 {
     [AllowAnonymous]
     public class ResetPasswordModel : PageModel
     {
+        private static string api_url = string.Empty;
         private readonly UserManager<IdentityUser> _userManager;
 
         public ResetPasswordModel(UserManager<IdentityUser> userManager)
         {
             _userManager = userManager;
+
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+
+            IConfigurationRoot configuration = builder.Build();
+
+            api_url = configuration.GetSection("API_url").Value;
         }
 
         [BindProperty]
@@ -37,6 +50,7 @@ namespace ljgb.UI.Areas.Identity.Pages.Account
             public string ConfirmPassword { get; set; }
 
             public string Code { get; set; }
+            public string ErrorMessage { get; set; }
         }
 
         public IActionResult OnGet(string code = null)
@@ -62,24 +76,21 @@ namespace ljgb.UI.Areas.Identity.Pages.Account
                 return Page();
             }
 
-            var user = await _userManager.FindByEmailAsync(Input.Email);
-            if (user == null)
+            string url = api_url + "Auth/ChangePassword";
+            UserResponse response = await url.PostJsonAsync(new
             {
-                // Don't reveal that the user does not exist
+                Email = Input.Email
+            }).ReceiveJson<UserResponse>();
+
+            if (response.IsSuccess)
+            {
                 return RedirectToPage("./ResetPasswordConfirmation");
             }
-
-            var result = await _userManager.ResetPasswordAsync(user, Input.Code, Input.Password);
-            if (result.Succeeded)
+            else
             {
-                return RedirectToPage("./ResetPasswordConfirmation");
-            }
-
-            foreach (var error in result.Errors)
-            {
-                ModelState.AddModelError(string.Empty, error.Description);
-            }
-            return Page();
+                Input.ErrorMessage = response.Message;
+                return Page();
+            }            
         }
     }
 }

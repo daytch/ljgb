@@ -262,21 +262,6 @@ namespace ljgb.BusinessLogic
 
             try
             {
-                #region Old
-                //Barang model = new Barang()
-                //{
-                //    Id = request.ID
-                //};
-                //List<Barang> ListBarang = await dep.GetAllBarangSameTypeAndKota(model);
-
-                //foreach (Barang brg in ListBarang)
-                //{
-                //    brg.PhotoPath = request.PhotoPath;
-                //    brg.Modified = DateTime.Now;
-                //    brg.ModifiedBy = username;
-                //}
-                #endregion
-
                 TypeBarangRequest typeRequest = new TypeBarangRequest();
                 typeRequest.ID = request.TypeBarangId;
                 var getTYpe = da_type.GetPost(typeRequest).Result;

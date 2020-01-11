@@ -24,8 +24,7 @@ namespace ljgb.API.Controllers
         private readonly IEmailSender emailSender;
         private readonly SignInManager<IdentityUser> signInManager;
         private Security sec = new Security();
-        private string access_token = "";
-        private string url = "";
+        private string url = string.Empty;
 
         public UserController(UserManager<IdentityUser> _userManager, IEmailSender _emailSender, SignInManager<IdentityUser> _signInManager, IConfiguration config)
         {
@@ -127,59 +126,6 @@ namespace ljgb.API.Controllers
                 return BadRequest(ex);
             }
         }
-
-        //[HttpPost]
-        //[Route("SaveUserDetail")]
-        //public async Task<IActionResult> SaveUserDetail([FromBody]UserRequest request)
-        //{
-        //    UserResponse resp = new UserResponse();
-        //    try
-        //    {
-        //        bool posts = await facade.SaveUserDetail(request);
-        //        resp.IsSuccess = posts;
-        //        if (posts)
-        //        {
-        //            resp.Message = "Success When Update UserDetail.";
-        //        }
-        //        else
-        //        {
-        //            resp.Message = "Failed when Update UserDetail.";
-        //        }
-
-        //        return Ok(resp);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        resp.Message = ex.ToString();
-        //        resp.IsSuccess = false;
-        //    }
-        //    return Ok(resp);
-        //}
-
-        //[HttpPost]
-        //[Route("DeleteUserDetail")]
-        //public async Task<IActionResult> DeleteUserDetail([FromBody]UserRequest request)
-        //{
-        //    UserResponse resp = new UserResponse();
-        //    try
-        //    {
-        //        resp.IsSuccess = await facade.DeleteUserDetail(request);
-        //        if (resp.IsSuccess)
-        //        {
-        //            resp.Message = "Success when deleted data.";
-        //        }
-        //        else
-        //        {
-        //            resp.Message = "Failed when deleted data.";
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        resp.IsSuccess = false;
-        //        resp.Message = ex.ToString();
-        //    }
-        //    return Ok(resp);
-        //}
 
         [HttpPost]
         [Route("GetPosts")]
@@ -498,7 +444,6 @@ namespace ljgb.API.Controllers
             UserResponse resp = new UserResponse();
             try
             {
-
                 string bearer = Request.HttpContext.Request.Headers["Authorization"];
                 string token = bearer.Substring("Bearer ".Length).Trim();
                 //string token = req.Token;
