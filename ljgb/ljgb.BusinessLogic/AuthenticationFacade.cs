@@ -21,13 +21,13 @@ namespace ljgb.BusinessLogic
         private IUser userDA;
         private Security security;
 
-        private readonly UserManager<IdentityUser> userManager;
-        private readonly IEmailSender emailSender;
-        private readonly SignInManager<IdentityUser> signInManager;
+        //private readonly UserManager<IdentityUser> userManager;
+        //private readonly IEmailSender emailSender;
+        //private readonly SignInManager<IdentityUser> signInManager;
 
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        public AuthenticationFacade(UserManager<IdentityUser> _userManager, IEmailSender _emailSender, SignInManager<IdentityUser> _signInManager)
+        public AuthenticationFacade()//UserManager<IdentityUser> _userManager, IEmailSender _emailSender, SignInManager<IdentityUser> _signInManager)
         {
             var builder = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
@@ -43,7 +43,7 @@ namespace ljgb.BusinessLogic
 
             db = new ljgbContext(optionsBuilder.Options);
             dataAccess = new AuthenticationRepository(db);
-            userDA= new UserProfileRepository(db, userManager, emailSender, signInManager);
+            userDA = new UserProfileRepository(db);
         }
         #endregion
         public async Task<AuthenticationResponse> Login(UserRequest user)

@@ -245,29 +245,29 @@ namespace ljgb.API.Controllers
             }
         }
 
-        [HttpPost]
-        [Route("Register")]
-        public async Task<RegisterResponse> Register([FromBody]UserRequest model)
-        {
-            //return await userManager.CreateAsync(model.user, model.password);
-            IdentityResult result = new IdentityResult();
-            RegisterResponse resp = new RegisterResponse();
-            try
-            {
-                result = await facade.Register(model);
-                resp = new RegisterResponse()
-                {
-                    Succeeded = result.Succeeded,
-                    Errors = result.Errors
-                };
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-            return resp;
-            //return await facade.Register(model);
-        }
+        //[HttpPost]
+        //[Route("Register")]
+        //public async Task<RegisterResponse> Register([FromBody]UserRequest model)
+        //{
+        //    //return await userManager.CreateAsync(model.user, model.password);
+        //    IdentityResult result = new IdentityResult();
+        //    RegisterResponse resp = new RegisterResponse();
+        //    try
+        //    {
+        //        result = await facade.Register(model);
+        //        resp = new RegisterResponse()
+        //        {
+        //            Succeeded = result.Succeeded,
+        //            Errors = result.Errors
+        //        };
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw ex;
+        //    }
+        //    return resp;
+        //    //return await facade.Register(model);
+        //}
 
         [HttpPost]
         [Route("SaveSalesman")]
@@ -307,69 +307,69 @@ namespace ljgb.API.Controllers
             return response;
         }
 
-        [HttpPost]
-        [Route("GenerateEmailConfirmationToken")]
-        public async Task<string> GenerateEmailConfirmationToken([FromBody]UserRequest model)
-        {
-            string result = string.Empty;
-            try
-            {
-                result = await facade.GenerateEmailConfirmationToken(model);
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-            return result;
-        }
+        //[HttpPost]
+        //[Route("GenerateEmailConfirmationToken")]
+        //public async Task<string> GenerateEmailConfirmationToken([FromBody]UserRequest model)
+        //{
+        //    string result = string.Empty;
+        //    try
+        //    {
+        //        result = await facade.GenerateEmailConfirmationToken(model);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw ex;
+        //    }
+        //    return result;
+        //}
 
-        [HttpPost]
-        [Route("SendConfirmationEmail")]
-        public async Task<bool> SendConfirmationEmail([FromBody]UserRequest model)
-        {
-            bool result = false;
-            try
-            {
-                result = await facade.SendConfirmationEmail(model);
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-            return result;
-        }
+        //[HttpPost]
+        //[Route("SendConfirmationEmail")]
+        //public async Task<bool> SendConfirmationEmail([FromBody]UserRequest model)
+        //{
+        //    bool result = false;
+        //    try
+        //    {
+        //        result = await facade.SendConfirmationEmail(model);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw ex;
+        //    }
+        //    return result;
+        //}
 
-        [HttpPost]
-        [Route("SignIn")]
-        public async Task<bool> SignIn([FromBody]UserRequest model)
-        {
-            bool result = false;
-            try
-            {
-                result = await facade.SignIn(model);
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-            return result;
-        }
+        //[HttpPost]
+        //[Route("SignIn")]
+        //public async Task<bool> SignIn([FromBody]UserRequest model)
+        //{
+        //    bool result = false;
+        //    try
+        //    {
+        //        result = await facade.SignIn(model);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw ex;
+        //    }
+        //    return result;
+        //}
 
-        [HttpGet]
-        [Route("GetExternalAuthenticationSchemes")]
-        public async Task<IEnumerable<AuthenticationScheme>> GetExternalAuthenticationSchemes()
-        {
-            IEnumerable<AuthenticationScheme> result;
-            try
-            {
-                result = await facade.GetExternalAuthenticationSchemes();
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-            return result;
-        }
+        //[HttpGet]
+        //[Route("GetExternalAuthenticationSchemes")]
+        //public async Task<IEnumerable<AuthenticationScheme>> GetExternalAuthenticationSchemes()
+        //{
+        //    IEnumerable<AuthenticationScheme> result;
+        //    try
+        //    {
+        //        result = await facade.GetExternalAuthenticationSchemes();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw ex;
+        //    }
+        //    return result;
+        //}
 
         [HttpPost]
         [Route("UpdateProfileSalesman")]

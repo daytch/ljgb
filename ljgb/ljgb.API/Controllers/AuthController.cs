@@ -16,9 +16,9 @@ namespace ljgb.API.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        private readonly UserManager<IdentityUser> userManager;
-        private readonly IEmailSender emailSender;
-        private readonly SignInManager<IdentityUser> signInManager;
+        //private readonly UserManager<IdentityUser> userManager;
+        //private readonly IEmailSender emailSender;
+        //private readonly SignInManager<IdentityUser> signInManager;
         private ConfigFacade configFacade = new ConfigFacade();
         private readonly AuthenticationFacade facade;
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
@@ -26,13 +26,13 @@ namespace ljgb.API.Controllers
         private string admin_url = string.Empty;
         private string ui_url = string.Empty;
         private Security sec = new Security();
-        public AuthController(IEmailConfiguration EmailConfiguration, IConfiguration config,UserManager<IdentityUser> _userManager, IEmailSender _emailSender, SignInManager<IdentityUser> _signInManager)
+        public AuthController(IConfiguration config)//(IEmailConfiguration EmailConfiguration, UserManager<IdentityUser> _userManager, IEmailSender _emailSender, SignInManager<IdentityUser> _signInManager)
         {
-            userManager = _userManager;
-            emailSender = _emailSender;
-            signInManager = _signInManager;
-            _emailConfiguration = EmailConfiguration;
-            facade = new AuthenticationFacade(userManager, emailSender, signInManager);
+            //userManager = _userManager;
+            //emailSender = _emailSender;
+            //signInManager = _signInManager;
+            //_emailConfiguration = EmailConfiguration;
+            facade = new AuthenticationFacade();// (userManager, emailSender, signInManager);
             admin_url = config.GetSection("ADMIN_url").Value;
             ui_url = config.GetSection("UI_url").Value;
         }

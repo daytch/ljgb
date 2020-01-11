@@ -16,17 +16,17 @@ namespace ljgb.DataAccess.Repository
     public class UserProfileRepository : IUser
     {
         ljgbContext db;
-        private readonly UserManager<IdentityUser> userManager;
+        //private readonly UserManager<IdentityUser> userManager;
         private readonly IEmailSender emailSender;
         private readonly SignInManager<IdentityUser> signInManager;
-        public UserProfileRepository(ljgbContext _db, UserManager<IdentityUser> _userManager, IEmailSender _emailSender, SignInManager<IdentityUser> _signInManager)
+        public UserProfileRepository(ljgbContext _db)//, IEmailSender _emailSender, SignInManager<IdentityUser> _signInManager , UserManager<IdentityUser> _userManager)
         {
             db = _db;
-            userManager = _userManager;
-            emailSender = _emailSender;
-            signInManager = _signInManager;
+            //userManager = _userManager;
+            //emailSender = _emailSender;
+            //signInManager = _signInManager;
         }
-        
+
         public async Task<sp_GetUserDetail> GetSalesmanById(int id)
         {
             if (db != null)
@@ -178,94 +178,94 @@ namespace ljgb.DataAccess.Repository
             throw new NotImplementedException();
         }
 
-        public async Task<IdentityResult> Register(UserRequest user)
-        {
-            IdentityResult result = new IdentityResult();
-            try
-            {
-                result = await userManager.CreateAsync(user.user, user.Password);
-                //await userManager.UpdateSecurityStampAsync(user.user);
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-            return result;
-        }
+        //public async Task<IdentityResult> Register(UserRequest user)
+        //{
+        //    IdentityResult result = new IdentityResult();
+        //    try
+        //    {
+        //        result = await userManager.CreateAsync(user.user, user.Password);
+        //        //await userManager.UpdateSecurityStampAsync(user.user);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw ex;
+        //    }
+        //    return result;
+        //}
 
-        public async Task<string> GenerateEmailConfirmationToken(UserRequest user)
-        {
-            string result = string.Empty;
-            try
-            {
-                result = await userManager.GenerateEmailConfirmationTokenAsync(user.user);
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-            return result;
-        }
+        //public async Task<string> GenerateEmailConfirmationToken(UserRequest user)
+        //{
+        //    string result = string.Empty;
+        //    try
+        //    {
+        //        result = await userManager.GenerateEmailConfirmationTokenAsync(user.user);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw ex;
+        //    }
+        //    return result;
+        //}
 
-        public async Task<bool> SendConfirmationEmail(UserRequest user)
-        {
-            bool result = true;
-            try
-            {
-                // _emailSender.SendEmailAsync
-                await emailSender.SendEmailAsync(user.user.Email, user.EmailSubject, user.HTMLTag);
-            }
-            catch (Exception ex)
-            {
-                result = false;
-                throw ex;
-            }
-            return result;
-        }
+        //public async Task<bool> SendConfirmationEmail(UserRequest user)
+        //{
+        //    bool result = true;
+        //    try
+        //    {
+        //        // _emailSender.SendEmailAsync
+        //        await emailSender.SendEmailAsync(user.user.Email, user.EmailSubject, user.HTMLTag);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        result = false;
+        //        throw ex;
+        //    }
+        //    return result;
+        //}
 
-        public async Task<bool> SignIn(UserRequest user)
-        {
-            bool result = true;
-            try
-            {
-                user.user.SecurityStamp = Guid.NewGuid().ToString();
-                await signInManager.SignInAsync(user.user, false);
-            }
-            catch (Exception ex)
-            {
-                result = false;
-                throw ex;
-            }
-            return result;
-        }
-        
-        public async Task<IEnumerable<AuthenticationScheme>> GetExternalAuthenticationSchemes()
-        {
-            IEnumerable<AuthenticationScheme> result;
-            try
-            {
-                result = await signInManager.GetExternalAuthenticationSchemesAsync();
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-            return result;
-        }
+        //public async Task<bool> SignIn(UserRequest user)
+        //{
+        //    bool result = true;
+        //    try
+        //    {
+        //        user.user.SecurityStamp = Guid.NewGuid().ToString();
+        //        await signInManager.SignInAsync(user.user, false);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        result = false;
+        //        throw ex;
+        //    }
+        //    return result;
+        //}
 
-        public async Task<SignInResult> PasswordSignIn(UserRequest user)
-        {
-            SignInResult result = new SignInResult();
-            try
-            {
-                result = await signInManager.PasswordSignInAsync(user.user.Email, user.Password, user.RememberMe, user.lockoutOnFailure);
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-            return result;
-        }
+        //public async Task<IEnumerable<AuthenticationScheme>> GetExternalAuthenticationSchemes()
+        //{
+        //    IEnumerable<AuthenticationScheme> result;
+        //    try
+        //    {
+        //        result = await signInManager.GetExternalAuthenticationSchemesAsync();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw ex;
+        //    }
+        //    return result;
+        //}
+
+        //public async Task<SignInResult> PasswordSignIn(UserRequest user)
+        //{
+        //    SignInResult result = new SignInResult();
+        //    try
+        //    {
+        //        result = await signInManager.PasswordSignInAsync(user.user.Email, user.Password, user.RememberMe, user.lockoutOnFailure);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw ex;
+        //    }
+        //    return result;
+        //}
 
         public async Task<UserProfile> GetUserByEmail(string Email)
         {

@@ -17,7 +17,7 @@ namespace ljgb.API.Core
         private static bool IsProduction;
         private readonly AuthenticationFacade facade;
 
-        public AuthenticationMiddleware(RequestDelegate next,UserManager<IdentityUser> _userManager, IEmailSender _emailSender, SignInManager<IdentityUser> _signInManager)
+        public AuthenticationMiddleware(RequestDelegate next)//,UserManager<IdentityUser> _userManager, IEmailSender _emailSender, SignInManager<IdentityUser> _signInManager)
         {
 
             var builder = new ConfigurationBuilder()
@@ -26,7 +26,7 @@ namespace ljgb.API.Core
 
             IConfigurationRoot configuration = builder.Build();
             IsProduction = Convert.ToBoolean(configuration.GetSection("IsProduction").Value.ToString());
-
+            facade = new AuthenticationFacade();
             this.next = next;
         }
 

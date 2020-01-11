@@ -31,8 +31,8 @@ namespace ljgb.API
 
             services.AddDbContext<ApplicationDbContext>(item => item.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             //services.AddScoped<IWarna, WarnaRepository>();
-            
-            services.AddDefaultIdentity<IdentityUser>().AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
+
+            //services.AddDefaultIdentity<IdentityUser>().AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
 
             services.AddLogging(builder =>
             {
@@ -52,7 +52,12 @@ namespace ljgb.API
             //services.AddIdentity<IdentityUser, IdentityRole>()
             //    .AddEntityFrameworkStores<ApplicationDbContext>()
             //    .AddDefaultTokenProviders();
-
+            services.AddIdentity<IdentityUser, IdentityRole>(options =>
+            {
+                options.User.RequireUniqueEmail = false;
+            })
+    .AddEntityFrameworkStores<ApplicationDbContext>()
+    .AddDefaultTokenProviders();
             #region JWT
             // ===== Add Jwt Authentication ========
             //JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear(); // => remove default claims
@@ -98,7 +103,7 @@ namespace ljgb.API
         {
             //enable all cors
             app.UseCors("AllowAll");
-            
+
             app.UseHttpContext();
             app.UseAuthenticationExtension();
 
@@ -132,7 +137,7 @@ namespace ljgb.API
             loggerFactory.AddLog4Net();
             app.UseCookiePolicy();
             app.UseAuthentication();
-            app.UseMvc();           
+            app.UseMvc();
 
         }
     }
