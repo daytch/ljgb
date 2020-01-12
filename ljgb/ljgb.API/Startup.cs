@@ -101,8 +101,8 @@ namespace ljgb.API
             
             app.UseHttpContext();
             app.UseAuthenticationExtension();
-
-            if (env.IsDevelopment())
+            //if (env.IsDevelopment())
+            if (true)
             {
                 app.UseDeveloperExceptionPage();
                 // Enable middleware to serve generated Swagger as a JSON endpoint.
