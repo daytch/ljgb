@@ -24,8 +24,7 @@ namespace ljgb.API.Controllers
         private readonly IEmailSender emailSender;
         private readonly SignInManager<IdentityUser> signInManager;
         private Security sec = new Security();
-        private string access_token = "";
-        private string url = "";
+        private string url = string.Empty;
 
         public UserController(UserManager<IdentityUser> _userManager, IEmailSender _emailSender, SignInManager<IdentityUser> _signInManager, IConfiguration config)
         {
@@ -127,59 +126,6 @@ namespace ljgb.API.Controllers
                 return BadRequest(ex);
             }
         }
-
-        //[HttpPost]
-        //[Route("SaveUserDetail")]
-        //public async Task<IActionResult> SaveUserDetail([FromBody]UserRequest request)
-        //{
-        //    UserResponse resp = new UserResponse();
-        //    try
-        //    {
-        //        bool posts = await facade.SaveUserDetail(request);
-        //        resp.IsSuccess = posts;
-        //        if (posts)
-        //        {
-        //            resp.Message = "Success When Update UserDetail.";
-        //        }
-        //        else
-        //        {
-        //            resp.Message = "Failed when Update UserDetail.";
-        //        }
-
-        //        return Ok(resp);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        resp.Message = ex.ToString();
-        //        resp.IsSuccess = false;
-        //    }
-        //    return Ok(resp);
-        //}
-
-        //[HttpPost]
-        //[Route("DeleteUserDetail")]
-        //public async Task<IActionResult> DeleteUserDetail([FromBody]UserRequest request)
-        //{
-        //    UserResponse resp = new UserResponse();
-        //    try
-        //    {
-        //        resp.IsSuccess = await facade.DeleteUserDetail(request);
-        //        if (resp.IsSuccess)
-        //        {
-        //            resp.Message = "Success when deleted data.";
-        //        }
-        //        else
-        //        {
-        //            resp.Message = "Failed when deleted data.";
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        resp.IsSuccess = false;
-        //        resp.Message = ex.ToString();
-        //    }
-        //    return Ok(resp);
-        //}
 
         [HttpPost]
         [Route("GetPosts")]
@@ -299,29 +245,29 @@ namespace ljgb.API.Controllers
             }
         }
 
-        [HttpPost]
-        [Route("Register")]
-        public async Task<RegisterResponse> Register([FromBody]UserRequest model)
-        {
-            //return await userManager.CreateAsync(model.user, model.password);
-            IdentityResult result = new IdentityResult();
-            RegisterResponse resp = new RegisterResponse();
-            try
-            {
-                result = await facade.Register(model);
-                resp = new RegisterResponse()
-                {
-                    Succeeded = result.Succeeded,
-                    Errors = result.Errors
-                };
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-            return resp;
-            //return await facade.Register(model);
-        }
+        //[HttpPost]
+        //[Route("Register")]
+        //public async Task<RegisterResponse> Register([FromBody]UserRequest model)
+        //{
+        //    //return await userManager.CreateAsync(model.user, model.password);
+        //    IdentityResult result = new IdentityResult();
+        //    RegisterResponse resp = new RegisterResponse();
+        //    try
+        //    {
+        //        result = await facade.Register(model);
+        //        resp = new RegisterResponse()
+        //        {
+        //            Succeeded = result.Succeeded,
+        //            Errors = result.Errors
+        //        };
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw ex;
+        //    }
+        //    return resp;
+        //    //return await facade.Register(model);
+        //}
 
         [HttpPost]
         [Route("SaveSalesman")]
@@ -361,69 +307,69 @@ namespace ljgb.API.Controllers
             return response;
         }
 
-        [HttpPost]
-        [Route("GenerateEmailConfirmationToken")]
-        public async Task<string> GenerateEmailConfirmationToken([FromBody]UserRequest model)
-        {
-            string result = string.Empty;
-            try
-            {
-                result = await facade.GenerateEmailConfirmationToken(model);
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-            return result;
-        }
+        //[HttpPost]
+        //[Route("GenerateEmailConfirmationToken")]
+        //public async Task<string> GenerateEmailConfirmationToken([FromBody]UserRequest model)
+        //{
+        //    string result = string.Empty;
+        //    try
+        //    {
+        //        result = await facade.GenerateEmailConfirmationToken(model);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw ex;
+        //    }
+        //    return result;
+        //}
 
-        [HttpPost]
-        [Route("SendConfirmationEmail")]
-        public async Task<bool> SendConfirmationEmail([FromBody]UserRequest model)
-        {
-            bool result = false;
-            try
-            {
-                result = await facade.SendConfirmationEmail(model);
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-            return result;
-        }
+        //[HttpPost]
+        //[Route("SendConfirmationEmail")]
+        //public async Task<bool> SendConfirmationEmail([FromBody]UserRequest model)
+        //{
+        //    bool result = false;
+        //    try
+        //    {
+        //        result = await facade.SendConfirmationEmail(model);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw ex;
+        //    }
+        //    return result;
+        //}
 
-        [HttpPost]
-        [Route("SignIn")]
-        public async Task<bool> SignIn([FromBody]UserRequest model)
-        {
-            bool result = false;
-            try
-            {
-                result = await facade.SignIn(model);
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-            return result;
-        }
+        //[HttpPost]
+        //[Route("SignIn")]
+        //public async Task<bool> SignIn([FromBody]UserRequest model)
+        //{
+        //    bool result = false;
+        //    try
+        //    {
+        //        result = await facade.SignIn(model);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw ex;
+        //    }
+        //    return result;
+        //}
 
-        [HttpGet]
-        [Route("GetExternalAuthenticationSchemes")]
-        public async Task<IEnumerable<AuthenticationScheme>> GetExternalAuthenticationSchemes()
-        {
-            IEnumerable<AuthenticationScheme> result;
-            try
-            {
-                result = await facade.GetExternalAuthenticationSchemes();
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-            return result;
-        }
+        //[HttpGet]
+        //[Route("GetExternalAuthenticationSchemes")]
+        //public async Task<IEnumerable<AuthenticationScheme>> GetExternalAuthenticationSchemes()
+        //{
+        //    IEnumerable<AuthenticationScheme> result;
+        //    try
+        //    {
+        //        result = await facade.GetExternalAuthenticationSchemes();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw ex;
+        //    }
+        //    return result;
+        //}
 
         [HttpPost]
         [Route("UpdateProfileSalesman")]
@@ -498,7 +444,6 @@ namespace ljgb.API.Controllers
             UserResponse resp = new UserResponse();
             try
             {
-
                 string bearer = Request.HttpContext.Request.Headers["Authorization"];
                 string token = bearer.Substring("Bearer ".Length).Trim();
                 //string token = req.Token;

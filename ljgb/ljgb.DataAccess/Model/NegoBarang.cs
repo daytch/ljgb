@@ -17,7 +17,6 @@ namespace ljgb.DataAccess.Model
         public bool RowStatus { get; set; }
         public bool? HasTransaction { get; set; }
 
-        public virtual Barang Barang { get; set; }
         public virtual UserProfile UserProfile { get; set; }
     }
 }

@@ -30,18 +30,17 @@ namespace ljgb.DataAccess.Interface
 
         Task<bool> Update(UserProfile userProfile);
 
-        Task<IdentityResult> Register(UserRequest userProfile);
+        //Task<IdentityResult> Register(UserRequest userProfile);
 
-        Task<string> GenerateEmailConfirmationToken(UserRequest userProfile);
+        //Task<string> GenerateEmailConfirmationToken(UserRequest userProfile);
 
-        Task<bool> SendConfirmationEmail(UserRequest userProfile);
+        //Task<bool> SendConfirmationEmail(UserRequest userProfile);
 
-        Task<bool> SignIn(UserRequest userProfile);
+        //Task<bool> SignIn(UserRequest userProfile);
         
+        //Task<IEnumerable<AuthenticationScheme>> GetExternalAuthenticationSchemes();
 
-        Task<IEnumerable<AuthenticationScheme>> GetExternalAuthenticationSchemes();
-
-        Task<SignInResult> PasswordSignIn(UserRequest userProfile);
+        //Task<SignInResult> PasswordSignIn(UserRequest userProfile);
         Task<UserProfile> GetUserByEmail(string Email);
     }
 }

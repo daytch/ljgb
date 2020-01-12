@@ -47,7 +47,6 @@ namespace ljgb.DataAccess.Model
         public virtual DbSet<Warna> Warna { get; set; }
 
 
-
         public virtual DbSet<Car> Car { get; set; }
         public virtual DbSet<CarAsks> CarAsks { get; set; }
         public virtual DbSet<CarDetail> CarDetail { get; set; }
@@ -198,7 +197,7 @@ namespace ljgb.DataAccess.Model
                 entity.Property(e => e.HargaOtr).HasColumnName("HargaOTR");
 
                 entity.Property(e => e.KodeType)
-                    .HasMaxLength(500)
+                    .HasMaxLength(50)
                     .IsUnicode(false);
 
                 entity.Property(e => e.KotaId).HasColumnName("KotaID");
@@ -211,10 +210,12 @@ namespace ljgb.DataAccess.Model
 
                 entity.Property(e => e.Name)
                     .IsRequired()
-                    .HasMaxLength(500)
+                    .HasMaxLength(250)
                     .IsUnicode(false);
 
-                entity.Property(e => e.PhotoPath).IsUnicode(false);
+                entity.Property(e => e.PhotoPath)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.TypeBarangId).HasColumnName("TypeBarangID");
 
@@ -431,12 +432,6 @@ namespace ljgb.DataAccess.Model
                     .IsUnicode(false);
 
                 entity.Property(e => e.UserProfileId).HasColumnName("UserProfileID");
-
-                entity.HasOne(d => d.Barang)
-                    .WithMany(p => p.NegoBarang)
-                    .HasForeignKey(d => d.BarangId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_NegoBarang_Barang");
 
                 entity.HasOne(d => d.UserProfile)
                     .WithMany(p => p.NegoBarang)
@@ -716,7 +711,9 @@ namespace ljgb.DataAccess.Model
                     .HasMaxLength(250)
                     .IsUnicode(false);
 
-                entity.Property(e => e.Description).IsUnicode(false);
+                entity.Property(e => e.Description)
+                    .HasMaxLength(250)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.ModelBarangId).HasColumnName("ModelBarangID");
 
@@ -728,6 +725,7 @@ namespace ljgb.DataAccess.Model
 
                 entity.Property(e => e.Name)
                     .IsRequired()
+                    .HasMaxLength(250)
                     .IsUnicode(false);
 
                 entity.HasOne(d => d.ModelBarang)

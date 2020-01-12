@@ -45,7 +45,7 @@ namespace ljgb.BusinessLogic
             signInManager = _signInManager;
 
             db = new ljgbContext(optionsBuilder.Options);
-            dep = new UserProfileRepository(db, userManager, emailSender, signInManager);
+            dep = new UserProfileRepository(db);
             IDetail = new UserDetailRepository(db);
         }
         #endregion
@@ -456,102 +456,102 @@ namespace ljgb.BusinessLogic
             return response;
         }
 
-        public async Task<IdentityResult> Register(UserRequest model)
-        {
-            IdentityResult result = new IdentityResult();
-            try
-            {
-                result = await dep.Register(model);
+        //public async Task<IdentityResult> Register(UserRequest model)
+        //{
+        //    IdentityResult result = new IdentityResult();
+        //    try
+        //    {
+        //        result = await dep.Register(model);
 
-            }
-            catch (Exception ex)
-            {
-                log.Error(ex);
-                throw ex;
-            }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        log.Error(ex);
+        //        throw ex;
+        //    }
 
-            return result;
-        }
+        //    return result;
+        //}
 
-        public async Task<string> GenerateEmailConfirmationToken(UserRequest model)
-        {
-            string result = string.Empty;
-            try
-            {
-                result = await dep.GenerateEmailConfirmationToken(model);
-            }
-            catch (Exception ex)
-            {
-                log.Error(ex);
-                throw ex;
-            }
+        //public async Task<string> GenerateEmailConfirmationToken(UserRequest model)
+        //{
+        //    string result = string.Empty;
+        //    try
+        //    {
+        //        result = await dep.GenerateEmailConfirmationToken(model);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        log.Error(ex);
+        //        throw ex;
+        //    }
 
-            return result;
-        }
+        //    return result;
+        //}
 
-        public async Task<bool> SendConfirmationEmail(UserRequest model)
-        {
-            bool result = true;
-            try
-            {
-                result = await dep.SendConfirmationEmail(model);
-            }
-            catch (Exception ex)
-            {
-                log.Error(ex);
-                throw ex;
-            }
+        //public async Task<bool> SendConfirmationEmail(UserRequest model)
+        //{
+        //    bool result = true;
+        //    try
+        //    {
+        //        result = await dep.SendConfirmationEmail(model);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        log.Error(ex);
+        //        throw ex;
+        //    }
 
-            return result;
-        }
+        //    return result;
+        //}
 
-        public async Task<bool> SignIn(UserRequest model)
-        {
-            bool result = true;
-            try
-            {
-                result = await dep.SignIn(model);
-            }
-            catch (Exception ex)
-            {
-                log.Error(ex);
-                throw ex;
-            }
+        //public async Task<bool> SignIn(UserRequest model)
+        //{
+        //    bool result = true;
+        //    try
+        //    {
+        //        result = await dep.SignIn(model);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        log.Error(ex);
+        //        throw ex;
+        //    }
 
-            return result;
-        }
+        //    return result;
+        //}
 
-        public async Task<IEnumerable<AuthenticationScheme>> GetExternalAuthenticationSchemes()
-        {
-            IEnumerable<AuthenticationScheme> result;
-            try
-            {
-                result = await dep.GetExternalAuthenticationSchemes();
-            }
-            catch (Exception ex)
-            {
-                log.Error(ex);
-                throw ex;
-            }
+        //public async Task<IEnumerable<AuthenticationScheme>> GetExternalAuthenticationSchemes()
+        //{
+        //    IEnumerable<AuthenticationScheme> result;
+        //    try
+        //    {
+        //        result = await dep.GetExternalAuthenticationSchemes();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        log.Error(ex);
+        //        throw ex;
+        //    }
 
-            return result;
-        }
+        //    return result;
+        //}
 
-        public async Task<SignInResult> PasswordSignIn(UserRequest model)
-        {
-            SignInResult result = new SignInResult();
-            try
-            {
-                result = await dep.PasswordSignIn(model);
-            }
-            catch (Exception ex)
-            {
-                log.Error(ex);
-                throw ex;
-            }
+        //public async Task<SignInResult> PasswordSignIn(UserRequest model)
+        //{
+        //    SignInResult result = new SignInResult();
+        //    try
+        //    {
+        //        result = await dep.PasswordSignIn(model);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        log.Error(ex);
+        //        throw ex;
+        //    }
 
-            return result;
-        }
+        //    return result;
+        //}
 
         public async Task<UserResponse> UpdateProfileSalesman(UserRequest req)
         {

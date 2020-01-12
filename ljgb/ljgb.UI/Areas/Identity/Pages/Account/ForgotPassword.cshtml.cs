@@ -1,18 +1,22 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.Text.Encodings.Web;
+using System.IO;
 using System.Threading.Tasks;
+using ljgb.Common.Responses;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Flurl.Http;
 
 namespace ljgb.UI.Areas.Identity.Pages.Account
 {
     [AllowAnonymous]
     public class ForgotPasswordModel : PageModel
     {
+        private static string api_url = string.Empty;
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly ILogger<LogoutModel> _logger;
         private readonly UserManager<IdentityUser> _userManager;
@@ -24,6 +28,14 @@ namespace ljgb.UI.Areas.Identity.Pages.Account
             _logger = logger;
             _userManager = userManager;
             _emailSender = emailSender;
+
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+
+            IConfigurationRoot configuration = builder.Build();
+
+            api_url = configuration.GetSection("API_url").Value;
         }
 
         [BindProperty]
@@ -34,6 +46,7 @@ namespace ljgb.UI.Areas.Identity.Pages.Account
             [Required]
             [EmailAddress]
             public string Email { get; set; }
+            public string ErrorMessage { get; set; }
         }
 
         public async Task OnGet()
@@ -47,28 +60,21 @@ namespace ljgb.UI.Areas.Identity.Pages.Account
         {
             if (ModelState.IsValid)
             {
-                var user = await _userManager.FindByEmailAsync(Input.Email);
-                if (user == null || !(await _userManager.IsEmailConfirmedAsync(user)))
+                string url = api_url + "Auth/ForgotPassword";
+                UserResponse response = await url.PostJsonAsync(new
                 {
-                    // Don't reveal that the user does not exist or is not confirmed
+                    Email = Input.Email
+                }).ReceiveJson<UserResponse>();
+
+                if (response.IsSuccess)
+                {
                     return RedirectToPage("./ForgotPasswordConfirmation");
                 }
-
-                // For more information on how to enable account confirmation and password reset please 
-                // visit https://go.microsoft.com/fwlink/?LinkID=532713
-                var code = await _userManager.GeneratePasswordResetTokenAsync(user);
-                var callbackUrl = Url.Page(
-                    "/Account/ResetPassword",
-                    pageHandler: null,
-                    values: new { code },
-                    protocol: Request.Scheme);
-
-                await _emailSender.SendEmailAsync(
-                    Input.Email,
-                    "Reset Password",
-                    $"Please reset your password by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
-
-                return RedirectToPage("./ForgotPasswordConfirmation");
+                else
+                {
+                    Input.ErrorMessage = response.Message;
+                    return Page();
+                }
             }
 
             return Page();

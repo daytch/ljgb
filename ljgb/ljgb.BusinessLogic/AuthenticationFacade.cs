@@ -3,11 +3,12 @@ using ljgb.Common.Responses;
 using ljgb.DataAccess.Interface;
 using ljgb.DataAccess.Model;
 using ljgb.DataAccess.Repository;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.IO;
-using System.Net.Mail;
 using System.Threading.Tasks;
 
 namespace ljgb.BusinessLogic
@@ -17,11 +18,16 @@ namespace ljgb.BusinessLogic
         #region Important
         private ljgbContext db;
         private IAuthentication dataAccess;
+        private IUser userDA;
         private Security security;
+
+        //private readonly UserManager<IdentityUser> userManager;
+        //private readonly IEmailSender emailSender;
+        //private readonly SignInManager<IdentityUser> signInManager;
 
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        public AuthenticationFacade()
+        public AuthenticationFacade()//UserManager<IdentityUser> _userManager, IEmailSender _emailSender, SignInManager<IdentityUser> _signInManager)
         {
             var builder = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
@@ -37,6 +43,7 @@ namespace ljgb.BusinessLogic
 
             db = new ljgbContext(optionsBuilder.Options);
             dataAccess = new AuthenticationRepository(db);
+            userDA = new UserProfileRepository(db);
         }
         #endregion
         public async Task<AuthenticationResponse> Login(UserRequest user)
@@ -71,6 +78,20 @@ namespace ljgb.BusinessLogic
                 log.Error(ex);
             }
             return response;
+        }
+
+        public string GenerateToken(string email)
+        {
+            string Token = string.Empty;
+            try
+            {
+                Token = security.GenerateToken(email);
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex);
+            }
+            return Token;
         }
 
         public bool IsUserActive(string email)
@@ -126,5 +147,52 @@ namespace ljgb.BusinessLogic
             return response;
         }
 
+        public async Task<AuthenticationResponse> ForgotPassword(UserRequest user)
+        {
+            AuthenticationResponse response = new AuthenticationResponse();
+            UserProfile userProfile = new UserProfile();
+            try
+            {
+                userProfile = await userDA.GetPost(user.Email);
+                if (userProfile != null)
+                {
+                    response.Name = userProfile.Nama;
+                    response.Message = "This account is active.";
+                    response.IsSuccess = true;                    
+                }
+                else
+                {
+                    response.IsSuccess = false;
+                    response.Message = "Email does not exist in our database.";
+                }
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex);
+            }
+            return response;
+        }
+        
+        public async Task<bool> UpdatePassword(UserRequest request)
+        {
+            bool result = true;
+            try
+            {
+                Security sec = new Security();
+                UserProfile user = await userDA.GetUserByEmail(request.Email);
+
+                user.Email = request.Email;
+                user.Password = sec.GetSHA1(request.Email, request.RePassword);
+
+                result = await userDA.Update(user);
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex);
+                throw ex;
+            }
+
+            return result;
+        }
     }
 }
