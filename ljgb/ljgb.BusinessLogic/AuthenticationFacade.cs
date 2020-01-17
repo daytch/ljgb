@@ -62,10 +62,21 @@ namespace ljgb.BusinessLogic
                 userProfile = await dataAccess.GetUserProfile(up);
                 if (userProfile != null)
                 {
-                    response.Name = userProfile.Nama;
-                    response.Token = security.GenerateToken(user.Email);
-                    response.Message = "Success";
-                    response.IsSuccess = true;
+                    if (userProfile.IsActivated == true)
+                    {
+                        response.Name = userProfile.Nama;
+                        response.Token = security.GenerateToken(user.Email);
+                        response.Message = "Success";
+                        response.IsSuccess = true;
+                    }
+                    else
+                    {
+                        response.Name = userProfile.Nama;
+                        response.Token = security.GenerateToken(user.Email);
+                        response.Message = "Your Account is not active";
+                        response.IsSuccess = false;
+                    }
+                   
                 }
                 else
                 {
@@ -119,26 +130,44 @@ namespace ljgb.BusinessLogic
 
                     Created = DateTime.Now,
                     CreatedBy = user.Email,
-                    RowStatus = true
+                    RowStatus = true,
+                    IsActivated = user.IsAdminPortal
                 };
-
-                long id = await dataAccess.Save(up);
-                if (id > 0)
+                UserProfile usr = await dataAccess.GetUserProfileByEmail(user.Email);
+                if (usr != null)
                 {
-                    //response.Token = security.GenerateToken(user.Email);
-                    response.Message = "Success created user profile.";
-                    response.IsSuccess = true;
-
-                    #region Sent
-                    EmailSender emailSender = new EmailSender();
-
-                    #endregion
+                    if (usr.IsActivated == true)
+                    {
+                        response.IsSuccess = false;
+                        response.Message = "Failed! Email has been registered.";
+                    }
+                    else
+                    {
+                        response.IsSuccess = false;
+                        response.Message = "Failed! Email has been registered and Check your email to active your account.";
+                    }
                 }
                 else
                 {
-                    response.IsSuccess = false;
-                    response.Message = "Failed when save userprofile.";
+                    long id = await dataAccess.Save(up);
+                    if (id > 0)
+                    {
+                        //response.Token = security.GenerateToken(user.Email);
+                        response.Message = "Success created user profile.";
+                        response.IsSuccess = true;
+
+                        #region Sent
+                        EmailSender emailSender = new EmailSender();
+
+                        #endregion
+                    }
+                    else
+                    {
+                        response.IsSuccess = false;
+                        response.Message = "Failed when save userprofile.";
+                    }
                 }
+              
             }
             catch (Exception ex)
             {
@@ -183,6 +212,28 @@ namespace ljgb.BusinessLogic
 
                 user.Email = request.Email;
                 user.Password = sec.GetSHA1(request.Email, request.RePassword);
+
+                result = await userDA.Update(user);
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex);
+                throw ex;
+            }
+
+            return result;
+        }
+
+        public async Task<bool> ActivateAccount(UserRequest request)
+        {
+            bool result = true;
+            try
+            {
+                Security sec = new Security();
+                UserProfile user = await userDA.GetUserByEmail(request.Email);
+
+                user.Email = request.Email;
+                user.IsActivated = true;
 
                 result = await userDA.Update(user);
             }

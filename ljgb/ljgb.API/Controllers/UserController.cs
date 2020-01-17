@@ -21,17 +21,15 @@ namespace ljgb.API.Controllers
     {
         private readonly UserManager<IdentityUser> userManager;
         private readonly UserFacade facade;
-        private readonly IEmailSender emailSender;
         private readonly SignInManager<IdentityUser> signInManager;
         private Security sec = new Security();
         private string url = string.Empty;
 
-        public UserController(UserManager<IdentityUser> _userManager, IEmailSender _emailSender, SignInManager<IdentityUser> _signInManager, IConfiguration config)
+        public UserController(UserManager<IdentityUser> _userManager, SignInManager<IdentityUser> _signInManager, IConfiguration config)
         {
             userManager = _userManager;
-            emailSender = _emailSender;
             signInManager = _signInManager;
-            facade = new UserFacade(userManager, emailSender, signInManager);
+            facade = new UserFacade(userManager, signInManager);
             url = config.GetSection("API_url").Value;
         }
 

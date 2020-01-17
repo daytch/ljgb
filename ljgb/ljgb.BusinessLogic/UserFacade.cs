@@ -29,7 +29,7 @@ namespace ljgb.BusinessLogic
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private Security security = new Security();
 
-        public UserFacade(UserManager<IdentityUser> _userManager, IEmailSender _emailSender, SignInManager<IdentityUser> _signInManager)
+        public UserFacade(UserManager<IdentityUser> _userManager, SignInManager<IdentityUser> _signInManager)
         {
             var builder = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
@@ -41,7 +41,6 @@ namespace ljgb.BusinessLogic
             var optionsBuilder = new DbContextOptionsBuilder<ljgbContext>();
             optionsBuilder.UseSqlServer(connectionString);
             userManager = _userManager;
-            emailSender = _emailSender;
             signInManager = _signInManager;
 
             db = new ljgbContext(optionsBuilder.Options);
@@ -354,7 +353,9 @@ namespace ljgb.BusinessLogic
 
                             Created = DateTime.Now,
                             CreatedBy = "Admin",
-                            RowStatus = true
+                            RowStatus = true,
+                            IsActivated = true
+                            
                         };
 
                         long userID = await dep.AddPost(user);

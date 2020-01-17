@@ -33,6 +33,8 @@ namespace ljgb.Common.Requests
         public string Facebook { get; set; }
         public string Instagram { get; set; }
         public string Photopath { get; set; }
+        public bool IsAdminPortal { get; set; }
+        public bool IsActive { get; set; }
     }
 
     public class sp_GetUserDetail

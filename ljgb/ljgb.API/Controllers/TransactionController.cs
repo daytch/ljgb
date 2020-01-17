@@ -24,7 +24,6 @@ namespace ljgb.API.Controllers
     {
         private readonly UserManager<IdentityUser> userManager;
         private readonly UserFacade usrFacade;
-        private readonly IEmailSender emailSender;
 
         private readonly SignInManager<IdentityUser> signInManager;
         private string url = "";
@@ -34,10 +33,9 @@ namespace ljgb.API.Controllers
         public TransactionController(IConfiguration config, IEmailConfiguration EmailConfiguration, UserManager<IdentityUser> _userManager, IEmailSender _emailSender, SignInManager<IdentityUser> _signInManager)
         {
             userManager = _userManager;
-            emailSender = _emailSender;
             signInManager = _signInManager;
             _emailConfiguration = EmailConfiguration;
-            usrFacade = new UserFacade(userManager, emailSender, signInManager);
+            usrFacade = new UserFacade(userManager, signInManager);
             url = config.GetSection("API_url").Value;
         }
         private TransactionFacade facade = new TransactionFacade();

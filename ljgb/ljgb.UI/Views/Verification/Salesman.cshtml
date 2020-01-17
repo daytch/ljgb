@@ -347,7 +347,8 @@
                             Alamat: $("#Alamat").val(),
                             JenisKelamin: $("#JenisKelamin").val(),
                             KotaId: $("#Kota").val(),
-                            KodeDealer: $('#Dealer option:selected').attr('data-code')
+                            KodeDealer: $('#Dealer option:selected').attr('data-code'),
+                            isAdminPortal: true
                         }
 
                         $.ajax({
@@ -391,13 +392,14 @@
                     url: url + "User/GetSalesman",
                     contentType: "application/json",
                     type: "GET",
-                    beforeSend: function (xhr) {
-                        xhr.setRequestHeader('Authorization', 'Bearer ' + Cookies.get("access_token"));
-                    },
                     dataType: "JSON",
                     data: function (a) {
                         return a;
                     },
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader('Authorization', 'Bearer ' + Cookies.get("access_token"));
+                    },
+                  
                     dataSrc: function (json) {
                         json.draw = json.draw;
                         json.recordsTotal = json.recordsTotal;

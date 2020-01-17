@@ -91,7 +91,7 @@ namespace ljgb.UI
             services.Configure(configOptions);
             services.AddSingleton(resolver => resolver.GetRequiredService<IOptions<ConfigOptions>>().Value);
 
-            services.AddSingleton<IEmailSender, EmailSender>();
+
             services.AddResponseCaching();
         }
 

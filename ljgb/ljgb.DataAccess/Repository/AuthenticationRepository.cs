@@ -71,6 +71,8 @@ namespace ljgb.DataAccess.Repository
             return result;
         }
 
+
+
         public async Task<UserDetail> GetUserDetailByID(long UserID)
         {
             UserDetail u = new UserDetail();

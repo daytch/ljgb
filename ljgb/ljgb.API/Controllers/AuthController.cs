@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
+//using System.Net.Mail;
 using System.Threading.Tasks;
 
 namespace ljgb.API.Controllers
@@ -77,7 +78,13 @@ namespace ljgb.API.Controllers
                     List<EmailAddress> listEmailAddress = new List<EmailAddress>();
                     listEmailAddress.Add(emailAddress);
 
+                    string token = facade.GenerateToken(userInfo.Email);
+
+                    string url = ui_url.Contains(Request.Host.Value) ? ui_url + "activationaccount?token=" + token
+                        : admin_url + "Identity/Account/activationaccount?token=" + token;
+                    //string url = admin_url + "Identity/Account/activationaccount?token=" + token;
                     contentEmail = contentEmail.Replace("[user]", emailAddress.Name);
+                    contentEmail = contentEmail.Replace("[Link]", url);
 
                     EmailAddress emailAddressFrom = new EmailAddress();
                     emailAddressFrom.Address = "admin@lojualguebeli.com";
@@ -92,6 +99,26 @@ namespace ljgb.API.Controllers
                     emailMessage.Content = contentEmail;
 
                     sendEmail.Send(emailMessage);
+
+                    #region testing email local victor
+                    //sendEmail.Send(emailMessage);
+                    //testing local victor
+                    //MailMessage mail = new MailMessage();
+                    //SmtpClient SmtpServer = new SmtpClient("smtp.gmail.com");
+
+                    //mail.From = new MailAddress("admin@lojualguebeli.com");
+                    //mail.To.Add("vb.simamora@gmail.com");
+                    //mail.Subject = "Activation Password";
+                    //mail.Body = contentEmail;
+                    //mail.IsBodyHtml = true;
+
+                    //SmtpServer.Port = 587;
+                    //SmtpServer.Credentials = new System.Net.NetworkCredential("admin@lojualguebeli.com", "Lojualguebeli.com");
+                    //SmtpServer.EnableSsl = true;
+
+                    //SmtpServer.Send(mail);
+                    #endregion
+
                     #endregion
                 }
             }
@@ -204,5 +231,43 @@ namespace ljgb.API.Controllers
             return resp;
         }
 
+        [HttpPost]
+        [Route("ActivateAccount")]
+        public async Task<AuthenticationResponse> ActivateAccount([FromBody] UserRequest userInfo)
+        {
+            AuthenticationResponse resp = new AuthenticationResponse();
+            try
+            {
+                string token = userInfo.Token;
+                string username = string.Empty;
+                if (string.IsNullOrEmpty(token))
+                {
+                    resp.IsSuccess = false;
+                    resp.Message = "Your token is invalid or has been expired.";
+                    return resp;
+                }
+                userInfo.Email = sec.ValidateToken(token);
+                if (await facade.ActivateAccount(userInfo))
+                {
+                    resp.IsSuccess = true;
+                    resp.Message = "Success, Activated account.";
+                }
+                else
+                {
+                    resp.IsSuccess = false;
+                    resp.Message = "Failed to activate account";
+                    return resp;
+                }
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex);
+                resp.IsSuccess = false;
+                resp.Message = ex.Message;
+            }
+
+            return resp;
+
+        }
     }
 }
