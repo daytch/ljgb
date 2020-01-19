@@ -16,6 +16,7 @@ namespace ljgb.API.Core
         private readonly RequestDelegate next;
         private static bool IsProduction;
         private readonly AuthenticationFacade facade;
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         public AuthenticationMiddleware(RequestDelegate next)//,UserManager<IdentityUser> _userManager, IEmailSender _emailSender, SignInManager<IdentityUser> _signInManager)
         {
@@ -34,8 +35,8 @@ namespace ljgb.API.Core
         {
             string authoriztionHeader = context.Request.Headers["Authorization"];
             string url = MyHttpContext.AppBaseUrl;
-
             string requester_url = Microsoft.AspNetCore.Http.Extensions.UriHelper.GetDisplayUrl(context.Request);
+            log.Debug("API url = " + url + ", requerster url = " + requester_url);
 
             if (IsProduction)
             {
@@ -72,6 +73,8 @@ namespace ljgb.API.Core
                 #region Development Setting
                 if (requester_url.ToLower().Contains(url.ToLower()) || requester_url.ToLower().Contains("swagger") || requester_url.ToLower().Contains("auth"))
                 {
+
+                    log.Debug("Lolos pada if development, (requester_url.ToLower().Contains(url.ToLower()) || requester_url.ToLower().Contains('swagger') || requester_url.ToLower().Contains('auth')");
                     await next.Invoke(context);
                 }
                 else

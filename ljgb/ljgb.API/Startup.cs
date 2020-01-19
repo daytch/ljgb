@@ -58,8 +58,9 @@ namespace ljgb.API
             {
                 options.User.RequireUniqueEmail = false;
             })
-    .AddEntityFrameworkStores<ApplicationDbContext>()
-    .AddDefaultTokenProviders();
+            .AddEntityFrameworkStores<ApplicationDbContext>()
+            .AddDefaultTokenProviders();
+          
             #region JWT
             // ===== Add Jwt Authentication ========
             //JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear(); // => remove default claims
