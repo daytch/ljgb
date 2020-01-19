@@ -17,9 +17,11 @@ namespace ljgb.API
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        private readonly ILogger<Startup> logger;
+        public Startup(IConfiguration configuration, ILogger<Startup> _log)
         {
             Configuration = configuration;
+            logger = _log;
         }
 
         public IConfiguration Configuration { get; }

@@ -17,6 +17,7 @@ namespace ljgb.UI.Areas.Identity.Pages.Account
     public class LoginModel : PageModel
     {
         private static string url_login = string.Empty;
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         public LoginModel()
         {
             var builder = new ConfigurationBuilder()
@@ -78,12 +79,13 @@ namespace ljgb.UI.Areas.Identity.Pages.Account
                 // This doesn't count login failures towards account lockout
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
                 //var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: true);
+                log.Debug("Email = " + Input.Email + ", PassWord = " + Input.Password);
                 var response = await url_login.PostJsonAsync(new
                 {
                     Email = Input.Email,
                     Password = Input.Password
                 }).ReceiveJson<AuthenticationResponse>();
-
+                log.Debug("IsSuccess = " + response.IsSuccess + ", Message = " + response.Message + ", Token = " + response.Token);
                 if (response.IsSuccess)
                 {
                     Response.Cookies.Append("access_token", response.Token);
