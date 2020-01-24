@@ -3,8 +3,6 @@ using ljgb.Common.Responses;
 using ljgb.DataAccess.Interface;
 using ljgb.DataAccess.Model;
 using ljgb.DataAccess.Repository;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -211,7 +209,7 @@ namespace ljgb.BusinessLogic
                 UserProfile user = await userDA.GetUserByEmail(request.Email);
 
                 user.Email = request.Email;
-                user.Password = sec.GetSHA1(request.Email, request.RePassword);
+                user.Password = sec.GetSHA1(request.Email, request.Password);
 
                 result = await userDA.Update(user);
             }

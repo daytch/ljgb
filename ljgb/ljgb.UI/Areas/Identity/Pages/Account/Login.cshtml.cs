@@ -11,6 +11,9 @@ using ljgb.Common.Responses;
 using Microsoft.Extensions.Configuration;
 using System.IO;
 using System;
+using System.Net.Http;
+using Newtonsoft.Json;
+using System.Text;
 
 namespace ljgb.UI.Areas.Identity.Pages.Account
 {
@@ -19,6 +22,7 @@ namespace ljgb.UI.Areas.Identity.Pages.Account
     {
         private static string url_login = string.Empty;
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static HttpClient httpClient;
         public LoginModel()
         {
             var builder = new ConfigurationBuilder()
@@ -28,6 +32,7 @@ namespace ljgb.UI.Areas.Identity.Pages.Account
             IConfigurationRoot configuration = builder.Build();
 
             url_login = configuration.GetSection("API_url").Value + "Auth/Login";
+            httpClient = new HttpClient();
         }
 
         [BindProperty]
@@ -77,6 +82,7 @@ namespace ljgb.UI.Areas.Identity.Pages.Account
 
             if (ModelState.IsValid)
             {
+                #region Old
                 // This doesn't count login failures towards account lockout
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
                 //var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: true);
@@ -100,6 +106,8 @@ namespace ljgb.UI.Areas.Identity.Pages.Account
                     ModelState.AddModelError(string.Empty, "Invalid login attempt.");
                     return Page();
                 }
+                #endregion
+
             }
 
             // If we got this far, something failed, redisplay form

@@ -1,8 +1,6 @@
 ﻿using MailKit.Net.Smtp;
 using MimeKit;
 using MimeKit.Text;
-using System;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace ljgb.API.Helper

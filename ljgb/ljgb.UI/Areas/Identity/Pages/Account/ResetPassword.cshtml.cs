@@ -53,7 +53,7 @@ namespace ljgb.UI.Areas.Identity.Pages.Account
             public string ErrorMessage { get; set; }
         }
 
-        public IActionResult OnGet(string code = null)
+        public IActionResult OnGet(string code)
         {
             if (code == null)
             {
@@ -79,7 +79,9 @@ namespace ljgb.UI.Areas.Identity.Pages.Account
             string url = api_url + "Auth/ChangePassword";
             UserResponse response = await url.PostJsonAsync(new
             {
-                Email = Input.Email
+                Email = Input.Email,
+                Password = Input.Password,
+                Token = Input.Code
             }).ReceiveJson<UserResponse>();
 
             if (response.IsSuccess)
@@ -90,7 +92,7 @@ namespace ljgb.UI.Areas.Identity.Pages.Account
             {
                 Input.ErrorMessage = response.Message;
                 return Page();
-            }            
+            }
         }
     }
 }

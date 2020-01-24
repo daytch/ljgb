@@ -2,8 +2,6 @@
 using ljgb.BusinessLogic;
 using ljgb.Common.Requests;
 using ljgb.Common.Responses;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -27,12 +25,12 @@ namespace ljgb.API.Controllers
         private string admin_url = string.Empty;
         private string ui_url = string.Empty;
         private Security sec = new Security();
-        public AuthController(IConfiguration config)//(IEmailConfiguration EmailConfiguration, UserManager<IdentityUser> _userManager, IEmailSender _emailSender, SignInManager<IdentityUser> _signInManager)
+        public AuthController(IConfiguration config, IEmailConfiguration EmailConfiguration)//, UserManager<IdentityUser> _userManager, IEmailSender _emailSender, SignInManager<IdentityUser> _signInManager)
         {
             //userManager = _userManager;
             //emailSender = _emailSender;
             //signInManager = _signInManager;
-            //_emailConfiguration = EmailConfiguration;
+            _emailConfiguration = EmailConfiguration;
             facade = new AuthenticationFacade();// (userManager, emailSender, signInManager);
             admin_url = config.GetSection("ADMIN_url").Value;
             ui_url = config.GetSection("UI_url").Value;
@@ -155,7 +153,7 @@ namespace ljgb.API.Controllers
 
                     string token = facade.GenerateToken(userInfo.Email);
                     string url = ui_url.Contains(Request.Host.Value) ? ui_url + "resetpassword?token=" + token
-                        : admin_url + "identity/account/resetpassword?token=" + token;
+                        : admin_url + "identity/account/resetpassword?code=" + token;
                     contentEmail = contentEmail.Replace("[user]", emailAddress.Name);
                     contentEmail = contentEmail.Replace("[url]", url);
 

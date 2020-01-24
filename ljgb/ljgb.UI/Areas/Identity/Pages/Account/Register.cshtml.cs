@@ -20,21 +20,20 @@ namespace ljgb.UI.Areas.Identity.Pages.Account
     [AllowAnonymous]
     public class RegisterModel : PageModel
     {
-        private readonly IEmailSender _emailSender;
-        private readonly ILogger<RegisterModel> _logger;
-        private readonly SignInManager<IdentityUser> _signInManager;
-        private readonly UserManager<IdentityUser> _userManager;
+        //private readonly IEmailSender _emailSender;
+        //private readonly ILogger<RegisterModel> _logger;
+        //private readonly SignInManager<IdentityUser> _signInManager;
+        //private readonly UserManager<IdentityUser> _userManager;
 
         private static string base_url_api;
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        public RegisterModel(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, ILogger<RegisterModel> logger,
-            IEmailSender emailSender, ConfigOptions _urlapi)
+        public RegisterModel(ConfigOptions _urlapi)
         {
-            _userManager = userManager;
-            _signInManager = signInManager;
-            _logger = logger;
-            _emailSender = emailSender;
+            //_userManager = userManager;
+            //_signInManager = signInManager;
+            //_logger = logger;
+            //_emailSender = emailSender;
             base_url_api = _urlapi.base_api_url;
         }
 
