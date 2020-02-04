@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
+using System.Net.Mail;
 //using System.Net.Mail;
 using System.Threading.Tasks;
 
@@ -101,11 +102,11 @@ namespace ljgb.API.Controllers
                     #region testing email local victor
                     //sendEmail.Send(emailMessage);
                     //testing local victor
-                    //MailMessage mail = new MailMessage();
+                    MailMessage mail = new MailMessage();
                     //SmtpClient SmtpServer = new SmtpClient("smtp.gmail.com");
 
                     //mail.From = new MailAddress("admin@lojualguebeli.com");
-                    //mail.To.Add("vb.simamora@gmail.com");
+                    //mail.To.Add(emailAddress.Address);
                     //mail.Subject = "Activation Password";
                     //mail.Body = contentEmail;
                     //mail.IsBodyHtml = true;
