@@ -5,6 +5,28 @@
       "title": "Tools & Components"
     },
     {
+      "title": "CMS",
+      "icon": "fal far fa-cogs",
+      "items": [
+        {
+          "title": "Highest Bids",
+          "href": "highest_bids.html"
+        },
+        {
+          "title": "Lowest Asks",
+          "href": "lowest_asks.html"
+        },
+        {
+          "title": "Other Category",
+          "href": "other_category.html"
+        },
+        {
+          "title": "Sosial Media",
+          "href": "sosial_media.html"
+        }
+      ]
+    },
+    {
       "title": "Verification",
       "icon": "fal far fa-barcode-read",
       "items": [
@@ -110,7 +132,6 @@
       "title": "Nego",
       "icon": "fal fa-shopping-cart",
       "items": [
-
         {
           "title": "List ASK",
           "href": "Nego_ListASKS.cshtml"
@@ -125,8 +146,6 @@
       "title": "User Profile",
       "icon": "fal fa-th-list",
       "items": [
-
-
         {
           "title": "User Profile",
           "href": "User_USerProfile.cshtml"
