@@ -319,9 +319,20 @@ namespace ljgb.DataAccess.Repository
             return response;
         }
 
-        public Task<BarangViewModel> GetPost(long ID)
+        public async Task<Barang> GetBarang(long ID)
         {
-            throw new NotImplementedException();
+            if (db!=null)
+            {
+                try
+                {
+                    return await db.Barang.Where(x => x.RowStatus == true).FirstOrDefaultAsync();
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+            }
+            return null;
         }
 
         public async Task<bool> UpdatePost(Barang model)
@@ -335,6 +346,7 @@ namespace ljgb.DataAccess.Repository
                     if (barang != null)
                     {
                         barang.Name = model.Name;
+                        barang.JumlahKlik = model.JumlahKlik;
                         barang.Year = model.Year;
                         barang.HargaOtr = model.HargaOtr;
                         barang.WarnaId = model.WarnaId;

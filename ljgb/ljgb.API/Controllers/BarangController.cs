@@ -81,6 +81,7 @@ namespace ljgb.API.Controllers
             try
             {
                 BarangResponse post = await facade.GetBarangDetail(Id);
+
                 post.IsSuccess = true;
                 post.Message = "Success";
 
@@ -213,31 +214,31 @@ namespace ljgb.API.Controllers
             }
         }
 
-        [HttpPost]
-        [Route("GetModelWithID")]
-        public async Task<IActionResult> GetPost(long postId)
-        {
-            if (postId < 1)
-            {
-                return BadRequest();
-            }
+        //[HttpPost]
+        //[Route("GetModelWithID")]
+        //public async Task<IActionResult> GetPost(long postId)
+        //{
+        //    if (postId < 1)
+        //    {
+        //        return BadRequest();
+        //    }
 
-            try
-            {
-                var post = await facade.GetPost(postId);
+        //    try
+        //    {
+        //        var post = await facade.GetPost(postId);
 
-                if (post == null)
-                {
-                    return NotFound();
-                }
+        //        if (post == null)
+        //        {
+        //            return NotFound();
+        //        }
 
-                return Ok(post);
-            }
-            catch (Exception)
-            {
-                return BadRequest();
-            }
-        }
+        //        return Ok(post);
+        //    }
+        //    catch (Exception)
+        //    {
+        //        return BadRequest();
+        //    }
+        //}
 
         [HttpPost]
         [Route("AddPost")]
