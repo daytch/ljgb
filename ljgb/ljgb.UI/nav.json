@@ -10,19 +10,15 @@
       "items": [
         {
           "title": "Highest Bids",
-          "href": "highest_bids.html"
+          "href": "Barang_HighestBids.html"
         },
         {
           "title": "Lowest Asks",
-          "href": "lowest_asks.html"
+          "href": "Barang_LowestAsks.html"
         },
         {
           "title": "Other Category",
-          "href": "other_category.html"
-        },
-        {
-          "title": "Sosial Media",
-          "href": "sosial_media.html"
+          "href": "Barang_OtherCategory.html"
         }
       ]
     },
@@ -132,6 +128,7 @@
       "title": "Nego",
       "icon": "fal fa-shopping-cart",
       "items": [
+
         {
           "title": "List ASK",
           "href": "Nego_ListASKS.cshtml"
@@ -146,6 +143,8 @@
       "title": "User Profile",
       "icon": "fal fa-th-list",
       "items": [
+
+
         {
           "title": "User Profile",
           "href": "User_USerProfile.cshtml"

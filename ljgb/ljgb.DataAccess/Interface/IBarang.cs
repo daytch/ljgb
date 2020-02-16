@@ -33,7 +33,7 @@ namespace ljgb.DataAccess.Interface
 
         List<Car> GetListNormal(string kota, int total);
 
-        Task<BarangViewModel> GetPost(long ID);
+        Task<Barang> GetBarang(long ID);
 
         Task<long> AddPost(Barang model);
 
