@@ -69,10 +69,12 @@ namespace ljgb.DataAccess.Model
         public virtual DbSet<sp_GetUserDetail> sp_GetUserDetail { get; set; }
 
 
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
+// #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
                 optionsBuilder.UseSqlServer("Server=localhost\\SQLEXPRESS;Database=ljgb;Trusted_Connection=True;");
             }
         }
@@ -375,6 +377,10 @@ namespace ljgb.DataAccess.Model
             modelBuilder.Entity<ModelBarang>(entity =>
             {
                 entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.Category)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.Created).HasColumnType("datetime");
 

@@ -60,7 +60,13 @@ namespace ljgb.BusinessLogic
             return await dep.GetAll(search, order, orderDir, startRec, pageSize, draw);
 
         }
+        
+        public async Task<BarangResponse> GetOtherCategory(string search, string order, string orderDir, int startRec, int pageSize, int draw)
+        {
 
+            return await dep.GetAll(search, order, orderDir, startRec, pageSize, draw);
+
+        }
         public BarangResponse GetAllForHomePage(string city)
         {
             BarangResponse resp = new BarangResponse();
@@ -136,6 +142,7 @@ namespace ljgb.BusinessLogic
 
             return resp;
         }
+
         public BarangResponse GetAllBidsById(BarangRequest req)
         {
             BarangResponse resp = new BarangResponse();
@@ -143,18 +150,7 @@ namespace ljgb.BusinessLogic
 
             return resp;
         }
-        //public async Task<BarangViewModel> GetPost(long ID)
-        //{
-        //    var model = await dep.GetPost(ID);
-
-        //    if (model == null)
-        //    {
-        //        return null;
-        //    }
-        //    return model;
-
-        //}
-
+       
         public async Task<BarangResponse> AddPost(BarangRequest request, string email)
         {
             BarangResponse response = new BarangResponse();
@@ -223,6 +219,7 @@ namespace ljgb.BusinessLogic
 
             return response;
         }
+
         public async Task<BarangResponse> UpdateImageBarang(BarangRequest request, string username)
         {
             BarangResponse response = new BarangResponse();

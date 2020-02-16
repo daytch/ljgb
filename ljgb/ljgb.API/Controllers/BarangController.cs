@@ -47,7 +47,32 @@ namespace ljgb.API.Controllers
                 return BadRequest(ex);
             }
         }
+        // GetOtherCategory
+        [HttpGet]
+        [Route("GetAll")]
+        public async Task<IActionResult> GetOtherCategory()
+        {
+            try
+            {
+                string search = HttpContext.Request.Query["search[value]"].ToString();
+                int draw = Convert.ToInt32(HttpContext.Request.Query["draw"]);
+                string order = HttpContext.Request.Query["order[0][column]"];
+                string orderDir = HttpContext.Request.Query["order[0][dir]"];
+                int startRec = Convert.ToInt32(HttpContext.Request.Query["start"]);
+                int pageSize = Convert.ToInt32(HttpContext.Request.Query["length"]);
+                var models = await facade.GetAll(search, order, orderDir, startRec, pageSize, draw);
+                if (models == null)
+                {
+                    return NotFound();
+                }
 
+                return Ok(models);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
         [HttpGet]
         [Route("GetAllForHomePage")]
         public IActionResult GetAllForHomePage([FromQuery]string city)
@@ -213,32 +238,6 @@ namespace ljgb.API.Controllers
                 return BadRequest(ex);
             }
         }
-
-        //[HttpPost]
-        //[Route("GetModelWithID")]
-        //public async Task<IActionResult> GetPost(long postId)
-        //{
-        //    if (postId < 1)
-        //    {
-        //        return BadRequest();
-        //    }
-
-        //    try
-        //    {
-        //        var post = await facade.GetPost(postId);
-
-        //        if (post == null)
-        //        {
-        //            return NotFound();
-        //        }
-
-        //        return Ok(post);
-        //    }
-        //    catch (Exception)
-        //    {
-        //        return BadRequest();
-        //    }
-        //}
 
         [HttpPost]
         [Route("AddPost")]
@@ -513,8 +512,7 @@ namespace ljgb.API.Controllers
                 return resp;
             }
         }
-
-
+        
         [HttpPost]
         [Route("UploadImageBarang")]
         public async Task<string> UploadImage(IFormFile file)
