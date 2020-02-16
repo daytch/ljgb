@@ -14,6 +14,8 @@ namespace ljgb.DataAccess.Interface
 
         Task<ModelBarangResponse> GetAll(string search, string order, string orderDir, int startRec, int pageSize, int draw);
 
+        Task<ModelBarangResponse> GetAllCategory(string search, string order, string orderDir, int startRec, int pageSize, int draw);
+        
         Task<ModelBarangResponse> GetPost(long ID);
 
         Task<long> Add(ModelBarang model);
