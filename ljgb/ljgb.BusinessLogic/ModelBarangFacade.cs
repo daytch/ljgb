@@ -36,8 +36,7 @@ namespace ljgb.BusinessLogic
             this.dep = new ModelBarangRepository(db);
         }
         #endregion
-
-
+        
         public async Task<ModelBarangResponse> GetAll(string search, string order, string orderDir, int startRec, int pageSize, int draw)
         {
             var models = await dep.GetAll(search, order, orderDir, startRec, pageSize, draw);
@@ -48,16 +47,15 @@ namespace ljgb.BusinessLogic
             return models;
         }
 
-        //public async Task<ModelBarangResponse> GetAllWithoutFilter()
-        //{
-        //    var models = await dep.GetAllWithoutFilter();
-        //    if (models == null)
-        //    {
-        //        return null;
-        //    }
-        //    return models;
-        //}
-        
+        public async Task<ModelBarangResponse> GetAllCategory(string search, string order, string orderDir, int startRec, int pageSize, int draw)
+        {
+            var models = await dep.GetAllCategory(search, order, orderDir, startRec, pageSize, draw);
+            if (models == null)
+            {
+                return null;
+            }
+            return models;
+        }
 
         public async Task<ModelBarangResponse> GetPost(long ID)
         {
@@ -70,13 +68,6 @@ namespace ljgb.BusinessLogic
             return model;
 
         }
-
-        //public async Task<ModelBarangResponse> GetModelWithMerkIDModelName(ModelBarangRequest request)
-        //{
-        //    ModelBarangResponse response = new ModelBarangResponse();
-        //    return response;
-
-        //}
 
         public async Task<ModelBarangResponse> AddPost(ModelBarangRequest model)
         {
@@ -163,6 +154,51 @@ namespace ljgb.BusinessLogic
             }
             return response;
             
+        }
+
+        public async Task<ModelBarangResponse> UpdateCategory(ModelBarangRequest model)
+        {
+            ModelBarangResponse response = new ModelBarangResponse();
+            try
+            {
+                ModelBarang request = new ModelBarang();
+                request.Id = model.ID;
+
+                ModelBarang result = await dep.GetModelWithMerkIDModelName(request);
+                model.ID = result.Id;
+                model.MerkID = result.MerkId;
+                model.Name = result.Name;
+                model.Description = result.Description;
+
+                if (result != null)
+                {
+                    if (model.ID != result.Id)
+                    {
+                        response.IsSuccess = false;
+                        response.Message = "Data Does not exist.";
+                    }
+                    else
+                    {
+                        response.IsSuccess = true;
+                        response.Message = "Update Success";
+                        response = await dep.UpdatePost(model);
+                    }
+                }
+                else
+                {
+                    response.IsSuccess = true;
+                    response.Message = "Update Success";
+                    response = await dep.UpdatePost(model);
+                }
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex);
+                response.Message = ex.ToString();
+                response.IsSuccess = false;
+            }
+            return response;
+
         }
 
         public async Task<ModelBarangResponse> GetModelWithMerkID(ModelBarangRequest model)

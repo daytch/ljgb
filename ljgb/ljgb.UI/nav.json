@@ -5,6 +5,24 @@
       "title": "Tools & Components"
     },
     {
+      "title": "CMS",
+      "icon": "fal far fa-cogs",
+      "items": [
+        {
+          "title": "Highest Bids",
+          "href": "Barang_HighestBids.html"
+        },
+        {
+          "title": "Lowest Asks",
+          "href": "Barang_LowestAsks.html"
+        },
+        {
+          "title": "Other Category",
+          "href": "Barang_OtherCategory.html"
+        }
+      ]
+    },
+    {
       "title": "Verification",
       "icon": "fal far fa-barcode-read",
       "items": [

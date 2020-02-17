@@ -14,7 +14,7 @@ namespace ljgb.DataAccess.Interface
         Task<List<Barang>> GetAllBarangSameTypeAndKota(Barang barang);
 
         Task<BarangResponse> GetAll(string search, string order, string orderDir, int startRec, int pageSize, int draw);
-
+                
         List<Car> GetHighestBid(string kota,int total);
 
         List<Car> GetLowestAsk(string kota, int total);
@@ -33,7 +33,7 @@ namespace ljgb.DataAccess.Interface
 
         List<Car> GetListNormal(string kota, int total);
 
-        Task<BarangViewModel> GetPost(long ID);
+        Task<Barang> GetBarang(long ID);
 
         Task<long> AddPost(Barang model);
 

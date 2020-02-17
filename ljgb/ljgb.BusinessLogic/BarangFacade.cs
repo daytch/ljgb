@@ -60,7 +60,13 @@ namespace ljgb.BusinessLogic
             return await dep.GetAll(search, order, orderDir, startRec, pageSize, draw);
 
         }
+        
+        public async Task<BarangResponse> GetOtherCategory(string search, string order, string orderDir, int startRec, int pageSize, int draw)
+        {
 
+            return await dep.GetAll(search, order, orderDir, startRec, pageSize, draw);
+
+        }
         public BarangResponse GetAllForHomePage(string city)
         {
             BarangResponse resp = new BarangResponse();
@@ -103,18 +109,26 @@ namespace ljgb.BusinessLogic
         {
             BarangResponse resp = new BarangResponse();
 
-
             BarangRequest req = new BarangRequest();
             req.ID = id;
             resp.CarDetail = await dep.GetBarangDetail(id);
             resp.RelatedProducts = dep.GetRelatedProducts(id);
-            //req.NegoType = "ask";
             resp.SP_GetPhotoAndWarnaByBarangIDS = await dep.GetPhotoAndWarnaByID(req);
-
             resp.ListModelForDetail = await dep.GetTypeBarangByBarangID(req);
-            //resp.SP_GetPhotoAndWarnaByBarangASKS = await dep.GetPhotoAndWarnaByID(req);
-            ////req.NegoType = "bid";
-            //resp.SP_GetPhotoAndWarnaByBarangIBIDS = await dep.GetPhotoAndWarnaByID(req);
+
+            // Update Jumlah Klik
+            Barang b = await dep.GetBarang(id);
+            if (b != null)
+            {
+                if (!b.JumlahKlik.HasValue || b.JumlahKlik < 1)
+                {
+                    b.JumlahKlik = 1;
+                    b.Modified = DateTime.Now;
+                    b.ModifiedBy = "System";
+                }
+
+                if (await dep.UpdatePost(b)) { }
+            }
 
             resp.IsSuccess = true;
             resp.Message = "Success";
@@ -128,6 +142,7 @@ namespace ljgb.BusinessLogic
 
             return resp;
         }
+
         public BarangResponse GetAllBidsById(BarangRequest req)
         {
             BarangResponse resp = new BarangResponse();
@@ -135,19 +150,8 @@ namespace ljgb.BusinessLogic
 
             return resp;
         }
-        public async Task<BarangViewModel> GetPost(long ID)
-        {
-            var model = await dep.GetPost(ID);
-
-            if (model == null)
-            {
-                return null;
-            }
-            return model;
-
-        }
-
-        public async Task<BarangResponse> AddPost(BarangRequest request,string email)
+       
+        public async Task<BarangResponse> AddPost(BarangRequest request, string email)
         {
             BarangResponse response = new BarangResponse();
             try
@@ -215,6 +219,7 @@ namespace ljgb.BusinessLogic
 
             return response;
         }
+
         public async Task<BarangResponse> UpdateImageBarang(BarangRequest request, string username)
         {
             BarangResponse response = new BarangResponse();
