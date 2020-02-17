@@ -25,6 +25,10 @@
         {
           "title": "Merk",
           "href": "Merk_ListMerk.cshtml"
+        },
+        {
+          "title": "Maintain Rank",
+          "href": "Merk_MaintainDropdownMerkRank.cshtml"
         }
       ]
     },

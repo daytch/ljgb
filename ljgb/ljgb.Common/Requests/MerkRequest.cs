@@ -14,6 +14,7 @@ namespace ljgb.Common.Requests
         public DateTime? Modified { get; set; }
         public string ModifiedBy { get; set; }
         public bool RowStatus { get; set; }
+        public int MerkRank { get; set; }
 
         public string cmd { get; set; }
         public string[] columns { get; set; }

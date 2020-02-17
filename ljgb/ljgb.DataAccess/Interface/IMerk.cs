@@ -30,5 +30,12 @@ namespace ljgb.DataAccess.Interface
         List<SP_MerkByKotaID> GetMerkByKotaID(long KotaID);
 
         Task<Merk> GetMerkByName(string request);
+
+        Task<List<SP_MerkRank>> GetMerkRank(string search, int draw, int startRec, int pageSize);
+
+        Task<MerkRank> GetMerkRankByMerkID(long MerkID);
+
+        Task<long> UpdateMerkRank(MerkRank merkRank);
+        Task<long> AddMerkRank(MerkRank merkRank);
     }
 }

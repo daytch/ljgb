@@ -23,5 +23,11 @@ namespace ljgb.UI.Controllers
             ViewBag.url_api = _config.base_api_url;
             return View(_settings);
         }
+
+        public IActionResult MaintainDropdownMerkRank()
+        {
+            ViewBag.url_api = _config.base_api_url;
+            return View(_settings);
+        }
     }
 }

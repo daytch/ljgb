@@ -79,8 +79,9 @@ namespace ljgb.API.Controllers
 
                     string token = facade.GenerateToken(userInfo.Email);
 
-                    string url = ui_url.Contains(Request.Host.Value) ? ui_url + "activationaccount?token=" + token
-                        : admin_url + "Identity/Account/activationaccount?token=" + token;
+                    string url = ui_url + "activationaccount?token=" + token;
+                    //string url = ui_url.Contains(Request.Host.Value) ? ui_url + "activationaccount?token=" + token
+                    //    : admin_url + "Identity/Account/activationaccount?token=" + token;
                     //string url = admin_url + "Identity/Account/activationaccount?token=" + token;
                     contentEmail = contentEmail.Replace("[user]", emailAddress.Name);
                     contentEmail = contentEmail.Replace("[Link]", url);
