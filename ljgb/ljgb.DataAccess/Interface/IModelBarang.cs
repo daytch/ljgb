@@ -14,17 +14,21 @@ namespace ljgb.DataAccess.Interface
 
         Task<ModelBarangResponse> GetAll(string search, string order, string orderDir, int startRec, int pageSize, int draw);
 
-        Task<ModelBarangResponse> GetAllCategory(string search, string order, string orderDir, int startRec, int pageSize, int draw);
-        
-        Task<ModelBarangResponse> GetPost(long ID);
+        Task<ModelBarangResponse> GetAllCategory(string search, string order, string orderDir, int startRec, int pageSize, int draw, string type);
+
+        Task<ModelBarang> GetModelBarangByID(long ID);
 
         Task<long> Add(ModelBarang model);
 
         Task<ModelBarangResponse> AddPost(ModelBarangRequest model);
 
+        Task<long> DeleteCategory(ModelBarang model);
+
         Task<long> DeletePost(long ID, string username);
 
         Task<ModelBarangResponse> UpdatePost(ModelBarangRequest model);
+
+        Task<ModelBarangResponse> UpdateCategory(ModelBarang model);
 
         Task<ModelBarangResponse> GetModelWithMerkID(ModelBarangRequest model);
 

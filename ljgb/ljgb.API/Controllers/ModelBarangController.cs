@@ -66,31 +66,83 @@ namespace ljgb.API.Controllers
             }
         }
 
-        [HttpPost]
-        [Route("GetModelWithID")]
-        public async Task<IActionResult> GetPost(long postId)
+        [HttpGet]
+        [Route("GetAllCategoryAsks")]
+        public async Task<IActionResult> GetAllCategoryAsks()
         {
-            if (postId < 1)
-            {
-                return BadRequest();
-            }
-
             try
             {
-                var post = await facade.GetPost(postId);
-
-                if (post == null)
+                string search = HttpContext.Request.Query["search[value]"].ToString();
+                int draw = Convert.ToInt32(HttpContext.Request.Query["draw"]);
+                string order = HttpContext.Request.Query["order[0][column]"];
+                string orderDir = HttpContext.Request.Query["order[0][dir]"];
+                int startRec = Convert.ToInt32(HttpContext.Request.Query["start"]);
+                int pageSize = Convert.ToInt32(HttpContext.Request.Query["length"]);
+                var models = await facade.GetAllCategoryAsks(search, order, orderDir, startRec, pageSize, draw);
+                if (models == null)
                 {
                     return NotFound();
                 }
 
-                return Ok(post);
+                return Ok(models);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return BadRequest();
+                return BadRequest(ex);
             }
         }
+
+        [HttpGet]
+        [Route("GetAllCategoryBids")]
+        public async Task<IActionResult> GetAllCategoryBids()
+        {
+            try
+            {
+                string search = HttpContext.Request.Query["search[value]"].ToString();
+                int draw = Convert.ToInt32(HttpContext.Request.Query["draw"]);
+                string order = HttpContext.Request.Query["order[0][column]"];
+                string orderDir = HttpContext.Request.Query["order[0][dir]"];
+                int startRec = Convert.ToInt32(HttpContext.Request.Query["start"]);
+                int pageSize = Convert.ToInt32(HttpContext.Request.Query["length"]);
+                var models = await facade.GetAllCategoryBids(search, order, orderDir, startRec, pageSize, draw);
+                if (models == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(models);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+
+        //[HttpPost]
+        //[Route("GetModelWithID")]
+        //public async Task<IActionResult> GetPost(long postId)
+        //{
+        //    if (postId < 1)
+        //    {
+        //        return BadRequest();
+        //    }
+
+        //    try
+        //    {
+        //        var post = await facade.GetPost(postId);
+
+        //        if (post == null)
+        //        {
+        //            return NotFound();
+        //        }
+
+        //        return Ok(post);
+        //    }
+        //    catch (Exception)
+        //    {
+        //        return BadRequest();
+        //    }
+        //}
 
         [HttpPost]
         [Route("GetModelWithMerkID")]
@@ -186,8 +238,7 @@ namespace ljgb.API.Controllers
 
             //return BadRequest();
         }
-
-
+        
         [HttpPost]
         [Route("AddCategory")]
         public async Task<ModelBarangResponse> AddCategory([FromBody]ModelBarangRequest model)
@@ -236,6 +287,126 @@ namespace ljgb.API.Controllers
         }
 
         [HttpPost]
+        [Route("DeleteCategory")]
+        public async Task<ModelBarangResponse> DeleteCategory([FromBody]ModelBarangRequest model)
+        {
+            ModelBarangResponse resp = new ModelBarangResponse();
+            try
+            {
+                string bearer = Request.HttpContext.Request.Headers["Authorization"];
+                string token = bearer.Substring("Bearer ".Length).Trim();
+                string username = string.Empty;
+                if (string.IsNullOrEmpty(token))
+                {
+                    resp.IsSuccess = false;
+                    resp.Message = "You don't have access.";
+                    return resp;
+                }
+
+                username = sec.ValidateToken(token);
+                if (username == null)
+                {
+                    Response.HttpContext.Response.Cookies.Append("access_token", "", new CookieOptions()
+                    {
+                        Expires = DateTime.Now.AddDays(-1)
+                    });
+                    resp.IsSuccess = false;
+                    resp.Message = "Your session was expired, please re-login.";
+                    return resp;
+                }
+                model.UserName = username;
+
+                return resp = await facade.DeleteCategory(model); ;
+            }
+            catch (Exception ex)
+            {
+                resp.IsSuccess = false;
+                resp.Message = ex.Message.ToString();
+                return resp;
+            }
+        }
+
+        [HttpPost]
+        [Route("DeleteCategoryBid")]
+        public async Task<ModelBarangResponse> DeleteCategoryBid([FromBody]ModelBarangRequest model)
+        {
+            ModelBarangResponse resp = new ModelBarangResponse();
+            try
+            {
+                string bearer = Request.HttpContext.Request.Headers["Authorization"];
+                string token = bearer.Substring("Bearer ".Length).Trim();
+                string username = string.Empty;
+                if (string.IsNullOrEmpty(token))
+                {
+                    resp.IsSuccess = false;
+                    resp.Message = "You don't have access.";
+                    return resp;
+                }
+
+                username = sec.ValidateToken(token);
+                if (username == null)
+                {
+                    Response.HttpContext.Response.Cookies.Append("access_token", "", new CookieOptions()
+                    {
+                        Expires = DateTime.Now.AddDays(-1)
+                    });
+                    resp.IsSuccess = false;
+                    resp.Message = "Your session was expired, please re-login.";
+                    return resp;
+                }
+                model.UserName = username;
+
+                return resp = await facade.DeleteCategoryBid(model); ;
+            }
+            catch (Exception ex)
+            {
+                resp.IsSuccess = false;
+                resp.Message = ex.Message.ToString();
+                return resp;
+            }
+        }
+
+        [HttpPost]
+        [Route("DeleteCategoryAsk")]
+        public async Task<ModelBarangResponse> DeleteCategoryAsk([FromBody]ModelBarangRequest model)
+        {
+            ModelBarangResponse resp = new ModelBarangResponse();
+            try
+            {
+                string bearer = Request.HttpContext.Request.Headers["Authorization"];
+                string token = bearer.Substring("Bearer ".Length).Trim();
+                string username = string.Empty;
+                if (string.IsNullOrEmpty(token))
+                {
+                    resp.IsSuccess = false;
+                    resp.Message = "You don't have access.";
+                    return resp;
+                }
+
+                username = sec.ValidateToken(token);
+                if (username == null)
+                {
+                    Response.HttpContext.Response.Cookies.Append("access_token", "", new CookieOptions()
+                    {
+                        Expires = DateTime.Now.AddDays(-1)
+                    });
+                    resp.IsSuccess = false;
+                    resp.Message = "Your session was expired, please re-login.";
+                    return resp;
+                }
+                model.UserName = username;
+
+                return resp = await facade.DeleteCategoryAsk(model); ;
+            }
+            catch (Exception ex)
+            {
+                resp.IsSuccess = false;
+                resp.Message = ex.Message.ToString();
+                return resp;
+            }
+        }
+
+        [HttpPost]
         [Route("DeletePost")]
         public async Task<ModelBarangResponse> DeletePost([FromBody]ModelBarangRequest model)
         {
@@ -273,17 +444,6 @@ namespace ljgb.API.Controllers
                 resp.Message = ex.Message.ToString();
                 return resp;
             }
-            //try
-            //{
-            //    var result = await facade.DeletePost(model);
-                
-            //    return Ok(result);
-            //}
-            //catch (Exception)
-            //{
-
-            //    return BadRequest();
-            //}
         }
 
 

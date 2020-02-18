@@ -81,6 +81,29 @@ namespace ljgb.DataAccess.Repository
             return response;
         }
 
+        public async Task<long> DeleteCategory(ModelBarang model)
+        {
+            int result = 0;
+            if (db != null)
+            {
+                //Find the warna for specific userprofile
+                var modelBrg = await db.ModelBarang.FirstOrDefaultAsync(x => x.Id == model.Id);
+
+                if (modelBrg != null)
+                {
+                    modelBrg.Modified = DateTime.Now;
+                    modelBrg.ModifiedBy = model.ModifiedBy;
+                    modelBrg.Category = model.Category;
+
+                    db.ModelBarang.Update(modelBrg);
+
+                    result = await db.SaveChangesAsync();
+                }
+                return result;
+            }
+            return result;
+        }
+
         public async Task<long> DeletePost(long modelID, string username)
         {
             int result = 0;
@@ -138,12 +161,12 @@ namespace ljgb.DataAccess.Repository
                     if (!string.IsNullOrEmpty(search) && !string.IsNullOrWhiteSpace(search))
                     {
                         query = query.Where(p => p.Name.ToString().ToLower().Contains(search.ToLower()) ||
-                                            p.NamaMerk.ToString().ToLower().Contains(search.ToLower())||
+                                            p.NamaMerk.ToString().ToLower().Contains(search.ToLower()) ||
                                             p.Description.ToLower().Contains(search.ToLower()));
                     }
                     int recFilter = query.Count();
                     response.ListModel = await (from model in query
-                                                
+
                                                 select new ModelBarangViewModel
                                                 {
                                                     ID = model.Id,
@@ -180,7 +203,7 @@ namespace ljgb.DataAccess.Repository
             return response;
         }
 
-        public async Task<ModelBarangResponse> GetAllCategory(string search, string order, string orderDir, int startRec, int pageSize, int draw)
+        public async Task<ModelBarangResponse> GetAllCategory(string search, string order, string orderDir, int startRec, int pageSize, int draw, string type)
         {
             ModelBarangResponse response = new ModelBarangResponse();
             try
@@ -191,6 +214,7 @@ namespace ljgb.DataAccess.Repository
                                  join merk in db.Merk
                                  on model.MerkId equals merk.Id
                                  where model.Category != null
+                                 && model.Category.Contains(type)
                                  && merk.RowStatus == true
                                  && model.RowStatus == true
                                  select new
@@ -244,10 +268,8 @@ namespace ljgb.DataAccess.Repository
             }
             catch (Exception ex)
             {
-
                 response.Message = ex.ToString();
                 response.IsSuccess = false;
-
             }
 
             return response;
@@ -279,20 +301,20 @@ namespace ljgb.DataAccess.Repository
             {
                 if (db != null)
                 {
-                    response.ListModel = await(from model in db.ModelBarang
-                                           where model.MerkId == request.MerkID & model.RowStatus == true
-                                           select new ModelBarangViewModel
-                                           {
-                                               ID = model.Id,
-                                               Name = model.Name,
-                                               MerkID = model.MerkId,
-                                               Description = model.Description,
-                                               Created = model.Created,
-                                               CreatedBy = model.Createdby,
-                                               Modified = model.Modified,
-                                               ModifiedBy = model.ModifiedBy,
-                                               RowStatus = model.RowStatus
-                                           }).OrderBy(x=>x.Name).ToListAsync();
+                    response.ListModel = await (from model in db.ModelBarang
+                                                where model.MerkId == request.MerkID & model.RowStatus == true
+                                                select new ModelBarangViewModel
+                                                {
+                                                    ID = model.Id,
+                                                    Name = model.Name,
+                                                    MerkID = model.MerkId,
+                                                    Description = model.Description,
+                                                    Created = model.Created,
+                                                    CreatedBy = model.Createdby,
+                                                    Modified = model.Modified,
+                                                    ModifiedBy = model.ModifiedBy,
+                                                    RowStatus = model.RowStatus
+                                                }).OrderBy(x => x.Name).ToListAsync();
                     response.Message = "Load Success";
                     response.IsSuccess = true;
                 }
@@ -317,7 +339,7 @@ namespace ljgb.DataAccess.Repository
             ModelBarang result = new ModelBarang();
             try
             {
-                result = await db.ModelBarang.Where(x => x.RowStatus == true && x.MerkId == request.MerkId).FirstOrDefaultAsync();
+                result = await db.ModelBarang.Where(x => x.RowStatus == true && x.MerkId == request.MerkId && x.Name == request.Name).FirstOrDefaultAsync();
             }
             catch (Exception ex)
             {
@@ -327,43 +349,20 @@ namespace ljgb.DataAccess.Repository
             return result;
         }
 
-        public async Task<ModelBarangResponse> GetPost(long ID)
+        public async Task<ModelBarang> GetModelBarangByID(long ID)
         {
-            ModelBarangResponse response = new ModelBarangResponse();
+            ModelBarang response = new ModelBarang();
             try
             {
                 if (db != null)
                 {
-                    response.Model =  await (from model in db.ModelBarang
-                                  where model.Id == ID & model.RowStatus == true
-                                  select new ModelBarangViewModel
-                                  {
-                                      ID = model.Id,
-                                      Name = model.Name,
-                                      MerkID = model.MerkId,
-                                      Description = model.Description,
-                                      Created = model.Created,
-                                      CreatedBy = model.Createdby,
-                                      Modified = model.Modified,
-                                      ModifiedBy = model.ModifiedBy,
-                                      RowStatus = model.RowStatus
-                                  }).FirstOrDefaultAsync();
-                    response.Message = "Load Success";
-                    response.IsSuccess = false;
-                }
-                else
-                {
-                    response.Message = "Opps, Something Error with System Righ Now !";
-                    response.IsSuccess = false;
+                    response = await db.ModelBarang.Where(x => x.RowStatus == true && x.Id == ID).FirstOrDefaultAsync();
                 }
             }
             catch (Exception ex)
             {
-
-                response.Message = ex.ToString();
-                response.IsSuccess = false;
+                throw ex;
             }
-
             return response;
         }
 
@@ -405,5 +404,42 @@ namespace ljgb.DataAccess.Repository
             }
             return response;
         }
+
+        public async Task<ModelBarangResponse> UpdateCategory(ModelBarang request)
+        {
+            ModelBarangResponse response = new ModelBarangResponse();
+            try
+            {
+
+                if (db != null)
+                {
+                    ModelBarang model = await db.ModelBarang.Where(x => x.Id == request.Id).FirstAsync();
+                    model.Modified = DateTime.Now;
+                    model.ModifiedBy = request.ModifiedBy;
+                    model.Category = request.Category;
+
+                    db.ModelBarang.Update(model);
+
+                    //Commit the transaction
+                    await db.SaveChangesAsync();
+                    response.Message = "Update success";
+                    response.IsSuccess = true;
+
+                }
+                else
+                {
+                    response.Message = "Opps, Something Error with System Righ Now !";
+                    response.IsSuccess = false;
+                }
+            }
+            catch (Exception ex)
+            {
+
+                response.Message = ex.ToString();
+                response.IsSuccess = false;
+            }
+            return response;
+        }
+
     }
 }
