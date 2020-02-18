@@ -326,5 +326,86 @@ namespace ljgb.DataAccess.Repository
                 throw ex;
             }
         }
+
+        public async Task<List<SP_MerkRank>> GetMerkRank(string search, int draw, int startRec, int pageSize)
+        {
+            try
+            {
+                if (db != null)
+                {
+                    try
+                    {
+                        return db.Set<SP_MerkRank>().FromSql("EXEC sp_GetMerkRank {0},{1},{2}", startRec, pageSize, search).AsNoTracking().ToList();
+                    }
+                    catch (Exception ex)
+                    {
+                        throw ex;
+                    }
+
+                }
+
+                return null;
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+          
+        }
+
+        public async Task<MerkRank> GetMerkRankByMerkID(long MerkID)
+        {
+            try
+            {
+                if (db != null)
+                {
+                    try
+                    {
+                        return await db.MerkRank.Where(x => x.RowStatus == true && x.MerkId == MerkID).FirstOrDefaultAsync();
+                    }
+                    catch (Exception ex)
+                    {
+                        throw ex;
+                    }
+
+                }
+
+                return null;
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+        public async Task<long> UpdateMerkRank(MerkRank merkRank)
+        {
+            try
+            {
+                db.MerkRank.Update(merkRank);
+                return await db.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+        public async Task<long> AddMerkRank(MerkRank merkRank)
+        {
+            try
+            {
+                db.MerkRank.Add(merkRank);
+                return await db.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
     }
 }

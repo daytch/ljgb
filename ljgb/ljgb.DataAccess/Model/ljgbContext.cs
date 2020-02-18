@@ -29,6 +29,7 @@ namespace ljgb.DataAccess.Model
         public virtual DbSet<Dealer> Dealer { get; set; }
         public virtual DbSet<Kota> Kota { get; set; }
         public virtual DbSet<Merk> Merk { get; set; }
+        public virtual DbSet<MerkRank> MerkRank { get; set; }
         public virtual DbSet<ModelBarang> ModelBarang { get; set; }
         public virtual DbSet<NegoBarang> NegoBarang { get; set; }
         public virtual DbSet<ProfileRole> ProfileRole { get; set; }
@@ -45,8 +46,6 @@ namespace ljgb.DataAccess.Model
         public virtual DbSet<UserProfile> UserProfile { get; set; }
         public virtual DbSet<Vincode> Vincode { get; set; }
         public virtual DbSet<Warna> Warna { get; set; }
-
-
         public virtual DbSet<Car> Car { get; set; }
         public virtual DbSet<CarAsks> CarAsks { get; set; }
         public virtual DbSet<CarDetail> CarDetail { get; set; }
@@ -67,6 +66,7 @@ namespace ljgb.DataAccess.Model
         public virtual DbSet<CarBids> CarBids { get; set; }
         public virtual DbSet<sp_GetAllBidAndBuyByUserProfileID> sp_GetAllBidAndBuyByUserProfileID { get; set; }
         public virtual DbSet<sp_GetUserDetail> sp_GetUserDetail { get; set; }
+        public virtual DbSet<SP_MerkRank> SP_MerkRanks { get; set; }
 
 
 
@@ -74,8 +74,11 @@ namespace ljgb.DataAccess.Model
         {
             if (!optionsBuilder.IsConfigured)
             {
-// #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Server=localhost\\SQLEXPRESS;Database=ljgb;Trusted_Connection=True;");
+
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
+                optionsBuilder.UseSqlServer("Server=GONNA-BE-GOOD\\SQLEXPRESS;Database=ljgb;Trusted_Connection=True;");
+
+
             }
         }
 
@@ -370,6 +373,26 @@ namespace ljgb.DataAccess.Model
 
                 entity.Property(e => e.Name)
                     .IsRequired()
+                    .HasMaxLength(250)
+                    .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<MerkRank>(entity =>
+            {
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.Created).HasColumnType("datetime");
+
+                entity.Property(e => e.CreatedBy)
+                    .IsRequired()
+                    .HasMaxLength(250)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.MerkId).HasColumnName("MerkID");
+
+                entity.Property(e => e.Modified).HasColumnType("datetime");
+
+                entity.Property(e => e.ModifiedBy)
                     .HasMaxLength(250)
                     .IsUnicode(false);
             });

@@ -125,12 +125,74 @@ namespace ljgb.BusinessLogic
             }
             catch (Exception ex)
             {
+                log.Error(ex);
                 response.Message = ex.ToString();
                 response.IsSuccess = false;
             }
             return response;
 
            
+        }
+
+        public async Task<MerkResponse> UpdateMerkRank(MerkRequest model, string username)
+        {
+            MerkResponse response = new MerkResponse();
+            try
+            {
+                MerkRank item = await dep.GetMerkRankByMerkID(model.ID);
+                if (item != null)
+                {
+                    if (item.Id == model.ID)
+                    {
+                        item.MerkId = model.ID;
+                        item.Rank = model.MerkRank;
+                        item.Modified = DateTime.Now;
+                        item.ModifiedBy = username;
+                        item.RowStatus = true;
+
+                        if (await dep.UpdateMerkRank(item) > 0)
+                        {
+                            response.Message = "Data Already Save!";
+                            response.IsSuccess = true;
+                        }
+                        else
+                        {
+                            response.Message = "There is something wrong in our system";
+                        }
+                    }
+                    else
+                    {
+                        response.Message = "Data is Duplicate with Existing Data";
+                        response.IsSuccess = false;
+                    }
+
+                }
+                else
+                {
+                    MerkRank merkRank = new MerkRank();
+                    merkRank.MerkId = model.ID;
+                    merkRank.Rank = model.MerkRank;
+                    merkRank.Created = DateTime.Now;
+                    merkRank.CreatedBy = username;
+                    merkRank.RowStatus = true;
+                    if (await dep.AddMerkRank(merkRank) > 0)
+                    {
+                        response.Message = "Data Already Save!";
+                        response.IsSuccess = true;
+                    } else{
+                        response.Message = "There is something wrong in our system";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex);
+                response.Message = ex.ToString();
+                response.IsSuccess = false;
+            }
+            return response;
+
+
         }
         public MerkResponse GetMerkByKotaID(long KotaID)
         {
@@ -149,6 +211,26 @@ namespace ljgb.BusinessLogic
             }
            
 
+            return response;
+        }
+
+        public MerkResponse GetMerkRank(string search, int draw, int startRec, int pageSize)
+        {
+            MerkResponse response = new MerkResponse();
+            try
+            {
+                response.ListSP_MerkRank = dep.GetMerkRank(search, draw, startRec, pageSize).Result;
+                response.IsSuccess = true;
+                response.Message = "Succes";
+                response.recordsTotal = response.ListSP_MerkRank[0].Total;
+            }
+            catch (Exception ex)
+            {
+
+                log.Error(ex);
+                response.IsSuccess = false;
+                response.Message = "Something Error wtih System";
+            }
             return response;
         }
     }
