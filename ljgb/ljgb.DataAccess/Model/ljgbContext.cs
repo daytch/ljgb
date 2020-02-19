@@ -25,6 +25,7 @@ namespace ljgb.DataAccess.Model
         public virtual DbSet<AspNetUserTokens> AspNetUserTokens { get; set; }
         public virtual DbSet<AspNetUsers> AspNetUsers { get; set; }
         public virtual DbSet<Barang> Barang { get; set; }
+        public virtual DbSet<CmsmasterData> CmsmasterData { get; set; }
         public virtual DbSet<Config> Config { get; set; }
         public virtual DbSet<Dealer> Dealer { get; set; }
         public virtual DbSet<Kota> Kota { get; set; }
@@ -67,18 +68,13 @@ namespace ljgb.DataAccess.Model
         public virtual DbSet<sp_GetAllBidAndBuyByUserProfileID> sp_GetAllBidAndBuyByUserProfileID { get; set; }
         public virtual DbSet<sp_GetUserDetail> sp_GetUserDetail { get; set; }
         public virtual DbSet<SP_MerkRank> SP_MerkRanks { get; set; }
-
-
-
+        public virtual DbSet<SP_CMSMaster> SP_CMSMasters { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
-
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
                 optionsBuilder.UseSqlServer("Server=GONNA-BE-GOOD\\SQLEXPRESS;Database=ljgb;Trusted_Connection=True;");
-
-
             }
         }
 
@@ -243,6 +239,40 @@ namespace ljgb.DataAccess.Model
                     .HasForeignKey(d => d.WarnaId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Barang_Warna");
+            });
+
+            modelBuilder.Entity<CmsmasterData>(entity =>
+            {
+                entity.ToTable("CMSMasterData");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.Category)
+                    .IsRequired()
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Created).HasColumnType("datetime");
+
+                entity.Property(e => e.CreatedBy)
+                    .IsRequired()
+                    .HasMaxLength(250)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Description)
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Modified).HasColumnType("datetime");
+
+                entity.Property(e => e.ModifiedBy)
+                    .HasMaxLength(250)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Value)
+                    .IsRequired()
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<Config>(entity =>

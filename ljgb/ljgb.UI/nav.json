@@ -8,6 +8,7 @@
       "title": "CMS",
       "icon": "fal far fa-cogs",
       "items": [
+
         {
           "title": "Highest Bids",
           "href": "Barang_HighestBids.html"
@@ -19,7 +20,12 @@
         {
           "title": "Other Category",
           "href": "Barang_OtherCategory.html"
+        },
+        {
+          "title": "Homepage",
+          "href": "CMS_Homepage.html"
         }
+
       ]
     },
     {
