@@ -338,6 +338,9 @@
         });
 
         function MasterCMS(Category, Value, Description) {
+            if (Value == null) {
+                Value = '';
+            }
             var CMSMasterData = {
                 //ID: ($("#BarangID").val()) ? $("#BarangID").val() : 0,
                 Category: Category,
@@ -422,15 +425,15 @@
                          LoadingMask.show();
                          debugger;
                          var List_CMSMaster = [];
-                         List_CMSMaster.push(MasterCMS("Banner", ($("#ImagePathBanner1").val().val()) ? $("#ImagePathBanner1").val() : '', "Banner 1"));
-                         List_CMSMaster.push(MasterCMS("Banner",($("#ImagePathBanner2").val().val()) ? $("#ImagePathBanner2").val() : '' , "Banner 2"));
-                         List_CMSMaster.push(MasterCMS("Banner",($("#ImagePathBanner3").val().val()) ? $("#ImagePathBanner3").val() : '' , "Banner 3"));
-                         List_CMSMaster.push(MasterCMS("Banner",($("#ImagePathBanner4").val().val()) ? $("#ImagePathBanner4").val() : '' , "Banner 4"));
-                         List_CMSMaster.push(MasterCMS("Sosial Media", ($("#Facebook").val().val()) ? $("#Facebook").val() : '' , "Facebook"));
-                         List_CMSMaster.push(MasterCMS("Sosial Media", ($("#Instagram").val().val()) ? $("#Instagram").val() : '', "Instagram"));
-                         List_CMSMaster.push(MasterCMS("Sosial Media", ($("#Twitter").val().val()) ? $("#Twitter").val() : '', "Twitter")); 
-                         List_CMSMaster.push(MasterCMS("Sosial Media", ($("#Youtube").val().val()) ? $("#Youtube").val() : '', "Youtube"));
-                         List_CMSMaster.push(MasterCMS("Contact Center"($("#Contact Center").val().val()) ? $("#Contact Center").val() : '', "Contact Center"));
+                         List_CMSMaster.push(MasterCMS("Banner", $("#ImagePathBanner1").val(), "Banner 1"));
+                         List_CMSMaster.push(MasterCMS("Banner", $("#ImagePathBanner2").val(), "Banner 2"));
+                         List_CMSMaster.push(MasterCMS("Banner", $("#ImagePathBanner3").val(), "Banner 3"));
+                         List_CMSMaster.push(MasterCMS("Banner", $("#ImagePathBanner4").val(), "Banner 4"));
+                         List_CMSMaster.push(MasterCMS("Sosial Media", $("#Facebook").val(), "Facebook"));
+                         List_CMSMaster.push(MasterCMS("Sosial Media", $("#Instagram").val(), "Instagram"));
+                         List_CMSMaster.push(MasterCMS("Sosial Media", $("#Twitter").val(), "Twitter"));
+                         List_CMSMaster.push(MasterCMS("Sosial Media", $("#Youtube").val(), "Youtube"));
+                         List_CMSMaster.push(MasterCMS("Contact Center", $("#ContactCenter").val(), "Contact Center"));
                          var values = {
                              List_CMSMaster: List_CMSMaster
                          };
