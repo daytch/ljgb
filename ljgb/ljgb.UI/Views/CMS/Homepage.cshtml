@@ -162,7 +162,7 @@
         var  url = "@ViewBag.url_api";
            
         $("#imgInp1").change(function () {
-                debugger;
+                
                 if ($("#imgInp1").val() == "") {
                     //$('#ImagePath').val("");
                     return;
@@ -206,7 +206,7 @@
                 LoadingMask.hide();
         });
         $("#imgInp2").change(function () {
-            debugger;
+            
             if ($("#imgInp2").val() == "") {
                 //$('#ImagePath').val("");
                 return;
@@ -293,7 +293,7 @@
             LoadingMask.hide();
         });
         $("#imgInp4").change(function () {
-            debugger;
+            
             if ($("#imgInp4").val() == "") {
                 //$('#ImagePath').val("");
                 return;
@@ -420,7 +420,7 @@
                      } else {
 
                          LoadingMask.show();
-                         debugger;
+                         
                          var List_CMSMaster = [];
                          List_CMSMaster.push(MasterCMS("Banner", ($("#ImagePathBanner1").val().val()) ? $("#ImagePathBanner1").val() : '', "Banner 1"));
                          List_CMSMaster.push(MasterCMS("Banner",($("#ImagePathBanner2").val().val()) ? $("#ImagePathBanner2").val() : '' , "Banner 2"));
@@ -434,13 +434,7 @@
                          var values = {
                              List_CMSMaster: List_CMSMaster
                          };
-                         //var values = {
-                         //    //ID: ($("#BarangID").val()) ? $("#BarangID").val() : 0,
-                         //    Category: "Banner",
-                         //    Value: $("#ImagePathBanner1").val(),
-                         //    Deskription: "Banner 1",
-                         //};
-                         debugger;
+
                          $.ajax({
                              url: url + "CMS/SubmitCMSChange",
                              contentType: 'application/json',

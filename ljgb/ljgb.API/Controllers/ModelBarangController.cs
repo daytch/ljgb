@@ -224,10 +224,10 @@ namespace ljgb.API.Controllers
             //        {
             //            result = await facade.AddPost(model);
             //        }
-                   
-                    
+
+
             //        return Ok(result);
-                  
+
             //    }
             //    catch (Exception)
             //    {
@@ -238,7 +238,7 @@ namespace ljgb.API.Controllers
 
             //return BadRequest();
         }
-        
+
         [HttpPost]
         [Route("AddCategory")]
         public async Task<ModelBarangResponse> AddCategory([FromBody]ModelBarangRequest model)
@@ -478,7 +478,7 @@ namespace ljgb.API.Controllers
         [Route("GetModelByKotaIDMerkID")]
         public async Task<IActionResult> GetModelByKotaIDMerkID([FromBody]ModelBarangRequest model)
         {
-           
+
 
             try
             {

@@ -49,7 +49,7 @@ namespace ljgb.API.Controllers
         }
         // GetOtherCategory
         [HttpGet]
-        [Route("GetAll")]
+        [Route("GetOtherCategory")]
         public async Task<IActionResult> GetOtherCategory()
         {
             try
@@ -275,7 +275,7 @@ namespace ljgb.API.Controllers
                     }
                     else
                     {
-                        result = await facade.AddPost(model,username);
+                        result = await facade.AddPost(model, username);
                     }
                     return Ok(result);
                 }
@@ -512,7 +512,7 @@ namespace ljgb.API.Controllers
                 return resp;
             }
         }
-        
+
         [HttpPost]
         [Route("UploadImageBarang")]
         public async Task<string> UploadImage(IFormFile file)
