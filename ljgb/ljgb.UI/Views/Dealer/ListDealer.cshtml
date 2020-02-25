@@ -273,14 +273,13 @@
                     .end();
             }
 
-            $("#ModalDelete").on("show.bs.modal", function (e) {
-                debugger;
+            $("#ModalDelete").on("show.bs.modal", function (e) {                
                 $('#DealerID').val(e.relatedTarget.getAttribute('data-id'));
             });
 
             $('#ModalEdit').on('show.bs.modal', function (e) {
                 resetModal();
-                debugger;
+                
                 $('#DealerID').val(e.relatedTarget.getAttribute('data-id'));
                 $('#NamaDealer').val(e.relatedTarget.getAttribute('data-nama'));
                 $('#KodeDealer').val(e.relatedTarget.getAttribute('data-kode'));
@@ -340,7 +339,7 @@
             });
 
             $('#btn-delete').on('click', function (e) {
-                debugger;
+                
                 var userData = {
                     ID: $("#DealerID").val()
                 }
