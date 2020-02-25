@@ -30,7 +30,7 @@ namespace ljgb.API.Controllers
         private Security sec = new Security();
         private ConfigFacade configFacade = new ConfigFacade();
         private IEmailConfiguration _emailConfiguration;
-        public TransactionController(IConfiguration config, IEmailConfiguration EmailConfiguration, UserManager<IdentityUser> _userManager, IEmailSender _emailSender, SignInManager<IdentityUser> _signInManager)
+        public TransactionController(IConfiguration config, IEmailConfiguration EmailConfiguration, UserManager<IdentityUser> _userManager, SignInManager<IdentityUser> _signInManager)
         {
             userManager = _userManager;
             signInManager = _signInManager;
